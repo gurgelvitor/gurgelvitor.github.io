@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela Nutricional - Painel de Bem-Estar</title>
+    <link rel="stylesheet" href="assets/dashboard.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Tabela de alimentos ricos em proteínas e carboidratos, além de uma calculadora de macros.">
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0W5V50NE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6H0W5V50NE');
+</script>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-start">
+                <a href="index.html" class="back-button">
+                    <i class="material-icons">arrow_back</i>
+                    <span>Voltar</span>
+                </a>
+                <h1>Tabela Nutricional</h1>
+            </div>
+            <div class="header-end">
+                <button id="theme-toggle" class="theme-switcher" aria-label="Alternar tema">
+                    <i class="material-icons">dark_mode</i>
+                </button>
+            </div>
+        </header>
+
+        <main class="dashboard-main">
+            <section class="card page-title-card">
+                <div class="title-container">
+                    <div class="title-icon-wrapper">
+                        <i class="material-icons title-icon">restaurant</i>
+                    </div>
+                    <div class="title-text">
+                        <h1>Alimentos e Calculadora</h1>
+                        <p class="title-subtitle">Veja alimentos ricos em proteínas e carboidratos e calcule suas macros</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card content-card" id="proteinas">
+                <h2>Alimentos Ricos em Proteínas (por 100g)</h2>
+                <div class="tabela-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Alimento</th>
+                                <th>Prot. (g)</th>
+                                <th>Carb. (g)</th>
+                                <th>Lip. (g)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Whey protein (pó)</td><td>80,0</td><td>8,0</td><td>4,0</td></tr>
+                            <tr><td>Leite em pó integral</td><td>26,0</td><td>39,0</td><td>26,0</td></tr>
+                            <tr><td>Amendoim torrado</td><td>25,2</td><td>21,0</td><td>50,0</td></tr>
+                            <tr><td>Peito de frango grelhado</td><td>32,0</td><td>0,0</td><td>3,0</td></tr>
+                            <tr><td>Frango à passarinho</td><td>28,0</td><td>0,0</td><td>12,0</td></tr>
+                            <tr><td>Carne de porco assada</td><td>27,0</td><td>0,0</td><td>10,0</td></tr>
+                            <tr><td>Carne bovina (alcatra)</td><td>26,0</td><td>0,0</td><td>10,0</td></tr>
+                            <tr><td>Peixe (tilápia) grelhado</td><td>26,0</td><td>0,0</td><td>2,0</td></tr>
+                            <tr><td>Atum em lata (água)</td><td>25,0</td><td>0,0</td><td>1,0</td></tr>
+                            <tr><td>Sardinha enlatada</td><td>24,6</td><td>0,0</td><td>10,5</td></tr>
+                            <tr><td>Queijo mussarela</td><td>21,0</td><td>2,0</td><td>20,0</td></tr>
+                            <tr><td>Queijo minas frescal</td><td>17,0</td><td>3,0</td><td>13,0</td></tr>
+                            <tr><td>Hambúrguer bovino grelhado</td><td>17,0</td><td>0,0</td><td>20,0</td></tr>
+                            <tr><td>Soja cozida</td><td>16,0</td><td>9,0</td><td>9,0</td></tr>
+                            <tr><td>Linguiça calabresa</td><td>15,0</td><td>0,5</td><td>30,0</td></tr>
+                            <tr><td>Presunto</td><td>15,0</td><td>1,5</td><td>8,0</td></tr>
+                            <tr><td>Castanha-do-pará</td><td>14,0</td><td>12,0</td><td>60,0</td></tr>
+                            <tr><td>Ovo mexido</td><td>13,5</td><td>1,0</td><td>12,0</td></tr>
+                            <tr><td>Ovos cozidos</td><td>13,0</td><td>1,1</td><td>10,0</td></tr>
+                            <tr><td>Aveia em flocos</td><td>13,9</td><td>66,0</td><td>6,9</td></tr>
+                            <tr><td>Feijão preto cozido</td><td>8,6</td><td>14,0</td><td>0,5</td></tr>
+                            <tr><td>Grão-de-bico cozido</td><td>8,4</td><td>27,4</td><td>2,6</td></tr>
+                            <tr><td>Tofu</td><td>8,1</td><td>1,9</td><td>4,8</td></tr>
+                            <tr><td>Leite condensado</td><td>7,0</td><td>60,0</td><td>8,0</td></tr>
+                            <tr><td>Doce de leite</td><td>6,2</td><td>59,0</td><td>9,3</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card content-card" id="carboidratos">
+                <h2>Alimentos Ricos em Carboidratos (por 100g)</h2>
+                <div class="tabela-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Alimento</th>
+                                <th>Carb. (g)</th>
+                                <th>Prot. (g)</th>
+                                <th>Lip. (g)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Açúcar refinado</td><td>100,0</td><td>0,0</td><td>0,0</td></tr>
+                            <tr><td>Farinha de mandioca</td><td>80,0</td><td>1,5</td><td>0,4</td></tr>
+                            <tr><td>Farinha de trigo</td><td>76,0</td><td>10,0</td><td>1,5</td></tr>
+                            <tr><td>Aveia em flocos</td><td>66,0</td><td>13,9</td><td>6,9</td></tr>
+                            <tr><td>Granola</td><td>64,0</td><td>8,0</td><td>15,0</td></tr>
+                            <tr><td>Leite condensado</td><td>60,0</td><td>7,0</td><td>8,0</td></tr>
+                            <tr><td>Doce de leite</td><td>59,0</td><td>6,2</td><td>9,3</td></tr>
+                            <tr><td>Biscoito recheado</td><td>68,0</td><td>4,5</td><td>22,0</td></tr>
+                            <tr><td>Pão francês</td><td>50,0</td><td>8,0</td><td>3,0</td></tr>
+                            <tr><td>Pão de forma</td><td>49,0</td><td>7,0</td><td>4,0</td></tr>
+                            <tr><td>Arroz branco cozido</td><td>28,0</td><td>2,5</td><td>0,3</td></tr>
+                            <tr><td>Batata doce cozida</td><td>28,0</td><td>2,2</td><td>0,2</td></tr>
+                            <tr><td>Inhame cozido</td><td>27,0</td><td>1,5</td><td>0,2</td></tr>
+                            <tr><td>Macarrão cozido</td><td>25,0</td><td>5,0</td><td>1,1</td></tr>
+                            <tr><td>Mandioquinha cozida</td><td>23,0</td><td>1,0</td><td>0,2</td></tr>
+                            <tr><td>Banana prata</td><td>22,0</td><td>1,3</td><td>0,3</td></tr>
+                            <tr><td>Batata inglesa cozida</td><td>20,0</td><td>2,0</td><td>0,1</td></tr>
+                            <tr><td>Milho verde cozido</td><td>19,0</td><td>3,2</td><td>1,5</td></tr>
+                            <tr><td>Uva</td><td>17,0</td><td>0,6</td><td>0,2</td></tr>
+                            <tr><td>Feijão carioca cozido</td><td>15,0</td><td>8,0</td><td>0,5</td></tr>
+                            <tr><td>Pera</td><td>15,0</td><td>0,4</td><td>0,1</td></tr>
+                            <tr><td>Maçã</td><td>14,0</td><td>0,3</td><td>0,2</td></tr>
+                            <tr><td>Manga</td><td>14,0</td><td>0,8</td><td>0,2</td></tr>
+                            <tr><td>Laranja</td><td>12,0</td><td>0,8</td><td>0,1</td></tr>
+                            <tr><td>Melancia</td><td>8,0</td><td>0,6</td><td>0,1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card content-card calculator-card" id="calculadora">
+                <h2>Calculadora de Calorias</h2>
+                <form onsubmit="event.preventDefault(); calcular();">
+                    <div class="form-group">
+                        <label for="peso">Peso atual (kg):</label>
+                        <input type="number" id="peso" placeholder="Ex: 70" />
+                    </div>
+                    <div class="form-group">
+                        <label for="altura">Altura (cm):</label>
+                        <input type="number" id="altura" placeholder="Ex: 175" />
+                    </div>
+                    <div class="form-group">
+                        <label for="idade">Idade:</label>
+                        <input type="number" id="idade" placeholder="Ex: 25" />
+                    </div>
+                    <div class="form-group">
+                        <label for="sexo">Sexo:</label>
+                        <select id="sexo">
+                            <option value="masculino">Masculino</option>
+                            <option value="feminino">Feminino</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="atividade">Nível de Atividade:</label>
+                        <select id="atividade">
+                            <option value="1.2">Nenhum exercício</option>
+                            <option value="1.375">Pouco exercício (1-2x por semana)</option>
+                            <option value="1.55">Exercício moderado (3-4x por semana)</option>
+                            <option value="1.725">Muito exercício (5-6x por semana)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="objetivo">Objetivo:</label>
+                        <select id="objetivo">
+                            <option value="manter">Manter peso</option>
+                            <option value="ganhar">Ganhar peso</option>
+                            <option value="perder">Perder peso</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="pesoMeta">Peso que deseja atingir (kg):</label>
+                        <input type="number" id="pesoMeta" placeholder="Ex: 70" />
+                    </div>
+                    <div class="form-group">
+                        <label for="metaSemana">Quantos kg por semana quer ganhar/perder?</label>
+                        <select id="metaSemana">
+                            <option value="0">0 kg por semana (manter peso)</option>
+                            <option value="0.25">250g por semana</option>
+                            <option value="0.5">500g por semana (recomendado)</option>
+                            <option value="0.75">750g por semana</option>
+                            <option value="1">1kg por semana</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="cta-button" style="margin-top:15px;">Calcular</button>
+                </form>
+                <div id="resultado" style="margin-top:20px; padding:10px; border-radius:5px;"></div>
+            </section>
+        </main>
+
+        <footer class="dashboard-footer">
+            <div class="footer-content">
+                <p>Site criado e idealizado por Vitor Gurgel</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/gurgel_vitor._/" class="social-link" aria-label="Instagram" target="_blank">
+                        <i class="material-icons">photo_camera</i>
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" role="navigation" aria-label="Navegação principal">
+        <button class="nav-item" data-page="home" aria-label="Início">
+            <i class="material-icons">home</i>
+            <span class="nav-label">Início</span>
+        </button>
+        <button class="nav-item" data-page="workout" aria-label="Treinos">
+            <i class="material-icons">fitness_center</i>
+            <span class="nav-label">Treinos</span>
+        </button>
+        <button class="nav-item active" data-page="nutrition" aria-label="Nutrição">
+            <i class="material-icons">restaurant</i>
+            <span class="nav-label">Nutrição</span>
+        </button>
+        <button class="nav-item" data-page="progress" aria-label="Progresso">
+            <i class="material-icons">trending_up</i>
+            <span class="nav-label">Progresso</span>
+        </button>
+        <button class="nav-item" data-page="profile" aria-label="Perfil">
+            <i class="material-icons">person</i>
+            <span class="nav-label">Perfil</span>
+        </button>
+    </nav>
+    
+    <script src="assets/dashboard.js"></script>
+<script>
+  function calcular() {
+    const pesoAtual = parseFloat(document.getElementById("peso").value);
+    const altura = parseFloat(document.getElementById("altura").value);
+    const idade = parseInt(document.getElementById("idade").value);
+    const sexo = document.getElementById("sexo").value;
+    const atividade = parseFloat(document.getElementById("atividade").value);
+    const objetivo = document.getElementById("objetivo").value;
+    const pesoMeta = parseFloat(document.getElementById("pesoMeta").value);
+    const metaSemana = parseFloat(document.getElementById("metaSemana").value);
+    const resultadoDiv = document.getElementById("resultado");
+
+    // Resetar resultados anteriores
+    resultadoDiv.innerHTML = '';
+    resultadoDiv.classList.remove('error');
+
+    // Validação básica dos campos
+    if (
+        isNaN(pesoAtual) ||
+        isNaN(altura) ||
+        isNaN(idade) ||
+        isNaN(pesoMeta) ||
+        isNaN(metaSemana)
+    ) {
+        resultadoDiv.innerHTML = "<strong>Erro:</strong> Preencha todos os campos corretamente.";
+        resultadoDiv.classList.add('error');
+        return;
+    }
+
+    // Validações específicas por objetivo
+    if (objetivo === "manter" && metaSemana !== 0) {
+        resultadoDiv.innerHTML = `<strong>Aviso:</strong> Você escolheu "Manter peso", mas a meta semanal é diferente de 0. Para manter o peso, a meta semanal deve ser zero.`;
+        resultadoDiv.classList.add('error');
+        return;
+    }
+
+    if (objetivo === "manter" && pesoMeta !== pesoAtual) {
+        resultadoDiv.innerHTML = `<strong>Aviso:</strong> Você escolheu "Manter peso", mas o peso desejado (${pesoMeta}kg) é diferente do peso atual (${pesoAtual}kg). Para manter o peso, os dois devem ser iguais.`;
+        resultadoDiv.classList.add('error');
+        return;
+    }
+
+    if ((objetivo === "ganhar" || objetivo === "perder") && metaSemana === 0) {
+        resultadoDiv.innerHTML = `<strong>Aviso:</strong> Você escolheu "${objetivo === "ganhar" ? "Ganhar" : "Perder"} peso", mas a meta semanal é 0kg. Para ${objetivo === "ganhar" ? "ganhar" : "perder"} peso, a meta semanal deve ser maior que 0.`;
+        resultadoDiv.classList.add('error');
+        return;
+    }
+
+    // ✅ Validação de coerência entre objetivo e pesoMeta
+    if (objetivo === "perder" && pesoMeta >= pesoAtual) {
+        resultadoDiv.innerHTML = `<strong>Erro:</strong> Você escolheu "Perder peso", mas o peso desejado (${pesoMeta}kg) é maior ou igual ao peso atual (${pesoAtual}kg). Isso não faz sentido para quem deseja emagrecer.`;
+        resultadoDiv.classList.add('error');
+        return;
+    }
+
+    if (objetivo === "ganhar" && pesoMeta <= pesoAtual) {
+        resultadoDiv.innerHTML = `<strong>Erro:</strong> Você escolheu "Ganhar peso", mas o peso desejado (${pesoMeta}kg) é menor ou igual ao peso atual (${pesoAtual}kg). Isso não faz sentido para quem deseja engordar.`;
+        resultadoDiv.classList.add('error');
+        return;
+    }
+
+    // Verificação da meta semanal
+    if (metaSemana < 0 || metaSemana > 1) {
+        resultadoDiv.innerHTML = "<strong>Aviso:</strong> O valor da meta semanal deve estar entre 0 e 1 kg.";
+        resultadoDiv.classList.add('error');
+        return;
+    }
+
+    if (metaSemana > 0.5 && metaSemana !== 0) {
+        const confirmacao = confirm(
+            "Perder ou ganhar mais de 500g por semana pode ser prejudicial, podendo causar perda de massa magra (emagrecimento) ou ganho excessivo de gordura (bulking). Deseja continuar?"
+        );
+        if (!confirmacao) {
+            resultadoDiv.innerText = "Cálculo cancelado pelo usuário.";
+            return;
+        }
+    }
+
+    // Cálculo de tempo necessário
+    const diferencaPeso = pesoMeta - pesoAtual;
+    let semanasNecessarias = 0;
+
+    if (objetivo === "manter") {
+        semanasNecessarias = 0;
+    } else {
+        if (metaSemana === 0 && diferencaPeso !== 0) {
+            resultadoDiv.innerHTML = `<strong>Aviso:</strong> Para ${objetivo === "ganhar" ? "ganhar" : "perder"} peso, a meta semanal não pode ser 0kg.`;
+            resultadoDiv.classList.add('error');
+            return;
+        }
+
+        semanasNecessarias = Math.abs(diferencaPeso) / metaSemana;
+
+        if (semanasNecessarias < 1 && diferencaPeso !== 0) {
+            resultadoDiv.innerText = "Seu objetivo é muito pequeno para o ritmo escolhido, ou o ritmo é muito alto para a diferença de peso. Tente ajustar os valores.";
+            resultadoDiv.classList.add('error');
+            return;
+        }
+    }
+
+    // Cálculo TMB
+    let tmb;
+    if (sexo === "masculino") {
+        tmb = 10 * pesoAtual + 6.25 * altura - 5 * idade + 5;
+    } else {
+        tmb = 10 * pesoAtual + 6.25 * altura - 5 * idade - 161;
+    }
+
+    const gastoEnergeticoTotal = tmb * atividade;
+    let caloriasNecessarias = gastoEnergeticoTotal;
+
+    // Calorias com base no objetivo
+    if (objetivo === "ganhar") {
+        caloriasNecessarias += metaSemana * 1100;
+    } else if (objetivo === "perder") {
+        caloriasNecessarias -= metaSemana * 1100;
+    }
+
+    // Macronutrientes (40% Carbo, 30% Prot, 30% Gord)
+    const proteinasG = (caloriasNecessarias * 0.30) / 4;
+    const carboidratosG = (caloriasNecessarias * 0.40) / 4;
+    const gordurasG = (caloriasNecessarias * 0.30) / 9;
+
+    // Resultado
+    let resultadoHTML = `
+      <h3>Resultados:</h3>
+      <p><strong>Taxa Metabólica Basal (TMB):</strong> ${tmb.toFixed(0)} kcal</p>
+      <p><strong>Gasto Energético Total (GET):</strong> ${gastoEnergeticoTotal.toFixed(0)} kcal</p>
+      <p><strong>Calorias para ${objetivo === 'manter' ? 'manter o peso' : objetivo === 'ganhar' ? 'ganhar peso' : 'perder peso'}:</strong> ${caloriasNecessarias.toFixed(0)} kcal/dia</p>
+      <h4>Sugestão de Macronutrientes:</h4>
+      <ul>
+        <li><strong>Proteínas:</strong> ${proteinasG.toFixed(0)}g/dia</li>
+        <li><strong>Carboidratos:</strong> ${carboidratosG.toFixed(0)}g/dia</li>
+        <li><strong>Gorduras:</strong> ${gordurasG.toFixed(0)}g/dia</li>
+      </ul>
+    `;
+
+    if (objetivo !== "manter") {
+        resultadoHTML += `<p><strong>Tempo estimado para atingir o objetivo (${pesoMeta}kg):</strong> ${semanasNecessarias.toFixed(1)} semanas</p>`;
+    }
+
+    resultadoHTML += `<p><em>Lembre-se: Estes são valores aproximados. Consulte um nutricionista para um plano alimentar personalizado.</em></p>`;
+    resultadoDiv.innerHTML = resultadoHTML;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa do Corpo - Painel de Bem-Estar</title>
+    <link rel="stylesheet" href="assets/dashboard.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .muscle-group-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .muscle-group-card h2 {
+            position: relative;
+            color: var(--primary-color);
+            margin: 40px 0;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .muscle-group-card h2::before,
+        .muscle-group-card h2::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            width: 60%;
+            height: 2px;
+            background-color: var(--primary-color);
+            transform: translateX(-50%);
+        }
+
+        .muscle-group-card h2::before {
+            top: -20px;
+        }
+
+        .muscle-group-card h2::after {
+            bottom: -20px;
+        }
+
+        .muscle-group-card p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: black;
+        }
+
+        .muscle-group-card b {
+            color: var(--accent-color);
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 50px auto;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+
+        .carousel-inner {
+            display: flex;
+            width: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            flex: 0 0 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            padding: 20px;
+            text-align: center;
+            background: transparent;
+        }
+
+        .slide img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .slide p {
+            background-color: white;
+            color: black;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 10px; /* <- Agora a seta está no topo */
+            transform: none;
+            background: #b388eb;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 50%;
+            z-index: 1;
+            transition: background 0.3s;
+        }
+
+        .carousel-btn:hover {
+            background: #a170e1;
+        }
+
+        .prev-btn {
+            left: 10px;
+        }
+
+        .next-btn {
+            right: 10px;
+        }
+    </style>
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0W5V50NE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6H0W5V50NE');
+</script>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-start">
+                <a href="index.html" class="cta-button" style="margin-right: 15px; background-color: transparent; border: 1px solid var(--header-text-color); padding: 8px 15px; display: inline-flex; align-items: center;"><i class="material-icons" style="margin-right: 5px; vertical-align: middle;">arrow_back</i> Voltar</a>
+                <h1>Mapa do corpo</h1>
+            </div>
+            <div class="header-end"></div>
+        </header>
+
+        <main class="dashboard-main">
+            <section class="card page-title-card">
+                <div class="title-container">
+                    <div class="title-icon-wrapper">
+                        <i class="material-icons title-icon">map</i>
+                    </div>
+                    <div class="title-text">
+                        <h1>Guia de Exercícios por Músculo</h1>
+                        <p class="title-subtitle">Descubra quais exercícios ativam cada músculo do seu corpo</p>
+                    </div>
+                </div>
+            </section>
+            <section class="card content-card muscle-group-card">
+                <div class="carousel-container">
+                <button class="carousel-btn prev-btn">&#10094;</button>
+                <div class="carousel-inner" id="carousel">
+                    <div class="slide">
+                        <img src="/assets/img/musculocostas.jpg" alt="Slide 1">
+                        <h2>COSTAS</h2>
+                        <p>
+                        <b>🔹 <b>1. Barra Fixa</b> <br></b>
+                        Principal: Latíssimo do dorso <br>
+                        Secundários: Trapézio inferior, romboides, deltoide posterior, bíceps <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>2. Puxada Alta Aberta (frontal)</b> <br>
+                            Principal: Latíssimo do dorso (ênfase na parte externa) <br>
+                            Secundários: Romboides, trapézio inferior, bíceps <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>3. Puxada Alta Fechada</b> <br>
+                            Principal: Latíssimo do dorso (parte interna e inferior) <br>
+                            Secundários: Romboides, bíceps <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>4. Puxada Alta nas Costas (nuca)</b> <br>
+                            Principal: Trapézio médio/inferior, romboides <br>
+                            Secundários: Latíssimo do dorso (menos ativado), deltoide posterior <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>5. Remada Curvada (barra)</b> <br>
+                            Principal: Latíssimo do dorso, trapézio médio <br>
+                            Secundários: Romboides, deltoide posterior, eretores da espinha, bíceps <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>6. Remada Cavalinho (T-Bar Row)</b> <br>
+                            Principal: Latíssimo do dorso (meio/inferior), trapézio médio <br>
+                            Secundários: Romboides, deltoide posterior, eretores da espinha <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>7. Remada Baixa (cabo)</b> <br>
+                            Principal: Romboides, trapézio médio <br>
+                            Secundários: Latíssimo do dorso, deltoide posterior, bíceps <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>8. Remada no Banco Inclinado (com halteres ou barra)</b> <br>
+                            Principal: Latíssimo do dorso, trapézio <br>
+                            Secundários: Romboides, deltoide posterior, bíceps <br>
+                            Observação: Maior isolamento, menos compensação com lombar <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>9. Remada Unilateral (halteres ou máquina)</b> <br>
+                            Principal: Latíssimo do dorso (ênfase unilateral) <br>
+                            Secundários: Romboides, trapézio, deltoide posterior, bíceps <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>10. Pulldown (Pull Down no cabo, normalmente frontal)</b> <br>
+                            Principal: Latíssimo do dorso <br>
+                            Secundários: Romboides, bíceps, deltoide posterior <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>11. Hipertensão Lombar (extensão de tronco)</b> <br>
+                            Principal: Eretor da espinha (lombar) <br>
+                            Secundários: Glúteos e isquiotibiais <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>12. Levantamento Terra (Deadlift)</b> <br>
+                            Principal: Eretor da espinha, glúteos, isquiotibiais <br>
+                            Secundários: Trapézio, latíssimo do dorso, antebraços, romboides <br>
+                    </p>
+                    </div>
+                    <div class="slide">
+                        <img src="/assets/img/musculopeito.png" alt="Slide 2">
+                        <h2>Peito</h2>
+                        <p>
+                        🔹 <b>1. Supino Inclinado (barra ou halteres)</b> <br>
+                        Principal: Peitoral maior (porção clavicular – parte superior) <br>
+                        Secundários: Deltoide anterior, tríceps <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>2. Supino Reto</b> <br>
+                            Principal: Peitoral maior (porção esternal – parte média) <br>
+                            Secundários: Deltoide anterior, tríceps <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>3. Supino Declinado</b> <br>
+                            Principal: Peitoral maior (porção inferior) <br>
+                            Secundários: Tríceps, deltoide anterior <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>4. Crucifixo Inclinado</b> <br>
+                            Principal: Peitoral maior (parte superior) <br>
+                            Secundários: Deltoide anterior <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>5. Crucifixo Reto</b> <br>
+                            Principal: Peitoral maior (parte média) <br>
+                            Secundários: Deltoide anterior <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>6. Crossover (cross over no cabo)</b> <br>
+                            Principal: Peitoral maior (parte média e inferior, dependendo da angulação) <br>
+                            Secundários: Deltoide anterior <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>7. Voador (peck deck)</b> <br>
+                            Principal: Peitoral maior (geral) <br>
+                            Secundários: Deltoide anterior <br>
+                        </p>
+                    </div>
+                    <div class="slide">
+                        <img src="/assets/img/musculoombro.jpg" alt="Slide 3">
+                        <h2>OMBRO</h2>
+                        <p>
+                        🔹 <b>1. Elevação Lateral</b> <br>
+                        Principal: Deltoide lateral (ombro) <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>2. Elevação Frontal</b> <br>
+                            Principal: Deltoide anterior (ombro) <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>3. Desenvolvimento (ombro – barra ou halteres)</b> <br>
+                            Principal: Deltoide anterior e medial <br>
+                            Secundários: Tríceps, trapézio superior <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>4. Crucifixo Invertido (voador inverso ou com halteres)</b> <br>
+                            Principal: Deltoide posterior, romboides, trapézio médio e inferior <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>5. Remada Alta (barra ou corda)</b> <br>
+                            Principal: Trapézio superior, deltoide lateral <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>6. Encolhimento (Shrug com halteres ou barra)</b> <br>
+                            Principal: Trapézio superior <br>
+                        </p>
+                    </div>
+                    <div class="slide">
+                        <img src="/assets/img/musculoquadriceps.jpg" alt="Slide 4">
+                        <h2>QUADRICEPS</h2>
+                        <p>
+                        🔹 <b>1. Cadeira Extensora</b> <br>
+                        Principal: Quadríceps (reto femoral, vasto medial, vasto lateral, vasto intermédio) <br>
+                        Secundários: Nenhum relevante <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>2. Leg Press</b> <br>
+                            Principal: Quadríceps, glúteo máximo, posteriores de coxa (isquiotibiais) <br>
+                            Secundários: Adutores, panturrilhas (gastrocnêmio), eretores da espinha (estabilização) <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>3. Hack Machine (Agachamento Hack)</b> <br>
+                            Principal: Quadríceps <br>
+                            Secundários: Glúteo máximo, posteriores de coxa, adutores, panturrilhas <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>4. Agachamento Livre</b> <br>
+                            Principal: Quadríceps, glúteo máximo, posteriores de coxa <br>
+                            Secundários: Adutores, eretores da espinha (lombar), abdômen (estabilização), panturrilhas <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>5. Passada (Lunge)</b> <br>
+                            Principal: Quadríceps, glúteo máximo, posteriores de coxa <br>
+                            Secundários: Adutores, abdutores, panturrilhas, lombar e core (estabilização) <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>6. Adutor (Máquina de Adução)</b> <br>
+                            Principal: Adutores do quadril (adutor longo, adutor magno, adutor curto, grácil) <br>
+                            Secundários: Nenhum relevante <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>7. Abdutor (Máquina de Abdução)</b> <br>
+                            Principal: Abdutores do quadril (glúteo médio, glúteo mínimo, tensor da fáscia lata) <br>
+                            Secundários: Glúteo máximo (parte superior) <br>
+                        </p>
+                    </div>
+                    <div class="slide">
+                        <img src="/assets/img/musculoposterior.jpg" alt="Slide 3">
+                        <h2>POSTERIOR</h2>
+                        <p>
+                        🔹 <b>1. Cadeira Flexora (leg curl sentado)</b> <br>
+                        Principal: Isquiotibiais (posteriores de coxa – bíceps femoral, semitendinoso, semimembranoso) <br>
+                        Secundários: Gastrocnêmio (panturrilha, leve ativação) <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>2. Mesa Flexora (leg curl deitado)</b> <br>
+                            Principal: Isquiotibiais <br>
+                            Secundários: Gastrocnêmio (mais ativado que na cadeira flexora) <br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>3. Flexora Unilateral (qualquer variação: sentada, deitada, ajoelhada)</b> <br>
+                            Principal: Isquiotibiais (ênfase unilateral, melhora simetria) <br>
+                            Secundários: Gastrocnêmio (dependendo da posição), glúteo máximo (leve estabilização) <br>
+                        </p>
+                        <br>
+                        <p>
+                        🔹 <b>4. Stiff (com barra ou halteres)</b> <br>
+                        Principal: Isquiotibiais, glúteo máximo <br>
+                        Secundários: Eretor da espinha (lombar), adutores (levemente), core (estabilização) <br>
+                        </p>
+                    </div>
+                    <div class="slide">
+                        <img src="/assets/img/musculobiceps.jpg" alt="Slide 3">
+                        <h2>BICEPS</h2>
+                        <p>
+                        🔹 <b>1. Rosca direta (barra reta)</b></br>
+                        Principalmente: cabeça curta</br>
+                        Secundário: cabeça longa</br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>2. Rosca direta (barra W)</b></br>
+                            Principalmente: cabeça curta</br>
+                        </p>  
+                        <br>
+                        <p>
+                            🔹 <b>3. Rosca alternada com halteres (em pé)</b></br>
+                            Principalmente: cabeça longa (por causa da rotação e posição do ombro)</br>
+                            Secundário: cabeça curta</br>
+                        </p>  
+                        <br>
+                        <p>
+                            🔹 <b>4. Rosca concentrada</b></br>
+                            Principalmente: cabeça curta</br>
+                        </p>    
+                        <br>
+                        <p>
+                            🔹 <b>5. Rosca scott (barra ou halteres)</b></br>
+                            Principalmente: cabeça curta</br>
+                            Secundário: braquial</br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>6. Rosca martelo</b></br>
+                            Principalmente: braquiorradial e braquial</br>
+                            Secundário: cabeça longa</br>
+                        </p>        
+                        <br>
+                        <p>
+                            🔹 <b>7. Rosca 45° inclinada com halteres</b></br>
+                            Principalmente: cabeça longa</br>
+                        </p>         
+                        <br>
+                        <p>
+                            🔹 <b>8. Rosca spider</b></br>
+                            Principalmente: cabeça curta</br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>9. Rosca martelo no cross (corda)</b></br>
+                            Principalmente: braquiorradial e braquial</br>
+                            Secundário: bíceps braquial</br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>10. Rosca Zottman</b></br>
+                            Subida (supinada): cabeça longa e curta</br>
+                        </p>  
+                    </div>
+                    <div class="slide">
+                        <img src="/assets/img/musculotriceps.jpg" alt="Slide 3">
+                        <h2>TRICEPS</h2>
+                        <p>
+                        🔹 <b>1. Tríceps testa (barra ou halteres)</b><br>
+                        Principalmente: cabeça longa<br>
+                        Secundário: cabeça medial<br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>2. Tríceps na polia alta (barra reta)</b><br>
+                            Principalmente: cabeça lateral<br>
+                            Secundário: cabeça medial<br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>3. Tríceps na polia alta com corda</b><br>
+                            Principalmente: cabeça lateral e medial<br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>4. Tríceps unilateral com corda ou pegador</b><br>
+                            Principalmente: cabeça medial<br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>5. Tríceps francês (halter ou barra)</b><br>
+                            Principalmente: cabeça longa<br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>6. Mergulho (paralelas ou banco)</b><br>
+                            Principalmente: cabeça longa<br>
+                            Secundário: cabeça medial e lateral<br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>7. Supino fechado</b><br>
+                            Principalmente: cabeça medial e lateral<br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>8. Coice (kickback com halter ou cabo)</b><br>
+                            Principalmente: cabeça longa<br>
+                            Secundário: cabeça medial<br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>9. Tríceps testa com pegada neutra</b><br>
+                            Principalmente: cabeça longa<br>
+                        </p>
+                        <br>
+                        <p>
+                            🔹 <b>10. Tríceps com pegada supinada na polia</b><br>
+                            Principalmente: cabeça medial<br>
+                        </p>
+                    </div>
+                </div>
+                <button class="carousel-btn next-btn">&#10095;</button>
+    </main>
+    
+        <footer class="dashboard-footer">
+            <div class="footer-content">
+                <p>Site criado e idealizado por Vitor Gurgel</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/gurgel_vitor._/" class="social-link" aria-label="Instagram" target="_blank">
+                        <i class="material-icons">photo_camera</i>
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" role="navigation" aria-label="Navegação principal">
+        <button class="nav-item" data-page="home" aria-label="Início">
+            <i class="material-icons">home</i>
+        </button>
+        <button class="nav-item" data-page="workout" aria-label="Treinos">
+            <i class="material-icons">fitness_center</i>
+        </button>
+        <button class="nav-item" data-page="nutrition" aria-label="Nutrição">
+            <i class="material-icons">restaurant</i>
+        </button>
+        <button class="nav-item active" data-page="progress" aria-label="Progresso">
+            <i class="material-icons">trending_up</i>
+        </button>
+        <button class="nav-item" data-page="profile" aria-label="Perfil">
+            <i class="material-icons">person</i>
+        </button>
+    </nav>
+    
+    <script src="assets/dashboard.js"></script>
+    <script>
+        const carouselInner = document.querySelector('.carousel-inner');
+        const slides = document.querySelectorAll('.slide');
+        let currentIndex = 0;
+
+        function updateCarousel() {
+            const offset = -currentIndex * 100;
+            carouselInner.style.transform = `translateX(${offset}%)`;
+        }
+
+        document.querySelector('.next-btn').addEventListener('click', () => {
+            if (currentIndex < slides.length - 1) {
+                currentIndex++;
+                updateCarousel();
+            }
+        });
+
+        document.querySelector('.prev-btn').addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        });
+    </script>
+</body>
+</html>

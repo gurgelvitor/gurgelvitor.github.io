@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Bem-Estar</title>
+    <link rel="stylesheet" href="assets/dashboard.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Painel de Bem-Estar: treinos, nutrição, dicas e mais para sua saúde e performance.">
+</head>
+<style>
+    i{
+        color: gray;
+    }
+</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0W5V50NE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6H0W5V50NE');
+</script>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-start">
+                <h1 id="greeting"></h1>
+            </div>
+            <div class="header-end">
+                <button id="theme-toggle" class="theme-switcher" aria-label="Alternar tema">
+                    <i class="material-icons">dark_mode</i>
+                </button>
+                <div class="theme-color-dropdown" id="theme-color-dropdown">
+                    <button class="theme-color-main-btn" id="theme-color-main-btn" aria-label="Escolher cor do tema">
+                        <i class="material-icons">palette</i>
+                    </button>
+                    <div class="theme-color-picker" id="theme-color-picker" style="display: none;">
+                        <button class="theme-color-btn" data-color="default" aria-label="Cor padrão"></button>
+                        <button class="theme-color-btn" data-color="green" aria-label="Verde"></button>
+                        <button class="theme-color-btn" data-color="gray" aria-label="Cinza"></button>
+                        <button class="theme-color-btn" data-color="yellow" aria-label="Amarelo"></button>
+                        <button class="theme-color-btn" data-color="orange" aria-label="Laranja"></button>
+                        <button class="theme-color-btn" data-color="pink" aria-label="Rosa"></button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-main">
+            <section class="welcome-card card">
+                <div class="quote-container">
+                    <i class="material-icons quote-icon">format_quote</i>
+                    <h2 id="motivational-quote"><em>Carregando frase motivacional...</em></h2>
+                </div>
+            </section>
+
+            <section class="fitness-overview card">
+                <h2>Resumo Fitness</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <a href="treinos.html" class="cta-button">
+                            <i class="material-icons">fitness_center</i>
+                            <span class="button-text">Treinos</span>
+                        </a>
+                        <p class="feature-description">
+                            <i class="material-icons">emoji_events</i>
+                            Veja os treinos completos dos maiores fisiculturistas do mundo
+                        </p>
+                    </div>
+
+                    <div class="feature-item">
+                        <a href="sobrenos.html" class="cta-button">
+                            <i class="material-icons">groups</i>
+                            <span class="button-text">Sobre nós</span>
+                        </a>
+                        <p class="feature-description">
+                            <i class="material-icons">info</i>
+                            Conheça nossa missão, quem somos e por que criamos este site
+                        </p>
+                    </div>
+
+                    <div class="feature-item">
+                        <a href="mapacorpo.html" class="cta-button">
+                            <i class="material-icons">accessibility_new</i>
+                            <span class="button-text">Mapa do Corpo</span>
+                        </a>
+                        <p class="feature-description">
+                            <i class="material-icons">psychology</i>
+                            Descubra quais exercícios ativam cada músculo do seu corpo
+                        </p>
+                    </div>
+
+                    <div class="feature-item">
+                        <a href="tabelanutricional.html" class="cta-button">
+                            <i class="material-icons">restaurant</i>
+                            <span class="button-text">Tabela Nutricional</span>
+                        </a>
+                        <p class="feature-description">
+                            <i class="material-icons">restaurant</i>
+                            Veja alimentos ricos em proteínas e carboidratos + calcule suas macros
+                        </p>
+                    </div>
+
+                    <div class="feature-item">
+                        <a href="dicas.html" class="cta-button">
+                            <i class="material-icons">lightbulb</i>
+                            <span class="button-text">Dicas / Curiosidades</span>
+                        </a>
+                        <p class="feature-description">
+                            <i class="material-icons">school</i>
+                            Aprenda dicas, estratégias e verdades sobre musculação
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="dashboard-footer">
+            <div class="footer-content">
+                <div class="footer-signature">
+                    <i class="material-icons">favorite</i>
+                    Site criado e idealizado por Vitor Gurgel
+                </div>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/gurgel_vitor._/" class="social-link" aria-label="Instagram" target="_blank">
+                        <i class="material-icons">photo_camera</i>
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <nav class="bottom-nav" role="navigation" aria-label="Navegação principal">
+        <button class="nav-item active" data-page="home" aria-label="Início">
+            <i class="material-icons">home</i>
+            <span class="nav-label">Início</span>
+        </button>
+        <button class="nav-item" data-page="workout" aria-label="Treinos">
+            <i class="material-icons">fitness_center</i>
+            <span class="nav-label">Treinos</span>
+        </button>
+        <button class="nav-item" data-page="nutrition" aria-label="Nutrição">
+            <i class="material-icons">restaurant</i>
+            <span class="nav-label">Nutrição</span>
+        </button>
+        <button class="nav-item" data-page="progress" aria-label="Progresso">
+            <i class="material-icons">trending_up</i>
+            <span class="nav-label">Progresso</span>
+        </button>
+        <button class="nav-item" data-page="profile" aria-label="Perfil">
+            <i class="material-icons">person</i>
+            <span class="nav-label">Perfil</span>
+        </button>
+    </nav>
+    
+    <script src="assets/dashboard.js"></script>
+</body>
+</html>

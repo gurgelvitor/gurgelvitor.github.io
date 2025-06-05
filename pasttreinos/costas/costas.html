@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treino de Costas - Painel de Bem-Estar</title>
+    <link rel="stylesheet" href="../../assets/dashboard.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Explore os melhores treinos de costas dos atletas profissionais">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-start">
+                <a href="../../treinos.html" class="back-button">
+                    <i class="material-icons">arrow_back</i>
+                    <span>Voltar</span>
+                </a>
+                <h1>Treino de Costas</h1>
+            </div>
+            <div class="header-end">
+                <button id="theme-toggle" class="theme-switcher" aria-label="Alternar tema">
+                    <i class="material-icons">dark_mode</i>
+                </button>
+            </div>
+        </header>
+
+        <main class="dashboard-main">
+            <section class="card page-title-card">
+                <div class="title-container">
+                    <div class="title-icon-wrapper">
+                        <i class="material-icons title-icon">fitness_center</i>
+                    </div>
+                    <div class="title-text">
+                        <h1>Treinos de Costas</h1>
+                        <p class="title-subtitle">Escolha entre os melhores treinos dos atletas profissionais</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card content-card quick-actions">
+                <h2>Escolha um Treino:</h2>
+                <div class="workout-buttons">
+                    <a href="tcostas/jorlancostas.html" class="action-button">
+                        <i class="material-icons">emoji_events</i>
+                        <span>JORLAN</span>
+                    </a>
+                    <a href="tcostas/johanncostas.html" class="action-button">
+                        <i class="material-icons">emoji_events</i>
+                        <span>JOHANN</span>
+                    </a>
+                    <a href="tcostas/arnoldcostas.html" class="action-button">
+                        <i class="material-icons">emoji_events</i>
+                        <span>ARNOLD</span>
+                    </a>
+                    <a href="tcostas/cbumcostas.html" class="action-button">
+                        <i class="material-icons">emoji_events</i>
+                        <span>CBUM</span>
+                    </a>
+                </div>
+            </section>
+
+            <section class="card content-card">
+                <h2>Atletas em Destaque</h2>
+                <div class="athletes-grid">
+                    <div class="athlete-card">
+                        <h3><i class="material-icons">emoji_events</i> Jorlan Vieira</h3>
+                        <p>Referência no fisiculturismo brasileiro, conhecido por sua densidade muscular e treinos intensos.</p>
+                        <ul>
+                            <li>Alta carga e volume</li>
+                            <li>Uso de técnicas como drop set e rest-pause</li>
+                            <li>Movimentos controlados e explosivos</li>
+                        </ul>
+                    </div>
+
+                    <div class="athlete-card">
+                        <h3><i class="material-icons">emoji_events</i> Johaan Henrique</h3>
+                        <p>Destaque por sua simetria e evolução rápida no cenário nacional.</p>
+                        <ul>
+                            <li>Treinos com alto volume</li>
+                            <li>Foco na conexão mente-músculo</li>
+                            <li>Execução precisa e controlada</li>
+                        </ul>
+                    </div>
+
+                    <div class="athlete-card">
+                        <h3><i class="material-icons">emoji_events</i> Dorian Yates</h3>
+                        <p>6x Mr. Olympia, revolucionou o fisiculturismo com treinos intensos e pesados.</p>
+                        <ul>
+                            <li>Criador do estilo HIT (High Intensity Training)</li>
+                            <li>Apenas uma série efetiva por exercício (após aquecimento)</li>
+                            <li>Técnicas como drop sets, negativa forçada e falha total</li>
+                        </ul>
+                    </div>
+
+                    <div class="athlete-card">
+                        <h3><i class="material-icons">emoji_events</i> Chris Bumstead</h3>
+                        <p>Atual campeão do Classic Physique no Mr. Olympia, ícone da nova geração.</p>
+                        <ul>
+                            <li>Foco em estética e simetria</li>
+                            <li>Treinos com volume moderado e boa conexão mente-músculo</li>
+                            <li>Execução lenta, controle e precisão em cada repetição</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="dashboard-footer">
+            <div class="footer-content">
+                <p>Site criado e idealizado por Vitor Gurgel</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/gurgel_vitor._/" class="social-link" aria-label="Instagram" target="_blank">
+                        <i class="material-icons">photo_camera</i>
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <nav class="bottom-nav" role="navigation" aria-label="Navegação principal">
+        <button class="nav-item" data-page="home" aria-label="Início">
+            <i class="material-icons">home</i>
+            <span class="nav-label">Início</span>
+        </button>
+        <button class="nav-item active" data-page="workout" aria-label="Treinos">
+            <i class="material-icons">fitness_center</i>
+            <span class="nav-label">Treinos</span>
+        </button>
+        <button class="nav-item" data-page="nutrition" aria-label="Nutrição">
+            <i class="material-icons">restaurant</i>
+            <span class="nav-label">Nutrição</span>
+        </button>
+        <button class="nav-item" data-page="progress" aria-label="Progresso">
+            <i class="material-icons">trending_up</i>
+            <span class="nav-label">Progresso</span>
+        </button>
+        <button class="nav-item" data-page="profile" aria-label="Perfil">
+            <i class="material-icons">person</i>
+            <span class="nav-label">Perfil</span>
+        </button>
+    </nav>
+    
+    <script src="../../assets/dashboard.js"></script>
+</body>
+</html>

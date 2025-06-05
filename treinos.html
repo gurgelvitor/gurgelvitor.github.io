@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treinos - Painel de Bem-Estar</title>
+    <link rel="stylesheet" href="assets/dashboard.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Treinos de grandes atletas organizados por grupo muscular">
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0W5V50NE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6H0W5V50NE');
+</script>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-start">
+                <a href="index.html" class="back-button">
+                    <i class="material-icons">arrow_back</i>
+                    <span>Voltar</span>
+                </a>
+                <h1>Treinos</h1>
+            </div>
+            <div class="header-end">
+                <button id="theme-toggle" class="theme-switcher" aria-label="Alternar tema">
+                    <i class="material-icons">dark_mode</i>
+                </button>
+            </div>
+        </header>
+
+        <main class="dashboard-main">
+            <section class="card page-title-card">
+                <div class="title-container">
+                    <div class="title-icon-wrapper">
+                        <i class="material-icons title-icon">fitness_center</i>
+                    </div>
+                    <div class="title-text">
+                        <h1>Treinos</h1>
+                        <p class="title-subtitle">Explore os melhores treinos dos atletas profissionais</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card content-card">
+                <div class="workout-content">
+                    <div class="workout-intro">
+                        <p>Explore os treinos baseados nos melhores atletas do mundo. Cada rotina foi cuidadosamente selecionada para maximizar seus resultados.</p>
+                    </div>
+
+                    <div class="muscle-groups-grid">
+                        <a href="pasttreinos/peito/peito.html" class="muscle-group-card">
+                            <i class="material-icons">fitness_center</i>
+                            <h3>Peito</h3>
+                            <p>Desenvolva um peitoral forte e definido</p>
+                        </a>
+                        <a href="pasttreinos/costas/costas.html" class="muscle-group-card">
+                            <i class="material-icons">fitness_center</i>
+                            <h3>Costas</h3>
+                            <p>Construa uma estrutura dorsal imponente</p>
+                        </a>
+                        <a href="pasttreinos/ombro/ombro.html" class="muscle-group-card">
+                            <i class="material-icons">fitness_center</i>
+                            <h3>Ombro</h3>
+                            <p>Desenvolva ombros largos e fortes</p>
+                        </a>
+                        <a href="pasttreinos/pernas/perna.html" class="muscle-group-card">
+                            <i class="material-icons">fitness_center</i>
+                            <h3>Pernas</h3>
+                            <p>Fortaleça e defina seus membros inferiores</p>
+                        </a>
+                        <a href="pasttreinos/braço/braço.html" class="muscle-group-card">
+                            <i class="material-icons">fitness_center</i>
+                            <h3>Braço</h3>
+                            <p>Desenvolva braços fortes e definidos</p>
+                        </a>
+                    </div>
+
+                    <div class="workout-info">
+                        <h2>Nossos Treinos</h2>
+                        <p>Cada treino foi desenvolvido com base nas rotinas de atletas renomados, adaptadas para diferentes níveis de experiência.</p>
+                        
+                        <div class="athletes-grid">
+                            <div class="athlete-card">
+                                <h3>Arnold Schwarzenegger</h3>
+                                <p>Foco em volume e definição muscular</p>
+                            </div>
+                            <div class="athlete-card">
+                                <h3>Chris Bumstead</h3>
+                                <p>Especialista em físico clássico</p>
+                            </div>
+                            <div class="athlete-card">
+                                <h3>Ramon Dino</h3>
+                                <p>Treinos intensos para ganho de massa</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="dashboard-footer">
+            <div class="footer-content">
+                <p>Site criado e idealizado por Vitor Gurgel</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/gurgel_vitor._/" class="social-link" aria-label="Instagram" target="_blank">
+                        <i class="material-icons">photo_camera</i>
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <nav class="bottom-nav" role="navigation" aria-label="Navegação principal">
+        <button class="nav-item" data-page="home" aria-label="Início">
+            <i class="material-icons">home</i>
+            <span class="nav-label">Início</span>
+        </button>
+        <button class="nav-item active" data-page="workout" aria-label="Treinos">
+            <i class="material-icons">fitness_center</i>
+            <span class="nav-label">Treinos</span>
+        </button>
+        <button class="nav-item" data-page="nutrition" aria-label="Nutrição">
+            <i class="material-icons">restaurant</i>
+            <span class="nav-label">Nutrição</span>
+        </button>
+        <button class="nav-item" data-page="progress" aria-label="Progresso">
+            <i class="material-icons">trending_up</i>
+            <span class="nav-label">Progresso</span>
+        </button>
+        <button class="nav-item" data-page="profile" aria-label="Perfil">
+            <i class="material-icons">person</i>
+            <span class="nav-label">Perfil</span>
+        </button>
+    </nav>
+    
+    <script src="assets/dashboard.js"></script>
+</body>
+</html> 
