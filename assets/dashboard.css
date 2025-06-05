@@ -588,6 +588,15 @@ body {
     transform: translateX(-2px);
 }
 
+.back-button .material-icons {
+    color: var(--header-text-color) !important;
+    font-size: 24px;
+}
+
+[data-theme="dark"] .back-button .material-icons {
+    color: var(--header-text-color) !important;
+}
+
 .title-container {
     display: flex;
     align-items: center;
