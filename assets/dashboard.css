@@ -1504,7 +1504,7 @@ body {
 
 /* Title card text adjustments */
 .page-title-card .title-text h1 {
-    color: var(--primary-color);
+    color: var(--text-color);
 }
 
 .page-title-card .title-text .title-subtitle {
@@ -1513,7 +1513,7 @@ body {
 }
 
 [data-theme="dark"] .page-title-card .title-text h1 {
-    color: var(--accent-color);
+    color: var(--text-color);
 }
 
 [data-theme="dark"] .page-title-card .title-text .title-subtitle {
@@ -2112,4 +2112,55 @@ a:hover, .link:hover {
 .carousel-btn:hover {
     background: var(--accent-color) !important;
     color: var(--button-text-color) !important;
+}
+
+@media (max-width: 768px) {
+    .carousel-container {
+        margin: 30px auto;
+        padding: 0 10px;
+    }
+
+    .slide {
+        padding: 10px;
+    }
+
+    .slide p {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .carousel-btn {
+        padding: 8px 12px;
+        font-size: 16px;
+    }
+
+    .muscle-group-card h2 {
+        font-size: 24px;
+        margin: 30px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-container {
+        margin: 20px auto;
+    }
+
+    .slide {
+        padding: 5px;
+    }
+
+    .slide p {
+        font-size: 13px;
+        padding: 8px;
+    }
+
+    .carousel-btn {
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+
+    .muscle-group-card h2 {
+        font-size: 20px;
+        margin: 20px 0;
+    }
 } 
