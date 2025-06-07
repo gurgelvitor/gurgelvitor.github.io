@@ -1394,13 +1394,14 @@ body {
 }
 
 .chart-modal-content {
-    background: var(--background-color);
+    background: var(--card-bg);
     padding: 20px;
     border-radius: 8px;
     width: 90%;
     max-width: 800px;
     max-height: 90vh;
     overflow-y: auto;
+    background-color: var(--card-bg-color);
 }
 
 .chart-modal h3 {
@@ -1412,6 +1413,10 @@ body {
 #chart-container {
     min-height: 400px;
     margin: 20px 0;
+    background-color: var(--card-bg-color);
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #progress-list {

@@ -93,8 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const pageMap = {
         'home': 'index.html',
         'workout': 'treinos.html', // Updated to use the main workouts page
-        'nutrition': 'tabelanutricional.html',
-        'progress': 'mapacorpo.html', // Using body map as progress page
         'profile': 'sobrenos.html' // About us as profile
     };
 
@@ -112,12 +110,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.classList.add('active');
             } else if (page === 'workout' && (currentPath.includes('pasttreinos') || currentPath.includes('treino'))) {
                 item.classList.add('active');
-            } else if (page === 'nutrition' && (currentPage === 'tabelanutricional.html' || currentPath.includes('nutri'))) {
-                item.classList.add('active');
-            } else if (page === 'progress' && (currentPage === 'mapacorpo.html' || currentPath.includes('mapa') || currentPath.includes('progress'))) {
-                item.classList.add('active');
             } else if (page === 'profile' && (currentPage === 'sobrenos.html' || currentPage === 'dicas.html' || currentPath.includes('sobre') || currentPath.includes('dica'))) {
                 item.classList.add('active');
+            }
+        });
+
+        // Handle progress buttons separately
+        const progressButtons = document.querySelectorAll('.nav-item[data-page="progress"]');
+        const isProgressPage = currentPage === 'tabelanutricional.html' || currentPath.includes('progress');
+        const isMapaPage = currentPage === 'mapacorpo.html' || currentPath.includes('mapa');
+
+        progressButtons.forEach(button => {
+            const icon = button.querySelector('.material-icons').textContent;
+            if ((isProgressPage && icon === 'trending_up') || (isMapaPage && icon === 'sports_gymnastics')) {
+                button.classList.add('active');
             }
         });
     }
@@ -127,6 +133,16 @@ document.addEventListener('DOMContentLoaded', () => {
         item.addEventListener('click', (e) => {
             const page = e.currentTarget.getAttribute('data-page');
             let targetUrl = pageMap[page];
+            
+            // Special handling for progress buttons
+            if (page === 'progress') {
+                const icon = e.currentTarget.querySelector('.material-icons').textContent;
+                if (icon === 'trending_up') {
+                    targetUrl = 'tabelanutricional.html';
+                } else if (icon === 'sports_gymnastics') {
+                    targetUrl = 'mapacorpo.html';
+                }
+            }
             
             // Calculate relative path based on current location
             const currentPath = window.location.pathname;
