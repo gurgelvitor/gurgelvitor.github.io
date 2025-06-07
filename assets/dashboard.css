@@ -243,17 +243,18 @@ body {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 24px;
     box-sizing: border-box;
-    background-color: var(--card-bg-color);
-    border-radius: 24px;
-    box-shadow: 0 12px 32px var(--shadow-color);
-    overflow: hidden;
+    position: relative;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    animation: fadeInScaleUp 0.8s ease-out;
-    transition: all 0.3s ease;
-    z-index: 1;
+}
+
+.dashboard-main {
+    width: 100%;
+    flex: 1;
+    padding: 24px 0;
+    position: relative;
 }
 
 .dashboard-header {
@@ -1419,38 +1420,42 @@ body {
 
 /* Workout Detail Page Styles */
 .training-card {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto 24px;
+    padding: 24px;
+    background: var(--card-bg-color);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px var(--shadow-color);
     position: relative;
+    overflow: hidden;
 }
 
 .training-card .show-exercises-btn {
-    position: absolute;
-    right: 1.5rem;
-    top: 1.5rem;
+    width: 100%;
+    padding: 12px 24px;
     background: var(--primary-color);
     color: var(--button-text-color);
     border: none;
     border-radius: 8px;
-    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 500;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
     transition: all 0.3s ease;
-    font-weight: 600;
 }
 
 .training-card .show-exercises-btn:hover {
-    background: var(--accent-color);
+    background: var(--secondary-color);
     transform: translateY(-2px);
 }
 
 .training-card .show-exercises-btn i {
+    font-size: 20px;
     transition: transform 0.3s ease;
 }
 
@@ -1459,18 +1464,17 @@ body {
 }
 
 .training-card ol {
-    list-style-position: inside;
-    padding-left: 0;
-    counter-reset: exercise-counter;
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.5s ease;
-    opacity: 0;
+    transition: max-height 0.3s ease;
+    margin: 0;
+    padding: 0;
+    list-style-position: inside;
 }
 
 .training-card ol.show {
     max-height: 2000px;
-    opacity: 1;
+    margin-top: 16px;
 }
 
 .training-card h2 {
@@ -2691,4 +2695,306 @@ a:hover {
 [data-theme="dark"][data-theme-color="pink"] .training-card .reps {
     background-color: var(--accent-color);
     color: white;
+}
+
+/* Ajustes de responsividade para telas grandes */
+@media (min-width: 1200px) {
+    .dashboard-container {
+        max-width: 1400px;
+        padding: 0 32px;
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 32px;
+    }
+
+    .muscle-groups-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 32px;
+    }
+
+    .athletes-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 32px;
+    }
+
+    .training-card {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+}
+
+/* Ajustes para telas médias */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .dashboard-container {
+        max-width: 960px;
+        padding: 0 24px;
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .muscle-groups-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .athletes-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .training-card {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+}
+
+/* Ajustes para telas pequenas */
+@media (max-width: 767px) {
+    body {
+        padding: 0 16px;
+    }
+
+    .dashboard-container {
+        padding: 0 16px;
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .muscle-groups-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .athletes-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .training-card {
+        max-width: 100%;
+        margin: 0;
+    }
+}
+
+/* Ajustes para telas muito pequenas */
+@media (max-width: 480px) {
+    body {
+        padding: 0 12px;
+    }
+
+    .dashboard-container {
+        padding: 0 12px;
+    }
+
+    .features-grid,
+    .muscle-groups-grid,
+    .athletes-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .training-card {
+        padding: 16px;
+    }
+
+    .training-card h2 {
+        font-size: 1.25rem;
+    }
+
+    .training-card p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Ajustes gerais de layout */
+.dashboard-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-main {
+    width: 100%;
+    flex: 1;
+    padding: 24px 0;
+    position: relative;
+}
+
+/* Ajustes dos cards de treino */
+.training-card {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto 24px;
+    padding: 24px;
+    background: var(--card-bg-color);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.training-card .show-exercises-btn {
+    width: 100%;
+    padding: 12px 24px;
+    background: var(--primary-color);
+    color: var(--button-text-color);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+    transition: all 0.3s ease;
+}
+
+.training-card .show-exercises-btn:hover {
+    background: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.training-card .show-exercises-btn i {
+    font-size: 20px;
+    transition: transform 0.3s ease;
+}
+
+.training-card .show-exercises-btn.active i {
+    transform: rotate(180deg);
+}
+
+.training-card ol {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    margin: 0;
+    padding: 0;
+    list-style-position: inside;
+}
+
+.training-card ol.show {
+    max-height: 2000px;
+    margin-top: 16px;
+}
+
+/* Ajustes de responsividade para telas grandes */
+@media (min-width: 1200px) {
+    .dashboard-container {
+        max-width: 1400px;
+        padding: 0 32px;
+    }
+
+    .training-card {
+        max-width: 800px;
+        margin: 0 auto 32px;
+        padding: 32px;
+    }
+
+    .training-card .show-exercises-btn {
+        padding: 14px 28px;
+        font-size: 1.1rem;
+    }
+}
+
+/* Ajustes para telas médias */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .dashboard-container {
+        max-width: 960px;
+        padding: 0 24px;
+    }
+
+    .training-card {
+        max-width: 600px;
+        margin: 0 auto 24px;
+        padding: 24px;
+    }
+
+    .training-card .show-exercises-btn {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+}
+
+/* Ajustes para telas pequenas */
+@media (max-width: 767px) {
+    .dashboard-container {
+        padding: 0 16px;
+    }
+
+    .training-card {
+        max-width: 100%;
+        margin: 0 0 16px;
+        padding: 16px;
+    }
+
+    .training-card .show-exercises-btn {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+}
+
+/* Ajustes para telas muito pequenas */
+@media (max-width: 480px) {
+    .dashboard-container {
+        padding: 0 12px;
+    }
+
+    .training-card {
+        padding: 12px;
+    }
+
+    .training-card .show-exercises-btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Ajustes de seção */
+.content-section {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+@media (min-width: 1200px) {
+    .content-section {
+        max-width: 1400px;
+        padding: 32px;
+    }
+}
+
+@media (max-width: 1199px) {
+    .content-section {
+        max-width: 960px;
+        padding: 24px;
+    }
+}
+
+@media (max-width: 767px) {
+    .content-section {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content-section {
+        padding: 12px;
+    }
 }
