@@ -243,11 +243,9 @@ body {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 24px;
     box-sizing: border-box;
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    overflow: hidden;
 }
 
 .dashboard-main {
@@ -410,42 +408,175 @@ body {
 
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 24px;
-    padding: 20px 0;
+    width: 100%;
+    padding: 24px;
+    box-sizing: border-box;
 }
 
 .feature-item {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 20px;
     background: var(--card-bg-color);
     border-radius: 16px;
-    border: 1px solid var(--border-color);
-    transition: all 0.3s ease;
+    padding: 24px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .feature-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 24px var(--shadow-color);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.feature-description {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0.5rem 0;
-    text-align: left;
-}
-
-.feature-description .material-icons {
-    font-size: 1.25rem;
+.feature-item i {
+    font-size: 1.5rem;
+    margin-right: 12px;
     color: var(--primary-color);
+    transition: transform 0.3s ease, color 0.3s ease;
 }
 
-[data-theme="dark"] .feature-description .material-icons {
+.feature-item:hover i {
+    transform: scale(1.1);
     color: var(--accent-color);
+}
+
+.feature-item h3 {
+    font-size: 1.25rem;
+    margin: 0 0 12px;
+    color: var(--text-color);
+}
+
+.feature-item p {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Ajustes responsivos para feature items */
+@media (min-width: 1200px) {
+    .features-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 32px;
+        padding: 32px;
+    }
+
+    .feature-item {
+        padding: 32px;
+    }
+
+    .feature-item h3 {
+        font-size: 1.5rem;
+    }
+
+    .feature-item p {
+        font-size: 1.1rem;
+    }
+
+    .feature-item i {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 1199px) {
+    .features-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        padding: 24px;
+    }
+
+    .feature-item {
+        padding: 24px;
+    }
+
+    .feature-item i {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        padding: 16px;
+    }
+
+    .feature-item {
+        padding: 20px;
+    }
+
+    .feature-item h3 {
+        font-size: 1.1rem;
+    }
+
+    .feature-item p {
+        font-size: 0.9rem;
+    }
+
+    .feature-item i {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 12px;
+    }
+
+    .feature-item {
+        padding: 16px;
+    }
+
+    .feature-item i {
+        font-size: 1.2rem;
+    }
+
+    .feature-item h3 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+
+    .feature-item p {
+        font-size: 0.85rem;
+    }
+}
+
+/* Ajustes para o container principal */
+.dashboard-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+@media (min-width: 1200px) {
+    .dashboard-container {
+        max-width: 1400px;
+        padding: 0 32px;
+    }
+}
+
+@media (max-width: 767px) {
+    .dashboard-container {
+        padding: 0 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-container {
+        padding: 0 12px;
+    }
 }
 
 .cta-button {
@@ -744,13 +875,12 @@ body {
     border-radius: 12px;
     text-decoration: none;
     color: var(--text-color);
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .muscle-group-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px var(--shadow-color);
-    border-color: var(--primary-color);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .muscle-group-card i {
@@ -788,12 +918,12 @@ body {
     padding: 20px;
     background: var(--bg-color);
     border-radius: 12px;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .athlete-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px var(--shadow-color);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .athlete-card i {
@@ -813,6 +943,14 @@ body {
     opacity: 0.8;
     margin: 0;
     font-size: 0.95em;
+}
+
+.athlete-card img {
+    transition: transform 0.3s ease;
+}
+
+.athlete-card:hover img {
+    transform: scale(1.05);
 }
 
 @media (max-width: 768px) {
@@ -1208,43 +1346,133 @@ body {
 }
 
 .action-button {
-    display: inline-block;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 20px;
-    background: var(--card-bg-color);
-    border: 1px solid var(--primary-color);
+    justify-content: center;
+    padding: 12px 24px;
+    background: var(--primary-color);
+    color: var(--button-text-color);
+    border: none;
     border-radius: 8px;
-    color: var(--text-color) !important;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
     text-decoration: none;
     transition: all 0.3s ease;
-    font-weight: 500;
-    max-width: 90%;
+    gap: 8px;
+    width: auto;
+    min-width: 120px;
+    max-width: 100%;
+    margin: 8px auto;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .action-button:hover {
+    background: var(--secondary-color);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px var(--shadow-color);
-    background: var(--primary-color);
-    color: var(--button-text-color) !important;
+}
+
+.action-button:active {
+    transform: translateY(0);
 }
 
 .action-button .material-icons {
-    color: var(--primary-color);
-    font-size: 1.2em;
-    transition: color 0.3s ease;
+    font-size: 20px;
+    transition: transform 0.3s ease;
 }
 
 .action-button:hover .material-icons {
-    color: var(--button-text-color);
+    transform: scale(1.1);
 }
 
-[data-theme="dark"] .action-button {
-    color: var(--text-color) !important;
+/* Ajustes responsivos para botões */
+@media (min-width: 1200px) {
+    .action-button {
+        padding: 14px 28px;
+        font-size: 1.1rem;
+        min-width: 140px;
+    }
 }
 
-[data-theme="dark"] .action-button:hover {
-    color: var(--button-text-color) !important;
+@media (max-width: 1199px) {
+    .action-button {
+        padding: 12px 24px;
+        font-size: 1rem;
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 767px) {
+    .action-button {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+        min-width: 100px;
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .action-button {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        min-width: 80px;
+        max-width: 250px;
+    }
+}
+
+/* Ajustes para containers de botões */
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    width: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 767px) {
+    .button-container {
+        padding: 12px;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .button-container {
+        padding: 8px;
+        gap: 8px;
+    }
+}
+
+/* Ajustes para botões em cards */
+.card .action-button,
+.content-card .action-button,
+.training-card .action-button {
+    margin: 16px auto;
+    display: flex;
+}
+
+@media (max-width: 767px) {
+    .card .action-button,
+    .content-card .action-button,
+    .training-card .action-button {
+        margin: 12px auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .card .action-button,
+    .content-card .action-button,
+    .training-card .action-button {
+        margin: 8px auto;
+    }
 }
 
 /* Enhanced Athlete Card Styles */
@@ -2997,4 +3225,109 @@ a:hover {
     .content-section {
         padding: 12px;
     }
+}
+
+/* Otimizações para Mobile */
+@media (max-width: 768px) {
+    /* Reduz a intensidade das animações em dispositivos móveis */
+    .feature-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .muscle-group-card:hover {
+        transform: translateY(-3px) scale(1.01);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .athlete-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .athlete-card:hover img {
+        transform: scale(1.03);
+    }
+
+    /* Ajusta a duração das animações para melhor performance */
+    .feature-item,
+    .muscle-group-card,
+    .athlete-card,
+    .nav-item,
+    .theme-toggle {
+        transition-duration: 0.2s;
+    }
+
+    /* Desativa algumas animações em dispositivos que preferem menos movimento */
+    @media (prefers-reduced-motion: reduce) {
+        .feature-item,
+        .muscle-group-card,
+        .athlete-card,
+        .nav-item,
+        .theme-toggle {
+            transition: none;
+            transform: none;
+        }
+
+        .feature-item:hover,
+        .muscle-group-card:hover,
+        .athlete-card:hover,
+        .nav-item:hover,
+        .theme-toggle:hover {
+            transform: none;
+            box-shadow: none;
+        }
+    }
+}
+
+/* Ajustes para telas muito pequenas */
+@media (max-width: 480px) {
+    /* Reduz ainda mais as animações */
+    .feature-item:hover {
+        transform: translateY(-2px);
+    }
+
+    .muscle-group-card:hover {
+        transform: translateY(-2px) scale(1.005);
+    }
+
+    .athlete-card:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Ajusta o tamanho dos elementos para melhor toque */
+    .feature-item,
+    .muscle-group-card,
+    .athlete-card {
+        padding: 16px;
+    }
+
+    /* Aumenta a área de toque para botões */
+    .nav-item,
+    .theme-toggle {
+        padding: 12px;
+    }
+}
+
+/* Otimizações de Performance */
+@media (hover: none) {
+    /* Remove efeitos hover em dispositivos touch */
+    .feature-item:hover,
+    .muscle-group-card:hover,
+    .athlete-card:hover,
+    .nav-item:hover,
+    .theme-toggle:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+/* Ajustes para AOS em mobile */
+@media (max-width: 768px) {
+    [data-aos] {
+        transform: none !important;
+        opacity: 1 !important;
+        transition: none !important;
+    }
+}
 }

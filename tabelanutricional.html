@@ -60,7 +60,63 @@
                     </div>
                 </div>
             </section>
-
+                       <section class="card content-card calculator-card" id="calculadora">
+                <h2>Calculadora de Calorias</h2>
+                <form onsubmit="event.preventDefault(); calcular();">
+                    <div class="form-group">
+                        <label for="peso">Peso atual (kg):</label>
+                        <input type="number" id="peso" placeholder="Ex: 70" />
+                    </div>
+                    <div class="form-group">
+                        <label for="altura">Altura (cm):</label>
+                        <input type="number" id="altura" placeholder="Ex: 175" />
+                    </div>
+                    <div class="form-group">
+                        <label for="idade">Idade:</label>
+                        <input type="number" id="idade" placeholder="Ex: 25" />
+                    </div>
+                    <div class="form-group">
+                        <label for="sexo">Sexo:</label>
+                        <select id="sexo">
+                            <option value="masculino">Masculino</option>
+                            <option value="feminino">Feminino</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="atividade">Nível de Atividade:</label>
+                        <select id="atividade">
+                            <option value="1.2">Nenhum exercício</option>
+                            <option value="1.375">Pouco exercício (1-2x por semana)</option>
+                            <option value="1.55">Exercício moderado (3-4x por semana)</option>
+                            <option value="1.725">Muito exercício (5-6x por semana)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="objetivo">Objetivo:</label>
+                        <select id="objetivo">
+                            <option value="manter">Manter peso</option>
+                            <option value="ganhar">Ganhar peso</option>
+                            <option value="perder">Perder peso</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="pesoMeta">Peso que deseja atingir (kg):</label>
+                        <input type="number" id="pesoMeta" placeholder="Ex: 70" />
+                    </div>
+                    <div class="form-group">
+                        <label for="metaSemana">Quantos kg por semana quer ganhar/perder?</label>
+                        <select id="metaSemana">
+                            <option value="0">0 kg por semana (manter peso)</option>
+                            <option value="0.25">250g por semana</option>
+                            <option value="0.5">500g por semana (recomendado)</option>
+                            <option value="0.75">750g por semana</option>
+                            <option value="1">1kg por semana</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="cta-button" style="margin-top:15px;">Calcular</button>
+                </form>
+                <div id="resultado" style="margin-top:20px; padding:10px; border-radius:5px;"></div>
+            </section>
             <section class="card content-card" id="proteinas">
                 <h2>Alimentos Ricos em Proteínas (por 100g)</h2>
                 <div class="tabela-container">
@@ -145,64 +201,6 @@
                         </tbody>
                     </table>
                 </div>
-            </section>
-
-            <section class="card content-card calculator-card" id="calculadora">
-                <h2>Calculadora de Calorias</h2>
-                <form onsubmit="event.preventDefault(); calcular();">
-                    <div class="form-group">
-                        <label for="peso">Peso atual (kg):</label>
-                        <input type="number" id="peso" placeholder="Ex: 70" />
-                    </div>
-                    <div class="form-group">
-                        <label for="altura">Altura (cm):</label>
-                        <input type="number" id="altura" placeholder="Ex: 175" />
-                    </div>
-                    <div class="form-group">
-                        <label for="idade">Idade:</label>
-                        <input type="number" id="idade" placeholder="Ex: 25" />
-                    </div>
-                    <div class="form-group">
-                        <label for="sexo">Sexo:</label>
-                        <select id="sexo">
-                            <option value="masculino">Masculino</option>
-                            <option value="feminino">Feminino</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="atividade">Nível de Atividade:</label>
-                        <select id="atividade">
-                            <option value="1.2">Nenhum exercício</option>
-                            <option value="1.375">Pouco exercício (1-2x por semana)</option>
-                            <option value="1.55">Exercício moderado (3-4x por semana)</option>
-                            <option value="1.725">Muito exercício (5-6x por semana)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="objetivo">Objetivo:</label>
-                        <select id="objetivo">
-                            <option value="manter">Manter peso</option>
-                            <option value="ganhar">Ganhar peso</option>
-                            <option value="perder">Perder peso</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="pesoMeta">Peso que deseja atingir (kg):</label>
-                        <input type="number" id="pesoMeta" placeholder="Ex: 70" />
-                    </div>
-                    <div class="form-group">
-                        <label for="metaSemana">Quantos kg por semana quer ganhar/perder?</label>
-                        <select id="metaSemana">
-                            <option value="0">0 kg por semana (manter peso)</option>
-                            <option value="0.25">250g por semana</option>
-                            <option value="0.5">500g por semana (recomendado)</option>
-                            <option value="0.75">750g por semana</option>
-                            <option value="1">1kg por semana</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="cta-button" style="margin-top:15px;">Calcular</button>
-                </form>
-                <div id="resultado" style="margin-top:20px; padding:10px; border-radius:5px;"></div>
             </section>
         </main>
 
