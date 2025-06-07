@@ -1218,7 +1218,7 @@ body {
     text-decoration: none;
     transition: all 0.3s ease;
     font-weight: 500;
-    max-width: 400px;
+    max-width: 90%;
 }
 
 .action-button:hover {
@@ -1425,11 +1425,52 @@ body {
     margin-bottom: 2rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
 }
 
-.training-card:hover {
+.training-card .show-exercises-btn {
+    position: absolute;
+    right: 1.5rem;
+    top: 1.5rem;
+    background: var(--primary-color);
+    color: var(--button-text-color);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.training-card .show-exercises-btn:hover {
+    background: var(--accent-color);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.training-card .show-exercises-btn i {
+    transition: transform 0.3s ease;
+}
+
+.training-card .show-exercises-btn.active i {
+    transform: rotate(180deg);
+}
+
+.training-card ol {
+    list-style-position: inside;
+    padding-left: 0;
+    counter-reset: exercise-counter;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+    opacity: 0;
+}
+
+.training-card ol.show {
+    max-height: 2000px;
+    opacity: 1;
 }
 
 .training-card h2 {
@@ -1493,10 +1534,15 @@ body {
 }
 
 .training-card .reps {
-    color: var(--primary-color);
+    color: var(--button-text-color);
     font-size: 1.1rem;
     margin: 0.5rem 0;
     display: inline-block;
+    background-color: var(--primary-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
 
 .training-card .ativ {
@@ -1592,7 +1638,7 @@ body {
 }
 
 .training-card .reps {
-    color: var(--primary-color);
+    color: var(--button-text-color);
     font-weight: 600;
 }
 
@@ -1624,7 +1670,8 @@ body {
 }
 
 [data-theme="dark"] .training-card .reps {
-    color: var(--accent-color);
+    background-color: var(--accent-color);
+    color: var(--button-text-color);
 }
 
 [data-theme="dark"] .training-card div {
@@ -2594,867 +2641,54 @@ a:hover {
     animation: fadeIn 0.5s ease-out;
 } 
 
-/* Quick View Button */
-.quick-view-btn {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: var(--primary-color);
-    color: var(--button-text-color);
-    border: none;
-    border-radius: 50%;
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    opacity: 1;
-    visibility: visible;
-    -webkit-tap-highlight-color: transparent;
-    backdrop-filter: blur(4px);
+/* Color theme adjustments for reps */
+[data-theme-color="green"] .training-card .reps {
+    background-color: var(--primary-color);
+    color: white;
 }
 
-.quick-view-btn:hover {
-    transform: scale(1.1);
-    background: var(--accent-color);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+[data-theme-color="gray"] .training-card .reps {
+    background-color: var(--primary-color);
+    color: white;
 }
 
-.quick-view-btn i {
-    font-size: 1.2rem;
-    opacity: 1;
-    visibility: visible;
+[data-theme-color="yellow"] .training-card .reps {
+    background-color: var(--primary-color);
+    color: black;
 }
 
-/* Ajuste para o card de treino */
-.training-card {
-    position: relative;
+[data-theme-color="orange"] .training-card .reps {
+    background-color: var(--primary-color);
+    color: white;
 }
 
-/* Quick View Modal */
-.quick-view-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 1rem;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    backdrop-filter: blur(4px);
+[data-theme-color="pink"] .training-card .reps {
+    background-color: var(--primary-color);
+    color: white;
 }
 
-.quick-view-content {
-    background: var(--card-bg-color);
-    border-radius: 12px;
-    width: 90%;
-    max-width: 800px;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    transform: translate(-50%, -50%);
-    transition: transform 0.3s ease;
-    -webkit-overflow-scrolling: touch;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    margin: 0 auto;
+/* Dark mode with color theme adjustments */
+[data-theme="dark"][data-theme-color="green"] .training-card .reps {
+    background-color: var(--accent-color);
+    color: white;
 }
 
-.quick-view-modal.active .quick-view-content {
-    transform: translateY(0);
+[data-theme="dark"][data-theme-color="gray"] .training-card .reps {
+    background-color: var(--accent-color);
+    color: white;
 }
 
-.quick-view-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--text-color);
-    cursor: pointer;
-    padding: 0.5rem;
-    line-height: 1;
-    transition: color 0.3s ease;
-    z-index: 2;
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
+[data-theme="dark"][data-theme-color="yellow"] .training-card .reps {
+    background-color: var(--accent-color);
+    color: black;
 }
 
-.quick-view-close:hover {
-    color: var(--accent-color);
-    background: var(--hover-color);
+[data-theme="dark"][data-theme-color="orange"] .training-card .reps {
+    background-color: var(--accent-color);
+    color: white;
 }
 
-.quick-view-content h2 {
-    margin: 0 0 1.5rem 0;
-    color: var(--text-color);
-    font-size: 1.5rem;
-}
-
-.quick-view-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-}
-
-.quick-view-table th,
-.quick-view-table td {
-    padding: 0.75rem;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.quick-view-table th {
-    background: var(--primary-color);
-    color: var(--button-text-color);
-    font-weight: 600;
-}
-
-.quick-view-table tr:hover {
-    background: var(--hover-color);
-}
-
-/* Dark mode adjustments */
-[data-theme="dark"] .quick-view-content {
-    background: var(--card-bg-color);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-[data-theme="dark"] .quick-view-table th {
-    background: var(--primary-color);
-}
-
-[data-theme="dark"] .quick-view-table tr:hover {
-    background: var(--hover-color);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .quick-view-content {
-        width: 95%;
-        max-width: 600px;
-        padding: 1.5rem;
-        margin: 1rem auto;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .quick-view-table {
-        margin-top: 0.75rem;
-        width: 100%;
-    }
-
-    .quick-view-table th,
-    .quick-view-table td {
-        padding: 0.75rem;
-        font-size: 0.95rem;
-        line-height: 1.4;
-    }
-
-    .quick-view-table th {
-        font-size: 1rem;
-        padding: 0.85rem 0.75rem;
-    }
-
-    .quick-view-btn {
-        width: 2.2rem;
-        height: 2.2rem;
-        top: 0.75rem;
-        right: 0.75rem;
-        background: var(--primary-color);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-        border-radius: 50%;
-    }
-
-    .quick-view-btn i {
-        font-size: 1.1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .quick-view-content {
-        width: 92%;
-        padding: 1.25rem;
-        margin: 0.75rem auto;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .quick-view-table {
-        margin-top: 0.5rem;
-        width: 100%;
-    }
-
-    .quick-view-table th,
-    .quick-view-table td {
-        padding: 0.6rem;
-        font-size: 0.9rem;
-    }
-
-    .quick-view-table th {
-        font-size: 0.95rem;
-        padding: 0.7rem 0.6rem;
-    }
-
-    .quick-view-btn {
-        width: 2rem;
-        height: 2rem;
-        top: 0.5rem;
-        right: 0.5rem;
-        border-radius: 50%;
-    }
-
-    .quick-view-btn i {
-        font-size: 1rem;
-    }
-}
-
-/* Responsive Design */
-@media (max-width: 1200px) {
-    .dashboard-container {
-        padding: 1rem;
-    }
-
-    .dashboard-main {
-        gap: 1.5rem;
-    }
-
-    .card {
-        padding: 1.5rem;
-    }
-}
-
-@media (max-width: 992px) {
-    .dashboard-header {
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
-    }
-
-    .header-start {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .header-end {
-        width: 100%;
-        justify-content: center;
-        margin-left: 0;
-    }
-
-    .workout-buttons {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .quick-view-content {
-        width: 95%;
-        max-width: 600px;
-        padding: 1.5rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .dashboard-container {
-        padding: 0.5rem;
-    }
-
-    .dashboard-main {
-        gap: 1rem;
-    }
-
-    .card {
-        padding: 1rem;
-    }
-
-    .header-start h1 {
-        font-size: 1.5rem;
-    }
-
-    .title-subtitle {
-        font-size: 0.9rem;
-    }
-
-    .workout-buttons {
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
-    }
-
-    .action-button {
-        padding: 0.75rem;
-        font-size: 0.9rem;
-    }
-
-    .action-button i {
-        font-size: 1.2rem;
-    }
-
-    .quick-view-btn {
-        width: 2rem;
-        height: 2rem;
-        top: 0.5rem;
-        right: 0.5rem;
-    }
-
-    .quick-view-btn i {
-        font-size: 1rem;
-    }
-
-    .quick-view-content {
-        padding: 1rem;
-    }
-
-    .quick-view-content h2 {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-    }
-
-    .quick-view-table th,
-    .quick-view-table td {
-        padding: 0.5rem;
-        font-size: 0.9rem;
-    }
-
-    .quick-view-close {
-        top: 0.5rem;
-        right: 0.5rem;
-        font-size: 1.2rem;
-    }
-
-    /* Ajustes para listas de exercícios */
-    .training-card ol {
-        padding-left: 1.2rem;
-    }
-
-    .training-card li {
-        font-size: 0.9rem;
-        margin-bottom: 0.75rem;
-    }
-
-    .training-card .reps,
-    .training-card .ativ {
-        font-size: 0.85rem;
-    }
-
-    .training-card div {
-        font-size: 0.8rem;
-        margin-top: 0.25rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .dashboard-header {
-        padding: 0.75rem;
-    }
-
-    .header-start h1 {
-        font-size: 1.3rem;
-    }
-
-    .title-subtitle {
-        font-size: 0.8rem;
-    }
-
-    .card {
-        padding: 0.75rem;
-    }
-
-    .workout-buttons {
-        gap: 0.5rem;
-    }
-
-    .action-button {
-        padding: 0.6rem;
-        font-size: 0.85rem;
-    }
-
-    .action-button i {
-        font-size: 1.1rem;
-    }
-
-    .quick-view-btn {
-        width: 1.8rem;
-        height: 1.8rem;
-    }
-
-    .quick-view-btn i {
-        font-size: 0.9rem;
-    }
-
-    .quick-view-content {
-        padding: 0.75rem;
-    }
-
-    .quick-view-content h2 {
-        font-size: 1.1rem;
-    }
-
-    .quick-view-table th,
-    .quick-view-table td {
-        padding: 0.4rem;
-        font-size: 0.8rem;
-    }
-
-    /* Ajustes para o modal em telas muito pequenas */
-    .quick-view-modal {
-        padding: 0.5rem;
-    }
-
-    .quick-view-content {
-        max-height: 85vh;
-    }
-
-    /* Ajustes para listas de exercícios em telas muito pequenas */
-    .training-card ol {
-        padding-left: 1rem;
-    }
-
-    .training-card li {
-        font-size: 0.85rem;
-        margin-bottom: 0.6rem;
-    }
-
-    .training-card .reps,
-    .training-card .ativ {
-        font-size: 0.8rem;
-    }
-
-    .training-card div {
-        font-size: 0.75rem;
-    }
-}
-
-/* Ajustes para orientação paisagem em dispositivos móveis */
-@media (max-height: 500px) and (orientation: landscape) {
-    .quick-view-content {
-        max-height: 80vh;
-    }
-
-    .quick-view-table th,
-    .quick-view-table td {
-        padding: 0.3rem;
-    }
-}
-
-/* Ajustes para telas muito grandes */
-@media (min-width: 1600px) {
-    .dashboard-container {
-        max-width: 1600px;
-        margin: 0 auto;
-    }
-
-    .card {
-        padding: 2rem;
-    }
-
-    .header-start h1 {
-        font-size: 2rem;
-    }
-
-    .title-subtitle {
-        font-size: 1.1rem;
-    }
-
-    .action-button {
-        padding: 1rem;
-        font-size: 1.1rem;
-    }
-
-    .action-button i {
-        font-size: 1.4rem;
-    }
-}
-
-/* Ajustes para garantir que o modal seja sempre visível e utilizável */
-.quick-view-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 1rem;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-.quick-view-content {
-    background: var(--card-bg-color);
-    border-radius: 8px;
-    width: 90%;
-    max-width: 800px;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    transform: translateY(20px);
-    transition: transform 0.3s ease;
-    -webkit-overflow-scrolling: touch;
-}
-
-/* Ajustes para garantir que o botão de visualização rápida seja sempre visível */
-.quick-view-btn {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: var(--primary-color);
-    color: var(--button-text-color);
-    border: none;
-    border-radius: 50%;
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 10;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    opacity: 1;
-    visibility: visible;
-    -webkit-tap-highlight-color: transparent;
-}
-
-/* Ajustes para garantir que o tema e cores funcionem bem em dispositivos móveis */
-.theme-switcher,
-.theme-color-picker {
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.theme-color-picker .dropdown {
-    position: absolute;
-    right: 0;
-    top: 100%;
-    margin-top: 0.5rem;
-    z-index: 1002;
-    min-width: 10rem;
-    background: var(--card-bg-color);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 0.5rem;
-    display: none;
-}
-
-.theme-color-picker.active .dropdown {
-    display: block;
-}
-
-/* Ajustes para garantir que os links e botões sejam fáceis de tocar em dispositivos móveis */
-a, button {
-    min-height: 44px;
-    min-width: 44px;
-}
-
-/* Ajustes para garantir que o texto seja legível em todos os dispositivos */
-body {
-    -webkit-text-size-adjust: 100%;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-/* Ajustes para a tabela de visualização rápida */
-.quick-view-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    table-layout: fixed;
-}
-
-.quick-view-table th,
-.quick-view-table td {
-    padding: 0.75rem;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-
-.quick-view-table th {
-    background: var(--primary-color);
-    color: var(--button-text-color);
-    font-weight: 600;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-}
-
-.quick-view-table tr:hover {
-    background: var(--hover-color);
-}
-
-/* Ajustes para o botão de visualização rápida */
-.quick-view-btn {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: var(--primary-color);
-    color: var(--button-text-color);
-    border: none;
-    border-radius: 50%;
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    opacity: 1;
-    visibility: visible;
-    -webkit-tap-highlight-color: transparent;
-    backdrop-filter: blur(4px);
-}
-
-.quick-view-btn:hover {
-    transform: scale(1.1);
-    background: var(--accent-color);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.quick-view-btn i {
-    font-size: 1.2rem;
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Ajustes responsivos para a tabela e botão */
-@media (max-width: 768px) {
-    .quick-view-content {
-        width: 95%;
-        max-width: 600px;
-        padding: 1.5rem;
-        margin: 1rem;
-    }
-
-    .quick-view-table {
-        margin-top: 0.75rem;
-    }
-
-    .quick-view-table th,
-    .quick-view-table td {
-        padding: 0.75rem;
-        font-size: 0.95rem;
-        line-height: 1.4;
-    }
-
-    .quick-view-table th {
-        font-size: 1rem;
-        padding: 0.85rem 0.75rem;
-    }
-
-    .quick-view-btn {
-        width: 2.2rem;
-        height: 2.2rem;
-        top: 0.75rem;
-        right: 0.75rem;
-        background: var(--primary-color);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    }
-
-    .quick-view-btn i {
-        font-size: 1.1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .quick-view-content {
-        width: 92%;
-        padding: 1.25rem;
-        margin: 0.75rem;
-    }
-
-    .quick-view-table {
-        margin-top: 0.5rem;
-    }
-
-    .quick-view-table th,
-    .quick-view-table td {
-        padding: 0.6rem;
-        font-size: 0.9rem;
-    }
-
-    .quick-view-table th {
-        font-size: 0.95rem;
-        padding: 0.7rem 0.6rem;
-    }
-
-    .quick-view-btn {
-        width: 2rem;
-        height: 2rem;
-        top: 0.5rem;
-        right: 0.5rem;
-    }
-
-    .quick-view-btn i {
-        font-size: 1rem;
-    }
-}
-
-/* Ajustes para o modal em dispositivos móveis */
-.quick-view-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 1rem;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    backdrop-filter: blur(4px);
-}
-
-.quick-view-content {
-    background: var(--card-bg-color);
-    border-radius: 12px;
-    width: 90%;
-    max-width: 800px;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    transform: translateY(20px);
-    transition: transform 0.3s ease;
-    -webkit-overflow-scrolling: touch;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-.quick-view-modal.active .quick-view-content {
-    transform: translateY(0);
-}
-
-.quick-view-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--text-color);
-    cursor: pointer;
-    padding: 0.5rem;
-    line-height: 1;
-    transition: color 0.3s ease;
-    z-index: 2;
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-}
-
-.quick-view-close:hover {
-    color: var(--accent-color);
-    background: var(--hover-color);
-}
-
-/* Ajustes responsivos para a tabela e botão */
-@media (max-width: 768px) {
-    .quick-view-modal {
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100vw;
-        height: 100vh;
-        left: 0;
-        top: 0;
-    }
-    .quick-view-content {
-        width: 95vw;
-        max-width: 95vw;
-        min-width: 0;
-        margin: 0;
-        padding: 0.5rem 0.25rem;
-        max-height: 90vh;
-        position: fixed;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        border-radius: 0.75rem;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-    .quick-view-table {
-        width: 100%;
-        max-width: 100%;
-        table-layout: fixed;
-        word-break: break-word;
-        font-size: 0.95rem;
-    }
-    .quick-view-table th, .quick-view-table td {
-        padding: 0.5rem 0.25rem;
-        font-size: 0.9rem;
-        word-break: break-word;
-        overflow-wrap: break-word;
-    }
-}
-
-@media (max-width: 480px) {
-    .quick-view-modal {
-        padding: 0;
-        width: 100vw;
-        height: 100vh;
-        left: 0;
-        top: 0;
-    }
-    .quick-view-content {
-        width: 97vw;
-        max-width: 97vw;
-        min-width: 0;
-        margin: 0;
-        padding: 0.25rem 0.1rem;
-        max-height: 85vh;
-        position: fixed;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        border-radius: 0.5rem;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-    .quick-view-table {
-        width: 100%;
-        max-width: 100%;
-        table-layout: fixed;
-        word-break: break-word;
-        font-size: 0.85rem;
-    }
-    .quick-view-table th, .quick-view-table td {
-        padding: 0.4rem 0.1rem;
-        font-size: 0.85rem;
-        word-break: break-word;
-        overflow-wrap: break-word;
-    }
+[data-theme="dark"][data-theme-color="pink"] .training-card .reps {
+    background-color: var(--accent-color);
+    color: white;
 }
