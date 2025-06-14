@@ -7,6 +7,38 @@
     <link rel="stylesheet" href="../../../assets/dashboard.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .training-card ol {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .training-card ol.show {
+            display: block;
+        }
+
+        .toggle-exercises {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-exercises:hover {
+            background-color: var(--primary-color-dark);
+        }
+
+        .toggle-exercises i {
+            font-size: 20px;
+        }
+    </style>
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0W5V50NE"></script>
@@ -59,6 +91,10 @@
             <section class="card content-card training-card">
                 <h2>TREINO 1</h2>
                 <p>Laércio Refundini <a href="https://www.youtube.com/watch?v=pVq563lcRRU" target="_blank" rel="noopener noreferrer">Reagindo ao MELHOR Vídeo de Treino da Internet</a></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                         Supino inclinado com barra <br> <i class="ativ">peitoral superior</i>
@@ -92,5 +128,21 @@
     <script src="../../../assets/dashboard.js"></script>
     <script src="../../../../assets/js/theme.js"></script>
     <script src="../../../../assets/js/exercises.js"></script>
+    <script>
+        function toggleExercises(button) {
+            const exerciseList = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            exerciseList.classList.toggle('show');
+            
+            if (exerciseList.classList.contains('show')) {
+                icon.textContent = 'visibility_off';
+                button.querySelector('span').textContent = 'Ocultar Exercícios';
+            } else {
+                icon.textContent = 'visibility';
+                button.querySelector('span').textContent = 'Mostrar Exercícios';
+            }
+        }
+    </script>
 </body>
 </html>

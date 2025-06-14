@@ -7,6 +7,38 @@
     <link rel="stylesheet" href="../../../assets/dashboard.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .training-card ol {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .training-card ol.show {
+            display: block;
+        }
+
+        .toggle-exercises {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-exercises:hover {
+            background-color: var(--primary-color-dark);
+        }
+
+        .toggle-exercises i {
+            font-size: 20px;
+        }
+    </style>
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0W5V50NE"></script>
@@ -47,61 +79,84 @@
             <section class="card content-card training-card">
                 <h2>TREINO 1</h2>
                 <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=4Ve1y0P0A50"><b>TREINO PARA NATURAL OU TREINO PARA HORMONIZADO? FT ALFREDO NETO</b></a></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
-                        Rosca com barra W <br><b class="reps">6-8-10-12-14-16-18-20</b> <br> <i class="ativ">cabeça curta e longa</i>
-                        <div>Trabalha tanto fibras brancas quanto vermelhas</div>
-                        <div>Pegadas mais fechadas e supinadas (palma para cima) favorecem a cabeça curta</div>
-                    </li> 
-
-                    <li>Rosca alternada sentado <br> <b class="reps">6a + 6s</b> <br><i class="ativ">Cabeça curta e longa</i></li>
-
-                    <li>
-                        Rosca Scott <br> <b class="reps">4x12</b> <br> <i class="ativ">cabeça curta</i>
-                        <div>Quanto mais alongamento do biceps melhor</div>
+                        Rosca W <br> <b class="reps">3x15-12-10 1xdrop-set</b> <br> <i class="ativ">cabeça curta e longa</i>
                     </li>
-
-                    <li> Triceps pulley com corda <br> <b class="reps">3x15</b> <br> <i class="ativ">Cabeça lateral e cabeça longa do tríceps</i><div>Aquecimento</div></li>
-
-                    <li>Triceps pulley <br>  <b class="reps">5³+10</b> com barra <br> <i class="ativ">Cabeça lateral e cabeça longa do tríceps</i></li>
-
-                    <li>Triceps pulley com pegada invertida <br> <b class="reps">4x10</b> <br><i class="ativ">Cabeça medial e Cabeça lateral</i></li>
-
-                    <li>Paralela <br> <b class="reps">até a falha</b> <br><i class="ativ">Cabeça longa (principalmente), Cabeça lateral, Cabeça medial </i></li>
+                    <li>
+                        Rosca martelo <br> <b class="reps">3xdropset 3 vezes fazendo 6rep a cada drop</b> <br> <i class="ativ">cabeça curta e longa</i>
+                    </li>
+                    <li>
+                        Rosca Scott <br> <b class="reps">4x6</b> <br> <i class="ativ">cabeça curta</i>
+                    </li>
+                    <li>
+                        Triceps pulley com barra U <br> <b class="reps">4x12</b> <br> <i class="ativ">Cabeça lateral e cabeça medial do tríceps</i>
+                    </li>
+                    <li>
+                        Triceps francês com halter <br> <b class="reps">4x10</b> <br> <i class="ativ">cabeça longa do tríceps</i>
+                    </li>
+                    <li>
+                        Triceps corda <br> <b class="reps">3x 3drops fazendo 10reps a cada drop</b> <br> <i class="ativ">Cabeça lateral e cabeça longa do tríceps</i>
+                    </li>
                 </ol>
             </section>
             <section class="card content-card training-card">
                 <h2>TREINO 2</h2>
                 <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=i_MeJQT13E4"><b>JORLAN REVELA TÉCNICAS PARA TER BRAÇOS GIGANTES!</b></a></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
-                    <li>Rosca alternada + triceps testa<br> <b class="reps">4x6-8 reps cada braço / 12 reps</b>  <br> <b></b> <i class="ativ">cabeça  Longa do biceps | cabeça Longa do tríceps</i></li>
-
-                    <li>Rosca spider + triceps francês <br> <b class="reps">10 reps / 12 reps</b> <br> <i class="ativ">cabeça curta do bíceps | cabeça longa do tríceps</i></li>
-
-                    <li>Rosca martelo + supino com a pegada fechada <br> <b class="reps">6-8reps cada braço / 12reps</b> <br> <i class="ativ">braquial | cabeça medial e lateral do tríceps</i></li>
+                    <li>
+                        Rosca W <br> <b class="reps">3x15-12-10 1xdrop-set</b> <br> <i class="ativ">cabeça curta e longa</i>
+                    </li>
+                    <li>
+                        Rosca martelo <br> <b class="reps">3xdropset 3 vezes fazendo 6rep a cada drop</b> <br> <i class="ativ">cabeça curta e longa</i>
+                    </li>
+                    <li>
+                        Rosca Scott <br> <b class="reps">4x6</b> <br> <i class="ativ">cabeça curta</i>
+                    </li>
+                    <li>
+                        Triceps pulley com barra U <br> <b class="reps">4x12</b> <br> <i class="ativ">Cabeça lateral e cabeça medial do tríceps</i>
+                    </li>
+                    <li>
+                        Triceps francês com halter <br> <b class="reps">4x10</b> <br> <i class="ativ">cabeça longa do tríceps</i>
+                    </li>
+                    <li>
+                        Triceps corda <br> <b class="reps">3x 3drops fazendo 10reps a cada drop</b> <br> <i class="ativ">Cabeça lateral e cabeça longa do tríceps</i>
+                    </li>
                 </ol>
             </section>
             <section class="card content-card training-card">
                 <h2>TREINO 3</h2>
-                <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=vnycHT0jGEw&t"><b>SEU TREINO RESPONDE MELHOR A QUAL ESTÍMULO?</b></a></p>
+                <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=4Ve1y0P0A50"><b>TREINO PARA NATURAL OU TREINO PARA HORMONIZADO? FT ALFREDO NETO</b></a></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
-                    <li> 
-                        Rosca alternada + rosca direta <br> <b class="reps">4x6 cada braço</b> <b class="reps">4x6</b> <br> <i class="ativ">cabeça  Longa do biceps</i>
+                    <li>
+                        Rosca W <br> <b class="reps">3x15-12-10 1xdrop-set</b> <br> <i class="ativ">cabeça curta e longa</i>
                     </li>
                     <li>
-                        Rosca maquina + rosca scott maquina <br> <b class="reps">4x5 cada braço segurando 2s</b> <b class="reps">4x10</b> <br> <i>cabeça curta</i>
+                        Rosca martelo <br> <b class="reps">3xdropset 3 vezes fazendo 6rep a cada drop</b> <br> <i class="ativ">cabeça curta e longa</i>
                     </li>
                     <li>
-                        Rosca punho invertida <br> <b class="reps">4x12</b> <br> <i>antebraço</i>
+                        Rosca Scott <br> <b class="reps">4x6</b> <br> <i class="ativ">cabeça curta</i>
                     </li>
                     <li>
-                        Rosca alternada na polia <br> <b>20-15-12-10</b> <br> <i>antebraço</i>
+                        Triceps pulley com barra U <br> <b class="reps">4x12</b> <br> <i class="ativ">Cabeça lateral e cabeça medial do tríceps</i>
                     </li>
                     <li>
-                        Triceps corda + triceps triangulo <br> <b class="reps">4x12</b> <b class="reps">4x12</b> <br> <i>>Cabeça lateral e cabeça longa do tríceps</i>
+                        Triceps francês com halter <br> <b class="reps">4x10</b> <br> <i class="ativ">cabeça longa do tríceps</i>
                     </li>
                     <li>
-                        Triceps francês na polia com banco + paralela <br> <b class="reps">4x10</b> <b class="reps">Até a falha</b> <br> <i>Cabeça longa (principalmente), Cabeça lateral, Cabeça medial</i>
+                        Triceps corda <br> <b class="reps">3x 3drops fazendo 10reps a cada drop</b> <br> <i class="ativ">Cabeça lateral e cabeça longa do tríceps</i>
                     </li>
                 </ol>
             </section>
@@ -114,5 +169,21 @@
     <script src="../../../assets/dashboard.js"></script>
     <script src="../../../../assets/js/theme.js"></script>
     <script src="../../../../assets/js/exercises.js"></script>
+    <script>
+        function toggleExercises(button) {
+            const exerciseList = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            exerciseList.classList.toggle('show');
+            
+            if (exerciseList.classList.contains('show')) {
+                icon.textContent = 'visibility_off';
+                button.querySelector('span').textContent = 'Ocultar Exercícios';
+            } else {
+                icon.textContent = 'visibility';
+                button.querySelector('span').textContent = 'Mostrar Exercícios';
+            }
+        }
+    </script>
 </body>
 </html>

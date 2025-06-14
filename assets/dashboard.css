@@ -60,8 +60,8 @@
     --header-bg-end: #388e3c;
     --button-text-color: #fff;
     --nav-item-active-bg: #43a047;
-    --bg-color: #f6fff7;
-    --card-bg-color: #ffffff;
+    --bg-color: white;
+    --card-bg-color: white;
     --text-color: #1b2b1b;
     --shadow-color: rgba(67,160,71,0.08);
     --nav-bg-color: #e8f5e9;
@@ -74,8 +74,8 @@
     --header-bg-end: #424242;
     --button-text-color: #fff;
     --nav-item-active-bg: #757575;
-    --bg-color: #f5f5f5;
-    --card-bg-color: #fff;
+    --bg-color: white;
+    --card-bg-color: whitef;
     --text-color: #232323;
     --shadow-color: rgba(117,117,117,0.08);
     --nav-bg-color: #f5f5f5;
@@ -88,8 +88,8 @@
     --header-bg-end: #f9a825;
     --button-text-color: #333;
     --nav-item-active-bg: #fbc02d;
-    --bg-color: #fffbe7;
-    --card-bg-color: #fffde7;
+    --bg-color: white;
+    --card-bg-color: white;
     --text-color: #3d2f00;
     --shadow-color: rgba(251,192,45,0.08);
     --nav-bg-color: #fffde7;
@@ -102,8 +102,8 @@
     --header-bg-end: #ef6c00;
     --button-text-color: #fff;
     --nav-item-active-bg: #fb8c00;
-    --bg-color: #fff8f3;
-    --card-bg-color: #fff3e0;
+    --bg-color: white;
+    --card-bg-color: white;
     --text-color: #3d2f00;
     --shadow-color: rgba(251,140,0,0.08);
     --nav-bg-color: #fff3e0;
@@ -116,8 +116,8 @@
     --header-bg-end: #ad1457;
     --button-text-color: #fff;
     --nav-item-active-bg: #e040fb;
-    --bg-color: #fff6fd;
-    --card-bg-color: #fff0fa;
+    --bg-color: white;
+    --card-bg-color: white;
     --text-color: #3d003d;
     --shadow-color: rgba(224,64,251,0.08);
     --nav-bg-color: #fff0fa;
@@ -132,7 +132,7 @@
     --button-text-color: #fff;
     --nav-item-active-bg: #686de0;
     --bg-color: #181a1b;
-    --card-bg-color: #23242a;
+    --card-bg-color: #181a1b;
     --text-color: #e9ecef;
     --shadow-color: rgba(0,0,0,0.3);
     --nav-bg-color: #23242a;
@@ -145,12 +145,13 @@
     --header-bg-end: #43a047;
     --button-text-color: #fff;
     --nav-item-active-bg: #43a047;
-    --bg-color: #16251a;
-    --card-bg-color: #1e2d22;
+    --bg-color: #181a1b;
+    --card-bg-color: #181a1b;
     --text-color: #e0f2e9;
     --shadow-color: rgba(67,160,71,0.18);
     --nav-bg-color: #1e2d22;
 }
+
 [data-theme="dark"][data-theme-color="gray"] {
     --primary-color: #bdbdbd;
     --secondary-color: #757575;
@@ -160,7 +161,7 @@
     --button-text-color: #222;
     --nav-item-active-bg: #bdbdbd;
     --bg-color: #181818;
-    --card-bg-color: #232323;
+    --card-bg-color: #181a1b;
     --text-color: #f5f5f5;
     --shadow-color: rgba(117,117,117,0.18);
     --nav-bg-color: #232323;
@@ -173,8 +174,8 @@
     --header-bg-end: #ffe082;
     --button-text-color: #222;
     --nav-item-active-bg: #ffe082;
-    --bg-color: #2d2a1a;
-    --card-bg-color: #3d3700;
+    --bg-color: #181a1b;
+    --card-bg-color: #181a1b;
     --text-color: #fffde7;
     --shadow-color: rgba(251,192,45,0.18);
     --nav-bg-color: #3d3700;
@@ -187,8 +188,8 @@
     --header-bg-end: #ffb74d;
     --button-text-color: #222;
     --nav-item-active-bg: #ffb74d;
-    --bg-color: #2d211a;
-    --card-bg-color: #3d2f00;
+    --bg-color: #181a1b;
+    --card-bg-color: #181a1b;
     --text-color: #fff3e0;
     --shadow-color: rgba(251,140,0,0.18);
     --nav-bg-color: #3d2f00;
@@ -201,8 +202,8 @@
     --header-bg-end: #ea80fc;
     --button-text-color: #fff;
     --nav-item-active-bg: #ea80fc;
-    --bg-color: #2d1a2a;
-    --card-bg-color: #3d003d;
+    --bg-color: #181a1b;
+    --card-bg-color: #181a1b;
     --text-color: #fff0fa;
     --shadow-color: rgba(224,64,251,0.18);
     --nav-bg-color: #3d003d;
@@ -687,54 +688,6 @@ body {
         font-size: 0.98rem;
         padding: 0.4rem 0.7rem;
     }
-}
-
-.bottom-nav {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--nav-bg-color);
-    padding: 12px 24px;
-    border-radius: var(--radius-pill);
-    box-shadow: var(--nav-shadow);
-    display: flex;
-    gap: 8px;
-    z-index: 1000;
-    backdrop-filter: blur(10px);
-    border: 2px solid var(--primary-color);
-    transition: background 0.3s, border-color 0.3s;
-}
-
-.nav-item {
-    background: none;
-    border: none;
-    color: var(--text-color);
-    padding: 12px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-}
-
-.nav-label {
-    font-size: 0.75em;
-    font-weight: 500;
-}
-
-.nav-item:hover {
-    background: var(--nav-item-hover-bg);
-    transform: translateY(-2px);
-}
-
-.nav-item.active {
-    background: var(--nav-item-active-bg);
-    color: var(--button-text-color);
-    transition: background 0.3s, color 0.3s;
 }
 
 @keyframes fadeInScaleUp {

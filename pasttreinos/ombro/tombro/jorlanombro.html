@@ -7,6 +7,38 @@
     <link rel="stylesheet" href="../../../assets/dashboard.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .training-card ol {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .training-card ol.show {
+            display: block;
+        }
+
+        .toggle-exercises {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-exercises:hover {
+            background-color: var(--primary-color-dark);
+        }
+
+        .toggle-exercises i {
+            font-size: 20px;
+        }
+    </style>
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0W5V50NE"></script>
@@ -47,6 +79,10 @@
             <section class="card content-card training-card">
                 <h2>TREINO 1</h2>
                 <p>Jorlan Vieira <b><a href="https://www.youtube.com/watch?v=q8YwD_l36Zk&t" target="_blank" rel="noopener noreferrer">APRENDA A DEIXAR SEU OMBRO NO MELHOR ESTILO "CEBOLA"</a></b></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                         Elevação lateral <br><b class="reps">3x50-100</b><br> <i class="ativ">lateral do ombro</i>
@@ -78,13 +114,17 @@
             <section class="card content-card training-card">
                 <h2>TREINO 2</h2>
                 <p>Jorlan Vieira <b><a href="https://youtu.be/_cH5EnRFN8g?si=LDZpQV9mBQsPeWRb">SE VOCÊ QUER TER OMBROS GRANDES ESSE VÍDEO É PRA VOCÊ! JORLAN E HENRIQUE!</a></b></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
-                    <li><br><b class="reps">3x20</b><br> elevação lateral dupla na polia <i class="ativ">lateral de ombro</i></li>
-                    <div>Aquecimento</div>
+                    <li>elevação lateral dupla na polia<br><b class="reps">3x20</b><br>  <i class="ativ">lateral de ombro</i><div>Aquecimento</div></li>
+                    
 
                     <li>Elevação frontal + desenvolvimento <br><b class="reps">12 reps cada</b><br> <i class="ativ">anterior de ombro</i></li>
 
-                    <li>Elevação lateral parcial <br><b class="reps">20</b><br> + elevação lateral máquina sentado <br><b class="reps">10</b><br> + desenvolvimento <br><b class="reps">10</b><br> - <br><b class="reps">4 séries</b><br> <i class="ativ">lateral de ombro e anterior de ombro</i></li>
+                    <li>Elevação lateral parcial + elevação lateral máquina sentado + desenvolvimento<br><b class="reps">20</b><b class="reps">10</b><b class="reps">10</b><br> <br><b class="reps">4 séries</b><br> <i class="ativ">lateral de ombro e anterior de ombro</i></li>
 
                     <li>Remada alta <br><b class="reps">4x12</b><br> <i class="ativ">lateral de ombro e trapézio</i></li>
                 </ol>
@@ -93,6 +133,10 @@
             <section class="card content-card training-card">
                 <h2>TREINO 3</h2>
                 <p>Jorlan Vieira <b><a href="https://www.youtube.com/watch?v=2rtvdaSUJKk">SÉRIE INFINITA DE OMBRO</a></b></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                         Elevação lateral <br><b class="reps">2x 5 aumentado peso + 4 diminuindo peso</b><br> <i class="ativ">lateral de ombro</i>
@@ -112,6 +156,10 @@
             <section class="card content-card training-card">
                 <h2>TREINO 4</h2>
                 <p>Jorlan Vieira <b><a href="https://www.youtube.com/watch?v=UJyfqjcbiG8">OMBRO COMPLETO EM 30 MINUTOS</a></b></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                         Encolhimento <br> <b class="reps">4x20</b> <br> <i class="ativ">trapézio</i>
@@ -138,5 +186,22 @@
     <script src="../../../assets/dashboard.js"></script>
     <script src="../../../../assets/js/theme.js"></script>
     <script src="../../../../assets/js/exercises.js"></script>
+    <script>
+        function toggleExercises(button) {
+            const card = button.closest('.training-card');
+            const exerciseList = card.querySelector('ol');
+            const icon = button.querySelector('i');
+            
+            exerciseList.classList.toggle('show');
+            
+            if (exerciseList.classList.contains('show')) {
+                icon.textContent = 'visibility_off';
+                button.querySelector('span').textContent = 'Ocultar Exercícios';
+            } else {
+                icon.textContent = 'visibility';
+                button.querySelector('span').textContent = 'Mostrar Exercícios';
+            }
+        }
+    </script>
 </body>
 </html>

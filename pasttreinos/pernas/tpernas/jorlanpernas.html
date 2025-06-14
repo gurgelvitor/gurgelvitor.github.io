@@ -7,6 +7,38 @@
     <link rel="stylesheet" href="../../../assets/dashboard.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .training-card ol {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .training-card ol.show {
+            display: block;
+        }
+
+        .toggle-exercises {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-exercises:hover {
+            background-color: var(--primary-color-dark);
+        }
+
+        .toggle-exercises i {
+            font-size: 20px;
+        }
+    </style>
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0W5V50NE"></script>
@@ -52,6 +84,10 @@
                     <br><b>NATURAL QUASE DESISTIU DO TREINO</b><br>
                   </a>
                 </p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                         Extensora <br> <b class="reps">3x20</b> <br><b class="reps">3x (10 reps embaixo) + (2 reps encima) 3 movs</b> <br> <i class="ativ">(vastos)</i>
@@ -85,6 +121,10 @@
                     <br><b>TOME CUIDADO COM ISSO NO SEU TREINO!</b><br>
                   </a>
                 </p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                         Extensora + flexora <br> <b class="reps">20-15-15-12-10</b> <b class="reps">5x15</b><br> <i class="ativ">vastos</i>
@@ -106,7 +146,6 @@
                     </li>
                     <li>
                         adução + abdução <br> <b class="reps">3 a 4x20</b>  <b class="reps">3 a 4x20</b> <br> <i class="ativ">adutores</i>
-                        
                     </li>
                 </ol>
                 <p>💡 Treino com progressão de carga</p>
@@ -119,6 +158,10 @@
                     <br><b>APRENDA A MONTAR SEU TREINO DE PERNA</b><br>
                   </a>
                 </p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                         extensora <br> <b class="reps">3x20 </b><b class="reps">3x 10³ + 10 </b> <br> <i class="ativ">vastos</i>
@@ -149,6 +192,10 @@
                     <br><b>TREINO AVANÇADO DE PERNA</b><br>
                   </a>
                 </p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                         Panturrilha<br> <b class="reps">3x20</b><br> <i class="ativ">panturrilha</i>
@@ -173,6 +220,10 @@
                     <br><b>JORLAN DESTRINCHA O LEG DAY DO JAY CUTLER</b><br>
                   </a>
                 </p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>Extensora <br><b class="reps">3x15</b><br><i class="ativ"> vastos lateral, medial e intermediario</i></li>
                     <li>Leg press <br><b class="reps">5x12-15</b> <br><i class="ativ">reto femoral</i></li>
@@ -195,5 +246,32 @@
     <script src="../../../assets/dashboard.js"></script>
     <script src="../../../../assets/js/theme.js"></script>
     <script src="../../../../assets/js/exercises.js"></script>
+    <script>
+        function toggleExercises(button) {
+            const exerciseList = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            const span = button.querySelector('span');
+            
+            if (exerciseList && exerciseList.tagName === 'OL') {
+                exerciseList.classList.toggle('show');
+                
+                if (exerciseList.classList.contains('show')) {
+                    icon.textContent = 'visibility_off';
+                    span.textContent = 'Ocultar Exercícios';
+                } else {
+                    icon.textContent = 'visibility';
+                    span.textContent = 'Mostrar Exercícios';
+                }
+            }
+        }
+
+        // Initialize all exercise lists as hidden
+        document.addEventListener('DOMContentLoaded', function() {
+            const exerciseLists = document.querySelectorAll('.training-card ol');
+            exerciseLists.forEach(list => {
+                list.classList.remove('show');
+            });
+        });
+    </script>
 </body>
 </html>

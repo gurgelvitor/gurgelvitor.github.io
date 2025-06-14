@@ -7,6 +7,38 @@
     <link rel="stylesheet" href="../../../assets/dashboard.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .training-card ol {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .training-card ol.show {
+            display: block;
+        }
+
+        .toggle-exercises {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-exercises:hover {
+            background-color: var(--primary-color-dark);
+        }
+
+        .toggle-exercises i {
+            font-size: 20px;
+        }
+    </style>
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0W5V50NE"></script>
@@ -46,6 +78,10 @@
         <main class="dashboard-main">
             <section class="card content-card training-card">
                 <h2>TREINO 1</h2>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                         pulley frente <br><b class="reps">1rec → 4xaté falha</b><br><i class="ativ">latissimo dorso</i>
@@ -64,35 +100,39 @@
                     </li>
                 </ol>
                 <p>💡todos os exercícios progredindo carga, e fazendo 4 series ate a falha</p>
-        </section>
-        <section class="card content-card training-card">
-            <h2>TREINO 2</h2>
-            <p>Dragon Pharma Brasil <a href="https://www.youtube.com/watch?v=JP5wUB1znjM"><b>JOHANN REVELA TÉCNICAS PARA TER A DORSAL GIGANTE | TREINO COMPLETO</b></a></p>
-            <ol>
-                <li>
-                    Puxada alta aberta com pegada neutra <br> <i class="ativ">latissimo dorso</i>
-                    <div>o braquiorradial é mais ativado com essa pegada</div>
-                </li>
-                <li>
-                    remada baixa media com pegada neutra <br> <i class="ativ">trapezio medio, romboide e latissimo dorso (parte interior)</i>
-                </li>
-                <li>
-                    puxada alta fechada <br> <i class="ativ">latissimo dorso (parte interior) e romboide</i>
-                </li>
-                <li>
-                    remada cavalinho <br> <i class="ativ">romboide e trapezio medio</i>
-                </li>
-                <li>
-                    puxada alta fechada com pegada neutra <br> <i class="ativ">latissimo dorso</i>
-                    <div>o braquiorradial é mais ativado com essa pegada</div>
-                </li>
-                <li>
-                    Pulldown <br> <i class="ativ">latissimo dorso</i>
-                </li>
-            </ol>
-            <p>💡todos os exercícios progredindo carga, e fazendo 4 series ate a falha</p>
-        </section>
-    </main>
+            </section>
+            <section class="card content-card training-card">
+                <h2>TREINO 2</h2>
+                <p>Dragon Pharma Brasil <a href="https://www.youtube.com/watch?v=JP5wUB1znjM"><b>JOHANN REVELA TÉCNICAS PARA TER A DORSAL GIGANTE | TREINO COMPLETO</b></a></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
+                <ol>
+                    <li>
+                        Puxada alta aberta com pegada neutra <br> <i class="ativ">latissimo dorso</i>
+                        <div>o braquiorradial é mais ativado com essa pegada</div>
+                    </li>
+                    <li>
+                        remada baixa media com pegada neutra <br> <i class="ativ">trapezio medio, romboide e latissimo dorso (parte interior)</i>
+                    </li>
+                    <li>
+                        puxada alta fechada <br> <i class="ativ">latissimo dorso (parte interior) e romboide</i>
+                    </li>
+                    <li>
+                        remada cavalinho <br> <i class="ativ">romboide e trapezio medio</i>
+                    </li>
+                    <li>
+                        puxada alta fechada com pegada neutra <br> <i class="ativ">latissimo dorso</i>
+                        <div>o braquiorradial é mais ativado com essa pegada</div>
+                    </li>
+                    <li>
+                        Pulldown <br> <i class="ativ">latissimo dorso</i>
+                    </li>
+                </ol>
+                <p>💡todos os exercícios progredindo carga, e fazendo 4 series ate a falha</p>
+            </section>
+        </main>
         <footer class="dashboard-footer">
             <p>Site criado e idealizado por Vitor Gurgel</p>
         </footer>
@@ -100,5 +140,21 @@
     <script src="../../../assets/dashboard.js"></script>
     <script src="../../../../assets/js/theme.js"></script>
     <script src="../../../../assets/js/exercises.js"></script>
+    <script>
+        function toggleExercises(button) {
+            const exerciseList = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            exerciseList.classList.toggle('show');
+            
+            if (exerciseList.classList.contains('show')) {
+                icon.textContent = 'visibility_off';
+                button.querySelector('span').textContent = 'Ocultar Exercícios';
+            } else {
+                icon.textContent = 'visibility';
+                button.querySelector('span').textContent = 'Mostrar Exercícios';
+            }
+        }
+    </script>
 </body>
 </html>

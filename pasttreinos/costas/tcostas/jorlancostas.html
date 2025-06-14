@@ -7,6 +7,38 @@
     <link rel="stylesheet" href="../../../assets/dashboard.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .training-card ol {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .training-card ol.show {
+            display: block;
+        }
+
+        .toggle-exercises {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-exercises:hover {
+            background-color: var(--primary-color-dark);
+        }
+
+        .toggle-exercises i {
+            font-size: 20px;
+        }
+    </style>
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0W5V50NE"></script>
@@ -29,7 +61,11 @@
     <main class="dashboard-main">
         <section class="card content-card training-card">
             <h2>TREINO 1</h2>
-            <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=g3ntXRAxZps" target="_blank" rel="noopener noreferrer"><br><b>APRENDA A MONTAR SEU TREINO</b><br></a></p>
+            <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=g3ntXRAxZps" target="_blank" rel="noopener noreferrer"><b>APRENDA A MONTAR SEU TREINO</b><br></a></p>
+            <button class="toggle-exercises" onclick="toggleExercises(this)">
+                <i class="material-icons">visibility</i>
+                <span>Mostrar Exercícios</span>
+            </button>
             <ol>
                 <li>
                     Pull down <br><b class="reps">3x20</b><br> <i class="ativ">(latíssimo dorso)</i>
@@ -57,7 +93,11 @@
         </section>
          <section class="card content-card training-card">
             <h2>TREINO 2</h2>
-            <p>Jorlan Vieira <br><b><a href="https://www.youtube.com/watch?v=DFRq2JmykXo" target="_blank" rel="noopener noreferrer">MEU TREINO DE COSTAS COMPLETO</a></b><br></p>
+            <p>Jorlan Vieira <b><a href="https://www.youtube.com/watch?v=DFRq2JmykXo" target="_blank" rel="noopener noreferrer">MEU TREINO DE COSTAS COMPLETO</a></b><br></p>
+            <button class="toggle-exercises" onclick="toggleExercises(this)">
+                <i class="material-icons">visibility</i>
+                <span>Mostrar Exercícios</span>
+            </button>
             <ol>
                 <li>
                     pull down <br><b class="reps">3x20</b><br><i class="ativ">grande dorsal</i>
@@ -86,7 +126,11 @@
 
         <section class="card content-card training-card">
             <h2>TREINO 3</h2>
-            <p>Jorlan Vieira <br><b><a href="https://www.youtube.com/watch?v=wNF0ndU8c-Q" target="_blank" rel="noopener noreferrer">APRENDA COMO USAR AS PEGADAS NO SEU TREINO DE COSTAS</a></b><br></p>
+            <p>Jorlan Vieira <b><a href="https://www.youtube.com/watch?v=wNF0ndU8c-Q" target="_blank" rel="noopener noreferrer">APRENDA COMO USAR AS PEGADAS NO SEU TREINO DE COSTAS</a></b><br></p>
+            <button class="toggle-exercises" onclick="toggleExercises(this)">
+                <i class="material-icons">visibility</i>
+                <span>Mostrar Exercícios</span>
+            </button>
             <ol>
                 <li>
                     pull down <br><b class="reps">3x20</b><br><i class="ativ">latissimo dorso</i> 
@@ -110,10 +154,14 @@
         </section>
           <section class="card content-card training-card">
             <h2>TREINO 4</h2>
-            <p>Jorlan Vieira <br><b><a href="https://www.youtube.com/watch?v=glA0Q7g4kuQ" target="_blank" rel="noopener noreferrer">MÉTODOS QUE UTILIZO NO MEU TREINO DE DORSAL</a></b><br></p>
+            <p>Jorlan Vieira <b><a href="https://www.youtube.com/watch?v=glA0Q7g4kuQ" target="_blank" rel="noopener noreferrer">MÉTODOS QUE UTILIZO NO MEU TREINO DE DORSAL</a></b><br></p>
+            <button class="toggle-exercises" onclick="toggleExercises(this)">
+                <i class="material-icons">visibility</i>
+                <span>Mostrar Exercícios</span>
+            </button>
             <ol>
                 <li>
-                    pulley frente <br><b class="reps">3x30</b><br><i class="ativ">latissimo dorso e interior das costas</i>
+                    pulley frente <b class="reps">3x30</b><br><i class="ativ">latissimo dorso e interior das costas</i>
                 </li>
                 <li>
                     pulley frente aberto <br><b class="reps">4x6+6²</b><br> <i class="ativ">latissimo dorso</i>
@@ -135,7 +183,11 @@
 
         <section class="card content-card training-card">
             <h2>TREINO 5</h2>
-            <p>Jorlan Vieira <br><b><a href="https://www.youtube.com/watch?v=QdVEueqrBlE">VARIAÇÕES QUE VÃO MELHORAR SEU TREINO DE COSTAS</a></b><br></p>
+            <p>Jorlan Vieira <b><a href="https://www.youtube.com/watch?v=QdVEueqrBlE">VARIAÇÕES QUE VÃO MELHORAR SEU TREINO DE COSTAS</a></b><br></p>
+            <button class="toggle-exercises" onclick="toggleExercises(this)">
+                <i class="material-icons">visibility</i>
+                <span>Mostrar Exercícios</span>
+            </button>
             <ol>
                 <li>
                     Pull down + remada na altura do peito <br><b class="reps">3x15</b><br> <i class="ativ">latissimo dorso</i>
@@ -158,7 +210,11 @@
 
         <section class="card content-card training-card">
             <h2>TREINO 6</h2>
-            <p>Jorlan Vieira <br><b><a href="https://www.youtube.com/watch?v=3gKkS62EcZI">RAMON DINO ENCARA JORLAN PELA PRIMEIRA VEZ</a></b><br></p>
+            <p>Jorlan Vieira <b><a href="https://www.youtube.com/watch?v=3gKkS62EcZI">RAMON DINO ENCARA JORLAN PELA PRIMEIRA VEZ</a></b><br></p>
+            <button class="toggle-exercises" onclick="toggleExercises(this)">
+                <i class="material-icons">visibility</i>
+                <span>Mostrar Exercícios</span>
+            </button>
             <ol>
                 <li>
                     Pull down <br><b class="reps">4x20</b><br><i class="ativ">latissimo do dorso</i>
@@ -171,6 +227,36 @@
                 </li>
                 <li>
                     Remada pegada neutra <br><b class="reps">4a +4s</b><br> <i class="ativ">romboide e trapezio</i>
+                </li>
+            </ol>
+        </section>
+        <section class="card content-card training-card">
+            <h2>TREINO 7</h2>
+            <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=jvtjDXTiKmg&t"><b>REMADA NO ESTILO "JOJO" 80KGS 20 REPETIÇÕES</b></a></p>
+            <button class="toggle-exercises" onclick="toggleExercises(this)">
+                <i class="material-icons">visibility</i>
+                <span>Mostrar Exercícios</span>
+            </button>
+            <ol>
+                <li>
+                    Pulldown c/ barra + pullover c/ barra W<br> <b class="reps">3x10</b> <b class="reps">3x12</b> <br> <i class="ativ">latissimo dorso</i> <i class="ativ">serrátil anterior</i>
+                    <div>embora pareça o mesmo tipo de ativação, o Pulldown ativa mais a dorsal, e o pullover mais o serrátil anterior</div>
+                    <div>Geralmente a pegada supinada proporciona um maior alongamento</div>
+                </li>
+                <li>
+                    Puxada alta aberta articulada + puxada alta aberta <br><b class="reps">4x 5 alternados + 5 simultâneas</b> <b class="reps">4x10</b> <br> <i class="ativ">latissimo dorso</i>
+                </li>
+                <li>
+                    Puxada alta fechada articulada + puxada alta fechada com triangulo <br> <b class="reps">4x 6 alternados + 6 simultâneas</b> <b class="reps">4x12</b> <br> <i class="ativ">parte interior do latissimo dorso e romboides</i>
+                </li>
+                <li>
+                    Remada cerrote <br> <b class="reps">4xaté a falha</b> <br> <i class="ativ">romboide, trapézio médio</i>
+                </li>
+                <li>
+                    Remada cavalinho <br> <b class="reps">4x8-12</b> <i class="ativ">romboide, trapezio medio</i>
+                </li>
+                <li>
+                    crucifixo invertido em pé + remada baixa pegada pronada <br> <b class="reps">4x12</b> <br> <i class="ativ">parte inferior das costas</i>
                 </li>
             </ol>
         </section>
@@ -188,5 +274,22 @@
 <script src="../../../assets/dashboard.js"></script>
 <script src="../../../../assets/js/theme.js"></script>
 <script src="../../../../assets/js/exercises.js"></script>
+<script>
+    function toggleExercises(button) {
+        const card = button.closest('.training-card');
+        const exerciseList = card.querySelector('ol');
+        const icon = button.querySelector('i');
+        
+        exerciseList.classList.toggle('show');
+        
+        if (exerciseList.classList.contains('show')) {
+            icon.textContent = 'visibility_off';
+            button.querySelector('span').textContent = 'Ocultar Exercícios';
+        } else {
+            icon.textContent = 'visibility';
+            button.querySelector('span').textContent = 'Mostrar Exercícios';
+        }
+    }
+</script>
 </body>
 </html>

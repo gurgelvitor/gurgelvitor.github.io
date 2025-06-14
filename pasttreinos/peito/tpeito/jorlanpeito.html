@@ -8,6 +8,38 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="description" content="Treinos de peito do atleta Jorlan Vieira - Técnicas avançadas e exercícios específicos">
+    <style>
+        .training-card ol {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .training-card ol.show {
+            display: block;
+        }
+
+        .toggle-exercises {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-exercises:hover {
+            background-color: var(--primary-color-dark);
+        }
+
+        .toggle-exercises i {
+            font-size: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-container">
@@ -42,6 +74,10 @@
             <section class="card content-card training-card">
                 <h2>TREINO 1</h2>
                 <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=6bK9XzM9Y0I" target="_blank" rel="noopener noreferrer"><b>COMO MELHORAR SEU PEITORAL?</b></a></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                         crossover <br><b class="reps">4x20</b><br> <i class="ativ">(peitoral por completo)</i>
@@ -70,6 +106,10 @@
             <section class="card content-card training-card">
                 <h2>TREINO 2</h2>
                 <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=698S1lzDLXc" target="_blank" rel="noopener noreferrer"><b>21 NÃO SERVE PARA PEITO? APRENDA COM OS MELHORES</b></a></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                         Crossover <br><b class="reps">3x21</b><br> <i class="ativ">3 porções</i>
@@ -95,6 +135,10 @@
             <section class="card content-card training-card">
                 <h2>TREINO 3</h2>
                 <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=uPP99ZRKiPI" target="_blank" rel="noopener noreferrer"><b>TREINO DE PEITO AVANÇADO</b></a></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                         voador <br><b class="reps">3x10³ + 10</b><br> <i class="ativ">peitoral medial</i>
@@ -119,6 +163,10 @@
             <section class="card content-card training-card">
                 <h2>TREINO 4</h2>
                 <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=toadeJ8O5v4" target="_blank" rel="noopener noreferrer"><b>TREINO DE PEITO OLDSCHOOL DO JORLAN</b></a></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                         Voador <br><b class="reps">2x20 reps + 3x 10+5³ + 1xdropset 3</b><br> <i class="ativ">parte medial do peito</i>
@@ -141,6 +189,10 @@
             <section class="card content-card training-card">
                 <h2>TREINO 5</h2>
                 <p>Jorlan Vieira <a href="https://youtu.be/3n40eVhgTgo?si=MqL1eH_BPGtUXn0V" target="_blank" rel="noopener noreferrer"><b>TREINO DE PEITO COM DANIEL BIANCHI</b></a></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                         crossover parte superior, medial e inferior<br><b class="reps">1x10 + 10  + 10 cada parte</b><br> <i class="ativ">todo o peitoral</i>
@@ -162,6 +214,10 @@
             <section class="card content-card training-card">
                 <h2>TREINO 6</h2>
                 <p>Jorlan Vieira <a href="https://youtu.be/KMtEOqrTpGs?si=TF_em8bDiuYnnYqC" target="_blank" rel="noopener noreferrer"><b>TREINO INSANO DE PEITO - QUER SER O PRÓXIMO?</b></a></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                         Crucifixo sentado na polia <br><b class="reps">3x15</b><br> <i class="ativ">parte medial do peito</i>
@@ -184,6 +240,10 @@
             <section class="card content-card training-card">
                 <h2>Treino 7</h2>
                 <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=rnsJbPdL5Ok">TREINO DE PEITO AVANÇADO COM BI-SET E FST-7</a></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                         Cross <br><b class="reps">3x20</b><br> <i class="ativ">parte medial do peito</i>
@@ -202,9 +262,14 @@
                 </ol>
                 <p>💡 Treino de bi-set + FST7</p>
             </section>
+
             <section class="card content-card training-card">
                 <h2>TREINO 8</h2>
                 <p>Jorlan Vieira <b><a href="https://www.youtube.com/watch?v=HgPFnYv12QE">TREINO DE PEITO INSANO COM CLUSTER SET</a></b></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
                 <ol>
                     <li>
                     Voador <br> <b class="reps">4x20 descansando 5s a cada 5rep</b> <br> <i class="ativ">Peitoral medial</i>
@@ -221,7 +286,31 @@
                         Crossover <br> <b class="reps">10+5²+5</b> <br> <i class="ativ">Peitoral inferior</i>
                     </li>
                 </ol>
-
+            </section>
+            <section class="card content-card training-card">
+                <h2>TREINO 9</h2>
+                <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=h2_4RMh_EjY&t"><b>TREINO OLD SCHOOL PARA UM PEITORAL GIGANTE</b></a></p>
+                <button class="toggle-exercises" onclick="toggleExercises(this)">
+                    <i class="material-icons">visibility</i>
+                    <span>Mostrar Exercícios</span>
+                </button>
+                <ol>
+                    <li>
+                        fly <br> <b class="reps">3x15 segurando 5s a cada 5rep</b> <br> <i class="ativ">Parte medial do peito e miolo</i>
+                    </li>
+                    <li>
+                        Supino Reto com barra<br> <b class="reps">15-12-10-8-6</b> <br> <i class="ativ">parte medial do peito</i>
+                    </li>
+                    <li>
+                        Crucifixo inclinado + supino inclinado HALTER + supino inclinado mão unidar HALTER + supino inclinado barra <br> <b class="reps">6</b> <b class="reps">6</b> <b class="reps">6</b> <b class="reps">6 segurando 3s embaixo</b> <b class="reps">4 series</b> <br> <i class="ativ">porção clavicular</i>
+                    </li>
+                    <li>
+                        crossover <br> <b class="reps">6xaté a falha</b> <br> <i class="ativ">porção inferior do peito</i>
+                    </li>
+                    <li>
+                        supino reto maquina <br> <b class="reps">3x20</b> <br> <i class="ativ">porção medial</i>
+                    </li>
+                </ol>
             </section>
         </main>
 
@@ -237,31 +326,25 @@
         </footer>
     </div>
     
-    <nav class="bottom-nav" role="navigation" aria-label="Navegação principal">
-        <button class="nav-item" data-page="home" aria-label="Início">
-            <i class="material-icons">home</i>
-            <span class="nav-label">Início</span>
-        </button>
-        <button class="nav-item active" data-page="workout" aria-label="Treinos">
-            <i class="material-icons">fitness_center</i>
-            <span class="nav-label">Treinos</span>
-        </button>
-        <button class="nav-item" data-page="nutrition" aria-label="Nutrição">
-            <i class="material-icons">restaurant</i>
-            <span class="nav-label">Nutrição</span>
-        </button>
-        <button class="nav-item" data-page="progress" aria-label="Progresso">
-            <i class="material-icons">trending_up</i>
-            <span class="nav-label">Progresso</span>
-        </button>
-        <button class="nav-item" data-page="profile" aria-label="Perfil">
-            <i class="material-icons">person</i>
-            <span class="nav-label">Perfil</span>
-        </button>
-    </nav>
-    
     <script src="../../../assets/dashboard.js"></script>
     <script src="../../../../assets/js/theme.js"></script>
     <script src="../../../../assets/js/exercises.js"></script>
+    <script>
+        function toggleExercises(button) {
+            const card = button.closest('.training-card');
+            const exerciseList = card.querySelector('ol');
+            const icon = button.querySelector('i');
+            
+            exerciseList.classList.toggle('show');
+            
+            if (exerciseList.classList.contains('show')) {
+                icon.textContent = 'visibility_off';
+                button.querySelector('span').textContent = 'Ocultar Exercícios';
+            } else {
+                icon.textContent = 'visibility';
+                button.querySelector('span').textContent = 'Mostrar Exercícios';
+            }
+        }
+    </script>
 </body>
 </html>
