@@ -3562,7 +3562,7 @@ a:hover {
     padding: 6px 10px;
     z-index: 1000;
     width: max-content;
-    max-width: 98vw;
+    max-width: 90%;
     min-width: 0;
     border: 1px solid var(--border-color, #e0e0e0);
   }
@@ -4371,12 +4371,20 @@ body {
     width: 100%;
     min-width: 0;
     box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
   .pill-bar-btn {
-    padding: 4px 8px;
+    flex: 1 1 20%;
     min-width: 44px;
+    max-width: 100px;
+    box-sizing: border-box;
+    padding: 4px 8px;
     min-height: 36px;
     font-size: 0.8em;
+    white-space: nowrap;
   }
   .pill-bar-btn .material-icons {
     font-size: 1.2em;
