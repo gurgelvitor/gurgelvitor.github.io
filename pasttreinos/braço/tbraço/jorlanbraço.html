@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treino de Costas (Jorlan) - Painel de Bem-Estar</title>
+    <title>Treino de Costas (Jorlan)</title>
     <link rel="stylesheet" href="../../../assets/dashboard.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../../../assets/img/favsite.png" type="image/x-icon">
     <style>
         .training-card ol {
             display: none;
@@ -79,10 +80,6 @@
             <section class="card content-card training-card">
                 <h2>TREINO 1</h2>
                 <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=4Ve1y0P0A50"><b>TREINO PARA NATURAL OU TREINO PARA HORMONIZADO? FT ALFREDO NETO</b></a></p>
-                <button class="toggle-exercises" onclick="toggleExercises(this)">
-                    <i class="material-icons">visibility</i>
-                    <span>Mostrar Exercícios</span>
-                </button>
                 <ol>
                     <li>
                         Rosca W <br> <b class="reps">3x15-12-10 1xdrop-set</b> <br> <i class="ativ">cabeça curta e longa</i>
@@ -107,9 +104,6 @@
             <section class="card content-card training-card">
                 <h2>TREINO 2</h2>
                 <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=i_MeJQT13E4"><b>JORLAN REVELA TÉCNICAS PARA TER BRAÇOS GIGANTES!</b></a></p>
-                <button class="toggle-exercises" onclick="toggleExercises(this)">
-                    <i class="material-icons">visibility</i>
-                    <span>Mostrar Exercícios</span>
                 </button>
                 <ol>
                     <li>
@@ -135,10 +129,6 @@
             <section class="card content-card training-card">
                 <h2>TREINO 3</h2>
                 <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=4Ve1y0P0A50"><b>TREINO PARA NATURAL OU TREINO PARA HORMONIZADO? FT ALFREDO NETO</b></a></p>
-                <button class="toggle-exercises" onclick="toggleExercises(this)">
-                    <i class="material-icons">visibility</i>
-                    <span>Mostrar Exercícios</span>
-                </button>
                 <ol>
                     <li>
                         Rosca W <br> <b class="reps">3x15-12-10 1xdrop-set</b> <br> <i class="ativ">cabeça curta e longa</i>
@@ -160,30 +150,53 @@
                     </li>
                 </ol>
             </section>
+            <section class="card content-card training-card">
+                <h2>TREINO 4</h2>
+                <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=svkUVRU9PHw"><b>TREINO INSANO DE OMBRO E BRAÇO</b></a></p>
+                <ol>
+                    <li>
+                        Rosca alternada + rosca martelo <br> <b class="reps">4x6</b> <b class="reps">4x6</b> <br> <i class="ativ">Cabeça longa</i> <i class="ativ">Cabeça curta e braquial</i>
+                    </li>
+                    <li>
+                        Triceps testa + supino c/ barra com as mãos juntas <br> <b class="reps">4x12</b> <b class="reps">4x12</b> <br> <i class="ativ">cabeça longa e medial</i> <i>cabeça lateral e medial</i>
+                    </li>
+                    <li>
+                        Rosca martelo + Triceps francês com halter <br> <b class="reps">4x 6 (drop) + 6 (drops) + 6</b> <b class="reps">4x18</b> <br> <i class="ativ">Cabeça curta e braquial</i> <i class="ativ">cabeça longa do tríceps</i>
+                    </li>
+                    <li>
+                        Triceps corda + rosca direta invertida <br> <b class="reps">4x10 + 10 segurando 3s</b> <b class="reps">4x12</b> <br> <i class="ativ">Cabeça lateral e cabeça longa</i> <i class="ativ">antebraço</i>
+                    </li>
+                </ol>
+            </section>
 
         </main>
         <footer class="dashboard-footer">
             <p>Site criado e idealizado por Vitor Gurgel</p>
         </footer>
+        <!-- Pill Bar para navegação mobile -->
+        <nav class="pill-bar">
+            <a href="../../../index.html" class="pill-bar-btn">
+                <span class="material-icons">home</span>
+                <span class="pill-label">Início</span>
+            </a>
+            <a href="../../../treinos.html" class="pill-bar-btn">
+                <span class="material-icons">fitness_center</span>
+                <span class="pill-label">Treinos</span>
+            </a>
+            <a href="../../../mapacorpo.html" class="pill-bar-btn">
+                <span class="material-icons">sports_gymnastics</span>
+                <span class="pill-label">Mapa do corpo</span>
+            </a>
+            <a href="../../../tabelanutricional.html" class="pill-bar-btn">
+                <span class="material-icons">show_chart</span>
+                <span class="pill-label">Progresso</span>
+            </a>
+            <a href="../../../sobrenos.html" class="pill-bar-btn">
+                <span class="material-icons">person</span>
+                <span class="pill-label">Perfil</span>
+            </a>
+        </nav>
     </div>
     <script src="../../../assets/dashboard.js"></script>
-    <script src="../../../../assets/js/theme.js"></script>
-    <script src="../../../../assets/js/exercises.js"></script>
-    <script>
-        function toggleExercises(button) {
-            const exerciseList = button.nextElementSibling;
-            const icon = button.querySelector('i');
-            
-            exerciseList.classList.toggle('show');
-            
-            if (exerciseList.classList.contains('show')) {
-                icon.textContent = 'visibility_off';
-                button.querySelector('span').textContent = 'Ocultar Exercícios';
-            } else {
-                icon.textContent = 'visibility';
-                button.querySelector('span').textContent = 'Mostrar Exercícios';
-            }
-        }
-    </script>
 </body>
 </html>

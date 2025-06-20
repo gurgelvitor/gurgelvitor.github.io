@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Bem-Estar - Sua Jornada Fitness Começa Aqui</title>
+    <title>Painel de Bem-Estar</title>
     <link rel="stylesheet" href="assets/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="shortcut icon" href="assets/img/favsite.png" type="image/x-icon">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <meta name="description" content="Painel de Bem-Estar: treinos, nutrição, dicas e mais para sua saúde e performance. Transforme seu corpo e sua vida com nossos programas personalizados.">
 <style>
@@ -51,7 +52,7 @@
 
         .hero-section {
             position: relative;
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('assets/images/hero-bg.jpg');
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('assets/img/hero-bg.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -417,7 +418,6 @@
                 </div>
             </div>
         </header>
-
         <main class="dashboard-main">
             <!-- Hero Section -->
             <section class="hero-section" data-aos="fade-up">
@@ -458,7 +458,7 @@
                 <h2 class="section-title">Área de Treinos</h2>
                 <div class="blog-grid" style="max-width: 800px; margin: 0 auto;">
                     <article class="blog-card" data-aos="fade-up" data-aos-delay="100">
-                        <img src="assets/images/workout.jpg" alt="Treinos Completos" class="blog-image">
+                        <img src="assets/img/workout.jpg" alt="Treinos Completos" class="blog-image">
                         <div class="blog-content">
                             <h3 class="blog-title">Treinos Completos</h3>
                             <p class="blog-excerpt">Acesse treinos completos para cada grupo muscular, incluindo braço, peito, costas, pernas e muito mais. Cada treino é detalhado com séries, repetições e técnicas específicas dos maiores fisiculturistas do mundo.</p>
@@ -473,7 +473,7 @@
                 <h2 class="section-title">Mapa do Corpo</h2>
                 <div class="testimonials-grid" style="max-width: 800px; margin: 0 auto;">
                     <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
-                        <img src="assets/images/body-map.jpg" alt="Mapa do Corpo" class="blog-image" style="border-radius: 10px 10px 0 0;">
+                        <img src="assets/img/body-map.jpg" alt="Mapa do Corpo" class="blog-image" style="border-radius: 10px 10px 0 0;">
                         <div class="blog-content">
                             <h3 class="blog-title">Exercícios por Grupo Muscular</h3>
                             <p class="testimonial-text">Explore nosso mapa interativo do corpo e descubra os melhores exercícios para cada grupo muscular. Visualize a anatomia, aprenda a executar cada movimento corretamente e descubra diferentes variações de exercícios para maximizar seus resultados.</p>
@@ -488,7 +488,7 @@
                 <h2 class="section-title">Acompanhamento de Progresso</h2>
                 <div class="blog-grid" style="max-width: 800px; margin: 0 auto;">
                     <article class="blog-card" data-aos="fade-up" data-aos-delay="100">
-                        <img src="assets/images/progress.jpg" alt="Gráficos de Progresso" class="blog-image">
+                        <img src="assets/img/progress.jpg" alt="Gráficos de Progresso" class="blog-image">
                         <div class="blog-content">
                             <h3 class="blog-title">Acompanhe sua Evolução</h3>
                             <p class="blog-excerpt">Acompanhe sua evolução através de gráficos interativos. Registre seu peso, medidas e progresso em cada exercício para visualizar seu desenvolvimento ao longo do tempo. Mantenha um registro detalhado de suas medidas corporais e ajuste seu treino conforme necessário.</p>
@@ -510,6 +510,26 @@
                     </div>
                 </div>
             </section>
+            <!-- Seção de Atualização do Site -->
+            <section class="update-section" style="max-width: 900px; margin: 32px auto 0 auto; background: var(--card-background); border-radius: 14px; box-shadow: 0 2px 12px var(--shadow-color); padding: 32px 24px; display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; justify-content: space-between;">
+                <div style="flex:1; min-width: 220px;">
+                    <h2 style="margin-top:0; font-size:1.5em; color:var(--primary-color);">Próxima atualização</h2>
+                    <div id="update-timer" style="font-size:2.2em; font-weight:700; color:var(--accent-color); margin: 12px 0 0 0; letter-spacing: 2px;">00:00:00</div>
+                    <div style="font-size:0.95em; color:var(--text-color-light); margin-top: 6px;">Fique ligado! Novidades em breve.</div>
+                </div>
+                <div style="flex:2; min-width: 220px;">
+                    <h3 style="margin-top:0; color:var(--primary-color); font-size:1.15em;">Novidades desta atualização</h3>
+                    <ul id="update-topics" style="margin:0; padding-left: 18px; color:var(--text-color); font-size:1em;">
+                        <li>Adição de mais treinos</li>
+                        <li>Incremento do Favcon no site</li>
+                        <li>Calculadora de IMC visual e interativa na Tabela Nutricional</li>
+                        <li>Footer padronizado e bonito em todas as páginas</li>
+                        <li>Pill bar sempre visível e com contraste em qualquer tema</li>
+                        <li>Limpeza e centralização dos scripts e estilos</li>
+                        <li>Melhorias de acessibilidade e navegação mobile</li>
+                    </ul>
+                </div>
+            </section>
         </main>
 
         <footer class="dashboard-footer">
@@ -520,21 +540,45 @@
                         <li><a href="treinos.html">Treinos</a></li>
                         <li><a href="mapacorpo.html">Mapa do Corpo</a></li>
                         <li><a href="tabelanutricional.html">Progresso Físico</a></li>
+                        <li><a href="sobrenos.html">Sobre</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h3>Redes Sociais</h3>
-                <div class="social-links">
-                    <a href="https://www.instagram.com/gurgel_vitor._/" class="social-link" aria-label="Instagram" target="_blank">
-                        <i class="material-icons">photo_camera</i>
-                    </a>
-                </div>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/gurgel_vitor._/" class="social-link" aria-label="Instagram" target="_blank">
+                            <i class="material-icons">photo_camera</i>
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="footer-bottom">
                 <p>Site criado e idealizado por Vitor Gurgel © 2024</p>
             </div>
         </footer>
+        <!-- Pill Bar para navegação mobile -->
+        <nav class="pill-bar">
+            <a href="index.html" class="pill-bar-btn active">
+                <span class="material-icons">home</span>
+                <span class="pill-label">Início</span>
+            </a>
+            <a href="treinos.html" class="pill-bar-btn">
+                <span class="material-icons">fitness_center</span>
+                <span class="pill-label">Treinos</span>
+            </a>
+            <a href="mapacorpo.html" class="pill-bar-btn">
+                <span class="material-icons">sports_gymnastics</span>
+                <span class="pill-label">Mapa do corpo</span>
+            </a>
+            <a href="tabelanutricional.html" class="pill-bar-btn">
+                <span class="material-icons">show_chart</span>
+                <span class="pill-label">Progresso</span>
+            </a>
+            <a href="sobrenos.html" class="pill-bar-btn">
+                <span class="material-icons">person</span>
+                <span class="pill-label">Perfil</span>
+            </a>
+        </nav>
     </div>
     <script src="assets/dashboard.js"></script>
     <script src="assets/js/theme.js"></script>
@@ -568,6 +612,30 @@
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
         });
+
+        // Contagem regressiva para a próxima atualização (exemplo: 7 dias a partir de agora)
+        (function() {
+            // Defina a data/hora da próxima atualização aqui:
+            const nextUpdate = new Date();
+            nextUpdate.setDate(nextUpdate.getDate() + 9); // 7 dias a partir de agora
+            nextUpdate.setHours(12, 0, 0, 0); // Exemplo: meio-dia
+
+            function updateTimer() {
+                const now = new Date();
+                let diff = nextUpdate - now;
+                if (diff < 0) diff = 0;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+                let str = '';
+                if (days > 0) str += days + 'd ';
+                str += String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+                document.getElementById('update-timer').textContent = str;
+            }
+            setInterval(updateTimer, 1000);
+            updateTimer();
+        })();
     </script>
 </body>
 </html>

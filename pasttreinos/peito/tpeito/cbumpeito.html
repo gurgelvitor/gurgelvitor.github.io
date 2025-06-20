@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treino de Peito (CBUM) - Painel de Bem-Estar</title>
+    <title>Treino de Peito (CBUM)</title>
     <link rel="stylesheet" href="../../../assets/dashboard.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../../../assets/img/favsite.png" type="image/x-icon">
     <style>
         .training-card ol {
             display: none;
@@ -91,10 +92,6 @@
             <section class="card content-card training-card">
                 <h2>TREINO 1</h2>
                 <p>CBUM <a href="https://www.youtube.com/watch?v=6bK9XzM9Y0I" target="_blank" rel="noopener noreferrer"><b>TREINO DE PEITO DO CBUM</b></a></p>
-                <button class="toggle-exercises" onclick="toggleExercises(this)">
-                    <i class="material-icons">visibility</i>
-                    <span>Mostrar Exercícios</span>
-                </button>
                 <ol>
                     <li>
                         Supino reto com halter <br> <i class="ativ">peitoral medial</i>
@@ -118,33 +115,52 @@
 
         <footer class="dashboard-footer">
             <div class="footer-content">
-                <p>Site criado e idealizado por Vitor Gurgel</p>
-                <div class="social-links">
-                    <a href="https://www.instagram.com/gurgel_vitor._/" class="social-link" aria-label="Instagram" target="_blank">
-                        <i class="material-icons">photo_camera</i>
-                    </a>
+                <div class="footer-section">
+                    <h3>Links Rápidos</h3>
+                    <ul>
+                        <li><a href="../../../treinos.html">Treinos</a></li>
+                        <li><a href="../../../mapacorpo.html">Mapa do Corpo</a></li>
+                        <li><a href="../../../tabelanutricional.html">Progresso Físico</a></li>
+                        <li><a href="../../../sobrenos.html">Sobre</a></li>
+                    </ul>
                 </div>
+                <div class="footer-section">
+                    <h3>Redes Sociais</h3>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/gurgel_vitor._/" class="social-link" aria-label="Instagram" target="_blank">
+                            <i class="material-icons">photo_camera</i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Site criado e idealizado por Vitor Gurgel © 2024</p>
             </div>
         </footer>
     </div>
     <script src="../../../assets/dashboard.js"></script>
-    <script src="../../../../assets/js/theme.js"></script>
-    <script src="../../../../assets/js/exercises.js"></script>
-    <script>
-        function toggleExercises(button) {
-            const exerciseList = button.nextElementSibling;
-            const icon = button.querySelector('i');
-            
-            exerciseList.classList.toggle('show');
-            
-            if (exerciseList.classList.contains('show')) {
-                icon.textContent = 'visibility_off';
-                button.querySelector('span').textContent = 'Ocultar Exercícios';
-            } else {
-                icon.textContent = 'visibility';
-                button.querySelector('span').textContent = 'Mostrar Exercícios';
-            }
-        }
-    </script>
+    <!-- Pill Bar para navegação mobile -->
+    <nav class="pill-bar">
+        <a href="../../../index.html" class="pill-bar-btn">
+            <span class="material-icons">home</span>
+            <span class="pill-label">Início</span>
+        </a>
+        <a href="../../../treinos.html" class="pill-bar-btn">
+            <span class="material-icons">fitness_center</span>
+            <span class="pill-label">Treinos</span>
+        </a>
+        <a href="../../../mapacorpo.html" class="pill-bar-btn">
+            <span class="material-icons">sports_gymnastics</span>
+            <span class="pill-label">Mapa do corpo</span>
+        </a>
+        <a href="../../../tabelanutricional.html" class="pill-bar-btn">
+            <span class="material-icons">show_chart</span>
+            <span class="pill-label">Progresso</span>
+        </a>
+        <a href="../../../sobrenos.html" class="pill-bar-btn">
+            <span class="material-icons">person</span>
+            <span class="pill-label">Perfil</span>
+        </a>
+    </nav>
 </body>
 </html>
