@@ -3562,7 +3562,7 @@ a:hover {
     padding: 6px 10px;
     z-index: 1000;
     width: max-content;
-    max-width: 90%;
+    max-width: 95%;
     min-width: 0;
     border: 1px solid var(--border-color, #e0e0e0);
   }
