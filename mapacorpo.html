@@ -113,10 +113,20 @@
         }
 
         .slide img {
-            max-width: 100%;
-            height: auto;
+            width: 100%;
+            max-width: 350px;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto 15px auto;
             border-radius: 12px;
-            margin-bottom: 15px;
+            box-shadow: 0 2px 12px var(--shadow-color);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .slide img:hover {
+            transform: scale(1.02);
         }
 
         .slide p {
@@ -159,7 +169,84 @@
             right: 10px;
         }
 
-        
+        .zoom-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary-color);
+            color: #000;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+        }
+
+        .zoom-btn .material-icons {
+            color: #000 !important;
+        }
+
+        .zoom-btn:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        .image-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90%;
+            text-align: center;
+        }
+
+        .modal img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10001;
+        }
+
+        .close:hover {
+            color: #bbb;
+        }
+
         /* Responsive styles */
         @media (max-width: 768px) {
             .muscle-group-card h2 {
@@ -189,6 +276,32 @@
             .carousel-btn {
                 padding: 8px 12px;
                 font-size: 16px;
+                width: 36px;
+                height: 36px;
+            }
+
+            .slide img {
+                max-width: 280px;
+                height: 180px;
+            }
+
+            .zoom-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+                top: 8px;
+                right: 8px;
+            }
+
+            .modal-content {
+                max-width: 95%;
+                max-height: 95%;
+            }
+
+            .close {
+                top: 10px;
+                right: 20px;
+                font-size: 30px;
             }
         }
 
@@ -220,6 +333,32 @@
             .carousel-btn {
                 padding: 6px 10px;
                 font-size: 14px;
+                width: 32px;
+                height: 32px;
+            }
+
+            .slide img {
+                max-width: 250px;
+                height: 160px;
+            }
+
+            .zoom-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+                top: 6px;
+                right: 6px;
+            }
+
+            .modal-content {
+                max-width: 98%;
+                max-height: 98%;
+            }
+
+            .close {
+                top: 8px;
+                right: 15px;
+                font-size: 24px;
             }
 
             .dashboard-header h1 {
@@ -235,7 +374,27 @@
             }
         }
 
-        
+        @media (max-width: 360px) {
+            .slide img {
+                max-width: 220px;
+                height: 140px;
+            }
+
+            .zoom-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 12px;
+                top: 4px;
+                right: 4px;
+            }
+
+            .carousel-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+                top: 15px;
+            }
+        }
     </style>
 </head>
 <!-- Google tag (gtag.js) -->
@@ -286,12 +445,17 @@
                     </div>
                 </div>
             </section>
-            <section class="card content-card muscle-group-card">
-                <div class="carousel-container">
-                <button class="carousel-btn prev-btn">&#10094;</button>
+            <section class="card content-card muscle-group-card" style="background: var(--card-background); box-shadow: 0 4px 24px var(--shadow-color); border-radius: 18px; padding: 0; margin-bottom: 32px;">
+                <div class="carousel-container" style="background: var(--card-background); box-shadow: 0 2px 16px var(--shadow-color); border-radius: 18px; padding: 0 0 32px 0;">
+                    <button class="carousel-btn prev-btn" style="top: 20px; left: 16px; transform: none; background: var(--primary-color); color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">&#10094;</button>
                 <div class="carousel-inner" id="carousel">
                     <div class="slide">
-                        <img src="/assets/img/musculocostas.jpg" alt="Slide 1">
+                        <div class="image-container">
+                            <img src="/assets/img/musculocostas.jpg" alt="Slide 1" onclick="openModal(this.src)">
+                            <button class="zoom-btn" onclick="openModal(this.previousElementSibling.src)">
+                                <i class="material-icons">zoom_in</i>
+                            </button>
+                        </div>
                         <h2>COSTAS</h2>
                         <p>
                         <b>🔹 <b>1. Barra Fixa</b> <br></b>
@@ -367,7 +531,12 @@
                     </p>
                     </div>
                     <div class="slide">
-                        <img src="/assets/img/musculopeito.png" alt="Slide 2">
+                        <div class="image-container">
+                            <img src="/assets/img/musculopeito.png" alt="Slide 2" onclick="openModal(this.src)">
+                            <button class="zoom-btn" onclick="openModal(this.previousElementSibling.src)">
+                                <i class="material-icons">zoom_in</i>
+                            </button>
+                        </div>
                         <h2>Peito</h2>
                         <p>
                         🔹 <b>1. Supino Inclinado (barra ou halteres)</b> <br>
@@ -412,7 +581,12 @@
                         </p>
                     </div>
                     <div class="slide">
-                        <img src="/assets/img/musculoombro.jpg" alt="Slide 3">
+                        <div class="image-container">
+                            <img src="/assets/img/musculoombro.jpg" alt="Slide 3" onclick="openModal(this.src)">
+                            <button class="zoom-btn" onclick="openModal(this.previousElementSibling.src)">
+                                <i class="material-icons">zoom_in</i>
+                            </button>
+                        </div>
                         <h2>OMBRO</h2>
                         <p>
                         🔹 <b>1. Elevação Lateral</b> <br>
@@ -446,7 +620,12 @@
                         </p>
                     </div>
                     <div class="slide">
-                        <img src="/assets/img/musculoquadriceps.jpg" alt="Slide 4">
+                        <div class="image-container">
+                            <img src="/assets/img/musculoquadriceps.jpg" alt="Slide 4" onclick="openModal(this.src)">
+                            <button class="zoom-btn" onclick="openModal(this.previousElementSibling.src)">
+                                <i class="material-icons">zoom_in</i>
+                            </button>
+                        </div>
                         <h2>QUADRICEPS</h2>
                         <p>
                         🔹 <b>1. Cadeira Extensora</b> <br>
@@ -491,7 +670,12 @@
                         </p>
                     </div>
                     <div class="slide">
-                        <img src="/assets/img/musculoposterior.jpg" alt="Slide 3">
+                        <div class="image-container">
+                            <img src="/assets/img/musculoposterior.jpg" alt="Slide 5" onclick="openModal(this.src)">
+                            <button class="zoom-btn" onclick="openModal(this.previousElementSibling.src)">
+                                <i class="material-icons">zoom_in</i>
+                            </button>
+                        </div>
                         <h2>POSTERIOR</h2>
                         <p>
                         🔹 <b>1. Cadeira Flexora (leg curl sentado)</b> <br>
@@ -518,7 +702,12 @@
                         </p>
                     </div>
                     <div class="slide">
-                        <img src="/assets/img/musculobiceps.jpg" alt="Slide 3">
+                        <div class="image-container">
+                            <img src="/assets/img/musculobiceps.jpg" alt="Slide 6" onclick="openModal(this.src)">
+                            <button class="zoom-btn" onclick="openModal(this.previousElementSibling.src)">
+                                <i class="material-icons">zoom_in</i>
+                            </button>
+                        </div>
                         <h2>BICEPS</h2>
                         <p>
                         🔹 <b>1. Rosca direta (barra reta)</b></br>
@@ -576,7 +765,12 @@
                         </p>  
                     </div>
                     <div class="slide">
-                        <img src="/assets/img/musculotriceps.jpg" alt="Slide 3">
+                        <div class="image-container">
+                            <img src="/assets/img/musculotriceps.jpg" alt="Slide 7" onclick="openModal(this.src)">
+                            <button class="zoom-btn" onclick="openModal(this.previousElementSibling.src)">
+                                <i class="material-icons">zoom_in</i>
+                            </button>
+                        </div>
                         <h2>TRICEPS</h2>
                         <p>
                         🔹 <b>1. Tríceps testa (barra ou halteres)</b><br>
@@ -633,8 +827,20 @@
                         </p>
                     </div>
                 </div>
-                <button class="carousel-btn next-btn">&#10095;</button>
+                    <button class="carousel-btn next-btn" style="top: 20px; right: 16px; transform: none; background: var(--primary-color); color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">&#10095;</button>
+                    <div class="carousel-indicators" id="carousel-indicators" style="display: flex; justify-content: center; gap: 8px; margin-top: 18px;"></div>
+                </div>
+            </section>
         </main>
+
+        <!-- Modal para zoom das imagens -->
+        <div class="modal" id="imageModal">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-content">
+                <img id="modalImage" src="" alt="Imagem ampliada">
+            </div>
+        </div>
+
         <footer class="dashboard-footer">
             <div class="footer-content">
                 <div class="footer-section">
@@ -648,11 +854,11 @@
                 </div>
                 <div class="footer-section">
                     <h3>Redes Sociais</h3>
-                    <div class="social-links">
-                        <a href="https://www.instagram.com/gurgel_vitor._/" class="social-link" aria-label="Instagram" target="_blank">
-                            <i class="material-icons">photo_camera</i>
-                        </a>
-                    </div>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/gurgel_vitor._/" class="social-link" aria-label="Instagram" target="_blank">
+                        <i class="material-icons">photo_camera</i>
+                    </a>
+                </div>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -690,9 +896,36 @@
         const slides = document.querySelectorAll('.slide');
         let currentIndex = 0;
 
+        // Adiciona indicadores de slide
+        const indicators = document.getElementById('carousel-indicators');
+        slides.forEach((_, idx) => {
+            const dot = document.createElement('span');
+            dot.className = 'carousel-dot' + (idx === 0 ? ' active' : '');
+            dot.style.width = '12px';
+            dot.style.height = '12px';
+            dot.style.borderRadius = '50%';
+            dot.style.background = 'var(--primary-color)';
+            dot.style.opacity = idx === 0 ? '1' : '0.3';
+            dot.style.cursor = 'pointer';
+            dot.addEventListener('click', () => {
+                currentIndex = idx;
+                updateCarousel();
+                updateIndicators();
+            });
+            indicators.appendChild(dot);
+        });
+
+        function updateIndicators() {
+            Array.from(indicators.children).forEach((dot, idx) => {
+                dot.className = 'carousel-dot' + (idx === currentIndex ? ' active' : '');
+                dot.style.opacity = idx === currentIndex ? '1' : '0.3';
+            });
+        }
+
         function updateCarousel() {
             const offset = -currentIndex * 100;
             carouselInner.style.transform = `translateX(${offset}%)`;
+            updateIndicators();
         }
 
         document.querySelector('.next-btn').addEventListener('click', () => {
@@ -706,6 +939,55 @@
             if (currentIndex > 0) {
                 currentIndex--;
                 updateCarousel();
+            }
+        });
+
+        let startX = 0;
+        let isDragging = false;
+
+        carouselInner.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                startX = e.touches[0].clientX;
+                isDragging = true;
+            }
+        });
+
+        carouselInner.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            // Opcional: pode adicionar efeito de arrasto visual aqui
+        });
+
+        carouselInner.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            const endX = e.changedTouches[0].clientX;
+            const diff = endX - startX;
+            if (Math.abs(diff) > 50) { // threshold para swipe
+                if (diff < 0 && currentIndex < slides.length - 1) {
+                    currentIndex++;
+                    updateCarousel();
+                } else if (diff > 0 && currentIndex > 0) {
+                    currentIndex--;
+                    updateCarousel();
+                }
+            }
+            isDragging = false;
+        });
+
+        function openModal(imgSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = 'block';
+            modalImg.src = imgSrc;
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        // Fechar modal ao clicar fora da imagem
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
             }
         });
     </script>
