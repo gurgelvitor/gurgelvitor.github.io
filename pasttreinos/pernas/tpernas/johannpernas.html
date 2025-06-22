@@ -8,38 +8,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="shortcut icon" href="../../../assets/img/favsite.png" type="image/x-icon">
-    <style>
-        .training-card ol {
-            display: none;
-            margin-top: 15px;
-        }
-
-        .training-card ol.show {
-            display: block;
-        }
-
-        .toggle-exercises {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 10px;
-            transition: background-color 0.3s;
-        }
-
-        .toggle-exercises:hover {
-            background-color: var(--primary-color-dark);
-        }
-
-        .toggle-exercises i {
-            font-size: 20px;
-        }
-    </style>
+    <meta name="description" content="Treinos de pernas do atleta Johann - Técnicas avançadas e exercícios específicos">
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0W5V50NE"></script>
@@ -52,44 +21,48 @@
 </script>
 <body>
     <div class="dashboard-container">
-        <header class="dashboard-header">
-            <div class="header-start">
-                <a href="../perna.html" class="cta-button" style="margin-right: 15px; background-color: transparent; border: 1px solid var(--header-text-color); padding: 8px 15px; display: inline-flex; align-items: center;"><i class="material-icons" style="margin-right: 5px; vertical-align: middle;">arrow_back</i> Treinos de Pernas</a>
-                <h1>Johann - Pernas</h1>
+        <header class="universal-header">
+            <div class="header-decoration">
+                <i class="material-icons header-decoration-icon">fitness_center</i>
+                <i class="material-icons header-decoration-icon">sports_gymnastics</i>
+                <i class="material-icons header-decoration-icon">sports</i>
+                <i class="material-icons header-decoration-icon">self_improvement</i>
+                <i class="material-icons header-decoration-icon">monitor_heart</i>
+                <i class="material-icons header-decoration-icon">shield</i>
             </div>
-            <div class="header-end">
-                <button id="theme-toggle" class="theme-switcher" aria-label="Alternar tema">
-                    <i class="material-icons">dark_mode</i>
-                </button>
-                <div class="theme-color-dropdown" id="theme-color-dropdown">
-                    <button class="theme-color-main-btn" id="theme-color-main-btn" aria-label="Escolher cor do tema">
-                        <i class="material-icons">palette</i>
+            <div class="header-container">
+                <div class="header-left-section">
+                    <a href="../perna.html" class="header-nav-btn">
+                        <i class="material-icons">arrow_back</i>
+                        <span>Voltar</span>
+                    </a>
+                    <h1 class="header-main-title">Johann - Pernas</h1>
+                    <div class="header-icon-desc">
+                        <i class="material-icons header-icon">fitness_center</i>
+                        <p class="header-description">Treinos avançados de pernas com técnicas específicas do atleta Johann</p>
+                    </div>
+                </div>
+                <div class="header-right-section">
+                    <button id="theme-toggle" class="header-control-btn" aria-label="Alternar tema">
+                        <i class="material-icons">dark_mode</i>
                     </button>
-                    <div class="theme-color-picker" id="theme-color-picker" style="display: none;">
-                        <button class="theme-color-btn" data-color="default" aria-label="Cor padrão"></button>
-                        <button class="theme-color-btn" data-color="green" aria-label="Verde"></button>
-                        <button class="theme-color-btn" data-color="gray" aria-label="Cinza"></button>
-                        <button class="theme-color-btn" data-color="yellow" aria-label="Amarelo"></button>
-                        <button class="theme-color-btn" data-color="orange" aria-label="Laranja"></button>
-                        <button class="theme-color-btn" data-color="pink" aria-label="Rosa"></button>
+                    <div class="theme-color-dropdown" id="theme-color-dropdown">
+                        <button class="header-control-btn" id="theme-color-main-btn" aria-label="Escolher cor do tema">
+                            <i class="material-icons">palette</i>
+                        </button>
+                        <div class="theme-color-picker" id="theme-color-picker" style="display: none;">
+                            <button class="theme-color-btn" data-color="default" aria-label="Cor padrão"></button>
+                            <button class="theme-color-btn" data-color="green" aria-label="Verde"></button>
+                            <button class="theme-color-btn" data-color="gray" aria-label="Cinza"></button>
+                            <button class="theme-color-btn" data-color="yellow" aria-label="Amarelo"></button>
+                            <button class="theme-color-btn" data-color="orange" aria-label="Laranja"></button>
+                            <button class="theme-color-btn" data-color="pink" aria-label="Rosa"></button>
+                        </div>
                     </div>
                 </div>
             </div>
         </header>
-
         <main class="dashboard-main">
-            <section class="card page-title-card">
-                <div class="title-container">
-                    <div class="title-icon-wrapper">
-                        <i class="material-icons title-icon">fitness_center</i>
-                    </div>
-                    <div class="title-text">
-                        <h1>Treinos de Pernas</h1>
-                        <p class="title-subtitle">Técnicas avançadas e exercícios específicos do atleta Johann</p>
-                    </div>
-                </div>
-            </section>
-
             <section class="card content-card training-card">
                 <h2>TREINO 1</h2>
                 <p>Tenente Breno Freire <a href="https://www.youtube.com/watch?v=9W8PPrpWpyg" target="_blank" rel="noopener noreferrer"><b>TREINO QUADRICEPS</b></a></p>

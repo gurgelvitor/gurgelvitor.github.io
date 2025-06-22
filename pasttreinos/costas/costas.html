@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Treino de Costas</title>
     <link rel="stylesheet" href="../../assets/dashboard.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="description" content="Explore os melhores treinos de costas dos atletas profissionais">
@@ -12,53 +13,210 @@
 </head>
 <body>
     <div class="dashboard-container">
-        <header class="dashboard-header">
-            <div class="header-start">
-                <a href="../../treinos.html" class="back-button">
-                    <i class="material-icons">arrow_back</i>
-                    <span>Voltar</span>
-                </a>
-                <h1>Treino de Costas</h1>
+        <header class="universal-header">
+            <div class="header-decoration">
+                <i class="material-icons header-decoration-icon">fitness_center</i>
+                <i class="material-icons header-decoration-icon">sports_gymnastics</i>
+                <i class="material-icons header-decoration-icon">sports</i>
+                <i class="material-icons header-decoration-icon">self_improvement</i>
+                <i class="material-icons header-decoration-icon">monitor_heart</i>
+                <i class="material-icons header-decoration-icon">shield</i>
             </div>
-            <div class="header-end">
-                <button id="theme-toggle" class="theme-switcher" aria-label="Alternar tema">
-                    <i class="material-icons">dark_mode</i>
-                </button>
+            <div class="header-container">
+                <div class="header-left-section">
+                    <a href="../../treinos.html" class="header-nav-btn">
+                        <i class="material-icons">arrow_back</i>
+                        <span>Voltar</span>
+                    </a>
+                    <h1 class="header-main-title">Treino de Costas</h1>
+                    <div class="header-icon-desc">
+                        <i class="material-icons header-page-icon">fitness_center</i>
+                        <span class="header-page-desc">Exercícios e técnicas para costas</span>
+                    </div>
+                </div>
+                <div class="header-right-section">
+                    <button id="theme-toggle" class="header-control-btn" aria-label="Alternar tema">
+                        <i class="material-icons">dark_mode</i>
+                    </button>
+                    <div class="theme-color-dropdown" id="theme-color-dropdown">
+                        <button class="header-control-btn" id="theme-color-main-btn" aria-label="Escolher cor do tema">
+                            <i class="material-icons">palette</i>
+                        </button>
+                        <div class="theme-color-picker" id="theme-color-picker" style="display: none;">
+                            <button class="theme-color-btn" data-color="default" aria-label="Cor padrão"></button>
+                            <button class="theme-color-btn" data-color="green" aria-label="Verde"></button>
+                            <button class="theme-color-btn" data-color="gray" aria-label="Cinza"></button>
+                            <button class="theme-color-btn" data-color="yellow" aria-label="Amarelo"></button>
+                            <button class="theme-color-btn" data-color="orange" aria-label="Laranja"></button>
+                            <button class="theme-color-btn" data-color="pink" aria-label="Rosa"></button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </header>
-
         <main class="dashboard-main">
-            <section class="card page-title-card">
-                <div class="title-container">
-                    <div class="title-icon-wrapper">
-                        <i class="material-icons title-icon">fitness_center</i>
+            <!-- Hero Section -->
+            <section class="hero-section-modern">
+                <div class="hero-content-modern">
+                    <div class="hero-text">
+                        <h1 class="hero-title-modern">Treinos de Costas</h1>
+                        <p class="hero-subtitle-modern">Desenvolva uma estrutura dorsal poderosa com os treinos dos maiores fisiculturistas do mundo</p>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <span class="stat-number">4</span>
+                                <span class="stat-label">Atletas</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">25+</span>
+                                <span class="stat-label">Exercícios</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">100%</span>
+                                <span class="stat-label">Resultados</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="title-text">
-                        <h1>Treinos de Costas</h1>
-                        <p class="title-subtitle">Escolha entre os melhores treinos dos atletas profissionais</p>
+                    <div class="hero-visual">
+                        <div class="muscle-animation">
+                            <i class="material-icons muscle-icon-large">fitness_center</i>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <section class="card content-card quick-actions">
-                <h2>Escolha um Treino:</h2>
-                <div class="workout-buttons">
-                    <a href="tcostas/jorlancostas.html" class="action-button">
-                        <i class="material-icons">emoji_events</i>
-                        <span>JORLAN</span>
+            <!-- Athletes Grid -->
+            <section class="athletes-section-modern">
+                <div class="section-header">
+                    <h2 class="section-title-modern">Escolha seu Atleta</h2>
+                    <p class="section-subtitle">Cada atleta tem sua metodologia única para desenvolver costas poderosas.</p>
+                </div>
+                
+                <div class="athletes-grid-modern">
+                    <a href="tcostas/jorlancostas.html" class="athlete-card-modern" data-aos="fade-up" data-aos-delay="100">
+                        <div class="athlete-card-header">
+                            <div class="athlete-avatar">
+                                <i class="material-icons">emoji_events</i>
+                            </div>
+                            <div class="athlete-badge">PRO</div>
+                        </div>
+                        <div class="athlete-card-content">
+                            <h3 class="athlete-name">JORLAN</h3>
+                            <p class="athlete-description">Treino intenso focado em volume e espessura muscular</p>
+                            <div class="athlete-stats">
+                                <span class="athlete-stat">
+                                    <i class="material-icons">fitness_center</i>
+                                    8 Treinos
+                                </span>
+                            </div>
+                        </div>
+                        <div class="athlete-card-footer">
+                            <span class="start-training">Começar Treino</span>
+                            <i class="material-icons">arrow_forward</i>
+                        </div>
                     </a>
-                    <a href="tcostas/johanncostas.html" class="action-button">
-                        <i class="material-icons">emoji_events</i>
-                        <span>JOHANN</span>
+
+                    <a href="tcostas/johanncostas.html" class="athlete-card-modern" data-aos="fade-up" data-aos-delay="200">
+                        <div class="athlete-card-header">
+                            <div class="athlete-avatar">
+                                <i class="material-icons">emoji_events</i>
+                            </div>
+                            <div class="athlete-badge">PRO</div>
+                        </div>
+                        <div class="athlete-card-content">
+                            <h3 class="athlete-name">JOHANN</h3>
+                            <p class="athlete-description">Técnica de isolamento e controle muscular específico</p>
+                            <div class="athlete-stats">
+                                <span class="athlete-stat">
+                                    <i class="material-icons">fitness_center</i>
+                                    2 Treinos
+                                </span>
+                            </div>
+                        </div>
+                        <div class="athlete-card-footer">
+                            <span class="start-training">Começar Treino</span>
+                            <i class="material-icons">arrow_forward</i>
+                        </div>
                     </a>
-                    <a href="tcostas/arnoldcostas.html" class="action-button">
-                        <i class="material-icons">emoji_events</i>
-                        <span>ARNOLD</span>
+
+                    <a href="tcostas/arnoldcostas.html" class="athlete-card-modern" data-aos="fade-up" data-aos-delay="300">
+                        <div class="athlete-card-header">
+                            <div class="athlete-avatar">
+                                <i class="material-icons">emoji_events</i>
+                            </div>
+                            <div class="athlete-badge">LEGEND</div>
+                        </div>
+                        <div class="athlete-card-content">
+                            <h3 class="athlete-name">ARNOLD</h3>
+                            <p class="athlete-description">Treino clássico para costas largas e definidas</p>
+                            <div class="athlete-stats">
+                                <span class="athlete-stat">
+                                    <i class="material-icons">fitness_center</i>
+                                    1 Treino
+                                </span>
+                            </div>
+                        </div>
+                        <div class="athlete-card-footer">
+                            <span class="start-training">Começar Treino</span>
+                            <i class="material-icons">arrow_forward</i>
+                        </div>
                     </a>
-                    <a href="tcostas/cbumcostas.html" class="action-button">
-                        <i class="material-icons">emoji_events</i>
-                        <span>CBUM</span>
+
+                    <a href="tcostas/cbumcostas.html" class="athlete-card-modern" data-aos="fade-up" data-aos-delay="400">
+                        <div class="athlete-card-header">
+                            <div class="athlete-avatar">
+                                <i class="material-icons">emoji_events</i>
+                            </div>
+                            <div class="athlete-badge">CHAMPION</div>
+                        </div>
+                        <div class="athlete-card-content">
+                            <h3 class="athlete-name">CBUM</h3>
+                            <p class="athlete-description">Treino moderno com foco em simetria e definição</p>
+                            <div class="athlete-stats">
+                                <span class="athlete-stat">
+                                    <i class="material-icons">fitness_center</i>
+                                    1 Treino
+                                </span>
+                            </div>
+                        </div>
+                        <div class="athlete-card-footer">
+                            <span class="start-training">Começar Treino</span>
+                            <i class="material-icons">arrow_forward</i>
+                        </div>
                     </a>
+                </div>
+            </section>
+
+            <!-- Tips Section -->
+            <section class="tips-section-modern">
+                <div class="section-header">
+                    <h2 class="section-title-modern">Dicas para Treino de Costas</h2>
+                    <p class="section-subtitle">Maximize seus resultados com essas dicas essenciais</p>
+                </div>
+                
+                <div class="tips-grid-modern">
+                    <div class="tip-card-modern" data-aos="fade-up" data-aos-delay="100">
+                        <div class="tip-icon">
+                            <i class="material-icons">straighten</i>
+                        </div>
+                        <h3>Mantenha a Postura</h3>
+                        <p>Coluna neutra e omoplatas retraídas são fundamentais para ativar corretamente os músculos das costas.</p>
+                    </div>
+                    
+                    <div class="tip-card-modern" data-aos="fade-up" data-aos-delay="200">
+                        <div class="tip-icon">
+                            <i class="material-icons">touch_app</i>
+                        </div>
+                        <h3>Controle o Movimento</h3>
+                        <p>Execute cada repetição de forma controlada, sentindo a contração muscular em toda a amplitude.</p>
+                    </div>
+                    
+                    <div class="tip-card-modern" data-aos="fade-up" data-aos-delay="300">
+                        <div class="tip-icon">
+                            <i class="material-icons">timer</i>
+                        </div>
+                        <h3>Tempo de Descanso</h3>
+                        <p>Respeite 2-3 minutos de descanso entre séries para recuperação muscular adequada.</p>
+                    </div>
                 </div>
             </section>
         </main>
@@ -89,6 +247,16 @@
         </footer>
     </div>
     <script src="../../assets/dashboard.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Inicializar AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+    </script>
     <!-- Pill Bar para navegação mobile -->
     <nav class="pill-bar">
         <a href="../../index.html" class="pill-bar-btn">

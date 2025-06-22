@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="assets/dashboard.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <meta name="description" content="Conheça nossa missão e quem está por trás do Painel de Bem-Estar">
+    <meta name="description" content="Sobre nós e nossa missão">
     <link rel="shortcut icon" href="assets/img/favsite.png" type="image/x-icon">
     <style>
         .card-page-title-card .title-text h1 {
@@ -34,42 +34,48 @@
 </script>
 <body>
     <div class="dashboard-container">
-        <header class="dashboard-header">
-            <div class="header-start">
-                <a href="index.html" class="back-button">
-                    <i class="material-icons">arrow_back</i>
-                    <span>Voltar</span>
-                </a>
-                <h1>Sobre Nós</h1>
+        <header class="universal-header">
+            <div class="header-decoration">
+                <i class="material-icons header-decoration-icon">fitness_center</i>
+                <i class="material-icons header-decoration-icon">sports_gymnastics</i>
+                <i class="material-icons header-decoration-icon">sports</i>
+                <i class="material-icons header-decoration-icon">self_improvement</i>
+                <i class="material-icons header-decoration-icon">monitor_heart</i>
+                <i class="material-icons header-decoration-icon">shield</i>
             </div>
-            <div class="header-end">
-                <button id="theme-toggle" class="theme-switcher" aria-label="Alternar tema">
-                    <i class="material-icons">dark_mode</i>
-                </button>
-                <div class="theme-color-dropdown" id="theme-color-dropdown">
-                    <button class="theme-color-main-btn" id="theme-color-main-btn" aria-label="Escolher cor do tema">
-                        <i class="material-icons">palette</i>
+            <div class="header-container">
+                <div class="header-left-section">
+                    <a href="index.html" class="header-nav-btn">
+                        <i class="material-icons">arrow_back</i>
+                        <span>Voltar</span>
+                    </a>
+                    <h1 class="header-main-title">Sobre Nós</h1>
+                    <div class="header-icon-desc">
+                        <i class="material-icons header-page-icon">info</i>
+                        <span class="header-page-desc">Conheça o projeto e quem desenvolveu</span>
+                    </div>
+                </div>
+                <div class="header-right-section">
+                    <button id="theme-toggle" class="header-control-btn" aria-label="Alternar tema">
+                        <i class="material-icons">dark_mode</i>
                     </button>
-                    <div class="theme-color-picker" id="theme-color-picker" style="display: none;">
-                        <button class="theme-color-btn" data-color="default" aria-label="Cor padrão"></button>
-                        <button class="theme-color-btn" data-color="green" aria-label="Verde"></button>
-                        <button class="theme-color-btn" data-color="gray" aria-label="Cinza"></button>
-                        <button class="theme-color-btn" data-color="yellow" aria-label="Amarelo"></button>
-                        <button class="theme-color-btn" data-color="orange" aria-label="Laranja"></button>
-                        <button class="theme-color-btn" data-color="pink" aria-label="Rosa"></button>
+                    <div class="theme-color-dropdown" id="theme-color-dropdown">
+                        <button class="header-control-btn" id="theme-color-main-btn" aria-label="Escolher cor do tema">
+                            <i class="material-icons">palette</i>
+                        </button>
+                        <div class="theme-color-picker" id="theme-color-picker" style="display: none;">
+                            <button class="theme-color-btn" data-color="default" aria-label="Cor padrão"></button>
+                            <button class="theme-color-btn" data-color="green" aria-label="Verde"></button>
+                            <button class="theme-color-btn" data-color="gray" aria-label="Cinza"></button>
+                            <button class="theme-color-btn" data-color="yellow" aria-label="Amarelo"></button>
+                            <button class="theme-color-btn" data-color="orange" aria-label="Laranja"></button>
+                            <button class="theme-color-btn" data-color="pink" aria-label="Rosa"></button>
+                        </div>
                     </div>
                 </div>
             </div>
         </header>
-
         <main class="dashboard-main">
-            <section class="card-page-title-card">
-                <div class="title-container">
-                    <i class="material-icons title-icon">groups</i>
-                    <h1>Quem nós somos?</h1>
-                </div>
-            </section>
-
             <section class="card content-card">
                 <div class="about-content">
                     <div class="about-section">

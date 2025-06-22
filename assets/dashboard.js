@@ -218,7 +218,39 @@ document.addEventListener('DOMContentLoaded', () => {
     mainBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         pickerOpen = !pickerOpen;
-        picker.style.display = pickerOpen ? 'flex' : 'none';
+        
+        if (pickerOpen) {
+            picker.style.display = 'flex';
+            
+            // Verificar se o menu vai ficar cortado
+            setTimeout(() => {
+                const pickerRect = picker.getBoundingClientRect();
+                const viewportHeight = window.innerHeight;
+                const viewportWidth = window.innerWidth;
+                
+                // Resetar posição
+                picker.style.top = '100%';
+                picker.style.bottom = 'auto';
+                picker.style.right = '0';
+                picker.style.left = 'auto';
+                
+                // Verificar se vai cortar na parte inferior
+                if (pickerRect.bottom > viewportHeight) {
+                    picker.style.top = 'auto';
+                    picker.style.bottom = '100%';
+                    picker.style.marginTop = '0';
+                    picker.style.marginBottom = '0.5rem';
+                }
+                
+                // Verificar se vai cortar na parte direita (em telas pequenas)
+                if (pickerRect.right > viewportWidth) {
+                    picker.style.right = 'auto';
+                    picker.style.left = '0';
+                }
+            }, 10);
+        } else {
+            picker.style.display = 'none';
+        }
     });
 
     // Fechar ao clicar fora
@@ -229,12 +261,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Fechar ao escolher cor
-    document.querySelectorAll('.theme-color-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            picker.style.display = 'none';
-            pickerOpen = false;
-        });
+    // Ajustar posição do menu quando a janela for redimensionada
+    window.addEventListener('resize', function() {
+        if (pickerOpen && picker.style.display === 'flex') {
+            const pickerRect = picker.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            const viewportWidth = window.innerWidth;
+            
+            // Resetar posição
+            picker.style.top = '100%';
+            picker.style.bottom = 'auto';
+            picker.style.right = '0';
+            picker.style.left = 'auto';
+            picker.style.marginTop = '0.5rem';
+            picker.style.marginBottom = '0';
+            
+            // Verificar se vai cortar na parte inferior
+            if (pickerRect.bottom > viewportHeight) {
+                picker.style.top = 'auto';
+                picker.style.bottom = '100%';
+                picker.style.marginTop = '0';
+                picker.style.marginBottom = '0.5rem';
+            }
+            
+            // Verificar se vai cortar na parte direita
+            if (pickerRect.right > viewportWidth) {
+                picker.style.right = 'auto';
+                picker.style.left = '0';
+            }
+        }
     });
 
     // Pill Bar: Seleção automática do item ativo
@@ -279,5 +334,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     : '<i class="material-icons">expand_more</i> Mostrar Exercícios';
             });
         }
+    });
+
+    // Fechar ao escolher cor
+    document.querySelectorAll('.theme-color-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            picker.style.display = 'none';
+            pickerOpen = false;
+        });
     });
 });

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="assets/dashboard.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <meta name="description" content="Treinos de grandes atletas organizados por grupo muscular">
+    <meta name="description" content="Explore todos os treinos disponíveis">
     <link rel="shortcut icon" href="assets/img/favsite.png" type="image/x-icon">
 </head>
 <!-- Google tag (gtag.js) -->
@@ -21,82 +21,90 @@
 </script>
 <body>
     <div class="dashboard-container">
-        <header class="dashboard-header">
-            <div class="header-start">
-                <a href="index.html" class="back-button">
-                    <i class="material-icons">arrow_back</i>
-                    <span>Voltar</span>
-                </a>
-                <h1>Treinos</h1>
+        <header class="universal-header">
+            <div class="header-decoration">
+                <i class="material-icons header-decoration-icon">fitness_center</i>
+                <i class="material-icons header-decoration-icon">sports_gymnastics</i>
+                <i class="material-icons header-decoration-icon">sports</i>
+                <i class="material-icons header-decoration-icon">self_improvement</i>
+                <i class="material-icons header-decoration-icon">monitor_heart</i>
+                <i class="material-icons header-decoration-icon">shield</i>
             </div>
-            <div class="header-end">
-                <button id="theme-toggle" class="theme-switcher" aria-label="Alternar tema">
-                    <i class="material-icons">dark_mode</i>
-                </button>
-                <div class="theme-color-dropdown" id="theme-color-dropdown">
-                    <button class="theme-color-main-btn" id="theme-color-main-btn" aria-label="Escolher cor do tema">
-                        <i class="material-icons">palette</i>
+            <div class="header-container">
+                <div class="header-left-section">
+                    <a href="index.html" class="header-nav-btn">
+                        <i class="material-icons">arrow_back</i>
+                        <span>Voltar</span>
+                    </a>
+                    <h1 class="header-main-title">Treinos</h1>
+                    <div class="header-icon-desc">
+                        <i class="material-icons header-page-icon">fitness_center</i>
+                        <span class="header-page-desc">Encontre e registre seus treinos</span>
+                    </div>
+                </div>
+                <div class="header-right-section">
+                    <button id="theme-toggle" class="header-control-btn" aria-label="Alternar tema">
+                        <i class="material-icons">dark_mode</i>
                     </button>
-                    <div class="theme-color-picker" id="theme-color-picker" style="display: none;">
-                        <button class="theme-color-btn" data-color="default" aria-label="Cor padrão"></button>
-                        <button class="theme-color-btn" data-color="green" aria-label="Verde"></button>
-                        <button class="theme-color-btn" data-color="gray" aria-label="Cinza"></button>
-                        <button class="theme-color-btn" data-color="yellow" aria-label="Amarelo"></button>
-                        <button class="theme-color-btn" data-color="orange" aria-label="Laranja"></button>
-                        <button class="theme-color-btn" data-color="pink" aria-label="Rosa"></button>
+                    <div class="theme-color-dropdown" id="theme-color-dropdown">
+                        <button class="header-control-btn" id="theme-color-main-btn" aria-label="Escolher cor do tema">
+                            <i class="material-icons">palette</i>
+                        </button>
+                        <div class="theme-color-picker" id="theme-color-picker" style="display: none;">
+                            <button class="theme-color-btn" data-color="default" aria-label="Cor padrão"></button>
+                            <button class="theme-color-btn" data-color="green" aria-label="Verde"></button>
+                            <button class="theme-color-btn" data-color="gray" aria-label="Cinza"></button>
+                            <button class="theme-color-btn" data-color="yellow" aria-label="Amarelo"></button>
+                            <button class="theme-color-btn" data-color="orange" aria-label="Laranja"></button>
+                            <button class="theme-color-btn" data-color="pink" aria-label="Rosa"></button>
+                        </div>
                     </div>
                 </div>
             </div>
         </header>
-
         <main class="dashboard-main">
-            <section class="card page-title-card">
-                <div class="title-container">
-                    <div class="title-icon-wrapper">
-                        <i class="material-icons title-icon">fitness_center</i>
-                    </div>
-                    <div class="title-text">
-                        <h1>Treinos</h1>
-                        <p class="title-subtitle">Explore os melhores treinos dos atletas profissionais</p>
-                    </div>
-                </div>
-            </section>
+            <div class="main-title-container" data-aos="fade-down">
+                <h1 class="main-title-large">Explore Treinos por Grupo Muscular</h1>
+                <p class="main-subtitle-medium">Navegue pelas categorias para encontrar rotinas de treino dos melhores atletas.</p>
+            </div>
 
-            <section class="card content-card">
-                <div class="workout-content">
-                    <div class="workout-intro">
-                        <p>Explore os treinos baseados nos melhores atletas do mundo. Cada rotina foi cuidadosamente selecionada para maximizar seus resultados.</p>
+            <div class="muscle-grid-modern">
+                <a href="pasttreinos/peito/peito.html" class="muscle-card-modern" style="background-image: url('assets/img/muscles/peito.jpg');" data-aos="fade-up" data-aos-delay="100">
+                    <div class="muscle-card-overlay"></div>
+                    <div class="muscle-card-content">
+                        <i class="material-icons muscle-icon">deck</i>
+                        <h3 class="muscle-card-title">Peito</h3>
                     </div>
-
-                    <div class="muscle-groups-grid">
-                        <a href="pasttreinos/peito/peito.html" class="muscle-group-card">
-                            <i class="material-icons">fitness_center</i>
-                            <h3>Peito</h3>
-                            <p>Desenvolva um peitoral forte e definido</p>
-                        </a>
-                        <a href="pasttreinos/costas/costas.html" class="muscle-group-card">
-                            <i class="material-icons">fitness_center</i>
-                            <h3>Costas</h3>
-                            <p>Construa uma estrutura dorsal imponente</p>
-                        </a>
-                        <a href="pasttreinos/ombro/ombro.html" class="muscle-group-card">
-                            <i class="material-icons">fitness_center</i>
-                            <h3>Ombro</h3>
-                            <p>Desenvolva ombros largos e fortes</p>
-                        </a>
-                        <a href="pasttreinos/pernas/perna.html" class="muscle-group-card">
-                            <i class="material-icons">fitness_center</i>
-                            <h3>Pernas</h3>
-                            <p>Fortaleça e defina seus membros inferiores</p>
-                        </a>
-                        <a href="pasttreinos/braço/braço.html" class="muscle-group-card">
-                            <i class="material-icons">fitness_center</i>
-                            <h3>Braço</h3>
-                            <p>Desenvolva braços fortes e definidos</p>
-                        </a>
+                </a>
+                <a href="pasttreinos/costas/costas.html" class="muscle-card-modern" style="background-image: url('assets/img/muscles/costas.jpg');" data-aos="fade-up" data-aos-delay="200">
+                    <div class="muscle-card-overlay"></div>
+                    <div class="muscle-card-content">
+                        <i class="material-icons muscle-icon">accessibility_new</i>
+                        <h3 class="muscle-card-title">Costas</h3>
                     </div>
-                </div>
-            </section>
+                </a>
+                <a href="pasttreinos/ombro/ombro.html" class="muscle-card-modern" style="background-image: url('assets/img/muscles/ombro.jpg');" data-aos="fade-up" data-aos-delay="300">
+                    <div class="muscle-card-overlay"></div>
+                    <div class="muscle-card-content">
+                        <i class="material-icons muscle-icon">transfer_within_a_station</i>
+                        <h3 class="muscle-card-title">Ombro</h3>
+                    </div>
+                </a>
+                <a href="pasttreinos/pernas/perna.html" class="muscle-card-modern" style="background-image: url('assets/img/muscles/perna.jpg');" data-aos="fade-up" data-aos-delay="400">
+                    <div class="muscle-card-overlay"></div>
+                    <div class="muscle-card-content">
+                        <i class="material-icons muscle-icon">directions_run</i>
+                        <h3 class="muscle-card-title">Pernas</h3>
+                    </div>
+                </a>
+                <a href="pasttreinos/braço/braço.html" class="muscle-card-modern" style="background-image: url('assets/img/muscles/braço.jpg');" data-aos="fade-up" data-aos-delay="500">
+                    <div class="muscle-card-overlay"></div>
+                    <div class="muscle-card-content">
+                        <i class="material-icons muscle-icon">fitness_center</i>
+                        <h3 class="muscle-card-title">Braço</h3>
+                    </div>
+                </a>
+            </div>
         </main>
 
         <footer class="dashboard-footer">

@@ -10,68 +10,68 @@
     <meta name="description" content="Treinos de peito do atleta Jorlan Vieira - Técnicas avançadas e exercícios específicos">
     <link rel="shortcut icon" href="../../../assets/img/favsite.png" type="image/x-icon">
     <style>
-        .training-card ol {
-            display: none;
-            margin-top: 15px;
-        }
-
-        .training-card ol.show {
-            display: block;
-        }
-
-        .toggle-exercises {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 10px;
-            transition: background-color 0.3s;
-        }
-
-        .toggle-exercises:hover {
-            background-color: var(--primary-color-dark);
-        }
-
-        .toggle-exercises i {
-            font-size: 20px;
-        }
+    .header-icon-desc {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .header-page-icon {
+      font-size: 1.5em;
+      color: var(--primary-color, #4caf50);
+    }
+    .header-page-desc {
+      font-size: 1em;
+      color: var(--header-text-color, #555);
+      font-weight: 400;
+    }
     </style>
 </head>
 <body>
     <div class="dashboard-container">
-        <header class="dashboard-header">
-            <div class="header-start">
-                <a href="../peito.html" class="back-button">
-                    <i class="material-icons">arrow_back</i>
-                    <span>Voltar</span>
-                </a>
-                <h1>Jorlan Vieira - Peito</h1>
+        <header class="universal-header">
+            <div class="header-decoration">
+                <i class="material-icons header-decoration-icon">fitness_center</i>
+                <i class="material-icons header-decoration-icon">sports_gymnastics</i>
+                <i class="material-icons header-decoration-icon">sports</i>
+                <i class="material-icons header-decoration-icon">self_improvement</i>
+                <i class="material-icons header-decoration-icon">monitor_heart</i>
+                <i class="material-icons header-decoration-icon">shield</i>
             </div>
-            <div class="header-end">
-                <button id="theme-toggle" class="theme-switcher" aria-label="Alternar tema">
-                    <i class="material-icons">dark_mode</i>
-                </button>
+            <div class="header-container">
+                <div class="header-left-section">
+                    <a href="../peito.html" class="header-nav-btn">
+                        <i class="material-icons">arrow_back</i>
+                        <span>Voltar</span>
+                    </a>
+                    <h1 class="header-main-title">Jorlan Vieira - Peito</h1>
+                    <div class="header-icon-desc">
+                        <i class="material-icons header-icon">fitness_center</i>
+                        <p class="header-description">Treinos avançados de peito do atleta Jorlan Vieira</p>
+                    </div>
+                </div>
+                <div class="header-right-section">
+                    <button id="theme-toggle" class="header-control-btn" aria-label="Alternar tema">
+                        <i class="material-icons">dark_mode</i>
+                    </button>
+                    <div class="theme-color-dropdown" id="theme-color-dropdown">
+                        <button class="header-control-btn" id="theme-color-main-btn" aria-label="Escolher cor do tema">
+                            <i class="material-icons">palette</i>
+                        </button>
+                        <div class="theme-color-picker" id="theme-color-picker" style="display: none;">
+                            <button class="theme-color-btn" data-color="default" aria-label="Cor padrão"></button>
+                            <button class="theme-color-btn" data-color="green" aria-label="Verde"></button>
+                            <button class="theme-color-btn" data-color="gray" aria-label="Cinza"></button>
+                            <button class="theme-color-btn" data-color="yellow" aria-label="Amarelo"></button>
+                            <button class="theme-color-btn" data-color="orange" aria-label="Laranja"></button>
+                            <button class="theme-color-btn" data-color="pink" aria-label="Rosa"></button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </header>
 
         <main class="dashboard-main">
-            <section class="card page-title-card">
-                <div class="title-container">
-                    <div class="title-icon-wrapper">
-                        <i class="material-icons title-icon">fitness_center</i>
-                    </div>
-                    <div class="title-text">
-                        <h1>Treinos de Peito</h1>
-                        <p class="title-subtitle">Técnicas avançadas e exercícios específicos do atleta Jorlan Vieira</p>
-                    </div>
-                </div>
-            </section>
-
             <section class="card content-card training-card">
                 <h2>TREINO 1</h2>
                 <p>Jorlan Vieira <a href="https://www.youtube.com/watch?v=6bK9XzM9Y0I" target="_blank" rel="noopener noreferrer"><b>COMO MELHORAR SEU PEITORAL?</b></a></p>
@@ -305,31 +305,6 @@
         </footer>
     </div>
     <script src="../../../assets/dashboard.js"></script>
-    <script>
-        const trainingCards = document.querySelectorAll('.training-card');
-        trainingCards.forEach(card => {
-            const ol = card.querySelector('ol');
-            if (ol) {
-                // Cria o botão
-                const button = document.createElement('button');
-                button.className = 'show-exercises-btn';
-                button.innerHTML = '<i class="material-icons">expand_more</i> Mostrar Exercícios';
-
-                // Insere o botão após o título
-                const h2 = card.querySelector('h2');
-                h2.parentNode.insertBefore(button, h2.nextSibling);
-
-                // Adiciona o evento de clique
-                button.addEventListener('click', function() {
-                    ol.classList.toggle('show');
-                    button.classList.toggle('active');
-                    button.innerHTML = button.classList.contains('active') 
-                        ? '<i class="material-icons">expand_less</i> Esconder Exercícios'
-                        : '<i class="material-icons">expand_more</i> Mostrar Exercícios';
-                });
-            }
-        });
-    </script>
     <!-- Pill Bar para navegação mobile -->
     <nav class="pill-bar">
         <a href="../../../index.html" class="pill-bar-btn">
