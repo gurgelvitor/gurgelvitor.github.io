@@ -2007,16 +2007,25 @@ body {
 
 .training-card ol {
     max-height: 0;
+    opacity: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease;
+    transition: max-height 0.5s cubic-bezier(.4,2,.6,1), opacity 0.4s;
     margin: 0;
     padding: 0;
-    list-style-position: inside;
+    list-style: none;
+    background: transparent;
+    transform: translateY(24px);
 }
-
 .training-card ol.show {
     max-height: 2000px;
-    margin-top: 16px;
+    opacity: 1;
+    margin-top: 1.2rem;
+    animation: fadeInList 0.5s cubic-bezier(.4,2,.6,1);
+    transform: translateY(0);
+}
+@keyframes fadeInList {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .training-card h2 {
@@ -3422,16 +3431,25 @@ a:hover {
 
 .training-card ol {
     max-height: 0;
+    opacity: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease;
+    transition: max-height 0.5s cubic-bezier(.4,2,.6,1), opacity 0.4s;
     margin: 0;
     padding: 0;
-    list-style-position: inside;
+    list-style: none;
+    background: transparent;
+    transform: translateY(24px);
 }
-
 .training-card ol.show {
     max-height: 2000px;
-    margin-top: 16px;
+    opacity: 1;
+    margin-top: 1.2rem;
+    animation: fadeInList 0.5s cubic-bezier(.4,2,.6,1);
+    transform: translateY(0);
+}
+@keyframes fadeInList {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* Ajustes de responsividade para telas grandes */
@@ -4407,6 +4425,7 @@ body {
     min-width: 100%;
     border: 1px solid var(--border-color, #e0e0e0);
   }
+
   .pill-bar-btn {
     display: flex;
     flex-direction: column;
@@ -4422,17 +4441,20 @@ body {
     min-height: 44px;
     position: relative;
   }
+
   .pill-bar-btn.active,
   .pill-bar-btn:active,
   .pill-bar-btn:hover {
     background: var(--primary-color, #4CAF50);
     color: #fff;
   }
+
   .pill-bar-btn .material-icons {
     font-size: 1.5em;
     margin-bottom: 2px;
     display: block;
   }
+
   .pill-label {
     font-size: 0.75em;
     line-height: 1;
@@ -4441,7 +4463,6 @@ body {
     letter-spacing: 0.01em;
   }
 }
-
 @media (min-width: 769px) {
   .pill-bar {
     display: none !important;
@@ -6359,3 +6380,355 @@ body {
     }
 }
 /* --- Fim da modernização do Sobre Nós --- */
+
+/* --- Modernização dos <ol> das páginas de treino --- */
+.training-card ol {
+    background: rgba(255,255,255,0.13);
+    border-radius: 16px;
+    box-shadow: 0 2px 12px 0 rgba(31, 38, 135, 0.06);
+    padding: 1.2rem 1.2rem 1.2rem 0.5rem;
+    margin: 0;
+    list-style: none;
+    counter-reset: exercise-counter;
+    transition: box-shadow 0.3s, background 0.3s;
+}
+.training-card ol.show {
+    margin-top: 1.2rem;
+    box-shadow: 0 4px 24px 0 rgba(67,160,71,0.10);
+}
+.training-card ol li {
+    margin-bottom: 1.2rem;
+    padding: 1.1rem 1.2rem 1.1rem 3.2rem;
+    background: rgba(255,255,255,0.7);
+    border-radius: 12px;
+    border-left: 5px solid var(--primary-color);
+    box-shadow: 0 2px 8px rgba(67,160,71,0.07);
+    position: relative;
+    transition: box-shadow 0.2s, transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    min-height: 60px;
+    font-size: 1.08rem;
+    color: var(--text-color);
+    /* Não muda cor no hover */
+}
+.training-card ol li::before {
+    counter-increment: exercise-counter;
+    content: counter(exercise-counter);
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color, #7f53ac));
+    color: #fff;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 8px rgba(67,160,71,0.10);
+    z-index: 1;
+    border: 2.5px solid #fff;
+}
+.training-card .reps {
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color, #7f53ac));
+    color: #fff;
+    font-size: 1.05rem;
+    margin: 0.4rem 0 0.2rem 0;
+    display: inline-block;
+    border-radius: 6px;
+    font-weight: 700;
+    padding: 0.25rem 0.9rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 1px 4px rgba(67,160,71,0.10);
+}
+.training-card .ativ {
+    background: var(--accent-color, #7f53ac);
+    color: #fff;
+    font-style: italic;
+    display: inline-block;
+    margin-top: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    font-weight: 500;
+    box-shadow: 0 1px 4px rgba(127,83,172,0.10);
+}
+.training-card div {
+    color: var(--text-color);
+    opacity: 0.8;
+    font-size: 0.97rem;
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--primary-color);
+}
+@media (max-width: 768px) {
+    .training-card ol {
+        padding: 0.7rem 0.3rem 0.7rem 0.1rem;
+    }
+    .training-card ol li {
+        padding: 0.8rem 0.7rem 0.8rem 2.5rem;
+        font-size: 0.98rem;
+    }
+    .training-card ol li::before {
+        width: 1.7rem;
+        height: 1.7rem;
+        font-size: 0.95rem;
+    }
+}
+@media (max-width: 480px) {
+    .training-card ol {
+        padding: 0.4rem 0.1rem 0.4rem 0.1rem;
+    }
+    .training-card ol li {
+        padding: 0.6rem 0.4rem 0.6rem 2rem;
+        font-size: 0.93rem;
+    }
+    .training-card ol li::before {
+        width: 1.3rem;
+        height: 1.3rem;
+        font-size: 0.8rem;
+    }
+}
+/* --- Fim da modernização dos <ol> das páginas de treino --- */
+
+/* --- Diferenciação visual entre .reps e .ativ --- */
+.training-card .reps {
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color, #7f53ac));
+    color: #fff;
+    font-size: 1.08rem;
+    margin: 0.4rem 0 0.2rem 0;
+    display: inline-block;
+    border-radius: 6px;
+    font-weight: 800;
+    padding: 0.28rem 1.1rem;
+    letter-spacing: 0.7px;
+    box-shadow: 0 1px 4px rgba(67,160,71,0.10);
+    text-transform: uppercase;
+    border: none;
+    outline: none;
+    vertical-align: middle;
+    position: relative;
+}
+.training-card .ativ {
+    background: linear-gradient(90deg, #fffbe7 60%, #ffe082 100%);
+    color: #7f53ac;
+    font-style: normal;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-top: 0.3rem;
+    padding: 0.22rem 1.1rem 0.22rem 0.7rem;
+    border-radius: 999px;
+    font-size: 1.01rem;
+    line-height: 1.5;
+    font-weight: 600;
+    box-shadow: 0 1px 4px rgba(255,193,7,0.10);
+    border: 1.5px solid #ffe082;
+    position: relative;
+    vertical-align: middle;
+}
+.training-card .ativ::before {
+    content: '\ef4e'; /* material icon: info_outline */
+    font-family: 'Material Icons';
+    font-size: 1.1em;
+    color: #ff9800;
+    margin-right: 0.3em;
+    vertical-align: middle;
+    opacity: 0.85;
+}
+@media (max-width: 768px) {
+    .training-card .reps {
+        font-size: 0.98rem;
+        padding: 0.22rem 0.8rem;
+    }
+    .training-card .ativ {
+        font-size: 0.93rem;
+        padding: 0.18rem 0.7rem 0.18rem 0.5rem;
+    }
+}
+@media (max-width: 480px) {
+    .training-card .reps {
+        font-size: 0.91rem;
+        padding: 0.15rem 0.6rem;
+    }
+    .training-card .ativ {
+        font-size: 0.85rem;
+        padding: 0.13rem 0.5rem 0.13rem 0.3rem;
+    }
+}
+/* --- Fim da diferenciação visual entre .reps e .ativ --- */
+
+/* --- Modernização dos <p> de descrição nas sections de treino --- */
+.training-card > p {
+    background: linear-gradient(90deg, var(--card-bg-color, #222) 60%, var(--secondary-color, #e3f2fd) 100%);
+    color: var(--primary-color) !important;
+    border-left: 5px solid var(--accent-color, #7f53ac);
+    border-radius: 0 14px 14px 0;
+    padding: 0.95rem 1.2rem 0.95rem 1.2rem;
+    margin-bottom: 1.3rem;
+    margin-top: 0.2rem;
+    font-size: 1.13rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(67,160,71,0.07);
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    position: relative;
+    letter-spacing: 0.2px;
+}
+.training-card > p::before {
+    content: '\ef6c'; /* material icon: description */
+    font-family: 'Material Icons';
+    font-size: 1.4em;
+    color: var(--accent-color, #7f53ac);
+    margin-right: 0.5em;
+    opacity: 0.85;
+    vertical-align: middle;
+}
+[data-theme="dark"] .training-card > p {
+    background: linear-gradient(90deg, var(--card-bg-color, #222) 60%, var(--secondary-color, #222) 100%);
+    color: var(--primary-color) !important;
+    border-left: 5px solid var(--accent-color, #7f53ac);
+}
+@media (max-width: 768px) {
+    .training-card > p {
+        font-size: 1.01rem;
+        padding: 0.7rem 0.7rem 0.7rem 0.9rem;
+    }
+    .training-card > p::before {
+        font-size: 1.1em;
+    }
+}
+@media (max-width: 480px) {
+    .training-card > p {
+        font-size: 0.93rem;
+        padding: 0.5rem 0.4rem 0.5rem 0.7rem;
+    }
+    .training-card > p::before {
+        font-size: 1em;
+    }
+}
+/* --- Fim do ajuste de cor do <p> de treino --- */
+
+/* --- Sinalização de link YouTube nos <a> das sections de treino --- */
+.training-card > p a[href*="youtube.com"],
+.training-card > p a[href*="youtu.be"] {
+    position: relative;
+    padding-left: 2.1em;
+    font-weight: 600;
+    color: var(--accent-color, #FF0000);
+    text-decoration: underline wavy;
+    transition: color 0.2s;
+}
+.training-card > p a[href*="youtube.com"]::before,
+.training-card > p a[href*="youtu.be"]::before {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.5em;
+    height: 1.5em;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png') no-repeat center center / contain;
+    opacity: 0.92;
+    margin-right: 0.4em;
+}
+.training-card > p a[href*="youtube.com"]:hover,
+.training-card > p a[href*="youtu.be"]:hover {
+    color: #d32f2f;
+}
+@media (max-width: 768px) {
+    .training-card > p a[href*="youtube.com"],
+    .training-card > p a[href*="youtu.be"] {
+        padding-left: 1.5em;
+        font-size: 0.98em;
+    }
+    .training-card > p a[href*="youtube.com"]::before,
+    .training-card > p a[href*="youtu.be"]::before {
+        width: 1.1em;
+        height: 1.1em;
+    }
+}
+/* --- Fim da sinalização de link YouTube --- */
+
+/* --- Layout diferenciado para <div> dentro das sections de treino --- */
+.training-card div {
+    background: linear-gradient(90deg, #fff3e0 60%, #ffe0b2 100%);
+    color: #b26a00;
+    border-left: 5px solid #ff9800;
+    border-radius: 0 10px 10px 0;
+    padding: 0.7rem 1.1rem 0.7rem 1.1rem;
+    margin-top: 0.7rem;
+    margin-bottom: 0.7rem;
+    font-size: 1.01rem;
+    font-weight: 500;
+    box-shadow: 0 1px 6px rgba(255,152,0,0.07);
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    position: relative;
+    letter-spacing: 0.1px;
+    opacity: 0.98;
+}
+.training-card div::before {
+    content: '\e26a'; /* material icon: tips_and_updates */
+    font-family: 'Material Icons';
+    font-size: 1.25em;
+    color: #ff9800;
+    margin-right: 0.5em;
+    opacity: 0.85;
+    vertical-align: middle;
+}
+@media (max-width: 768px) {
+    .training-card div {
+        font-size: 0.93rem;
+        padding: 0.5rem 0.7rem 0.5rem 0.7rem;
+    }
+    .training-card div::before {
+        font-size: 1em;
+    }
+}
+@media (max-width: 480px) {
+    .training-card div {
+        font-size: 0.87rem;
+        padding: 0.3rem 0.4rem 0.3rem 0.4rem;
+    }
+    .training-card div::before {
+        font-size: 0.9em;
+    }
+}
+/* --- Fim do layout diferenciado para <div> --- */
+
+/* --- Ajuste de contraste para <div> dentro das sections de treino --- */
+.training-card div {
+    background: linear-gradient(90deg, #fff3e0 60%, #ffe0b2 100%);
+    color: #4a2c00;
+    border-left: 5px solid #ff9800;
+    border-radius: 0 10px 10px 0;
+    padding: 0.7rem 1.1rem 0.7rem 1.1rem;
+    margin-top: 0.7rem;
+    margin-bottom: 0.7rem;
+    font-size: 1.01rem;
+    font-weight: 600;
+    box-shadow: 0 1px 6px rgba(255,152,0,0.07);
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    position: relative;
+    letter-spacing: 0.1px;
+    opacity: 0.98;
+    text-shadow: 0 1px 2px #fff8e1, 0 0.5px 0 #ffe0b2;
+}
+[data-theme="dark"] .training-card div {
+    background: linear-gradient(90deg, #3a2a13 60%, #5d3c00 100%);
+    color: #fffbe7;
+    border-left: 5px solid #ffb300;
+    text-shadow: 0 1px 2px #3a2a13, 0 0.5px 0 #5d3c00;
+}
+/* --- Fim do ajuste de contraste para <div> --- */
