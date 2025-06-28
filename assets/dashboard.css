@@ -116,149 +116,6 @@
     color: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Regras mais específicas para sobrescrever qualquer tema */
-[data-theme="light"] .universal-header,
-[data-theme="light"] .universal-header *,
-[data-theme="light"] .universal-header .header-main-title,
-[data-theme="light"] .universal-header .header-page-desc,
-[data-theme="light"] .universal-header .header-control-btn,
-[data-theme="light"] .universal-header .header-control-btn i,
-[data-theme="light"] .universal-header .header-nav-btn,
-[data-theme="light"] .universal-header .header-icon-desc,
-[data-theme="light"] .universal-header .header-page-icon,
-[data-theme="light"] .universal-header .theme-color-main-btn,
-[data-theme="light"] .universal-header .theme-color-main-btn i,
-[data-theme="light"] .universal-header .theme-toggle,
-[data-theme="light"] .universal-header .theme-toggle i,
-[data-theme="light"] .universal-header .material-icons,
-[data-theme="light"] .universal-header h1,
-[data-theme="light"] .universal-header h2,
-[data-theme="light"] .universal-header h3,
-[data-theme="light"] .universal-header h4,
-[data-theme="light"] .universal-header h5,
-[data-theme="light"] .universal-header h6,
-[data-theme="light"] .universal-header p,
-[data-theme="light"] .universal-header span,
-[data-theme="light"] .universal-header a,
-[data-theme="light"] .universal-header button,
-[data-theme="light"] .universal-header label {
-    color: #ffffff !important;
-}
-
-[data-theme="dark"] .universal-header,
-[data-theme="dark"] .universal-header *,
-[data-theme="dark"] .universal-header .header-main-title,
-[data-theme="dark"] .universal-header .header-page-desc,
-[data-theme="dark"] .universal-header .header-control-btn,
-[data-theme="dark"] .universal-header .header-control-btn i,
-[data-theme="dark"] .universal-header .header-nav-btn,
-[data-theme="dark"] .universal-header .header-icon-desc,
-[data-theme="dark"] .universal-header .header-page-icon,
-[data-theme="dark"] .universal-header .theme-color-main-btn,
-[data-theme="dark"] .universal-header .theme-color-main-btn i,
-[data-theme="dark"] .universal-header .theme-toggle,
-[data-theme="dark"] .universal-header .theme-toggle i,
-[data-theme="dark"] .universal-header .material-icons,
-[data-theme="dark"] .universal-header h1,
-[data-theme="dark"] .universal-header h2,
-[data-theme="dark"] .universal-header h3,
-[data-theme="dark"] .universal-header h4,
-[data-theme="dark"] .universal-header h5,
-[data-theme="dark"] .universal-header h6,
-[data-theme="dark"] .universal-header p,
-[data-theme="dark"] .universal-header span,
-[data-theme="dark"] .universal-header a,
-[data-theme="dark"] .universal-header button,
-[data-theme="dark"] .universal-header label {
-    color: #ffffff !important;
-}
-
-/* Regras específicas para todos os temas de cor */
-[data-theme-color="default"] .universal-header,
-[data-theme-color="default"] .universal-header *,
-[data-theme-color="green"] .universal-header,
-[data-theme-color="green"] .universal-header *,
-[data-theme-color="gray"] .universal-header,
-[data-theme-color="gray"] .universal-header *,
-[data-theme-color="yellow"] .universal-header,
-[data-theme-color="yellow"] .universal-header *,
-[data-theme-color="orange"] .universal-header,
-[data-theme-color="orange"] .universal-header *,
-[data-theme-color="pink"] .universal-header,
-[data-theme-color="pink"] .universal-header * {
-    color: #ffffff !important;
-}
-
-/* Regras específicas para combinações de tema e cor */
-[data-theme="light"][data-theme-color="default"] .universal-header,
-[data-theme="light"][data-theme-color="default"] .universal-header *,
-[data-theme="light"][data-theme-color="green"] .universal-header,
-[data-theme="light"][data-theme-color="green"] .universal-header *,
-[data-theme="light"][data-theme-color="gray"] .universal-header,
-[data-theme="light"][data-theme-color="gray"] .universal-header *,
-[data-theme="light"][data-theme-color="yellow"] .universal-header,
-[data-theme="light"][data-theme-color="yellow"] .universal-header *,
-[data-theme="light"][data-theme-color="orange"] .universal-header,
-[data-theme="light"][data-theme-color="orange"] .universal-header *,
-[data-theme="light"][data-theme-color="pink"] .universal-header,
-[data-theme="light"][data-theme-color="pink"] .universal-header *,
-[data-theme="dark"][data-theme-color="default"] .universal-header,
-[data-theme="dark"][data-theme-color="default"] .universal-header *,
-[data-theme="dark"][data-theme-color="green"] .universal-header,
-[data-theme="dark"][data-theme-color="green"] .universal-header *,
-[data-theme="dark"][data-theme-color="gray"] .universal-header,
-[data-theme="dark"][data-theme-color="gray"] .universal-header *,
-[data-theme="dark"][data-theme-color="yellow"] .universal-header,
-[data-theme="dark"][data-theme-color="yellow"] .universal-header *,
-[data-theme="dark"][data-theme-color="orange"] .universal-header,
-[data-theme="dark"][data-theme-color="orange"] .universal-header *,
-[data-theme="dark"][data-theme-color="pink"] .universal-header,
-[data-theme="dark"][data-theme-color="pink"] .universal-header * {
-    color: #ffffff !important;
-}
-
-/* Regras específicas para elementos de texto no header */
-.universal-header .header-main-title,
-.universal-header .header-page-desc,
-.universal-header .header-page-icon,
-.universal-header .header-control-btn,
-.universal-header .header-control-btn i,
-.universal-header .theme-color-main-btn,
-.universal-header .theme-color-main-btn i,
-.universal-header .theme-toggle,
-.universal-header .theme-toggle i,
-.universal-header .material-icons {
-    color: #ffffff !important;
-}
-
-/* Regras para hover states */
-.universal-header .header-control-btn:hover,
-.universal-header .header-control-btn:hover i,
-.universal-header .theme-color-main-btn:hover,
-.universal-header .theme-color-main-btn:hover i,
-.universal-header .theme-toggle:hover,
-.universal-header .theme-toggle:hover i {
-    color: #ffffff !important;
-}
-
-/* Regras para elementos específicos que podem ter cores diferentes */
-.universal-header .header-main-title::after {
-    background: #ffffff !important;
-}
-
-.universal-header .header-decoration-icon {
-    color: rgba(255, 255, 255, 0.1) !important;
-}
-
-/* Regras para garantir que não haja herança de cor */
-.universal-header * {
-    color: inherit !important;
-}
-
-.universal-header {
-    color: #ffffff !important;
-}
-
 /* Paletas de cores adicionais - deve vir logo após o :root */
 :root[data-theme-color="default"] {
     --primary-color: #6c63ff;
@@ -6954,3 +6811,131 @@ body {
     text-shadow: 0 1px 2px #3a2a13, 0 0.5px 0 #5d3c00;
 }
 /* --- Fim do ajuste de contraste para <div> --- */
+
+[data-theme="dark"] .training-card div {
+    background: linear-gradient(90deg, #3a2a13 60%, #5d3c00 100%);
+    color: #fffbe7;
+    border-left: 5px solid #ffb300;
+    text-shadow: 0 1px 2px #3a2a13, 0 0.5px 0 #5d3c00;
+}
+/* --- Fim do ajuste de contraste para <div> --- */
+
+/* Regras específicas para sobrescrever temas claro/escuro no desktop */
+[data-theme="light"] .universal-header,
+[data-theme="light"] .universal-header *,
+[data-theme="light"] .universal-header .header-main-title,
+[data-theme="light"] .universal-header .header-page-desc,
+[data-theme="light"] .universal-header .header-control-btn,
+[data-theme="light"] .universal-header .header-control-btn i,
+[data-theme="light"] .universal-header .header-nav-btn,
+[data-theme="light"] .universal-header .header-icon-desc,
+[data-theme="light"] .universal-header .header-page-icon,
+[data-theme="light"] .universal-header .theme-color-main-btn,
+[data-theme="light"] .universal-header .theme-color-main-btn i,
+[data-theme="light"] .universal-header .theme-toggle,
+[data-theme="light"] .universal-header .theme-toggle i {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .universal-header,
+[data-theme="dark"] .universal-header *,
+[data-theme="dark"] .universal-header .header-main-title,
+[data-theme="dark"] .universal-header .header-page-desc,
+[data-theme="dark"] .universal-header .header-control-btn,
+[data-theme="dark"] .universal-header .header-control-btn i,
+[data-theme="dark"] .universal-header .header-nav-btn,
+[data-theme="dark"] .universal-header .header-icon-desc,
+[data-theme="dark"] .universal-header .header-page-icon,
+[data-theme="dark"] .universal-header .theme-color-main-btn,
+[data-theme="dark"] .universal-header .theme-color-main-btn i,
+[data-theme="dark"] .universal-header .theme-toggle,
+[data-theme="dark"] .universal-header .theme-toggle i {
+    color: #ffffff !important;
+}
+
+/* Garantir que ícones do Material Icons no header sejam brancos em ambos os temas */
+[data-theme="light"] .universal-header .material-icons,
+[data-theme="dark"] .universal-header .material-icons {
+    color: #ffffff !important;
+}
+
+/* Garantir que texto e elementos dentro do header sejam brancos em ambos os temas */
+[data-theme="light"] .universal-header h1,
+[data-theme="light"] .universal-header h2,
+[data-theme="light"] .universal-header h3,
+[data-theme="light"] .universal-header h4,
+[data-theme="light"] .universal-header h5,
+[data-theme="light"] .universal-header h6,
+[data-theme="light"] .universal-header p,
+[data-theme="light"] .universal-header span,
+[data-theme="light"] .universal-header a,
+[data-theme="light"] .universal-header button,
+[data-theme="light"] .universal-header label,
+[data-theme="dark"] .universal-header h1,
+[data-theme="dark"] .universal-header h2,
+[data-theme="dark"] .universal-header h3,
+[data-theme="dark"] .universal-header h4,
+[data-theme="dark"] .universal-header h5,
+[data-theme="dark"] .universal-header h6,
+[data-theme="dark"] .universal-header p,
+[data-theme="dark"] .universal-header span,
+[data-theme="dark"] .universal-header a,
+[data-theme="dark"] .universal-header button,
+[data-theme="dark"] .universal-header label {
+    color: #ffffff !important;
+}
+
+/* Garantir que botões e controles no header tenham texto branco em ambos os temas */
+[data-theme="light"] .universal-header .header-control-btn,
+[data-theme="light"] .universal-header .theme-color-main-btn,
+[data-theme="light"] .universal-header .theme-toggle,
+[data-theme="dark"] .universal-header .header-control-btn,
+[data-theme="dark"] .universal-header .theme-color-main-btn,
+[data-theme="dark"] .universal-header .theme-toggle {
+    color: #ffffff !important;
+}
+
+[data-theme="light"] .universal-header .header-control-btn i,
+[data-theme="light"] .universal-header .theme-color-main-btn i,
+[data-theme="light"] .universal-header .theme-toggle i,
+[data-theme="dark"] .universal-header .header-control-btn i,
+[data-theme="dark"] .universal-header .theme-color-main-btn i,
+[data-theme="dark"] .universal-header .theme-toggle i {
+    color: #ffffff !important;
+}
+
+/* Garantir que elementos de navegação no header sejam brancos em ambos os temas */
+[data-theme="light"] .universal-header .header-nav-btn,
+[data-theme="dark"] .universal-header .header-nav-btn {
+    color: #ffffff !important;
+}
+
+[data-theme="light"] .universal-header .header-nav-btn:hover,
+[data-theme="dark"] .universal-header .header-nav-btn:hover {
+    color: #ffffff !important;
+}
+
+/* Garantir que descrições e ícones de página sejam brancos em ambos os temas */
+[data-theme="light"] .universal-header .header-page-desc,
+[data-theme="light"] .universal-header .header-page-icon,
+[data-theme="dark"] .universal-header .header-page-desc,
+[data-theme="dark"] .universal-header .header-page-icon {
+    color: #ffffff !important;
+}
+
+/* Garantir que o título principal seja branco em ambos os temas */
+[data-theme="light"] .universal-header .header-main-title,
+[data-theme="dark"] .universal-header .header-main-title {
+    color: #ffffff !important;
+}
+
+[data-theme="light"] .universal-header .header-main-title::after,
+[data-theme="dark"] .universal-header .header-main-title::after {
+    background: #ffffff !important;
+}
+
+/* Manter os ícones de decoração com a transparência original em ambos os temas */
+[data-theme="light"] .universal-header .header-decoration-icon,
+[data-theme="dark"] .universal-header .header-decoration-icon {
+    color: rgba(255, 255, 255, 0.1) !important;
+}
