@@ -37,6 +37,85 @@
     --nav-item-hover-bg: rgba(108, 92, 231, 0.1);
 }
 
+/* Regras para garantir que elementos do header sejam sempre brancos */
+.universal-header,
+.universal-header *,
+.universal-header .header-main-title,
+.universal-header .header-page-desc,
+.universal-header .header-control-btn,
+.universal-header .header-control-btn i,
+.universal-header .header-nav-btn,
+.universal-header .header-icon-desc,
+.universal-header .header-page-icon,
+.universal-header .theme-color-main-btn,
+.universal-header .theme-color-main-btn i,
+.universal-header .theme-toggle,
+.universal-header .theme-toggle i {
+    color: #ffffff !important;
+}
+
+/* Garantir que ícones do Material Icons no header sejam brancos */
+.universal-header .material-icons {
+    color: #ffffff !important;
+}
+
+/* Garantir que texto e elementos dentro do header sejam brancos */
+.universal-header h1,
+.universal-header h2,
+.universal-header h3,
+.universal-header h4,
+.universal-header h5,
+.universal-header h6,
+.universal-header p,
+.universal-header span,
+.universal-header a,
+.universal-header button,
+.universal-header label {
+    color: #ffffff !important;
+}
+
+/* Garantir que botões e controles no header tenham texto branco */
+.universal-header .header-control-btn,
+.universal-header .theme-color-main-btn,
+.universal-header .theme-toggle {
+    color: #ffffff !important;
+}
+
+.universal-header .header-control-btn i,
+.universal-header .theme-color-main-btn i,
+.universal-header .theme-toggle i {
+    color: #ffffff !important;
+}
+
+/* Garantir que elementos de navegação no header sejam brancos */
+.universal-header .header-nav-btn {
+    color: #ffffff !important;
+}
+
+.universal-header .header-nav-btn:hover {
+    color: #ffffff !important;
+}
+
+/* Garantir que descrições e ícones de página sejam brancos */
+.universal-header .header-page-desc,
+.universal-header .header-page-icon {
+    color: #ffffff !important;
+}
+
+/* Garantir que o título principal seja branco */
+.universal-header .header-main-title {
+    color: #ffffff !important;
+}
+
+.universal-header .header-main-title::after {
+    background: #ffffff !important;
+}
+
+/* Garantir que elementos de decoração sejam brancos (com opacidade) */
+.universal-header .header-decoration-icon {
+    color: rgba(255, 255, 255, 0.1) !important;
+}
+
 /* Paletas de cores adicionais - deve vir logo após o :root */
 :root[data-theme-color="default"] {
     --primary-color: #6c63ff;
