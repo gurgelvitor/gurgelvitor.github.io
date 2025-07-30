@@ -2176,30 +2176,6 @@ body {
     font-size: 0.9rem;
 }
 
-.training-card .reps {
-    color: var(--button-text-color);
-    font-size: 1.1rem;
-    margin: 0.5rem 0;
-    display: inline-block;
-    background-color: var(--primary-color);
-    padding: 0.25rem 0.75rem;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.training-card .ativ {
-    color: white;
-    font-style: italic;
-    display: inline-block;
-    margin-top: 0.25rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 4px;
-    background-color: var(--primary-color);
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
-
 .training-card div {
     color: var(--text-color);
     opacity: 0.7;
@@ -2227,15 +2203,7 @@ body {
     color: var(--primary-color);
 }
 
-/* Dark mode adjustments for exercise descriptions */
-[data-theme="dark"] .training-card .ativ {
-    background-color: var(--accent-color);
-}
 
-/* Dark mode adjustments for exercise numbers */
-[data-theme="dark"] .training-card ol li::before {
-    background-color: var(--accent-color);
-}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -2280,11 +2248,6 @@ body {
     color: var(--accent-color);
 }
 
-.training-card .reps {
-    color: var(--button-text-color);
-    font-weight: 600;
-}
-
 .training-card div {
     color: var(--text-color);
     opacity: 0.8;
@@ -2310,11 +2273,6 @@ body {
 
 [data-theme="dark"] .training-card a:hover {
     color: var(--primary-color);
-}
-
-[data-theme="dark"] .training-card .reps {
-    background-color: var(--accent-color);
-    color: var(--button-text-color);
 }
 
 [data-theme="dark"] .training-card div {
@@ -3289,57 +3247,6 @@ a:hover {
     animation: fadeIn 0.5s ease-out;
 } 
 
-/* Color theme adjustments for reps */
-[data-theme-color="green"] .training-card .reps {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-[data-theme-color="gray"] .training-card .reps {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-[data-theme-color="yellow"] .training-card .reps {
-    background-color: var(--primary-color);
-    color: black;
-}
-
-[data-theme-color="orange"] .training-card .reps {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-[data-theme-color="pink"] .training-card .reps {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-/* Dark mode with color theme adjustments */
-[data-theme="dark"][data-theme-color="green"] .training-card .reps {
-    background-color: var(--accent-color);
-    color: white;
-}
-
-[data-theme="dark"][data-theme-color="gray"] .training-card .reps {
-    background-color: var(--accent-color);
-    color: white;
-}
-
-[data-theme="dark"][data-theme-color="yellow"] .training-card .reps {
-    background-color: var(--accent-color);
-    color: black;
-}
-
-[data-theme="dark"][data-theme-color="orange"] .training-card .reps {
-    background-color: var(--accent-color);
-    color: white;
-}
-
-[data-theme="dark"][data-theme-color="pink"] .training-card .reps {
-    background-color: var(--accent-color);
-    color: white;
-}
 
 /* Ajustes de responsividade para telas grandes */
 @media (min-width: 1200px) {
@@ -6494,82 +6401,6 @@ body {
 /* --- Fim da modernização do Sobre Nós --- */
 
 /* --- Modernização dos <ol> das páginas de treino --- */
-.training-card ol {
-    background: rgba(255,255,255,0.13);
-    border-radius: 16px;
-    box-shadow: 0 2px 12px 0 rgba(31, 38, 135, 0.06);
-    padding: 1.2rem 1.2rem 1.2rem 0.5rem;
-    margin: 0;
-    list-style: none;
-    counter-reset: exercise-counter;
-    transition: box-shadow 0.3s, background 0.3s;
-}
-.training-card ol.show {
-    margin-top: 1.2rem;
-    box-shadow: 0 4px 24px 0 rgba(67,160,71,0.10);
-}
-.training-card ol li {
-    margin-bottom: 1.2rem;
-    padding: 1.1rem 1.2rem 1.1rem 3.2rem;
-    background: rgba(255,255,255,0.7);
-    border-radius: 12px;
-    border-left: 5px solid var(--primary-color);
-    box-shadow: 0 2px 8px rgba(67,160,71,0.07);
-    position: relative;
-    transition: box-shadow 0.2s, transform 0.2s;
-    display: flex;
-    flex-direction: column;
-    min-height: 60px;
-    font-size: 1.08rem;
-    color: var(--text-color);
-    /* Não muda cor no hover */
-}
-.training-card ol li::before {
-    counter-increment: exercise-counter;
-    content: counter(exercise-counter);
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color, #7f53ac));
-    color: #fff;
-    width: 2.2rem;
-    height: 2.2rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 1.1rem;
-    box-shadow: 0 2px 8px rgba(67,160,71,0.10);
-    z-index: 1;
-    border: 2.5px solid #fff;
-}
-.training-card .reps {
-    background: linear-gradient(90deg, var(--primary-color), var(--accent-color, #7f53ac));
-    color: #fff;
-    font-size: 1.05rem;
-    margin: 0.4rem 0 0.2rem 0;
-    display: inline-block;
-    border-radius: 6px;
-    font-weight: 700;
-    padding: 0.25rem 0.9rem;
-    letter-spacing: 0.5px;
-    box-shadow: 0 1px 4px rgba(67,160,71,0.10);
-}
-.training-card .ativ {
-    background: var(--accent-color, #7f53ac);
-    color: #fff;
-    font-style: italic;
-    display: inline-block;
-    margin-top: 0.25rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    line-height: 1.4;
-    font-weight: 500;
-    box-shadow: 0 1px 4px rgba(127,83,172,0.10);
-}
 .training-card div {
     color: var(--text-color);
     opacity: 0.8;
@@ -6609,50 +6440,7 @@ body {
 /* --- Fim da modernização dos <ol> das páginas de treino --- */
 
 /* --- Diferenciação visual entre .reps e .ativ --- */
-.training-card .reps {
-    background: linear-gradient(90deg, var(--primary-color), var(--accent-color, #7f53ac));
-    color: #fff;
-    font-size: 1.08rem;
-    margin: 0.4rem 0 0.2rem 0;
-    display: inline-block;
-    border-radius: 6px;
-    font-weight: 800;
-    padding: 0.28rem 1.1rem;
-    letter-spacing: 0.7px;
-    box-shadow: 0 1px 4px rgba(67,160,71,0.10);
-    text-transform: uppercase;
-    border: none;
-    outline: none;
-    vertical-align: middle;
-    position: relative;
-}
-.training-card .ativ {
-    background: linear-gradient(90deg, #fffbe7 60%, #ffe082 100%);
-    color: #7f53ac;
-    font-style: normal;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5em;
-    margin-top: 0.3rem;
-    padding: 0.22rem 1.1rem 0.22rem 0.7rem;
-    border-radius: 999px;
-    font-size: 1.01rem;
-    line-height: 1.5;
-    font-weight: 600;
-    box-shadow: 0 1px 4px rgba(255,193,7,0.10);
-    border: 1.5px solid #ffe082;
-    position: relative;
-    vertical-align: middle;
-}
-.training-card .ativ::before {
-    content: '\ef4e'; /* material icon: info_outline */
-    font-family: 'Material Icons';
-    font-size: 1.1em;
-    color: #ff9800;
-    margin-right: 0.3em;
-    vertical-align: middle;
-    opacity: 0.85;
-}
+
 @media (max-width: 768px) {
     .training-card .reps {
         font-size: 0.98rem;
@@ -7000,4 +6788,27 @@ body.index-page .cta-button-large {
     color: #f5f5f5 !important;
     text-shadow: 0 1px 4px rgba(0,0,0,0.18);
     opacity: 1;
+}
+
+.treino-table, .treino-table th, .treino-table td {
+  border: 1px solid #d1d5db;
+  border-collapse: collapse;
+}
+.treino-table th, .treino-table td {
+  padding: 0.5em 1em;
+}
+.treino-table {
+  width: 100%;
+  max-width: 100%;
+  margin: 1em 0;
+  background: #fff;
+  display: block;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
+[data-theme="dark"] .treino-table {
+  background: #23242a;
+}
+[data-theme="dark"] .treino-table th, [data-theme="dark"] .treino-table td {
+  border-color: #444;
 }
