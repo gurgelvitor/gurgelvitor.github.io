@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Gasto Calórico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .calculator-container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            display: none;
+        }
+        .result h3 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        .result p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .highlight {
+            font-weight: 700;
+            color: #e74c3c;
+            font-size: 18px;
+        }
+        .calculator-container {
+    max-width: 500px;
+    margin: 80px auto 40px;  /* Increased top margin to 80px */
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;  /* Added for proper positioning */
+}
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button" style="position: absolute; top: 20px; left: 20px; display: inline-flex; align-items: center; text-decoration: none; color: #2c3e50; font-weight: 500; background: #f5f5f5; padding: 8px 16px; border-radius: 6px; transition: background-color 0.3s;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    Voltar
+</a>
+    <div class="calculator-container">
+        <h1>Calculadora de Gasto Calórico</h1>
+        <form id="calorieForm">
+            <div class="form-group">
+                <label for="gender">Sexo:</label>
+                <select id="gender" required>
+                    <option value="male">Masculino</option>
+                    <option value="female">Feminino</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="age">Idade (anos):</label>
+                <input type="number" id="age" min="15" max="120" required>
+            </div>
+            <div class="form-group">
+                <label for="weight">Peso (kg):</label>
+                <input type="number" id="weight" min="30" step="0.1" required>
+            </div>
+            <div class="form-group">
+                <label for="height">Altura (cm):</label>
+                <input type="number" id="height" min="100" max="250" required>
+            </div>
+            <div class="form-group">
+                <label for="activity">Nível de Atividade Física:</label>
+                <select id="activity" required>
+                    <option value="1.3">1.3</option>
+                    <option value="1.4">1.4</option>
+                    <option value="1.5">1.5</option>
+                    <option value="1.6">1.6</option>
+                    <option value="1.7">1.7</option>
+                    <option value="1.8">1.8</option>
+                    <option value="1.9">1.9</option>
+                    <option value="2.0">2.0</option>
+                </select>
+            </div>
+            <button type="submit">Calcular</button>
+        </form>
+        
+        <div class="result" id="result">
+            <h3>Resultados</h3>
+            <p>Taxa Metabólica Basal (TMB): <span class="highlight" id="bmr">0</span> calorias/dia</p>
+            <p>Gasto Energético Total (GET): <span class="highlight" id="tdee">0</span> calorias/dia</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('calorieForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Obter valores do formulário
+            const gender = document.getElementById('gender').value;
+            const age = parseInt(document.getElementById('age').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const activityFactor = parseFloat(document.getElementById('activity').value);
+            
+            // Calcular TMB (Taxa Metabólica Basal) - Fórmula de Harris-Benedict
+            let bmr;
+            if (gender === 'male') {
+                bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+            } else {
+                bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+            }
+            
+            // Calcular GET (Gasto Energético Total)
+            const tdee = bmr * activityFactor;
+            
+            // Exibir resultados
+            document.getElementById('bmr').textContent = bmr.toFixed(0);
+            document.getElementById('tdee').textContent = tdee.toFixed(0);
+            document.getElementById('result').style.display = 'block';
+            
+            // Rolar até o resultado
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
