@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Treino Personalizado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+    /* Cores do Tema Claro com Azul */
+    --bg-primary: #f8f9fa;
+    --bg-secondary: #ffffff;
+    --bg-card: #ffffff;
+    --bg-hover: #f1f8ff;
+    --accent: #3498db;         /* Azul principal */
+    --accent-hover: #2980b9;   /* Azul mais escuro no hover */
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --border: #e1e4e8;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+ 
+body {
+    background-color: var(--bg-primary);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px 0;
+}
+ 
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+ 
+.workout-builder {
+    background: var(--bg-secondary);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    margin-bottom: 30px;
+}
+ 
+.page-title {
+    text-align: center;
+    color: var(--accent);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+ 
+.add-day-section {
+    background: var(--bg-card);
+    border-radius: 15px;
+    padding: 30px;
+    border: 2px solid var(--border);
+    margin-bottom: 30px;
+    transition: var(--transition);
+}
+ 
+.add-day-section:hover {
+    border-color: var(--accent);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.15);
+}
+ 
+.form-control {
+    background-color: var(--bg-hover);
+    border: 2px solid var(--border);
+    color: var(--text-primary);
+    padding: 12px 20px;
+    border-radius: 10px;
+    transition: var(--transition);
+    font-size: 16px;
+}
+ 
+.form-control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+}
+ 
+.btn-primary {
+    background-color: var(--accent);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: var(--transition);
+    color: white;
+    font-size: 16px;
+}
+ 
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+}
+ 
+.btn-success {
+    background-color: var(--accent);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: var(--transition);
+    color: white;
+}
+ 
+.btn-success:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+}
+ 
+.btn-danger {
+    background: linear-gradient(135deg, #eb3349, #f45c43);
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: var(--transition);
+    color: white;
+}
+ 
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(235, 51, 73, 0.4);
+}
+ 
+.day-card {
+    background: var(--bg-card);
+    border-radius: 15px;
+    margin-bottom: 25px;
+    border: 2px solid var(--border);
+    overflow: hidden;
+    transition: var(--transition);
+}
+ 
+.day-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 10px 30px rgba(52, 152, 219, 0.15);
+    transform: translateY(-2px);
+}
+ 
+.day-header {
+    background-color: var(--accent);
+    color: white;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+ 
+.day-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+ 
+.exercise-item {
+    background: var(--bg-hover);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 5px solid var(--accent);
+    transition: var(--transition);
+}
+ 
+.exercise-item:hover {
+    transform: translateX(5px);
+    background: #e8f4fd;
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+}
+ 
+.exercise-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+ 
+.exercise-details {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+ 
+.exercise-notes {
+    color: var(--text-secondary);
+    font-style: italic;
+    font-size: 0.9rem;
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: rgba(52, 152, 219, 0.1);
+    border-radius: 6px;
+    border-left: 3px solid var(--accent);
+}
+ 
+.workout-preview {
+    background: var(--bg-card);
+    border-radius: 15px;
+    padding: 30px;
+    border: 2px solid var(--border);
+    margin-top: 30px;
+    display: none;
+}
+ 
+.workout-preview.show {
+    display: block;
+}
+ 
+.preview-header {
+    background-color: var(--accent);
+    color: white;
+    padding: 20px;
+    border-radius: 10px 10px 0 0;
+    margin: -30px -30px 20px -30px;
+    text-align: center;
+}
+ 
+.print-section {
+    display: none;
+}
+ 
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .print-section, .print-section * {
+        visibility: visible;
+    }
+    .print-section {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+}
+ 
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+}
+ 
+.empty-state svg {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+ 
+.actions-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+ 
+.modal-content {
+    border-radius: 15px;
+    border: none;
+}
+ 
+.modal-header {
+    background-color: var(--accent);
+    color: white;
+    border-radius: 15px 15px 0 0;
+    border: none;
+}
+ 
+.modal-title {
+    font-weight: 700;
+}
+ 
+.form-label {
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+ 
+/* Seta de retorno responsiva */
+.back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    background-color: var(--accent);
+    padding: 12px 20px;
+    border-radius: 12px;
+    transition: var(--transition);
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    min-width: 120px;
+    font-size: 14px;
+}
+ 
+.back-button:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+    color: white;
+}
+ 
+.back-button svg {
+    margin-right: 8px;
+    transition: transform 0.3s ease;
+}
+ 
+.back-button:hover svg {
+    transform: translateX(-3px);
+}
+ 
+.back-button .text {
+    display: inline;
+}
+ 
+/* Responsividade para a seta */
+@media (max-width: 768px) {
+    .back-button {
+        top: 15px;
+        left: 15px;
+        padding: 10px 15px;
+        min-width: 100px;
+        font-size: 13px;
+    }
+            
+    .back-button svg {
+        width: 16px;
+        height: 16px;
+        margin-right: 6px;
+    }
+}
+ 
+@media (max-width: 480px) {
+    .back-button {
+        top: 10px;
+        left: 10px;
+        padding: 8px 12px;
+        min-width: 80px;
+        font-size: 12px;
+        border-radius: 8px;
+    }
+            
+    .back-button svg {
+        width: 14px;
+        height: 14px;
+        margin-right: 4px;
+    }
+            
+    .back-button .text {
+        display: none;
+    }
+            
+    .back-button {
+        min-width: auto;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+    }
+}
+ 
+/* Estilos para Drag and Drop */
+.draggable {
+    cursor: move;
+    position: relative;
+}
+ 
+.draggable:hover {
+    opacity: 0.8;
+}
+ 
+.dragging {
+    opacity: 0.5;
+    transform: rotate(2deg);
+    z-index: 1000;
+}
+ 
+.drag-over {
+    background-color: rgba(52, 152, 219, 0.1);
+    border: 2px dashed var(--accent);
+}
+ 
+.day-card.dragging {
+    box-shadow: 0 15px 35px rgba(52, 152, 219, 0.3);
+    transform: rotate(1deg) scale(1.02);
+}
+ 
+.exercise-item.dragging {
+    box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+    transform: translateX(-5px);
+}
+ 
+.drop-indicator {
+    height: 3px;
+    background-color: var(--accent);
+    margin: 10px 0;
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+ 
+.drop-indicator.active {
+    opacity: 1;
+}
+ 
+.drag-handle {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    cursor: grab;
+    font-size: 18px;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+ 
+.drag-handle:hover {
+    opacity: 1;
+}
+ 
+.day-header .drag-handle {
+    position: static;
+    transform: none;
+    margin-right: 10px;
+    font-size: 20px;
+}
+ 
+.exercise-item .drag-handle {
+    left: 5px;
+}
+ 
+.exercise-item {
+    padding-left: 35px;
+}
+ 
+/* Animações suaves */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+ 
+.drag-animation {
+    animation: slideIn 0.3s ease;
+}
+ 
+/* Responsividade geral */
+@media (max-width: 768px) {
+    .workout-builder {
+        padding: 20px;
+        margin: 10px;
+    }
+            
+    .page-title {
+        font-size: 2rem;
+        margin-bottom: 30px;
+    }
+            
+    .add-day-section {
+        padding: 20px;
+    }
+            
+    .day-header {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+            
+    .day-title {
+        font-size: 1.3rem;
+    }
+            
+    .actions-buttons {
+        justify-content: center;
+    }
+            
+    .exercise-item {
+        padding: 15px;
+        padding-left: 30px;
+    }
+            
+    .exercise-name {
+        font-size: 1.1rem;
+    }
+}
+ 
+@media (max-width: 480px) {
+    .main-container {
+        padding: 0 10px;
+    }
+            
+    .workout-builder {
+        padding: 15px;
+        margin: 5px;
+        border-radius: 15px;
+    }
+            
+    .page-title {
+        font-size: 1.8rem;
+    }
+            
+    .add-day-section {
+        padding: 15px;
+    }
+            
+    .day-header {
+        padding: 12px 15px;
+    }
+            
+    .day-title {
+        font-size: 1.2rem;
+    }
+            
+    .exercise-item {
+        padding: 12px;
+        padding-left: 25px;
+    }
+            
+    .btn-primary, .btn-success {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+            
+    .btn-danger {
+        padding: 6px 15px;
+        font-size: 12px;
+    }
+}
+
+/* Indicador de salvamento */
+#save-indicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--accent);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1001;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+ 
+/* Responsividade para o indicador */
+@media (max-width: 768px) {
+    #save-indicator {
+        top: 60px;
+        right: 15px;
+        font-size: 11px;
+        padding: 6px 12px;
+    }
+}
+ 
+@media (max-width: 480px) {
+    #save-indicator {
+        top: 50px;
+        right: 10px;
+        font-size: 10px;
+        padding: 5px 10px;
+    }
+}
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    <span class="text">Voltar</span>
+</a>
+ 
+    <div class="main-container">
+        <div class="workout-builder">
+            <h1 class="page-title">Criar Treino Personalizado</h1>
+            
+            <!-- Seção para adicionar dia de treino -->
+            <div class="add-day-section">
+                <h3 class="mb-4">Adicionar Dia de Treino</h3>
+                <form id="addDayForm">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label for="dayName" class="form-label">Nome do Treino (ex: Upper 1, Lower 2, PUSH, PULL, LEGS)</label>
+                            <input type="text" class="form-control" id="dayName" placeholder="Digite o nome do treino..." required>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Adicionar Dia</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+ 
+            <!-- Seção onde os treinos serão exibidos -->
+            <div id="workoutDays">
+                <!-- Os dias de treino serão adicionados aqui dinamicamente -->
+            </div>
+ 
+            <!-- Estado vazio -->
+            <div id="emptyState" class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                </svg>
+                <h4>Nenhum treino adicionado ainda</h4>
+                <p>Adicione seu primeiro dia de treino para começar!</p>
+            </div>
+ 
+            <!-- Botões de ação -->
+            <div class="text-center mt-5" id="actionButtons" style="display: none;">
+                <button id="generatePdf" class="btn btn-success btn-lg me-3">📄 Gerar PDF do Treino</button>
+                <button id="printWorkout" class="btn btn-primary btn-lg">🖨️ Imprimir Treino</button>
+            </div>
+        </div>
+ 
+        <!-- Área de visualização -->
+        <div id="workoutPreview" class="workout-preview">
+            <div class="preview-header">
+                <h2>📋 Resumo do Treino</h2>
+                <p class="mb-0">Visualize todos os seus dias de treino</p>
+            </div>
+            <div id="previewContent">
+                <!-- Conteúdo será inserido aqui -->
+            </div>
+        </div>
+    </div>
+ 
+    <!-- Modal para adicionar exercício -->
+    <div class="modal fade" id="addExerciseModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Adicionar Exercício</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addExerciseForm">
+                        <input type="hidden" id="currentDayId">
+                        <div class="mb-4">
+                            <label for="exerciseName" class="form-label">Nome do Exercício</label>
+                            <input type="text" class="form-control" id="exerciseName" placeholder="Ex: Agachamento, Supino, etc..." required>
+                        </div>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label for="sets" class="form-label">Séries</label>
+                                <input type="number" class="form-control" id="sets" min="1" value="3" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="reps" class="form-label">Repetições</label>
+                                <input type="text" class="form-control" id="reps" value="8-12" placeholder="Ex: 8-12, 10, 15" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="rest" class="form-label">Descanso (segundos)</label>
+                                <input type="text" class="form-control" id="rest" value="60" placeholder="Ex: 60, 90">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="notes" class="form-label">Observações (opcional)</label>
+                            <textarea class="form-control" id="notes" rows="3" placeholder="Dicas, técnica, equipamento necessário..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="saveExercise">💪 Adicionar Exercício</button>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <!-- Área de impressão (oculta na tela, visível na impressão) -->
+    <div id="printArea" class="print-section">
+        <div id="printContent">
+            <!-- Conteúdo do treino será inserido aqui -->
+        </div>
+    </div>
+ 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addDayForm = document.getElementById('addDayForm');
+            const workoutDays = document.getElementById('workoutDays');
+            const addExerciseForm = document.getElementById('addExerciseForm');
+            const saveExerciseBtn = document.getElementById('saveExercise');
+            const generatePdfBtn = document.getElementById('generatePdf');
+            const printWorkoutBtn = document.getElementById('printWorkout');
+            const printArea = document.getElementById('printArea');
+            const printContent = document.getElementById('printContent');
+            const workoutPreview = document.getElementById('workoutPreview');
+            const previewContent = document.getElementById('previewContent');
+            const emptyState = document.getElementById('emptyState');
+            const actionButtons = document.getElementById('actionButtons');
+            
+            let currentDayId = '';
+            let workoutData = [];
+ 
+            // Adicionar novo dia de treino
+            addDayForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const dayName = document.getElementById('dayName').value.trim();
+                
+                if (dayName) {
+                    const dayId = 'day-' + Date.now();
+                    const dayData = {
+                        id: dayId,
+                        name: dayName,
+                        exercises: []
+                    };
+                    
+                    workoutData.push(dayData);
+                    renderWorkoutDay(dayData);
+                    updatePreview();
+                    document.getElementById('dayName').value = '';
+                    
+                    // Esconder estado vazio e mostrar botões
+                    emptyState.style.display = 'none';
+                    actionButtons.style.display = 'block';
+                }
+            });
+ 
+            // Renderizar dia de treino na interface
+            function renderWorkoutDay(dayData) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'day-card';
+                dayElement.id = dayData.id;
+                
+                let exercisesHtml = '';
+                dayData.exercises.forEach((exercise, index) => {
+                    exercisesHtml += `
+                        <div class="exercise-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <div class="exercise-name">${exercise.name}</div>
+                                    <div class="exercise-details">🏋️ ${exercise.sets} séries × ${exercise.reps} repetições</div>
+                                    <div class="exercise-details">⏱️ Descanso: ${exercise.rest} segundos</div>
+                                    ${exercise.notes ? `<div class="exercise-notes">📝 ${exercise.notes}</div>` : ''}
+                                </div>
+                                <button class="btn btn-danger btn-sm remove-exercise" data-day-id="${dayData.id}" data-exercise-index="${index}">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                dayElement.innerHTML = `
+                    <div class="day-header">
+                        <h3 class="day-title">${dayData.name}</h3>
+                        <div class="actions-buttons">
+                            <button class="btn btn-success add-exercise" data-day-id="${dayData.id}">
+                                ➕ Adicionar Exercício
+                            </button>
+                            <button class="btn btn-danger remove-day" data-day-id="${dayData.id}">
+                                🗑️ Remover Dia
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-4" id="exercises-${dayData.id}">
+                        ${exercisesHtml || '<p class="text-muted text-center mb-0">Nenhum exercício adicionado ainda. Clique em "Adicionar Exercício" para começar!</p>'}
+                    </div>
+                `;
+                
+                workoutDays.appendChild(dayElement);
+                
+                // Adicionar event listeners aos botões
+                dayElement.querySelector('.add-exercise').addEventListener('click', function() {
+                    currentDayId = this.getAttribute('data-day-id');
+                    const modal = new bootstrap.Modal(document.getElementById('addExerciseModal'));
+                    document.getElementById('currentDayId').value = currentDayId;
+                    modal.show();
+                });
+                
+                dayElement.querySelectorAll('.remove-exercise').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const dayId = this.getAttribute('data-day-id');
+                        const exerciseIndex = parseInt(this.getAttribute('data-exercise-index'));
+                        removeExercise(dayId, exerciseIndex);
+                    });
+                });
+                
+                dayElement.querySelector('.remove-day').addEventListener('click', function() {
+                    if (confirm('Tem certeza que deseja remover este dia de treino?')) {
+                        const dayId = this.getAttribute('data-day-id');
+                        removeDay(dayId);
+                    }
+                });
+            }
+            
+            // Atualizar visualização de um dia de treino
+            // Atualizar visualização de um dia de treino
+function updateWorkoutDay(dayId) {
+    const dayData = workoutData.find(day => day.id === dayId);
+    if (dayData) {
+        const dayElement = document.getElementById(dayId);
+        if (dayElement) {
+            const exercisesContainer = document.getElementById(`exercises-${dayId}`);
+            
+            // Atualizar apenas os exercícios, mantendo o dia na mesma posição
+            let exercisesHtml = '';
+            dayData.exercises.forEach((exercise, index) => {
+                exercisesHtml += `
+                    <div class="exercise-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="exercise-name">${exercise.name}</div>
+                                <div class="exercise-details">🏋️ ${exercise.sets} séries × ${exercise.reps} repetições</div>
+                                <div class="exercise-details">⏱️ Descanso: ${exercise.rest} segundos</div>
+                                ${exercise.notes ? `<div class="exercise-notes">📝 ${exercise.notes}</div>` : ''}
+                            </div>
+                            <button class="btn btn-danger btn-sm remove-exercise" data-day-id="${dayData.id}" data-exercise-index="${index}">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            exercisesContainer.innerHTML = exercisesHtml || '<p class="text-muted text-center mb-0">Nenhum exercício adicionado ainda. Clique em "Adicionar Exercício" para começar!</p>';
+            
+            // Readicionar os event listeners aos botões de remover exercício
+            exercisesContainer.querySelectorAll('.remove-exercise').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const dayId = this.getAttribute('data-day-id');
+                    const exerciseIndex = parseInt(this.getAttribute('data-exercise-index'));
+                    removeExercise(dayId, exerciseIndex);
+                });
+            });
+        }
+    }
+}
+            
+            // Remover dia de treino
+            function removeDay(dayId) {
+    workoutData = workoutData.filter(day => day.id !== dayId);
+    const dayElement = document.getElementById(dayId);
+    if (dayElement) {
+        workoutDays.removeChild(dayElement);
+    }
+    updatePreview();
+    
+    // Mostrar estado vazio se não houver mais treinos
+    if (workoutData.length === 0) {
+        emptyState.style.display = 'block';
+        actionButtons.style.display = 'none';
+        workoutPreview.classList.remove('show');
+    }
+}
+            
+            // Remover exercício
+            function removeExercise(dayId, exerciseIndex) {
+                const dayIndex = workoutData.findIndex(day => day.id === dayId);
+                if (dayIndex !== -1) {
+                    workoutData[dayIndex].exercises.splice(exerciseIndex, 1);
+                    updateWorkoutDay(dayId);
+                    updatePreview();
+                }
+            }
+            
+            // Salvar exercício
+            saveExerciseBtn.addEventListener('click', function() {
+                const dayId = document.getElementById('currentDayId').value;
+                const exerciseName = document.getElementById('exerciseName').value.trim();
+                const sets = document.getElementById('sets').value.trim();
+                const reps = document.getElementById('reps').value.trim();
+                const rest = document.getElementById('rest').value.trim();
+                const notes = document.getElementById('notes').value.trim();
+                
+                if (exerciseName && sets && reps) {
+                    const dayIndex = workoutData.findIndex(day => day.id === dayId);
+                    if (dayIndex !== -1) {
+                        const exercise = {
+                            name: exerciseName,
+                            sets: sets,
+                            reps: reps,
+                            rest: rest,
+                            notes: notes
+                        };
+                        
+                        workoutData[dayIndex].exercises.push(exercise);
+                        updateWorkoutDay(dayId);
+                        
+                        // Limpar formulário e fechar modal
+                        document.getElementById('exerciseName').value = '';
+                        document.getElementById('sets').value = '3';
+                        document.getElementById('reps').value = '8-12';
+                        document.getElementById('rest').value = '60';
+                        document.getElementById('notes').value = '';
+                        
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('addExerciseModal'));
+                        modal.hide();
+                        
+                        updatePreview();
+                    }
+                }
+            });
+            
+            // Atualizar visualização de impressão e preview
+            function updatePreview() {
+                if (workoutData.length === 0) {
+                    previewContent.innerHTML = '<p class="text-center text-muted">Adicione dias de treino e exercícios para visualizar o resumo.</p>';
+                    printContent.innerHTML = previewContent.innerHTML;
+                    return;
+                }
+                
+                let previewHtml = '';
+                let printHtml = '<h1 style="text-align: center; margin-bottom: 30px;">Meu Treino Personalizado</h1>';
+                
+                workoutData.forEach((day, dayIndex) => {
+                    let exercisesHtml = '';
+                    let printExercisesHtml = '';
+                    
+                    if (day.exercises.length === 0) {
+                        exercisesHtml = '<p class="text-muted text-center">Nenhum exercício adicionado.</p>';
+                        printExercisesHtml = '<p>Nenhum exercício adicionado.</p>';
+                    } else {
+                        day.exercises.forEach(exercise => {
+                            exercisesHtml += `
+                                <div class="exercise-item">
+                                    <div class="exercise-name">${exercise.name}</div>
+                                    <div class="exercise-details">🏋️ ${exercise.sets} séries × ${exercise.reps} repetições</div>
+                                    <div class="exercise-details">⏱️ Descanso: ${exercise.rest} segundos</div>
+                                    ${exercise.notes ? `<div class="exercise-notes">📝 ${exercise.notes}</div>` : ''}
+                                </div>
+                            `;
+                            
+                            printExercisesHtml += `
+                                <div style="margin-bottom: 20px; page-break-inside: avoid;">
+                                    <h4 style="margin-bottom: 8px; color: #2c3e50;">${exercise.name}</h4>
+                                    <p style="margin: 4px 0; color: #7f8c8d;"><strong>Séries:</strong> ${exercise.sets} × ${exercise.reps}</p>
+                                    <p style="margin: 4px 0; color: #7f8c8d;"><strong>Descanso:</strong> ${exercise.rest} segundos</p>
+                                    ${exercise.notes ? `<p style="margin: 8px 0; font-style: italic; color: #7f8c8d; padding: 8px; background: #f8f9fa; border-left: 3px solid #3498db;">${exercise.notes}</p>` : ''}
+                                    <hr style="margin: 15px 0; border: none; border-top: 1px solid #e1e4e8;">
+                                </div>
+                            `;
+                        });
+                    }
+                    
+                    previewHtml += `
+                        <div class="mb-4">
+                            <h3 style="color: #667eea; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #667eea;">
+                                ${day.name}
+                            </h3>
+                            ${exercisesHtml}
+                        </div>
+                    `;
+                    
+                    printHtml += `
+                        <div style="margin-bottom: 40px; page-break-inside: avoid;">
+                            <h2 style="color: #2c3e50; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #3498db;">${day.name}</h2>
+                            ${printExercisesHtml}
+                        </div>
+                        ${dayIndex < workoutData.length - 1 ? '<div style="page-break-after: always;"></div>' : ''}
+                    `;
+                });
+                
+                previewContent.innerHTML = previewHtml;
+                printContent.innerHTML = printHtml;
+                workoutPreview.classList.add('show');
+            }
+            
+            // Gerar PDF com múltiplas páginas
+            generatePdfBtn.addEventListener('click', async function() {
+                if (workoutData.length === 0) {
+                    alert('Adicione pelo menos um dia de treino antes de gerar o PDF.');
+                    return;
+                }
+                
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({
+                        orientation: 'portrait',
+                        unit: 'mm',
+                        format: 'a4'
+                    });
+                    
+                    const pageWidth = pdf.internal.pageSize.getWidth();
+                    const pageHeight = pdf.internal.pageSize.getHeight();
+                    const margin = 15;
+                    let currentY = margin;
+                    let pageNumber = 1;
+                    
+                    // Função para adicionar cabeçalho
+                    const addHeader = (pageNum) => {
+                        pdf.setFontSize(20);
+                        pdf.setTextColor(102, 126, 234);
+                        pdf.text('Meu Treino Personalizado', margin, 20);
+                        
+                        pdf.setFontSize(10);
+                        pdf.setTextColor(100, 100, 100);
+                        const today = new Date().toLocaleDateString('pt-BR');
+                        pdf.text(`Gerado em: ${today}`, margin, 30);
+                        pdf.text(`Página ${pageNum}`, pageWidth - margin - 15, 30, { align: 'right' });
+                        
+                        pdf.setDrawColor(200, 200, 200);
+                        pdf.line(margin, 35, pageWidth - margin, 35);
+                        
+                        return 45;
+                    };
+                    
+                    // Adicionar cabeçalho da primeira página
+                    currentY = addHeader(pageNumber);
+                    
+                    // Adicionar cada dia de treino
+                    workoutData.forEach((day, dayIndex) => {
+                        // Verificar se precisa de nova página para o título do dia
+                        if (currentY > pageHeight - 60) {
+                            pdf.addPage();
+                            pageNumber++;
+                            currentY = addHeader(pageNumber);
+                        }
+                        
+                        // Título do dia
+                        pdf.setFontSize(16);
+                        pdf.setTextColor(44, 62, 80);
+                        pdf.setFont(undefined, 'bold');
+                        pdf.text(day.name, margin, currentY);
+                        currentY += 15;
+                        
+                        // Adicionar exercícios
+                        day.exercises.forEach((exercise, exIndex) => {
+                            // Verificar espaço disponível
+                            const neededSpace = exercise.notes ? 35 : 25;
+                            if (currentY > pageHeight - neededSpace) {
+                                pdf.addPage();
+                                pageNumber++;
+                                currentY = addHeader(pageNumber);
+                            }
+                            
+                            // Nome do exercício
+                            pdf.setFontSize(12);
+                            pdf.setFont(undefined, 'bold');
+                            pdf.setTextColor(44, 62, 80);
+                            pdf.text(`• ${exercise.name}`, margin + 5, currentY);
+                            currentY += 8;
+                            
+                            // Séries e repetições
+                            pdf.setFont(undefined, 'normal');
+                            pdf.setFontSize(10);
+                            pdf.setTextColor(127, 140, 141);
+                            pdf.text(`  Séries: ${exercise.sets} × ${exercise.reps}`, margin + 8, currentY);
+                            currentY += 6;
+                            
+                            // Descanso
+                            pdf.text(`  Descanso: ${exercise.rest} segundos`, margin + 8, currentY);
+                            currentY += 6;
+                            
+                            // Notas (se houver)
+                            if (exercise.notes) {
+                                const splitNotes = pdf.splitTextToSize(exercise.notes, pageWidth - (2 * margin) - 15);
+                                pdf.setFont(undefined, 'italic');
+                                pdf.text(splitNotes, margin + 8, currentY);
+                                pdf.setFont(undefined, 'normal');
+                                currentY += (splitNotes.length * 5) + 8;
+                            } else {
+                                currentY += 8;
+                            }
+                            
+                            // Linha divisória (exceto após o último exercício)
+                            if (exIndex < day.exercises.length - 1) {
+                                pdf.setDrawColor(230, 230, 230);
+                                pdf.line(margin, currentY - 2, pageWidth - margin, currentY - 2);
+                            }
+                        });
+                        
+                        // Espaçamento entre dias (exceto após o último dia)
+                        if (dayIndex < workoutData.length - 1) {
+                            currentY += 15;
+                            // Se não houver espaço suficiente para o próximo dia, adicionar nova página
+                            if (currentY > pageHeight - 50) {
+                                pdf.addPage();
+                                pageNumber++;
+                                currentY = addHeader(pageNumber);
+                            }
+                        }
+                    });
+                    
+                    // Salvar o PDF
+                    const dateStr = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+                    pdf.save(`treino-${dateStr}.pdf`);
+                    
+                } catch (error) {
+                    console.error('Erro ao gerar PDF:', error);
+                    alert('Ocorreu um erro ao gerar o PDF. Por favor, tente novamente.');
+                }
+            });
+            
+            // Imprimir treino
+            printWorkoutBtn.addEventListener('click', function() {
+                if (workoutData.length === 0) {
+                    alert('Adicione pelo menos um dia de treino antes de imprimir.');
+                    return;
+                }
+                window.print();
+            });
+            
+            // Inicializar
+            updatePreview();
+        });
+
+        // Sistema de persistência com localStorage
+const STORAGE_KEY = 'workoutData';
+ 
+// Função para salvar treino no localStorage
+function saveWorkoutToStorage() {
+    const workoutData = {
+        workoutDays: workoutDays,
+        lastSaved: new Date().toISOString()
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(workoutData));
+    console.log('Treino salvo automaticamente');
+}
+ 
+// Função para carregar treino do localStorage
+function loadWorkoutFromStorage() {
+    const savedData = localStorage.getItem(STORAGE_KEY);
+    if (savedData) {
+        try {
+            const workoutData = JSON.parse(savedData);
+            if (workoutData.workoutDays && workoutData.workoutDays.length > 0) {
+                workoutDays = workoutData.workoutDays;
+                workoutDays.forEach((day, index) => {
+                    renderWorkoutDay(day, index);
+                });
+                updatePreview();
+                updateButtons();
+                console.log('Treino carregado com sucesso');
+                return true;
+            }
+        } catch (error) {
+            console.error('Erro ao carregar treino:', error);
+        }
+    }
+    return false;
+}
+ 
+// Função para limpar storage (opcional, para debug)
+function clearWorkoutStorage() {
+    localStorage.removeItem(STORAGE_KEY);
+    console.log('Storage limpo');
+}
+ 
+// Modificar as funções existentes para incluir salvamento automático
+ 
+// Sobrescrever a função addWorkoutDay para incluir salvamento
+const originalAddWorkoutDay = addWorkoutDay;
+addWorkoutDay = function() {
+    const result = originalAddWorkoutDay.call(this);
+    saveWorkoutToStorage();
+    return result;
+};
+ 
+// Sobrescrever a função addExercise para incluir salvamento
+const originalAddExercise = addExercise;
+addExercise = function(dayIndex) {
+    const result = originalAddExercise.call(this, dayIndex);
+    saveWorkoutToStorage();
+    return result;
+};
+ 
+// Sobrescrever a função removeDay para incluir salvamento
+const originalRemoveDay = removeDay;
+removeDay = function(dayIndex) {
+    const result = originalRemoveDay.call(this, dayIndex);
+    saveWorkoutToStorage();
+    return result;
+};
+ 
+// Sobrescrever a função removeExercise para incluir salvamento
+const originalRemoveExercise = removeExercise;
+removeExercise = function(dayIndex, exerciseIndex) {
+    const result = originalRemoveExercise.call(this, dayIndex, exerciseIndex);
+    saveWorkoutToStorage();
+    return result;
+};
+ 
+// Sobrescrever a função updateWorkoutDay para incluir salvamento
+const originalUpdateWorkoutDay = updateWorkoutDay;
+updateWorkoutDay = function(dayIndex) {
+    const result = originalUpdateWorkoutDay.call(this, dayIndex);
+    saveWorkoutToStorage();
+    return result;
+};
+ 
+// Sobrescrever as funções de drag and drop para incluir salvamento
+const originalUpdateWorkoutDataOrder = updateWorkoutDataOrder;
+updateWorkoutDataOrder = function() {
+    const result = originalUpdateWorkoutDataOrder.call(this);
+    saveWorkoutToStorage();
+    return result;
+};
+ 
+const originalUpdateExerciseOrder = updateExerciseOrder;
+updateExerciseOrder = function(dayIndex) {
+    const result = originalUpdateExerciseOrder.call(this, dayIndex);
+    saveWorkoutToStorage();
+    return result;
+};
+ 
+// Carregar treino quando a página iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    // Tentar carregar treino salvo
+    const hasLoaded = loadWorkoutFromStorage();
+    
+    if (!hasLoaded) {
+        console.log('Nenhum treino salvo encontrado');
+    }
+    
+    // Adicionar indicador visual de que o treino foi salvo
+    addSaveIndicator();
+});
+ 
+// Função para adicionar indicador visual de salvamento
+function addSaveIndicator() {
+    const indicator = document.createElement('div');
+    indicator.id = 'save-indicator';
+    indicator.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--accent);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 1001;
+        pointer-events: none;
+    `;
+    indicator.textContent = 'Salvo automaticamente';
+    document.body.appendChild(indicator);
+    
+    // Função para mostrar o indicador
+    window.showSaveIndicator = function() {
+        const indicator = document.getElementById('save-indicator');
+        indicator.style.opacity = '1';
+        setTimeout(() => {
+            indicator.style.opacity = '0';
+        }, 2000);
+    };
+}
+ 
+// Modificar a função saveWorkoutToStorage para mostrar indicador
+const originalSaveWorkoutToStorage = saveWorkoutToStorage;
+saveWorkoutToStorage = function() {
+    const result = originalSaveWorkoutToStorage.call(this);
+    if (window.showSaveIndicator) {
+        window.showSaveIndicator();
+    }
+    return result;
+};
+ 
+// Salvar automaticamente antes de fechar a página
+window.addEventListener('beforeunload', function() {
+    saveWorkoutToStorage();
+});
+ 
+// Salvar periodicamente (a cada 30 segundos) como backup
+setInterval(function() {
+    if (workoutDays.length > 0) {
+        saveWorkoutToStorage();
+    }
+}, 30000);
+ 
+// Adicionar botão para limpar todos os dados (opcional)
+function addClearAllButton() {
+    const clearButton = document.createElement('button');
+    clearButton.className = 'btn btn-danger';
+    clearButton.innerHTML = '🗑️ Limpar Tudo';
+    clearButton.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        font-size: 12px;
+        padding: 8px 15px;
+    `;
+    
+    clearButton.addEventListener('click', function() {
+        if (confirm('Tem certeza que deseja apagar TODOS os treinos salvos? Esta ação não pode ser desfeita.')) {
+            clearWorkoutStorage();
+            workoutDays = [];
+            document.getElementById('workoutDays').innerHTML = '';
+            updatePreview();
+            updateButtons();
+            alert('Todos os treinos foram apagados com sucesso!');
+        }
+    });
+    
+    document.body.appendChild(clearButton);
+}
+ 
+// Adicionar botão de limpar quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(addClearAllButton, 1000);
+});
+    </script>
+</body>
+</html>
