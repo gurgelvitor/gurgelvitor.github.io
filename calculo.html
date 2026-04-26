@@ -1,0 +1,2406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo Energético - GurgelTrack</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Cores do Tema Claro - Vermelho */
+            --bg-primary: #fff5f5;
+            --bg-secondary: #ffffff;
+            --bg-sidebar: #8b0000;
+            --bg-sidebar-hover: #a52a2a;
+            --accent: #dc143c;
+            --accent-hover: #b91c1c;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-sidebar: #ffffff;
+            --border: #ffcccc;
+            --shadow: 0 4px 12px rgba(220, 20, 60, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode {
+            /* Cores do Tema Escuro - Melhoradas */
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1e1e1e;
+            --bg-sidebar: #1a1a2e;
+            --bg-sidebar-hover: #25253d;
+            --accent: #e91e63;
+            --accent-hover: #f06292;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b8b8b8;
+            --text-sidebar: #ffffff;
+            --border: #333333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            color: var(--text-sidebar);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-sidebar);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-header p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .nav-menu {
+            padding: 1.5rem 0;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: var(--text-sidebar);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-sidebar-hover);
+            border-left-color: var(--accent);
+            color: var(--text-sidebar);
+        }
+
+        .nav-item.active {
+            background: var(--bg-sidebar-hover);
+            border-left-color: var(--accent);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            flex: 1;
+            margin-left: 280px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-header {
+            background: var(--bg-secondary);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .main-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .main-header p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Calculator Section */
+        .calculator-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .calculator-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .calculator-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px 15px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .btn-calculate {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-calculate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-save-calculation {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-save-calculation:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Results Section */
+        .results-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .results-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Info Section */
+        .info-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .info-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-section p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .activity-levels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .activity-item {
+            background: var(--bg-primary);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .activity-item strong {
+            color: var(--accent);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .activity-item span {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        .main-footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .layout-container {
+                overflow-x: hidden;
+            }
+            
+            .main-wrapper {
+                margin-left: 0;
+                width: 100%;
+                min-height: 100vh;
+            }
+            
+            .main-content {
+                padding: 1rem;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                z-index: 1001;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 1002;
+                background: var(--accent);
+                color: white;
+                border: none;
+                padding: 0.75rem;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1.25rem;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            }
+            
+            .main-header {
+                padding: 1rem;
+                margin-top: 3rem;
+                text-align: center;
+            }
+            
+            .main-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .main-header p {
+                font-size: 0.9rem;
+            }
+            
+            .page-header {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .content-section {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+                border-radius: 12px;
+            }
+            
+            .content-section h2 {
+                font-size: 1.3rem;
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .calculator-form {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 1rem;
+                background: var(--bg-primary);
+                border-radius: 12px;
+                border: 1px solid var(--border);
+            }
+            
+            .form-group {
+                margin-bottom: 1.5rem;
+            }
+            
+            .form-group label {
+                font-size: 0.95rem;
+                margin-bottom: 0.5rem;
+                font-weight: 500;
+            }
+            
+            .form-group input,
+            .form-group select {
+                font-size: 1rem;
+                padding: 0.875rem;
+                border-radius: 8px;
+                border: 2px solid var(--border);
+            }
+            
+            .form-group input:focus,
+            .form-group select:focus {
+                border-color: var(--accent);
+                box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            }
+
+            .activity-levels {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin-top: 1.5rem;
+            }
+            
+            .activity-card {
+                padding: 1.25rem;
+                text-align: center;
+                border-radius: 12px;
+                transition: var(--transition);
+                cursor: pointer;
+                border: 2px solid transparent;
+            }
+            
+            .activity-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            }
+            
+            .activity-card.selected {
+                border-color: var(--accent);
+                background: rgba(52, 152, 219, 0.05);
+            }
+            
+            .activity-icon {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+            
+            .activity-title {
+                font-size: 1.1rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .activity-description {
+                font-size: 0.9rem;
+                line-height: 1.4;
+            }
+
+            .results-section {
+                margin-top: 2rem;
+                padding: 1.5rem;
+                background: var(--bg-secondary);
+                border-radius: 12px;
+                border: 1px solid var(--border);
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .result-card {
+                padding: 1.5rem;
+                text-align: center;
+                border-radius: 12px;
+                background: var(--bg-primary);
+                border: 1px solid var(--border);
+            }
+            
+            .result-value {
+                font-size: 2rem;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+            }
+            
+            .result-label {
+                font-size: 1rem;
+                color: var(--text-secondary);
+            }
+            
+            .btn-calculate {
+                width: 100%;
+                padding: 1rem;
+                font-size: 1.1rem;
+                margin-top: 1.5rem;
+                border-radius: 8px;
+                font-weight: 600;
+            }
+            
+            .btn-calculate:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            }
+            
+            .btn-assign-student {
+                width: 100%;
+                padding: 0.875rem;
+                font-size: 1rem;
+                margin-top: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 0.75rem;
+            }
+            
+            .content-section {
+                padding: 1rem;
+            }
+            
+            .calculator-form {
+                padding: 0.75rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1rem;
+            }
+            
+            .activity-card {
+                padding: 1rem;
+            }
+            
+            .activity-icon {
+                font-size: 1.5rem;
+            }
+            
+            .activity-title {
+                font-size: 1rem;
+            }
+            
+            .activity-description {
+                font-size: 0.85rem;
+            }
+            
+            .result-card {
+                padding: 1rem;
+            }
+            
+            .result-value {
+                font-size: 1.5rem;
+            }
+            
+            .result-label {
+                font-size: 0.9rem;
+            }
+            
+            .btn-calculate {
+                padding: 0.875rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-toggle {
+                display: none;
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+        .modal-content {
+            background-color: var(--bg-secondary);
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--text-primary);
+            font-size: 1.25rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        /* Botão de Ajuda */
+        .help-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border: none;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+            transition: var(--transition);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        /* Modal de Ajuda */
+        .help-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .help-modal-content {
+            position: relative;
+            background: var(--bg-secondary);
+            margin: 50px auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            animation: slideIn 0.3s ease;
+        }
+
+        .help-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .help-modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .help-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-close:hover {
+            background: var(--bg-primary);
+            color: var(--accent);
+        }
+
+        .help-section {
+            margin-bottom: 25px;
+        }
+
+        .help-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .help-section-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .help-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .help-step-number {
+            background: var(--accent);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .help-step-text {
+            flex: 1;
+            color: var(--text-secondary);
+        }
+
+        .help-tip {
+            background: var(--bg-primary);
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .help-tip-title {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Goal Selection Styles */
+        .goal-section {
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .goal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .goal-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .goal-header p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .goal-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .goal-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .goal-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.15);
+            border-color: var(--accent);
+        }
+
+        .goal-card.selected {
+            border-color: var(--accent);
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .goal-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin: 0 auto 1rem auto;
+        }
+
+        .goal-icon.cutting {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .goal-icon.maintain {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .goal-icon.bulking {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+
+        .goal-content h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 0.5rem 0;
+        }
+
+        .goal-content p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .goal-options-detail {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .goal-options-detail h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .goal-options-detail p {
+            color: var(--text-secondary);
+            margin: 0 0 1.5rem 0;
+        }
+
+        .percentage-options,
+        .surplus-options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .percentage-option,
+        .surplus-option {
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .percentage-option:hover,
+        .surplus-option:hover {
+            transform: translateX(4px);
+            border-color: var(--accent);
+        }
+
+        .percentage-option.selected,
+        .surplus-option.selected {
+            border-color: var(--accent);
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .percentage-value,
+        .surplus-value {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        .percentage-desc,
+        .surplus-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .btn-calculate-goal {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-calculate-goal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        /* Macronutrients Results Styles */
+        .macros-results {
+            background: var(--bg-primary);
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .macros-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .macros-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .macros-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .macro-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .macro-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .macro-card.calories {
+            border-color: var(--accent);
+        }
+
+        .macro-card.protein {
+            border-color: #e74c3c;
+        }
+
+        .macro-card.carbs {
+            border-color: #f39c12;
+        }
+
+        .macro-card.fats {
+            border-color: #27ae60;
+        }
+
+        .macro-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            margin: 0 auto 1rem auto;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+        }
+
+        .macro-card.protein .macro-icon {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .macro-card.carbs .macro-icon {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .macro-card.fats .macro-icon {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .macro-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .macro-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .macro-detail {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .macros-breakdown {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .macros-breakdown h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .breakdown-bars {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .breakdown-item {
+            display: grid;
+            grid-template-columns: 100px 1fr 50px;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .breakdown-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .breakdown-bar {
+            height: 20px;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .breakdown-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        .breakdown-fill.protein-fill {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+        }
+
+        .breakdown-fill.carbs-fill {
+            background: linear-gradient(90deg, #f39c12, #e67e22);
+        }
+
+        .breakdown-fill.fats-fill {
+            background: linear-gradient(90deg, #27ae60, #229954);
+        }
+
+        .breakdown-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: right;
+        }
+
+        .recommendations {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .recommendations h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .recommendation-list {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .recommendation-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .recommendation-item i {
+            color: var(--accent);
+            width: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .goal-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .macros-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .breakdown-item {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            .breakdown-bar {
+                order: 2;
+            }
+            
+            .breakdown-value {
+                order: 3;
+                text-align: left;
+            }
+            
+            .help-button {
+                bottom: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .help-modal-content {
+                margin: 20px;
+                padding: 20px;
+                width: calc(100% - 40px);
+            }
+
+            .help-modal-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="logo-gurgel.png" alt="GurgelTrack Logo" class="logo" style="width: 10vw;">
+                <h1>
+                    <i class="fas fa-dumbbell"></i>
+                    GurgelTrack
+                </h1>
+                <p>Sua plataforma fitness</p>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    Início
+                </a>
+                <a href="alunos.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    Alunos
+                </a>
+                <a href="treino.html" class="nav-item">
+                    <i class="fas fa-dumbbell"></i>
+                    Treino
+                </a>
+                <a href="dieta.html" class="nav-item">
+                    <i class="fas fa-utensils"></i>
+                    Dieta
+                </a>
+                <a href="calculo.html" class="nav-item active">
+                    <i class="fas fa-calculator"></i>
+                    Cálculo
+                </a>
+                <a href="carga.html" class="nav-item">
+                    <i class="fas fa-weight"></i>
+                    Anotações
+                </a>
+                <a href="pagamentos.html" class="nav-item">
+                    <i class="fas fa-credit-card"></i>
+                    Pagamentos
+                </a>
+                <a href="agenda.html" class="nav-item">
+                    <i class="fas fa-calendar"></i>
+                    Agenda
+                </a>
+                <button class="nav-item theme-toggle" id="themeToggle" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                    <span id="themeText">Tema Escuro</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <header class="main-header">
+                <h1><i class="fas fa-calculator"></i> Cálculo Energético</h1>
+                <p>Calcule seu gasto calórico diário com base em seus dados pessoais e nível de atividade</p>
+            </header>
+
+            <main class="main-content">
+                <!-- Calculator Section -->
+                <section class="calculator-section">
+                    <h2>
+                        <i class="fas fa-calculator"></i>
+                        Calculadora de Gasto Calórico
+                    </h2>
+                    
+                    <form id="calorieForm" class="calculator-form">
+                        <div class="form-group">
+                            <label for="gender">Sexo:</label>
+                            <select id="gender" required>
+                                <option value="male">Masculino</option>
+                                <option value="female">Feminino</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="age">Idade (anos):</label>
+                            <input type="number" id="age" min="15" max="120" placeholder="25" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="weight">Peso (kg):</label>
+                            <input type="number" id="weight" min="30" step="0.1" placeholder="70.0" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="height">Altura (cm):</label>
+                            <input type="number" id="height" min="100" max="250" placeholder="175" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="activity">Nível de Atividade Física:</label>
+                            <select id="activity" required>
+                                <option value="1.2">1.2 - Sedentário</option>
+                                <option value="1.3">1.3 - Levemente ativo</option>
+                                <option value="1.4">1.4 - Moderadamente ativo</option>
+                                <option value="1.5">1.5 - Ativo</option>
+                                <option value="1.6">1.6 - Muito ativo</option>
+                                <option value="1.7">1.7 - Extremamente ativo</option>
+                                <option value="1.8">1.8 - Atleta leve</option>
+                                <option value="1.9">1.9 - Atleta moderado</option>
+                                <option value="2.0">2.0 - Atleta intenso</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" class="btn-calculate">
+                                <i class="fas fa-calculator"></i>
+                                Calcular Gasto Calórico
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="form-actions">
+                        <button class="btn btn-primary" onclick="openAssignStudentModal()">
+                            <i class="fas fa-user-plus"></i>
+                            Atribuir a Aluno
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Results Section -->
+                <section class="results-section" id="resultsSection">
+                    <div class="results-header">
+                        <h2>
+                            <i class="fas fa-chart-line"></i>
+                            Seus Resultados
+                        </h2>
+                    </div>
+                    
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <div class="result-value" id="bmr">0</div>
+                            <div class="result-label">Taxa Metabólica Basal (TMB)</div>
+                        </div>
+                        
+                        <div class="result-card">
+                            <div class="result-value" id="tdee">0</div>
+                            <div class="result-label">Gasto Energético Total (GET)</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Goal Selection Section -->
+                    <div class="goal-section" id="goalSection" style="display: none;">
+                        <div class="goal-header">
+                            <h3>
+                                <i class="fas fa-bullseye"></i>
+                                Qual seu objetivo?
+                            </h3>
+                            <p>Escolha seu objetivo para calcular as calorias e macronutrientes ideais</p>
+                        </div>
+                        
+                        <div class="goal-options">
+                            <div class="goal-card" onclick="selectGoal('cutting')">
+                                <div class="goal-icon cutting">
+                                    <i class="fas fa-cut"></i>
+                                </div>
+                                <div class="goal-content">
+                                    <h4>Perder Peso (Cutting)</h4>
+                                    <p>Déficit calórico para perda de gordura</p>
+                                </div>
+                            </div>
+                            
+                            <div class="goal-card" onclick="selectGoal('maintain')">
+                                <div class="goal-icon maintain">
+                                    <i class="fas fa-balance-scale"></i>
+                                </div>
+                                <div class="goal-content">
+                                    <h4>Manter Peso</h4>
+                                    <p>Manter o peso atual com calorias de manutenção</p>
+                                </div>
+                            </div>
+                            
+                            <div class="goal-card" onclick="selectGoal('bulking')">
+                                <div class="goal-icon bulking">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                                <div class="goal-content">
+                                    <h4>Ganhar Peso (Bulking)</h4>
+                                    <p>Superávit calórico para ganho de massa muscular</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Cutting Options -->
+                        <div class="goal-options-detail" id="cuttingOptions" style="display: none;">
+                            <h4>
+                                <i class="fas fa-percentage"></i>
+                                Percentual de Perda de Peso
+                            </h4>
+                            <p>Escolha quantos por cento do seu peso deseja perder por semana:</p>
+                            
+                            <div class="percentage-options">
+                                <div class="percentage-option" data-percentage="0.5">
+                                    <span class="percentage-value">0.5%</span>
+                                    <span class="percentage-desc">Perda gradual e sustentável</span>
+                                </div>
+                                <div class="percentage-option" data-percentage="0.75">
+                                    <span class="percentage-value">0.75%</span>
+                                    <span class="percentage-desc">Perda moderada</span>
+                                </div>
+                                <div class="percentage-option" data-percentage="1.0">
+                                    <span class="percentage-value">1.0%</span>
+                                    <span class="percentage-desc">Perda eficiente</span>
+                                </div>
+                                <div class="percentage-option" data-percentage="1.25">
+                                    <span class="percentage-value">1.25%</span>
+                                    <span class="percentage-desc">Perda acelerada</span>
+                                </div>
+                                <div class="percentage-option" data-percentage="1.5">
+                                    <span class="percentage-value">1.5%</span>
+                                    <span class="percentage-desc">Perda máxima (recomendado para atletas)</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Bulking Options -->
+                        <div class="goal-options-detail" id="bulkingOptions" style="display: none;">
+                            <h4>
+                                <i class="fas fa-plus-circle"></i>
+                                Superávit Calórico
+                            </h4>
+                            <p>Escolha o percentual de superávit calórico em relação ao seu GET:</p>
+                            
+                            <div class="surplus-options">
+                                <div class="surplus-option" data-surplus="10">
+                                    <span class="surplus-value">10%</span>
+                                    <span class="surplus-desc">Ganho limpo e lento</span>
+                                </div>
+                                <div class="surplus-option" data-surplus="15">
+                                    <span class="surplus-value">15%</span>
+                                    <span class="surplus-desc">Ganho balanceado</span>
+                                </div>
+                                <div class="surplus-option" data-surplus="20">
+                                    <span class="surplus-value">20%</span>
+                                    <span class="surplus-desc">Ganho eficiente</span>
+                                </div>
+                                <div class="surplus-option" data-surplus="25">
+                                    <span class="surplus-value">25%</span>
+                                    <span class="surplus-desc">Ganho acelerado</span>
+                                </div>
+                                <div class="surplus-option" data-surplus="30">
+                                    <span class="surplus-value">30%</span>
+                                    <span class="surplus-desc">Ganho máximo (cuidado com gordura)</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-calculate-goal" onclick="calculateGoalMacros()">
+                            <i class="fas fa-calculator"></i>
+                            Calcular Macronutrientes
+                        </button>
+                    </div>
+                    
+                    <!-- Macronutrients Results -->
+                    <div class="macros-results" id="macrosResults" style="display: none;">
+                        <div class="macros-header">
+                            <h3>
+                                <i class="fas fa-utensils"></i>
+                                Seus Macronutrientes
+                            </h3>
+                        </div>
+                        
+                        <div class="macros-summary">
+                            <div class="macro-card calories">
+                                <div class="macro-icon">
+                                    <i class="fas fa-fire"></i>
+                                </div>
+                                <div class="macro-content">
+                                    <div class="macro-value" id="goalCalories">0</div>
+                                    <div class="macro-label">Calorias Diárias</div>
+                                    <div class="macro-detail" id="calorieAdjustment">Manutenção</div>
+                                </div>
+                            </div>
+                            
+                            <div class="macro-card protein">
+                                <div class="macro-icon">
+                                    <i class="fas fa-drumstick-bite"></i>
+                                </div>
+                                <div class="macro-content">
+                                    <div class="macro-value" id="proteinGrams">0g</div>
+                                    <div class="macro-label">Proteína</div>
+                                    <div class="macro-detail" id="proteinCalories">0 kcal</div>
+                                </div>
+                            </div>
+                            
+                            <div class="macro-card carbs">
+                                <div class="macro-icon">
+                                    <i class="fas fa-bread-slice"></i>
+                                </div>
+                                <div class="macro-content">
+                                    <div class="macro-value" id="carbsGrams">0g</div>
+                                    <div class="macro-label">Carboidratos</div>
+                                    <div class="macro-detail" id="carbsCalories">0 kcal</div>
+                                </div>
+                            </div>
+                            
+                            <div class="macro-card fats">
+                                <div class="macro-icon">
+                                    <i class="fas fa-oil-can"></i>
+                                </div>
+                                <div class="macro-content">
+                                    <div class="macro-value" id="fatsGrams">0g</div>
+                                    <div class="macro-label">Gorduras</div>
+                                    <div class="macro-detail" id="fatsCalories">0 kcal</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="macros-breakdown">
+                            <h4>
+                                <i class="fas fa-chart-pie"></i>
+                                Distribuição Percentual
+                            </h4>
+                            <div class="breakdown-bars">
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Proteína</span>
+                                    <div class="breakdown-bar">
+                                        <div class="breakdown-fill protein-fill" id="proteinPercent"></div>
+                                    </div>
+                                    <span class="breakdown-value" id="proteinPercentText">0%</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Carboidratos</span>
+                                    <div class="breakdown-bar">
+                                        <div class="breakdown-fill carbs-fill" id="carbsPercent"></div>
+                                    </div>
+                                    <span class="breakdown-value" id="carbsPercentText">0%</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Gorduras</span>
+                                    <div class="breakdown-bar">
+                                        <div class="breakdown-fill fats-fill" id="fatsPercent"></div>
+                                    </div>
+                                    <span class="breakdown-value" id="fatsPercentText">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="recommendations">
+                            <h4>
+                                <i class="fas fa-lightbulb"></i>
+                                Recomendações
+                            </h4>
+                            <div class="recommendation-list">
+                                <div class="recommendation-item">
+                                    <i class="fas fa-tint"></i>
+                                    <span>Água: <strong id="waterRecommendation">0ml</strong> por dia</span>
+                                </div>
+                                <div class="recommendation-item">
+                                    <i class="fas fa-seedling"></i>
+                                    <span>Fibra: <strong>25-35g</strong> por dia</span>
+                                </div>
+                                <div class="recommendation-item">
+                                    <i class="fas fa-apple-alt"></i>
+                                    <span>Frutas: <strong>2-4 porções</strong> por dia</span>
+                                </div>
+                                <div class="recommendation-item">
+                                    <i class="fas fa-carrot"></i>
+                                    <span>Vegetais: <strong>4-6 porções</strong> por dia</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Info Section -->
+                <section class="info-section">
+                    <h2>
+                        <i class="fas fa-info-circle"></i>
+                        Níveis de Atividade Física
+                    </h2>
+                    <p>
+                        Escolha o nível que melhor representa sua rotina diária de atividades físicas. 
+                        Isso afeta diretamente seu gasto calórico total.
+                    </p>
+                    
+                    <div class="activity-levels">
+                        <div class="activity-item">
+                            <strong>1.2 - Sedentário</strong>
+                            <span>Pouco ou nenhum exercício</span>
+                        </div>
+                        <div class="activity-item">
+                            <strong>1.3 - Levemente ativo</strong>
+                            <span>Exercício leve 1-3 dias/semana</span>
+                        </div>
+                        <div class="activity-item">
+                            <strong>1.4 - Moderadamente ativo</strong>
+                            <span>Exercício moderado 3-5 dias/semana</span>
+                        </div>
+                        <div class="activity-item">
+                            <strong>1.5 - Ativo</strong>
+                            <span>Exercício intenso 3-5 dias/semana</span>
+                        </div>
+                        <div class="activity-item">
+                            <strong>1.6 - Muito ativo</strong>
+                            <span>Exercício intenso 6-7 dias/semana</span>
+                        </div>
+                        <div class="activity-item">
+                            <strong>1.7+ - Extremamente ativo</strong>
+                            <span>Atleta ou trabalho físico muito intenso</span>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="main-footer">
+                <p> 2026 GurgelTrack - Todos os direitos reservados à Vitor Gurgel</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal para Atribuir a Aluno -->
+    <div class="modal" id="assignStudentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Atribuir Cálculo Energético a Aluno</h3>
+                <button class="modal-close" onclick="closeAssignStudentModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="assignStudentForm">
+                <div class="form-group">
+                    <label for="studentSelect">Selecione o Aluno:</label>
+                    <select id="studentSelect" required>
+                        <option value="">Carregando alunos...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="calculationName">Nome do Cálculo:</label>
+                    <input type="text" id="calculationName" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="closeAssignStudentModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Atribuir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+
+        // Active navigation state
+        const currentPath = window.location.pathname;
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        navItems.forEach(item => {
+            const itemPath = item.getAttribute('href');
+            if (currentPath.includes(itemPath) || (currentPath === '/' && itemPath === 'index.html')) {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+            }
+        });
+
+        // Calculator functionality
+        document.getElementById('calorieForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Obter valores do formulário
+            const gender = document.getElementById('gender').value;
+            const age = parseInt(document.getElementById('age').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const activityFactor = parseFloat(document.getElementById('activity').value);
+            
+            // Calcular TMB (Taxa Metabólica Basal) - Fórmula de Harris-Benedict
+            let bmr;
+            if (gender === 'male') {
+                bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+            } else {
+                bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+            }
+            
+            // Calcular GET (Gasto Energético Total)
+            const tdee = bmr * activityFactor;
+            
+            // Exibir resultados
+            document.getElementById('bmr').textContent = Math.round(bmr) + ' kcal';
+            document.getElementById('tdee').textContent = Math.round(tdee) + ' kcal';
+            
+            // Salvar dados para uso na seção de objetivos
+            window.currentCalculation = {
+                bmr: Math.round(bmr),
+                tdee: Math.round(tdee),
+                weight: weight,
+                age: age,
+                gender: gender,
+                activityFactor: activityFactor
+            };
+            
+            // Salvar GET no localStorage para uso na página de educação
+            localStorage.setItem('getCalculo', Math.round(tdee));
+            
+            // Mostrar seção de resultados
+            const resultsSection = document.getElementById('resultsSection');
+            resultsSection.classList.add('show');
+            
+            // Mostrar seção de objetivos
+            const goalSection = document.getElementById('goalSection');
+            goalSection.style.display = 'block';
+            
+            // Rolar até o resultado
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+            
+            // Mostrar botão de salvar
+            const saveBtn = document.getElementById('saveCalculationBtn');
+            saveBtn.style.display = 'flex';
+        });
+
+        // Variáveis globais para seleção de objetivos
+        let selectedGoal = null;
+        let selectedPercentage = null;
+        let selectedSurplus = null;
+
+        // Função para selecionar objetivo
+        function selectGoal(goal) {
+            selectedGoal = goal;
+            selectedPercentage = null;
+            selectedSurplus = null;
+            
+            // Remover seleção anterior
+            document.querySelectorAll('.goal-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Adicionar seleção ao card clicado
+            event.currentTarget.classList.add('selected');
+            
+            // Esconder todas as opções detalhadas
+            document.getElementById('cuttingOptions').style.display = 'none';
+            document.getElementById('bulkingOptions').style.display = 'none';
+            
+            // Mostrar opções detalhadas conforme o objetivo
+            if (goal === 'cutting') {
+                document.getElementById('cuttingOptions').style.display = 'block';
+            } else if (goal === 'bulking') {
+                document.getElementById('bulkingOptions').style.display = 'block';
+            }
+            
+            // Adicionar eventos de clique às opções
+            if (goal === 'cutting') {
+                document.querySelectorAll('.percentage-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        selectPercentage(this.dataset.percentage);
+                    });
+                });
+            } else if (goal === 'bulking') {
+                document.querySelectorAll('.surplus-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        selectSurplus(this.dataset.surplus);
+                    });
+                });
+            }
+        }
+
+        // Função para selecionar percentual de perda
+        function selectPercentage(percentage) {
+            selectedPercentage = parseFloat(percentage);
+            
+            // Remover seleção anterior
+            document.querySelectorAll('.percentage-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Adicionar seleção à opção clicada
+            document.querySelector(`[data-percentage="${percentage}"]`).classList.add('selected');
+        }
+
+        // Função para selecionar superávit
+        function selectSurplus(surplus) {
+            selectedSurplus = parseFloat(surplus);
+            
+            // Remover seleção anterior
+            document.querySelectorAll('.surplus-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Adicionar seleção à opção clicada
+            document.querySelector(`[data-surplus="${surplus}"]`).classList.add('selected');
+        }
+
+        // Função para calcular macronutrientes
+        function calculateGoalMacros() {
+            if (!window.currentCalculation) {
+                alert('Realize o cálculo energético primeiro!');
+                return;
+            }
+            
+            if (!selectedGoal) {
+                alert('Selecione um objetivo!');
+                return;
+            }
+            
+            if (selectedGoal === 'cutting' && !selectedPercentage) {
+                alert('Selecione o percentual de perda de peso!');
+                return;
+            }
+            
+            if (selectedGoal === 'bulking' && !selectedSurplus) {
+                alert('Selecione o superávit calórico!');
+                return;
+            }
+            
+            const { tdee, weight } = window.currentCalculation;
+            let targetCalories = tdee;
+            let proteinPerKg = 2.0; // padrão
+            let fatPercentage = 0.25; // 25% das calorias
+            let adjustmentText = 'Manutenção';
+            
+            // Calcular calorias alvo
+            if (selectedGoal === 'cutting') {
+                // Cálculo de cutting usando a mesma fórmula da página educação
+                const r = (selectedPercentage / 100) * weight; // peso a perder por semana
+                const x = r * 7700; // kcal por semana
+                const gastoSemanal = tdee * 7;
+                targetCalories = (gastoSemanal - x) / 7;
+                
+                // Ajustar proteína conforme o déficit (quanto mais severo, mais proteína)
+                if (selectedPercentage <= 0.5) {
+                    proteinPerKg = 2.2;
+                } else if (selectedPercentage <= 1.0) {
+                    proteinPerKg = 2.4;
+                } else if (selectedPercentage <= 1.25) {
+                    proteinPerKg = 2.55;
+                } else {
+                    proteinPerKg = 2.7;
+                }
+                
+                adjustmentText = `Déficit de ${Math.round(tdee - targetCalories)} kcal/dia`;
+                
+            } else if (selectedGoal === 'bulking') {
+                // Cálculo de bulking com superávit percentual
+                const surplusCalories = tdee * (selectedSurplus / 100);
+                targetCalories = tdee + surplusCalories;
+                
+                // Ajustar proteína conforme o superávit (quanto maior o superávit, menos proteína)
+                if (selectedSurplus <= 15) {
+                    proteinPerKg = 2.0;
+                } else if (selectedSurplus <= 20) {
+                    proteinPerKg = 1.9;
+                } else if (selectedSurplus <= 25) {
+                    proteinPerKg = 1.8;
+                } else {
+                    proteinPerKg = 1.7;
+                }
+                
+                adjustmentText = `Superávit de ${Math.round(surplusCalories)} kcal/dia`;
+            }
+            
+            // Calcular macronutrientes
+            const proteinGrams = proteinPerKg * weight;
+            const proteinCalories = proteinGrams * 4;
+            const fatCalories = targetCalories * fatPercentage;
+            const fatGrams = fatCalories / 9;
+            const carbsCalories = targetCalories - proteinCalories - fatCalories;
+            const carbsGrams = carbsCalories / 4;
+            
+            // Calcular percentuais
+            const proteinPercent = (proteinCalories / targetCalories * 100).toFixed(1);
+            const fatPercent = (fatCalories / targetCalories * 100).toFixed(1);
+            const carbsPercent = (carbsCalories / targetCalories * 100).toFixed(1);
+            
+            // Atualizar interface
+            document.getElementById('goalCalories').textContent = Math.round(targetCalories);
+            document.getElementById('calorieAdjustment').textContent = adjustmentText;
+            
+            document.getElementById('proteinGrams').textContent = Math.round(proteinGrams) + 'g';
+            document.getElementById('proteinCalories').textContent = Math.round(proteinCalories) + ' kcal';
+            
+            document.getElementById('carbsGrams').textContent = Math.round(carbsGrams) + 'g';
+            document.getElementById('carbsCalories').textContent = Math.round(carbsCalories) + ' kcal';
+            
+            document.getElementById('fatsGrams').textContent = Math.round(fatGrams) + 'g';
+            document.getElementById('fatsCalories').textContent = Math.round(fatCalories) + ' kcal';
+            
+            // Atualizar barras percentuais
+            document.getElementById('proteinPercent').style.width = proteinPercent + '%';
+            document.getElementById('proteinPercentText').textContent = proteinPercent + '%';
+            
+            document.getElementById('carbsPercent').style.width = carbsPercent + '%';
+            document.getElementById('carbsPercentText').textContent = carbsPercent + '%';
+            
+            document.getElementById('fatsPercent').style.width = fatPercent + '%';
+            document.getElementById('fatsPercentText').textContent = fatPercent + '%';
+            
+            // Calcular recomendação de água
+            const waterRecommendation = Math.round(weight * 35);
+            document.getElementById('waterRecommendation').textContent = waterRecommendation + 'ml';
+            
+            // Mostrar resultados
+            document.getElementById('macrosResults').style.display = 'block';
+            
+            // Rolar para os resultados
+            document.getElementById('macrosResults').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Função para salvar cálculo energético
+        function saveCalculation() {
+            const bmr = document.getElementById('bmr').textContent;
+            const tdee = document.getElementById('tdee').textContent;
+            
+            if (!bmr || !tdee || bmr === '0 kcal' || tdee === '0 kcal') {
+                alert('Realize um cálculo antes de salvar!');
+                return;
+            }
+            
+            const calcName = prompt('Digite um nome para este cálculo:', `Cálculo ${new Date().toLocaleDateString('pt-BR')}`);
+            if (!calcName || calcName.trim() === '') {
+                return;
+            }
+            
+            try {
+                // Obter cálculos salvos existentes
+                const savedCalculations = JSON.parse(localStorage.getItem('savedCalculations') || '[]');
+                
+                // Obter dados do formulário
+                const gender = document.getElementById('gender').value;
+                const age = document.getElementById('age').value;
+                const weight = document.getElementById('weight').value;
+                const height = document.getElementById('height').value;
+                const activity = document.getElementById('activity').value;
+                const activityText = document.getElementById('activity').options[document.getElementById('activity').selectedIndex].text;
+                
+                // Criar objeto do cálculo
+                const calculationData = {
+                    id: Date.now(),
+                    name: calcName,
+                    date: new Date().toISOString(),
+                    gender: gender,
+                    age: age,
+                    weight: weight,
+                    height: height,
+                    activity: activity,
+                    activityText: activityText,
+                    tmb: parseInt(bmr),
+                    get: parseInt(tdee)
+                };
+                
+                // Adicionar cálculo salvo
+                savedCalculations.push(calculationData);
+                localStorage.setItem('savedCalculations', JSON.stringify(savedCalculations));
+                
+                alert(`✅ Cálculo "${calcName}" salvo com sucesso!`);
+                console.log('Cálculo salvo:', calculationData);
+                
+            } catch (error) {
+                console.error('❌ Erro ao salvar cálculo:', error);
+                alert('❌ Erro ao salvar cálculo. Tente novamente.');
+            }
+        }
+
+        // Funções para atribuir a aluno
+        function openAssignStudentModal() {
+            loadStudents();
+            document.getElementById('assignStudentModal').classList.add('show');
+        }
+
+        function closeAssignStudentModal() {
+            document.getElementById('assignStudentModal').classList.remove('show');
+            document.getElementById('assignStudentForm').reset();
+        }
+
+        function loadStudents() {
+            try {
+                const students = JSON.parse(localStorage.getItem('students') || '[]');
+                const studentSelect = document.getElementById('studentSelect');
+                
+                studentSelect.innerHTML = '<option value="">Selecione um aluno...</option>';
+                students.forEach(student => {
+                    const option = document.createElement('option');
+                    option.value = student.id;
+                    option.textContent = student.name;
+                    studentSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar alunos:', error);
+            }
+        }
+
+        // Form submission for assigning calculation
+        document.getElementById('assignStudentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            assignCalculationToStudent();
+        });
+
+        function assignCalculationToStudent() {
+            const studentId = document.getElementById('studentSelect').value;
+            const calculationName = document.getElementById('calculationName').value;
+            
+            if (!studentId) {
+                alert('Selecione um aluno!');
+                return;
+            }
+            
+            if (!calculationName.trim()) {
+                alert('Digite um nome para o cálculo!');
+                return;
+            }
+
+            try {
+                // Get current calculation results
+                const bmr = document.getElementById('bmr').textContent;
+                const tdee = document.getElementById('tdee').textContent;
+                
+                if (!bmr || !tdee || bmr === '0 kcal' || tdee === '0 kcal') {
+                    alert('Realize um cálculo antes de atribuir!');
+                    return;
+                }
+                
+                // Get form data
+                const gender = document.getElementById('gender').value;
+                const age = document.getElementById('age').value;
+                const weight = document.getElementById('weight').value;
+                const height = document.getElementById('height').value;
+                const activity = document.getElementById('activity').value;
+                const activityText = document.getElementById('activity').options[document.getElementById('activity').selectedIndex].text;
+                
+                // Get current assignments
+                const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
+                if (!assignments.calculations) {
+                    assignments.calculations = [];
+                }
+                
+                // Create calculation assignment
+                const calculationAssignment = {
+                    id: Date.now().toString(),
+                    studentId: studentId,
+                    name: calculationName,
+                    gender: gender,
+                    age: age,
+                    weight: weight,
+                    height: height,
+                    activity: activity,
+                    activityText: activityText,
+                    tmb: parseInt(bmr),
+                    get: parseInt(tdee),
+                    assignedAt: new Date().toISOString()
+                };
+                
+                // Add to assignments
+                assignments.calculations.push(calculationAssignment);
+                localStorage.setItem('studentAssignments', JSON.stringify(assignments));
+                
+                alert(`Cálculo "${calculationName}" atribuído com sucesso ao aluno!`);
+                closeAssignStudentModal();
+                
+            } catch (error) {
+                console.error('Erro ao atribuir cálculo:', error);
+                alert('Erro ao atribuir cálculo. Tente novamente.');
+            }
+        }
+
+        // Tema escuro/claro functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const body = document.body;
+
+        // Carregar preferência de tema salva
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                themeText.textContent = 'Tema Claro';
+            }
+        }
+
+        // Alternar tema
+        function toggleTheme() {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                // Mudar para tema escuro
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                themeText.textContent = 'Tema Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                // Mudar para tema claro
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                themeText.textContent = 'Tema Escuro';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Adicionar evento de clique ao botão de tema
+        if (themeToggle) {
+            themeToggle.addEventListener('click', toggleTheme);
+        }
+
+        // Carregar preferência de tema ao iniciar a página
+        document.addEventListener('DOMContentLoaded', loadThemePreference);
+    </script>
+
+    <!-- Botão de Ajuda -->
+    <button class="help-button" onclick="openHelpModal()">?</button>
+
+    <!-- Modal de Ajuda -->
+    <div class="help-modal" id="helpModal">
+        <div class="help-modal-content">
+            <div class="help-modal-header">
+                <h3 class="help-modal-title">
+                    <i class="fas fa-question-circle"></i>
+                    Ajuda - Cálculo Energético
+                </h3>
+                <button class="help-close" onclick="closeHelpModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-calculator"></i>
+                    O que é Cálculo Energético?
+                </h4>
+                <div class="help-section-content">
+                    <p>O cálculo energético determina suas necessidades calóricas diárias baseado em:</p>
+                    <p><strong>TMB (Taxa Metabólica Basal):</strong> Energia que seu corpo gasta em repouso</p>
+                    <p><strong>GET (Gasto Energético Total):</strong> TMB + atividades diárias + exercícios</p>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">🎯 Importância</div>
+                        <div>Saber suas necessidades energéticas é fundamental para planejar dietas eficazes</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-play-circle"></i>
+                    Como Calcular
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Preencha seus dados: idade, peso, altura e sexo</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Selecione seu nível de atividade física</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Selecione seu objetivo (emagrecer, manter, engordar)</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">Clique em "Calcular" para ver os resultados</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-chart-line"></i>
+                    Entendendo os Resultados
+                </h4>
+                <div class="help-section-content">
+                    <p><strong>TMB:</strong> Calorias mínimas para funções vitais</p>
+                    <p><strong>GET Manutenção:</strong> Calorias para manter peso atual</p>
+                    <p><strong>GET Deficit:</strong> Calorias para emagrecer (-15% a -25%)</p>
+                    <p><strong>GET Superávit:</strong> Calorias para engordar (+10% a +20%)</p>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">💡 Dica Profissional</div>
+                        <div>Deficits muito agressivos (>30%) podem causar perda muscular</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-running"></i>
+                    Níveis de Atividade
+                </h4>
+                <div class="help-section-content">
+                    <p><strong>Sedentário:</strong> Pouco ou nenhum exercício</p>
+                    <p><strong>Levemente Ativo:</strong> Exercício leve 1-3 dias/semana</p>
+                    <p><strong>Moderadamente Ativo:</strong> Exercício moderado 3-5 dias/semana</p>
+                    <p><strong>Muito Ativo:</strong> Exercício intenso 6-7 dias/semana</p>
+                    <p><strong>Extremamente Ativo:</strong> Trabalho físico + exercício intenso</p>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-user-plus"></i>
+                    Atribuição a Alunos
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Após calcular, clique em "Atribuir a Aluno"</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Selecione o aluno na lista</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Dê um nome para o cálculo</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">O cálculo ficará salvo para o aluno</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Dicas Importantes
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-tip">
+                        <div class="help-tip-title">⚖️ Precisão dos Dados</div>
+                        <div>Use medidas atualizadas para resultados mais precisos</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">🔄 Reavaliação</div>
+                        <div>Recalcule a cada 5-10kg de mudança de peso</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">🎯 Metas Realistas</div>
+                        <div>Perder 0.5-1kg por semana é saudável e sustentável</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">💧 Hidratação</div>
+                        <div>Beba 30-35ml de água por kg de peso corporal</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funções do Modal de Ajuda
+        function openHelpModal() {
+            document.getElementById('helpModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Impede scroll do fundo
+        }
+
+        function closeHelpModal() {
+            document.getElementById('helpModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restaura scroll
+        }
+
+        // Fechar modal clicando fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('helpModal');
+            if (event.target === modal) {
+                closeHelpModal();
+            }
+        }
+
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeHelpModal();
+            }
+        });
+    </script>
+</body>
+</html>

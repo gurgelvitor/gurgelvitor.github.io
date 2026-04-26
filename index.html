@@ -1,0 +1,2545 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GurgelTrack - Plataforma Fitness</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Cores do Tema Claro - Vermelho */
+            --bg-primary: #fff5f5;
+            --bg-secondary: #ffffff;
+            --bg-sidebar: #8b0000;
+            --bg-sidebar-hover: #a52a2a;
+            --accent: #dc143c;
+            --accent-hover: #b91c1c;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-sidebar: #ffffff;
+            --border: #ffcccc;
+            --shadow: 0 4px 12px rgba(220, 20, 60, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode {
+            /* Cores do Tema Escuro - Melhoradas */
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1e1e1e;
+            --bg-sidebar: #1a1a2e;
+            --bg-sidebar-hover: #25253d;
+            --accent: #e91e63;
+            --accent-hover: #f06292;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b8b8b8;
+            --text-sidebar: #ffffff;
+            --border: #333333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            color: var(--text-sidebar);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-sidebar);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-header p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .nav-menu {
+            padding: 1.5rem 0;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: var(--text-sidebar);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-sidebar-hover);
+            border-left-color: var(--accent);
+            color: var(--text-sidebar);
+        }
+
+        .nav-item.active {
+            background: var(--bg-sidebar-hover);
+            border-left-color: var(--accent);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            flex: 1;
+            margin-left: 280px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-header {
+            background: var(--bg-secondary);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .login-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(220, 20, 60, 0.2);
+        }
+
+        .login-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(220, 20, 60, 0.3);
+        }
+
+        .main-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .main-header p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .content-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .content-section p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .feature-grid {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .workout-card {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .workout-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2980b9, #e74c3c);
+            border-radius: 16px 16px 0 0;
+        }
+
+        .workout-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(52, 152, 219, 0.15);
+            border-color: var(--accent);
+        }
+
+        .workout-card:hover::before {
+            height: 6px;
+            background: linear-gradient(90deg, #2980b9, #3498db, #e74c3c);
+        }
+
+        .workout-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .workout-title-section {
+            flex: 1;
+        }
+
+        .workout-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .workout-title i {
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .workout-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin: 0;
+        }
+
+        .workout-date {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin: 0;
+            background: var(--bg-primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            font-weight: 500;
+        }
+
+        .workout-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .workout-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .workout-stat:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, var(--bg-primary), rgba(52, 152, 219, 0.05));
+            border-color: var(--accent);
+        }
+
+        .workout-stat i {
+            color: var(--accent);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .workout-stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .workout-stat-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 600;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Áreas de Organização */
+        .saved-diets-container,
+        .saved-calculations-container,
+        .saved-workouts-container,
+        .deadlines-container {
+            margin-bottom: 1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 2px dashed var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .diets-grid,
+        .calculations-grid,
+        .workouts-grid,
+        .deadlines-grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .diets-grid {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        .calculations-grid {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        }
+
+        .workouts-grid {
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+
+        .deadlines-grid {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        }
+
+        .diet-card,
+        .calculation-card,
+        .workout-card,
+        .deadline-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: var(--transition);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .diet-card:hover,
+        .calculation-card:hover,
+        .workout-card:hover,
+        .deadline-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.15);
+            border-color: var(--accent);
+        }
+
+        .diet-card-header,
+        .calculation-header,
+        .workout-header,
+        .deadline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .diet-card-title,
+        .calculation-title,
+        .workout-title,
+        .deadline-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .diet-card-date,
+        .calculation-date,
+        .workout-date,
+        .deadline-date {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .diet-card-macros,
+        .calculation-results,
+        .workout-details,
+        .deadline-description {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .macro-stat {
+            background: var(--bg-primary);
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .macro-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .macro-stat-value {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-action {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-action:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-action.delete {
+            background: #e74c3c;
+        }
+
+        .btn-action.delete:hover {
+            background: #c0392b;
+        }
+
+        .deadline-date.urgent {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+
+        .deadline-date.soon {
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        /* User Profile Styles */
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--accent), #e74c3c);
+            padding: 8px 16px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .user-profile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            color: white;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .user-email {
+            font-size: 12px;
+            opacity: 0.9;
+            line-height: 1.2;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .logout-btn:active {
+            transform: rotate(90deg) scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+            .user-info {
+                display: none;
+            }
+            
+            .user-profile {
+                padding: 8px 12px;
+                gap: 8px;
+            }
+            
+            .user-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+            
+            .logout-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .user-profile {
+                padding: 6px 10px;
+            }
+            
+            .user-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+            
+            .logout-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+            }
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .content-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .layout-container {
+                overflow-x: hidden;
+            }
+            
+            .main-wrapper {
+                margin-left: 0;
+                width: 100%;
+                min-height: 100vh;
+            }
+            
+            .main-content {
+                padding: 1rem;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                z-index: 1001;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 1002;
+                background: var(--accent);
+                color: white;
+                border: none;
+                padding: 0.75rem;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1.25rem;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            }
+            
+            .main-header {
+                padding: 1rem;
+                margin-top: 3rem;
+                text-align: center;
+            }
+            
+            .main-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .main-header p {
+                font-size: 0.9rem;
+            }
+            
+            .page-header {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .content-section {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+                border-radius: 12px;
+            }
+            
+            .content-section h2 {
+                font-size: 1.3rem;
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+                text-align: center;
+                border-radius: 12px;
+                transition: var(--transition);
+            }
+            
+            .feature-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
+
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 2rem;
+                margin: 0 auto 1rem;
+            }
+
+            .feature-title {
+                font-size: 1.2rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .feature-description {
+                font-size: 1rem;
+                line-height: 1.4;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .stat-card {
+                padding: 1.5rem;
+                text-align: center;
+                border-radius: 12px;
+                transition: var(--transition);
+            }
+            
+            .stat-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
+
+            .stat-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.25rem;
+                margin: 0 auto 1rem;
+            }
+
+            .stat-content {
+                text-align: center;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .stat-label {
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 0.75rem;
+            }
+            
+            .content-section {
+                padding: 1rem;
+            }
+            
+            .feature-card {
+                padding: 1rem;
+            }
+            
+            .feature-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+            
+            .feature-title {
+                font-size: 1.1rem;
+            }
+            
+            .feature-description {
+                font-size: 0.9rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-card {
+                padding: 1rem;
+            }
+            
+            .stat-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .stat-value {
+                font-size: 1.25rem;
+            }
+            
+            .stat-label {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-toggle {
+                display: none;
+            }
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .stat-content {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Students Grid for Home Page */
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .student-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: var(--transition);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+        }
+        
+        .student-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.15);
+            border-color: var(--accent);
+        }
+        
+        .student-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .student-info h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 0.25rem 0;
+        }
+        
+        .student-info p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        
+        .student-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .student-stat {
+            background: var(--bg-primary);
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 80px;
+        }
+        
+        .student-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        
+        .student-stat-value {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1rem auto 0;
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        /* Dashboard Analytics Styles */
+        .dashboard-analytics {
+            margin-bottom: 2rem;
+        }
+
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .analytics-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .analytics-period {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card-analytics {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .stat-card-analytics:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            border-color: var(--accent);
+        }
+
+        .stat-card-analytics::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+        }
+
+        .stat-header-analytics {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon-analytics {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .stat-icon-analytics.revenue {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .stat-icon-analytics.students {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .stat-icon-analytics.attendance {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .stat-icon-analytics.workouts {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .stat-value-analytics {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            line-height: 1;
+        }
+
+        .stat-label-analytics {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stat-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .stat-change.positive {
+            background: rgba(39, 174, 96, 0.1);
+            color: #27ae60;
+        }
+
+        .stat-change.negative {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-options {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chart-option {
+            padding: 0.25rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chart-option:hover,
+        .chart-option.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .chart-canvas {
+            height: 250px;
+            position: relative;
+        }
+
+        .recent-activity {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .activity-item:hover {
+            transform: translateX(4px);
+            border-color: var(--accent);
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .activity-icon.checkin {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .activity-icon.payment {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .activity-icon.workout {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .activity-icon.assessment {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .quick-actions {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .quick-actions-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .quick-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.5rem 1rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .quick-action-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            border-color: var(--accent);
+            background: linear-gradient(135deg, var(--bg-primary), rgba(52, 152, 219, 0.05));
+        }
+
+        .quick-action-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+        }
+
+        .quick-action-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .charts-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .quick-actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .analytics-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .stat-value-analytics {
+                font-size: 1.5rem;
+            }
+
+            .chart-canvas {
+                height: 200px;
+            }
+        }
+
+        /* Botão de Ajuda */
+        .help-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border: none;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+            transition: var(--transition);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        /* Modal de Ajuda */
+        .help-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .help-modal-content {
+            position: relative;
+            background: var(--bg-secondary);
+            margin: 50px auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            animation: slideIn 0.3s ease;
+        }
+
+        .help-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .help-modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .help-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-close:hover {
+            background: var(--bg-primary);
+            color: var(--accent);
+        }
+
+        .help-section {
+            margin-bottom: 25px;
+        }
+
+        .help-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .help-section-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .help-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .help-step-number {
+            background: var(--accent);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .help-step-text {
+            flex: 1;
+            color: var(--text-secondary);
+        }
+
+        .help-tip {
+            background: var(--bg-primary);
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .help-tip-title {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .help-button {
+                bottom: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .help-modal-content {
+                margin: 20px;
+                padding: 20px;
+                width: calc(100% - 40px);
+            }
+
+            .help-modal-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="logo-gurgel.png" alt="GurgelTrack Logo" class="logo" style="width: 10vw;">
+                <h1>
+                    <i class="fas fa-dumbbell"></i>
+                    GurgelTrack
+                </h1>
+                <p>Sua plataforma fitness</p>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    Início
+                </a>
+                <a href="alunos.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    Alunos
+                </a>
+                <a href="treino.html" class="nav-item">
+                    <i class="fas fa-dumbbell"></i>
+                    Treino
+                </a>
+                <a href="dieta.html" class="nav-item">
+                    <i class="fas fa-utensils"></i>
+                    Dieta
+                </a>
+                <a href="calculo.html" class="nav-item">
+                    <i class="fas fa-calculator"></i>
+                    Cálculo
+                </a>
+                <a href="carga.html" class="nav-item">
+                    <i class="fas fa-weight"></i>
+                    Anotações
+                </a>
+                <a href="pagamentos.html" class="nav-item">
+                    <i class="fas fa-credit-card"></i>
+                    Pagamentos
+                </a>
+                <a href="agenda.html" class="nav-item">
+                    <i class="fas fa-calendar"></i>
+                    Agenda
+                </a>
+                <button class="nav-item theme-toggle" id="themeToggle" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                    <span id="themeText">Tema Escuro</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <header class="main-header">
+                <div class="header-content">
+                    <div class="header-text">
+                        <h1><i class="fas fa-home"></i> Bem-vindo ao GurgelTrack</h1>
+                        <p>Sua jornada fitness começa aqui - ferramentas profissionais para seus treinos e nutrição</p>
+                    </div>
+                    <div class="header-actions">
+                        <!-- Login button (shown when not logged in) -->
+                        <a href="login.html" class="login-btn" id="loginBtn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Login
+                        </a>
+                        
+                        <!-- User account dropdown (shown when logged in) -->
+                        <div class="user-dropdown" id="userDropdown" style="display: none;">
+                            <div class="user-profile">
+                                <div class="user-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="user-info">
+                                    <div class="user-name" id="userName">Conta</div>
+                                    <div class="user-email" id="userEmail">user@example.com</div>
+                                </div>
+                                <button class="logout-btn" id="logoutBtn" title="Sair da conta">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="main-content">
+                <!-- Dashboard Analytics -->
+                <div class="dashboard-analytics">
+                    <div class="analytics-header">
+                        <h2 class="analytics-title">
+                            <i class="fas fa-chart-line"></i>
+                            Dashboard Analytics
+                        </h2>
+                        <div class="analytics-period">
+                            <i class="fas fa-calendar"></i>
+                            <span id="currentPeriod">Mês Atual</span>
+                        </div>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card-analytics">
+                            <div class="stat-header-analytics">
+                                <div>
+                                    <div class="stat-value-analytics" id="revenueValue">R$ 0</div>
+                                    <div class="stat-label-analytics">Receita do Mês</div>
+                                    <div class="stat-change positive">
+                                        <i class="fas fa-arrow-up"></i>
+                                        <span id="revenueChange">+0%</span>
+                                    </div>
+                                </div>
+                                <div class="stat-icon-analytics revenue">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card-analytics">
+                            <div class="stat-header-analytics">
+                                <div>
+                                    <div class="stat-value-analytics" id="studentsValue">0</div>
+                                    <div class="stat-label-analytics">Total de Alunos</div>
+                                    <div class="stat-change positive">
+                                        <i class="fas fa-arrow-up"></i>
+                                        <span id="studentsChange">+0</span>
+                                    </div>
+                                </div>
+                                <div class="stat-icon-analytics students">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <section class="content-section">
+                    <h2>
+                        <i class="fas fa-users"></i>
+                        Meus Alunos
+                    </h2>
+                    <div class="students-grid" id="homeStudentsGrid">
+                        <div class="empty-state" id="emptyStudentsState">
+                            <i class="fas fa-user-plus"></i>
+                            <h3>Nenhum aluno cadastrado</h3>
+                            <p>Adicione seus alunos para começar a gerenciar treinos e dietas!</p>
+                            <button class="btn btn-primary" onclick="window.location.href='alunos.html'">
+                                <i class="fas fa-plus"></i>
+                                Adicionar Aluno
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Prazos -->
+                <section class="content-section">
+                    <h2>
+                        <i class="fas fa-calendar-alt"></i>
+                        Meus Prazos
+                    </h2>
+                    <div class="deadlines-container" id="deadlinesContainer">
+                        <div class="empty-state" id="emptyDeadlinesState">
+                            <i class="fas fa-clock"></i>
+                            <p>Nenhum prazo cadastrado</p>
+                            <p>Adicione seus objetivos e prazos!</p>
+                        </div>
+                        <div class="deadlines-grid" id="deadlinesGrid" style="display: none;">
+                            <!-- Prazos serão inseridos aqui dinamicamente -->
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="main-footer" style="text-align: center;">
+                <p>&copy; 2026 GurgelTrack - Todos os direitos reservados à Vitor Gurgel</p>
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+
+        // Active navigation state
+        const currentPath = window.location.pathname;
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        navItems.forEach(item => {
+            const itemPath = item.getAttribute('href');
+            if (currentPath.includes(itemPath) || (currentPath === '/' && itemPath === 'index.html')) {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+            }
+        });
+
+        // Carregar dados salvos ao iniciar
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedData();
+            checkAuthState();
+        });
+
+        // Função para verificar estado de autenticação
+        function checkAuthState() {
+            const currentUser = localStorage.getItem('currentUser');
+            const loginBtn = document.getElementById('loginBtn');
+            const userDropdown = document.getElementById('userDropdown');
+            const userEmail = document.getElementById('userEmail');
+            const userName = document.getElementById('userName');
+            
+            if (currentUser) {
+                try {
+                    const user = JSON.parse(currentUser);
+                    // Usuário logado - mostrar perfil
+                    loginBtn.style.display = 'none';
+                    userDropdown.style.display = 'block';
+                    userEmail.textContent = user.email;
+                    
+                    // Extrair nome do email (parte antes do @)
+                    const emailName = user.email.split('@')[0];
+                    userName.textContent = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+                } catch (error) {
+                    console.error('Erro ao parsear dados do usuário:', error);
+                    logout(); // Limpa dados corrompidos
+                }
+            } else {
+                // Usuário não logado - mostrar botão de login
+                loginBtn.style.display = 'block';
+                userDropdown.style.display = 'none';
+            }
+        }
+
+        // Função de logout
+        function logout() {
+            localStorage.removeItem('currentUser');
+            checkAuthState();
+            
+            // Mostrar mensagem de logout
+            showNotification('Você saiu da conta com sucesso!', 'success');
+            
+            // Redirecionar para página inicial se não estiver nela
+            if (window.location.pathname !== '/' && !window.location.pathname.includes('index.html')) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Função para mostrar notificações
+        function showNotification(message, type = 'info') {
+            // Criar elemento de notificação
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            // Adicionar estilos se não existirem
+            if (!document.querySelector('#notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    .notification {
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: white;
+                        padding: 15px 20px;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        z-index: 10000;
+                        animation: slideInRight 0.3s ease;
+                        max-width: 300px;
+                    }
+                    .notification-success {
+                        border-left: 4px solid #27ae60;
+                        color: #27ae60;
+                    }
+                    .notification-error {
+                        border-left: 4px solid #e74c3c;
+                        color: #e74c3c;
+                    }
+                    .notification-info {
+                        border-left: 4px solid #3498db;
+                        color: #3498db;
+                    }
+                    @keyframes slideInRight {
+                        from {
+                            transform: translateX(100%);
+                            opacity: 0;
+                        }
+                        to {
+                            transform: translateX(0);
+                            opacity: 1;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // Adicionar ao DOM
+            document.body.appendChild(notification);
+            
+            // Remover após 3 segundos
+            setTimeout(() => {
+                notification.style.animation = 'slideInRight 0.3s ease reverse';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Logout button functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logout();
+                });
+            }
+        });
+
+        // Função para carregar todos os dados salvos
+        function loadSavedData() {
+            try {
+                // Carregar alunos na página inicial
+                loadHomeStudents();
+                
+                // Carregar prazos salvos
+                const savedDeadlines = JSON.parse(localStorage.getItem('savedDeadlines') || '[]');
+                displaySavedDeadlines(savedDeadlines);
+            } catch (error) {
+                console.error('Erro ao carregar dados salvos:', error);
+            }
+        }
+
+        // Função para carregar alunos na página inicial
+        function loadHomeStudents() {
+            try {
+                const students = JSON.parse(localStorage.getItem('students') || '[]');
+                const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
+                
+                const container = document.getElementById('homeStudentsGrid');
+                const emptyState = document.getElementById('emptyStudentsState');
+                
+                if (students.length === 0) {
+                    emptyState.style.display = 'block';
+                    container.innerHTML = '';
+                    container.appendChild(emptyState);
+                } else {
+                    emptyState.style.display = 'none';
+                    container.innerHTML = '';
+                    
+                    students.forEach(student => {
+                        const studentCard = createStudentCard(student, assignments);
+                        container.appendChild(studentCard);
+                    });
+                }
+                
+                console.log('Alunos carregados na página inicial:', students.length);
+                
+            } catch (error) {
+                console.error('Erro ao carregar alunos na página inicial:', error);
+            }
+        }
+
+        // Função para criar card de aluno
+        function createStudentCard(student, assignments) {
+            const card = document.createElement('div');
+            card.className = 'student-card';
+            card.onclick = () => window.location.href = 'alunos.html';
+            
+            // Obter iniciais do nome
+            const initials = student.name.split(' ').map(word => word[0]).join('').substring(0, 2).toUpperCase();
+            
+            // Contar atribuições do aluno
+            const studentId = student.id;
+            const workoutCount = assignments.workouts ? assignments.workouts.filter(w => w.studentId === studentId).length : 0;
+            const dietCount = assignments.diets ? assignments.diets.filter(d => d.studentId === studentId).length : 0;
+            const calculationCount = assignments.calculations ? assignments.calculations.filter(c => c.studentId === studentId).length : 0;
+            
+            card.innerHTML = `
+                <div class="student-header">
+                    <div class="student-avatar">${initials}</div>
+                    <div class="student-info">
+                        <h3>${student.name}</h3>
+                        <p>${student.email || 'Email não informado'}</p>
+                    </div>
+                </div>
+                <div class="student-stats">
+                    <div class="student-stat">
+                        <span class="student-stat-label">Treinos</span>
+                        <span class="student-stat-value">${workoutCount}</span>
+                    </div>
+                    <div class="student-stat">
+                        <span class="student-stat-label">Dietas</span>
+                        <span class="student-stat-value">${dietCount}</span>
+                    </div>
+                    <div class="student-stat">
+                        <span class="student-stat-label">Cálculos</span>
+                        <span class="student-stat-value">${calculationCount}</span>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Função para exibir cálculos energéticos salvos
+        function displaySavedCalculations(calculations) {
+            const container = document.getElementById('calculationsGrid');
+            const emptyState = document.getElementById('emptyCalculationsState');
+            
+            if (calculations.length === 0) {
+                container.style.display = 'none';
+                emptyState.style.display = 'block';
+            } else {
+                container.style.display = 'grid';
+                emptyState.style.display = 'none';
+                container.innerHTML = '';
+                
+                calculations.forEach(calc => {
+                    const calcCard = document.createElement('div');
+                    calcCard.className = 'calculation-card';
+                    calcCard.innerHTML = `
+                        <div class="calculation-header">
+                            <div class="calculation-title">${calc.name}</div>
+                            <div class="calculation-date">${new Date(calc.date).toLocaleDateString('pt-BR')}</div>
+                        </div>
+                        <div class="calculation-results">
+                            <div class="macro-stat">
+                                <div class="macro-stat-label">TMB</div>
+                                <div class="macro-stat-value">${calc.tmb} kcal</div>
+                            </div>
+                            <div class="macro-stat">
+                                <div class="macro-stat-label">GET</div>
+                                <div class="macro-stat-value">${calc.get} kcal</div>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn-action" onclick="loadCalculation('${calc.id}')">
+                                <i class="fas fa-folder-open"></i>
+                                Ver Detalhes
+                            </button>
+                            <button class="btn-action delete" onclick="deleteCalculation('${calc.id}')">
+                                <i class="fas fa-trash"></i>
+                                Excluir
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(calcCard);
+                });
+            }
+        }
+
+        // Função para excluir cálculo
+        function deleteCalculation(calcId) {
+            if (confirm('Tem certeza que deseja excluir este cálculo?')) {
+                try {
+                    let savedCalculations = JSON.parse(localStorage.getItem('savedCalculations') || '[]');
+                    savedCalculations = savedCalculations.filter(c => c.id != calcId);
+                    localStorage.setItem('savedCalculations', JSON.stringify(savedCalculations));
+                    loadSavedData(); // Recarregar lista
+                    alert('Cálculo excluído com sucesso!');
+                } catch (error) {
+                    console.error('Erro ao excluir cálculo:', error);
+                    alert('Erro ao excluir cálculo. Tente novamente.');
+                }
+            }
+        }
+
+        // Função para exibir prazos salvos e compromissos próximos
+        function displaySavedDeadlines(deadlines) {
+            const container = document.getElementById('deadlinesGrid');
+            const emptyState = document.getElementById('emptyDeadlinesState');
+            
+            // Carregar compromissos próximos
+            const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+            const today = new Date();
+            const nextWeek = new Date(today.getTime() + (7 * 24 * 60 * 60 * 1000));
+            
+            // Filtrar compromissos próximos (próximos 7 dias)
+            const upcomingAppointments = appointments
+                .filter(apt => {
+                    const aptDate = new Date(apt.date + 'T' + apt.time);
+                    return aptDate >= today && aptDate <= nextWeek;
+                })
+                .sort((a, b) => {
+                    const dateA = new Date(a.date + 'T' + a.time);
+                    const dateB = new Date(b.date + 'T' + b.time);
+                    return dateA - dateB;
+                });
+            
+            // Combinar prazos e compromissos
+            const allItems = [...deadlines, ...upcomingAppointments];
+            
+            if (allItems.length === 0) {
+                container.style.display = 'none';
+                emptyState.style.display = 'block';
+            } else {
+                container.style.display = 'grid';
+                emptyState.style.display = 'none';
+                container.innerHTML = '';
+                
+                allItems.forEach(item => {
+                    const itemCard = document.createElement('div');
+                    
+                    // Verificar se é compromisso ou prazo
+                    const isAppointment = item.time !== undefined;
+                    
+                    if (isAppointment) {
+                        // Card para compromisso
+                        itemCard.className = 'deadline-card';
+                        const appointmentDate = new Date(item.date + 'T' + item.time);
+                        const isToday = item.date === today.toISOString().split('T')[0];
+                        const isTomorrow = item.date === new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                        
+                        let priorityClass = '';
+                        let priorityText = '';
+                        
+                        if (isToday) {
+                            priorityClass = 'urgent';
+                            priorityText = 'Hoje';
+                        } else if (isTomorrow) {
+                            priorityClass = 'soon';
+                            priorityText = 'Amanhã';
+                        } else {
+                            const daysUntil = Math.ceil((appointmentDate - today) / (1000 * 60 * 60 * 24));
+                            priorityText = `Em ${daysUntil} dias`;
+                        }
+                        
+                        itemCard.innerHTML = `
+                            <div class="deadline-header">
+                                <div class="deadline-title">
+                                    <i class="fas fa-calendar-check"></i>
+                                    ${item.title}
+                                </div>
+                                <div class="deadline-date ${priorityClass}">
+                                    ${priorityText} - ${appointmentDate.toLocaleDateString('pt-BR')} ${item.time}
+                                </div>
+                            </div>
+                            <div class="deadline-description">
+                                <p>${item.description || 'Sem descrição'}</p>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="btn-action" onclick="viewAppointment('${item.id}')">
+                                    <i class="fas fa-eye"></i>
+                                    Ver
+                                </button>
+                                <button class="btn-action delete" onclick="deleteAppointmentFromIndex('${item.id}')">
+                                    <i class="fas fa-trash"></i>
+                                    Excluir
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        // Card para prazo (código existente)
+                        itemCard.className = 'deadline-card';
+                        itemCard.innerHTML = `
+                            <div class="deadline-header">
+                                <div class="deadline-title">
+                                    <i class="fas fa-clock"></i>
+                                    ${item.title}
+                                </div>
+                                <div class="deadline-date">${new Date(item.date).toLocaleDateString('pt-BR')}</div>
+                            </div>
+                            <div class="deadline-description">
+                                <p>${item.description}</p>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="btn-action delete" onclick="deleteDeadline('${item.id}')">
+                                    <i class="fas fa-trash"></i>
+                                    Excluir
+                                </button>
+                            </div>
+                        `;
+                    }
+                    
+                    container.appendChild(itemCard);
+                });
+            }
+        }
+
+        // Função para excluir prazo
+        function deleteDeadline(deadlineId) {
+            if (confirm('Tem certeza que deseja excluir este prazo?')) {
+                try {
+                    let savedDeadlines = JSON.parse(localStorage.getItem('savedDeadlines') || '[]');
+                    savedDeadlines = savedDeadlines.filter(d => d.id != deadlineId);
+                    localStorage.setItem('savedDeadlines', JSON.stringify(savedDeadlines));
+                    loadSavedData(); // Recarregar lista
+                    alert('Prazo excluído com sucesso!');
+                } catch (error) {
+                    console.error('Erro ao excluir prazo:', error);
+                    alert('Erro ao excluir prazo. Tente novamente.');
+                }
+            }
+        }
+
+        // Função para visualizar compromisso na agenda
+        function viewAppointment(appointmentId) {
+            // Redirecionar para agenda com o compromisso selecionado
+            localStorage.setItem('selectedAppointmentId', appointmentId);
+            window.location.href = 'agenda.html';
+        }
+
+        // Função para excluir compromisso da página index
+        function deleteAppointmentFromIndex(appointmentId) {
+            if (confirm('Tem certeza que deseja excluir este compromisso?')) {
+                try {
+                    let appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+                    appointments = appointments.filter(apt => apt.id != appointmentId);
+                    localStorage.setItem('appointments', JSON.stringify(appointments));
+                    loadSavedData(); // Recarregar lista
+                    alert('Compromisso excluído com sucesso!');
+                } catch (error) {
+                    console.error('Erro ao excluir compromisso:', error);
+                    alert('Erro ao excluir compromisso. Tente novamente.');
+                }
+            }
+        }
+
+        // Tema escuro/claro functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const body = document.body;
+
+        // Carregar preferência de tema salva
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                themeText.textContent = 'Tema Claro';
+            }
+        }
+
+        // Alternar tema
+        function toggleTheme() {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                // Mudar para tema escuro
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                themeText.textContent = 'Tema Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                // Mudar para tema claro
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                themeText.textContent = 'Tema Escuro';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Adicionar evento de clique ao botão de tema
+        if (themeToggle) {
+            themeToggle.addEventListener('click', toggleTheme);
+        }
+
+        // Carregar preferência de tema ao iniciar a página
+        document.addEventListener('DOMContentLoaded', loadThemePreference);
+
+        // Dashboard Analytics Simplificado
+        function initDashboardAnalytics() {
+            try {
+                updateDashboardStats();
+            } catch (error) {
+                console.error('Erro ao inicializar dashboard:', error);
+            }
+        }
+
+        // Atualizar estatísticas do dashboard
+        function updateDashboardStats() {
+            try {
+                // Carregar dados do localStorage
+                const students = JSON.parse(localStorage.getItem('students') || '[]');
+                const payments = JSON.parse(localStorage.getItem('pagamentos') || '[]');
+                const workouts = JSON.parse(localStorage.getItem('workouts') || '[]');
+
+                // Calcular estatísticas
+                const currentMonth = new Date().getMonth();
+                const currentYear = new Date().getFullYear();
+
+                // Receita do mês (usando mesma lógica da página de pagamentos)
+                const pagos = payments.filter(p => p.status === 'pago');
+                const monthlyRevenue = pagos
+                    .filter(p => {
+                        const pagamentoMes = new Date(p.dataPagamento).getMonth();
+                        const pagamentoAno = new Date(p.dataPagamento).getFullYear();
+                        return pagamentoMes === currentMonth && pagamentoAno === currentYear;
+                    })
+                    .reduce((total, p) => total + p.valor, 0);
+
+                // Total de alunos
+                const totalStudents = students.length;
+
+                // Atualizar DOM
+                document.getElementById('revenueValue').textContent = `R$ ${monthlyRevenue.toFixed(2).replace('.', ',')}`;
+                document.getElementById('revenueChange').textContent = monthlyRevenue > 0 ? '+15%' : '+0%';
+                
+                document.getElementById('studentsValue').textContent = totalStudents;
+                document.getElementById('studentsChange').textContent = totalStudents > 0 ? `+${Math.min(totalStudents, 3)}` : '+0';
+
+                // Atualizar período atual
+                const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+                                  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+                document.getElementById('currentPeriod').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+            } catch (error) {
+                console.error('Erro ao atualizar estatísticas:', error);
+            }
+        }
+
+        // Carregar preferência de tema ao iniciar a página
+        document.addEventListener('DOMContentLoaded', loadThemePreference);
+        
+        // Inicializar Dashboard Analytics junto com outros dados
+        const originalLoadSavedData = loadSavedData;
+        loadSavedData = function() {
+            originalLoadSavedData();
+            initDashboardAnalytics();
+        };
+    </script>
+
+    <!-- Botão de Ajuda -->
+    <button class="help-button" onclick="openHelpModal()">?</button>
+
+    <!-- Modal de Ajuda -->
+    <div class="help-modal" id="helpModal">
+        <div class="help-modal-content">
+            <div class="help-modal-header">
+                <h3 class="help-modal-title">
+                    <i class="fas fa-question-circle"></i>
+                    Ajuda - Dashboard GurgelTrack
+                </h3>
+                <button class="help-close" onclick="closeHelpModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-home"></i>
+                    Bem-vindo ao Dashboard
+                </h4>
+                <div class="help-section-content">
+                    <p>O Dashboard é sua central de controle, onde você visualiza informações importantes e acessa rapidamente as principais funções do sistema.</p>
+                    
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Visualize suas estatísticas principais no topo da página</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Acesse seus alunos cadastrados na seção "Meus Alunos"</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Gerencie seus prazos e compromissos em "Meus Prazos"</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard Analytics
+                </h4>
+                <div class="help-section-content">
+                    <p>Os cards de estatísticas mostram dados em tempo real:</p>
+                    <p><strong>Receita do Mês:</strong> Total de pagamentos recebidos no mês atual</p>
+                    <p><strong>Total de Alunos:</strong> Número de alunos ativos cadastrados</p>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">💡 Dica</div>
+                        <div>Os valores são atualizados automaticamente quando você adiciona novos alunos ou registra pagamentos</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-users"></i>
+                    Gerenciando Alunos
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Clique em "Adicionar Aluno" para cadastrar novos alunos</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Clique no card de um aluno para ver detalhes e gerenciar</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Visualize rapidamente treinos, dietas e cálculos atribuídos</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-calendar-alt"></i>
+                    Prazos e Compromissos
+                </h4>
+                <div class="help-section-content">
+                    <p>Organize suas metas e compromissos:</p>
+                    <p><strong>Prazos:</strong> Defina objetivos com datas limite</p>
+                    <p><strong>Compromissos:</strong> Visualize compromissos próximos (próximos 7 dias)</p>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">⚠️ Alertas</div>
+                        <div>Prazos urgentes aparecem destacados em vermelho para não perder nenhuma meta</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-bars"></i>
+                    Navegação Rápida
+                </h4>
+                <div class="help-section-content">
+                    <p>Use o menu lateral para acessar todas as funcionalidades:</p>
+                    <p><strong>Alunos:</strong> Cadastro e gerenciamento de alunos</p>
+                    <p><strong>Treino:</strong> Criação de fichas de treino</p>
+                    <p><strong>Dieta:</strong> Montador de dietas personalizadas</p>
+                    <p><strong>Cálculo:</strong> Cálculo energético e TMB</p>
+                    <p><strong>Anotações:</strong> Controle de cargas e peso corporal</p>
+                    <p><strong>Pagamentos:</strong> Gestão financeira</p>
+                    <p><strong>Agenda:</strong> Compromissos e agendamentos</p>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Dicas de Uso
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-tip">
+                        <div class="help-tip-title">🎯 Produtividade</div>
+                        <div>Comece cadastrando seus alunos, depois crie treinos e dietas personalizadas</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">📱 Mobile</div>
+                        <div>O sistema é totalmente responsivo e funciona perfeitamente em celulares</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">🌙 Tema Escuro</div>
+                        <div>Use o botão de tema no menu para alternar entre modo claro e escuro</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funções do Modal de Ajuda
+        function openHelpModal() {
+            document.getElementById('helpModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Impede scroll do fundo
+        }
+
+        function closeHelpModal() {
+            document.getElementById('helpModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restaura scroll
+        }
+
+        // Fechar modal clicando fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('helpModal');
+            if (event.target === modal) {
+                closeHelpModal();
+            }
+        }
+
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeHelpModal();
+            }
+        });
+    </script>
+</body>
+</html>

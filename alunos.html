@@ -1,0 +1,3464 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alunos - GurgelTrack</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #8b0000;
+            --secondary-color: #a52a2a;
+            --accent-color: #dc143c;
+            --accent-hover: #b91c1c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-color: #fff5f5;
+            --dark-color: #333333;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --bg-primary: #ffffff;
+            --bg-secondary: #fff5f5;
+            --border: #ffcccc;
+            --shadow: 0 2px 10px rgba(220,20,60,0.15);
+            --transition: all 0.3s ease;
+        }
+
+        body.dark-mode {
+            --primary-color: #1a1a2e;
+            --secondary-color: #25253d;
+            --accent-color: #e91e63;
+            --accent-hover: #f06292;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --light-color: #0f0f0f;
+            --dark-color: #f5f5f5;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b8b8b8;
+            --bg-primary: #1e1e1e;
+            --bg-secondary: #0f0f0f;
+            --border: #333333;
+            --shadow: 0 2px 10px rgba(0,0,0,0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-secondary);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-left-color: var(--accent-color);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            margin-left: 280px;
+            flex: 1;
+            background: var(--bg-secondary);
+            min-height: 100vh;
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .main-header {
+            background: var(--bg-primary);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .main-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .main-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Student Selection */
+        .student-selection {
+            background: var(--bg-primary);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .student-selection h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .student-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .student-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.2);
+        }
+
+        .student-card.active {
+            border-color: var(--accent-color);
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        .student-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .student-info h3 {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .student-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .student-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 0.5rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Add Student Button */
+        .add-student-btn {
+            background: var(--success-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 auto;
+        }
+
+        .add-student-btn:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+
+        /* Student Details */
+        .student-details {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            display: none;
+        }
+
+        .student-details.active {
+            display: block;
+        }
+
+        .details-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .details-header h2 {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .details-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            margin-bottom: 2rem;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Protocol Cards */
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .protocol-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .protocol-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .protocol-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .protocol-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .protocol-date {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .protocol-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .protocol-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        /* Diet Card Styles */
+        .diet-card {
+            grid-column: 1 / -1;
+        }
+
+        .diet-summary {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-item i {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: block;
+        }
+
+        .diet-meals {
+            margin-bottom: 1rem;
+        }
+
+        .diet-meals h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meal-section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .meal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .meal-header h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .meal-totals {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .meal-totals span {
+            padding: 0.25rem 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .meal-foods {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .food-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 2fr;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            align-items: center;
+        }
+
+        .food-name {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .food-quantity {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .food-macros {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .macro {
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .macro.kcal {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+        }
+
+        .macro.protein {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+        }
+
+        .macro.carb {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+
+        .macro.fat {
+            background: rgba(241, 196, 15, 0.2);
+            color: #f1c40f;
+        }
+
+        .no-meals, .no-foods {
+            text-align: center;
+            color: var(--text-secondary);
+            font-style: italic;
+            padding: 1rem;
+        }
+
+        /* Workout Card Styles */
+        .workout-card {
+            grid-column: 1 / -1;
+        }
+
+        .workout-summary {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .workout-days {
+            margin-bottom: 1rem;
+        }
+
+        .workout-days h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .day-section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .day-header h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .day-stats {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .day-stats span {
+            padding: 0.25rem 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .day-exercises {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .exercise-item {
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .exercise-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .exercise-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .exercise-details span {
+            padding: 0.2rem 0.5rem;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid var(--border);
+        }
+
+        .exercise-sets {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+        }
+
+        .exercise-reps {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+
+        .exercise-rest {
+            background: rgba(241, 196, 15, 0.2);
+            color: #f1c40f;
+        }
+
+        .exercise-load {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
+        .exercise-notes {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .no-days, .no-exercises {
+            text-align: center;
+            color: var(--text-secondary);
+            font-style: italic;
+            padding: 1rem;
+        }
+
+        /* Calculation Card Styles */
+        .calculation-card {
+            grid-column: 1 / -1;
+        }
+
+        .calculation-summary {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .calculation-details,
+        .activity-info,
+        .calculation-recommendations {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .calculation-details h4,
+        .activity-info h4,
+        .calculation-recommendations h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .personal-data,
+        .activity-details,
+        .recommendations {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .data-row,
+        .recommendation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .data-label,
+        .rec-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .data-value,
+        .rec-value {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .recommendation-item {
+            border-left: 3px solid var(--accent);
+        }
+
+        .recommendation-item:nth-child(1) {
+            border-left-color: #e74c3c;
+        }
+
+        .recommendation-item:nth-child(2) {
+            border-left-color: #f39c12;
+        }
+
+        .recommendation-item:nth-child(3) {
+            border-left-color: #27ae60;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .layout-container {
+                overflow-x: hidden;
+            }
+            
+            .main-wrapper {
+                margin-left: 0;
+                width: 100%;
+                min-height: 100vh;
+            }
+            
+            .main-content {
+                padding: 1rem;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                z-index: 1001;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 1002;
+                background: var(--accent-color);
+                color: white;
+                border: none;
+                padding: 0.75rem;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1.25rem;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            }
+            
+            .main-header {
+                padding: 1rem;
+                margin-top: 3rem;
+                text-align: center;
+            }
+            
+            .main-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .main-header p {
+                font-size: 0.9rem;
+            }
+            
+            .page-header {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .tabs-nav {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                padding: 0.5rem;
+                background: var(--bg-secondary);
+                border-radius: 12px;
+                margin-bottom: 1.5rem;
+            }
+
+            .tab-btn {
+                flex: 1;
+                min-width: 120px;
+                padding: 0.75rem 1rem;
+                text-align: center;
+                font-size: 0.9rem;
+                border-radius: 8px;
+                transition: var(--transition);
+            }
+            
+            .tab-btn.active {
+                background: var(--accent-color);
+                color: white;
+                transform: scale(1.05);
+            }
+
+            .student-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .student-card {
+                padding: 1.5rem;
+                border-radius: 12px;
+                text-align: center;
+                transition: var(--transition);
+            }
+            
+            .student-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
+
+            .student-header {
+                flex-direction: column;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .student-avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+                margin: 0 auto;
+            }
+
+            .student-info h3 {
+                font-size: 1.3rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .student-info p {
+                font-size: 1rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .student-stats {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+                margin-top: 1.5rem;
+            }
+
+            .stat-item {
+                padding: 1rem;
+                background: var(--bg-primary);
+                border-radius: 8px;
+                text-align: center;
+                border: 1px solid var(--border);
+            }
+
+            .stat-label {
+                font-size: 0.8rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .stat-value {
+                font-size: 1.1rem;
+                font-weight: 600;
+            }
+
+            .student-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+                margin-top: 1.5rem;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 0.875rem;
+                font-size: 0.95rem;
+                border-radius: 8px;
+                font-weight: 500;
+                transition: var(--transition);
+            }
+
+            .btn-primary {
+                background: var(--accent-color);
+                color: white;
+                border: none;
+            }
+
+            .btn-secondary {
+                background: var(--bg-primary);
+                color: var(--text-primary);
+                border: 1px solid var(--border);
+            }
+
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+
+            .protocol-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .protocol-card {
+                padding: 1.5rem;
+                border-radius: 12px;
+                text-align: center;
+            }
+
+            .protocol-header {
+                flex-direction: column;
+                gap: 1rem;
+                margin-bottom: 1rem;
+                text-align: center;
+            }
+
+            .protocol-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+                margin: 0 auto;
+            }
+
+            .protocol-title {
+                font-size: 1.2rem;
+            }
+
+            .protocol-meta {
+                font-size: 0.9rem;
+            }
+
+            .protocol-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                max-width: calc(100% - 2rem);
+                border-radius: 12px;
+            }
+
+            .modal-header {
+                padding: 1.5rem;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .modal-header h3 {
+                font-size: 1.2rem;
+            }
+
+            .modal-body {
+                padding: 1.5rem;
+            }
+
+            .form-group {
+                margin-bottom: 1.5rem;
+            }
+
+            .form-group label {
+                font-size: 0.95rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 1rem;
+                padding: 0.875rem;
+                border-radius: 8px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .form-actions .btn {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 0.75rem;
+            }
+            
+            .tabs-nav {
+                padding: 0.25rem;
+            }
+            
+            .tab-btn {
+                min-width: 100px;
+                padding: 0.625rem 0.75rem;
+                font-size: 0.85rem;
+            }
+            
+            .student-card {
+                padding: 1rem;
+            }
+            
+            .student-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .student-info h3 {
+                font-size: 1.1rem;
+            }
+            
+            .student-info p {
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-toggle {
+                display: none;
+            }
+        }
+
+        /* Botão de Ajuda */
+        .help-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            border: none;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+            transition: var(--transition);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        /* Modal de Ajuda */
+        .help-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .help-modal-content {
+            position: relative;
+            background: var(--bg-secondary);
+            margin: 50px auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            animation: slideIn 0.3s ease;
+        }
+
+        .help-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .help-modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .help-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-close:hover {
+            background: var(--bg-primary);
+            color: var(--accent-color);
+        }
+
+        .help-section {
+            margin-bottom: 25px;
+        }
+
+        .help-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .help-section-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .help-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .help-step-number {
+            background: var(--accent-color);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .help-step-text {
+            flex: 1;
+            color: var(--text-secondary);
+        }
+
+        .help-tip {
+            background: var(--bg-primary);
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .help-tip-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .help-button {
+                bottom: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .help-modal-content {
+                margin: 20px;
+                padding: 20px;
+                width: calc(100% - 40px);
+            }
+
+            .help-modal-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+
+    <style>
+        /* Print Styles for Student Protocol */
+        @media print {
+            @page {
+                margin: 2mm;
+                size: A4;
+            }
+
+            html, body {
+                background: white !important;
+                color: black !important;
+                font-size: 11pt;
+                line-height: 1.2;
+                margin: 0 !important;
+                padding: 0 !important;
+                height: auto;
+                overflow: visible;
+                width: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            /* Force no blank first page */
+            * {
+                visibility: hidden;
+                position: relative;
+            }
+
+            .protocol-container,
+            .protocol-container * {
+                visibility: visible;
+            }
+
+            .layout-container > *:not(.protocol-container) {
+                display: none !important;
+                height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+
+            .layout-container {
+                display: block !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                height: auto;
+                width: 100%;
+                position: relative;
+                top: 0;
+                left: 0;
+            }
+
+            .protocol-container {
+                display: block !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 2px !important;
+                background: white !important;
+                color: black !important;
+                height: auto;
+                overflow: visible;
+                page-break-inside: avoid;
+                page-break-before: auto;
+                page-break-after: auto;
+            }
+
+            .protocol-header {
+                text-align: center;
+                border-bottom: 2px solid #333;
+                padding-bottom: 8px;
+                margin-bottom: 15px;
+                margin-top: 0;
+                page-break-after: avoid;
+                page-break-before: avoid;
+            }
+
+            .protocol-section {
+                margin-bottom: 20px;
+                page-break-inside: avoid;
+                margin-top: 0;
+                padding-top: 0;
+                orphans: 3;
+                widows: 3;
+                page-break-before: auto;
+                padding: 8px;
+                border: 1px solid #e0e0e0;
+                border-radius: 4px;
+                background-color: #fafafa;
+            }
+
+            .protocol-section:first-child {
+                page-break-before: auto;
+                margin-top: 0;
+                padding-top: 8px;
+            }
+
+            .protocol-section:last-child {
+                margin-bottom: 0;
+                page-break-after: auto;
+            }
+
+            .protocol-section h2 {
+                font-size: 15pt;
+                font-weight: bold;
+                margin-bottom: 12px;
+                margin-top: 0;
+                color: #333;
+                border-bottom: 1px solid #ccc;
+                padding-bottom: 4px;
+                page-break-after: avoid;
+                page-break-before: avoid;
+                orphans: 2;
+                widows: 2;
+            }
+
+            .protocol-section h3 {
+                font-size: 13pt;
+                font-weight: bold;
+                margin: 10px 0 6px 0;
+                color: #555;
+                page-break-after: avoid;
+            }
+
+            .protocol-section h4 {
+                font-size: 12pt;
+                font-weight: bold;
+                margin: 8px 0 4px 0;
+                color: #666;
+            }
+
+            .protocol-section h5 {
+                font-size: 11pt;
+                font-weight: bold;
+                margin: 6px 0 3px 0;
+                color: #777;
+            }
+
+            .protocol-section h6 {
+                font-size: 10pt;
+                font-weight: bold;
+                margin: 5px 0 2px 0;
+                color: #888;
+            }
+
+            .protocol-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+                margin-bottom: 10px;
+            }
+
+            .protocol-item {
+                margin-bottom: 4px;
+                font-size: 10pt;
+                page-break-inside: avoid;
+            }
+
+            .protocol-label {
+                font-weight: bold;
+                color: #333;
+            }
+
+            .protocol-value {
+                color: #555;
+            }
+
+            .protocol-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 5px;
+                font-size: 9pt;
+                page-break-inside: avoid;
+            }
+
+            .protocol-table th,
+            .protocol-table td {
+                border: 1px solid #ccc;
+                padding: 1px;
+                text-align: left;
+            }
+
+            .protocol-table th {
+                background-color: #f5f5f5;
+                font-weight: bold;
+                font-size: 9pt;
+            }
+
+            .protocol-meal {
+                margin-bottom: 6px;
+                page-break-inside: avoid;
+            }
+
+            .protocol-exercise {
+                margin-bottom: 3px;
+                padding: 1px;
+                border-left: 1px solid #333;
+                background-color: #f9f9f9;
+            }
+
+            .no-print {
+                display: none !important;
+                height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+
+            /* Aggressive prevention of blank pages */
+            body::before,
+            body::after,
+            html::before,
+            html::after {
+                content: none !important;
+                display: none !important;
+            }
+
+            /* Force content to start at top */
+            * {
+                box-sizing: border-box;
+            }
+
+            /* Remove any potential extra spacing */
+            br {
+                display: none !important;
+            }
+
+            /* Ensure no empty elements create pages */
+            :empty {
+                display: none !important;
+            }
+
+            /* Force protocol to start immediately */
+            .protocol-container {
+                transform: translateY(0) !important;
+            }
+        }
+
+        .protocol-container {
+            display: none;
+        }
+
+        .protocol-container.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="logo-gurgel.png" alt="GurgelTrack Logo" class="logo" style="width: 10vw;">
+                <h1>
+                    <i class="fas fa-dumbbell"></i>
+                    GurgelTrack
+                </h1>
+                <p>Sua plataforma fitness</p>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    Início
+                </a>
+                <a href="alunos.html" class="nav-item active">
+                    <i class="fas fa-users"></i>
+                    Alunos
+                </a>
+                <a href="treino.html" class="nav-item">
+                    <i class="fas fa-dumbbell"></i>
+                    Treino
+                </a>
+                <a href="dieta.html" class="nav-item">
+                    <i class="fas fa-utensils"></i>
+                    Dieta
+                </a>
+                <a href="calculo.html" class="nav-item">
+                    <i class="fas fa-calculator"></i>
+                    Cálculo
+                </a>
+                <a href="carga.html" class="nav-item">
+                    <i class="fas fa-weight"></i>
+                    Anotações
+                </a>
+                <a href="pagamentos.html" class="nav-item">
+                    <i class="fas fa-credit-card"></i>
+                    Pagamentos
+                </a>
+                <a href="agenda.html" class="nav-item">
+                    <i class="fas fa-calendar"></i>
+                    Agenda
+                </a>
+                <button class="nav-item theme-toggle" id="themeToggle" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                    <span id="themeText">Tema Escuro</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <header class="main-header">
+                <h1><i class="fas fa-users"></i> Gerenciamento de Alunos</h1>
+                <p>Atribua e gerencie protocolos de treino, dieta e cálculos energéticos</p>
+            </header>
+
+            <main class="main-content">
+                <!-- Student Selection -->
+                <section class="student-selection">
+                    <h2>
+                        <i class="fas fa-users"></i>
+                        Selecione um Aluno
+                    </h2>
+                    
+                    <div class="student-grid" id="studentGrid">
+                        <!-- Students will be loaded here -->
+                    </div>
+                    
+                    <button class="add-student-btn" onclick="openStudentModal()">
+                        <i class="fas fa-plus"></i>
+                        Adicionar Novo Aluno
+                    </button>
+                </section>
+
+                <!-- Student Details -->
+                <section class="student-details" id="studentDetails">
+                    <div class="details-header">
+                        <h2>
+                            <i class="fas fa-user"></i>
+                            <span id="selectedStudentName">Dados do Aluno</span>
+                        </h2>
+                        <div class="details-actions">
+                            <button class="btn btn-primary" onclick="editStudent()">
+                                <i class="fas fa-edit"></i>
+                                Editar
+                            </button>
+                            <button class="btn btn-success" onclick="printStudentProtocol()">
+                                <i class="fas fa-print"></i>
+                                Imprimir Protocolo
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteStudent()">
+                                <i class="fas fa-trash"></i>
+                                Excluir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="tabs-container">
+                        <div class="tabs-nav">
+                            <button class="tab-btn active" onclick="switchTab('overview')">
+                                <i class="fas fa-eye"></i>
+                                Visão Geral
+                            </button>
+                            <button class="tab-btn" onclick="switchTab('diet')">
+                                <i class="fas fa-utensils"></i>
+                                Dieta
+                            </button>
+                            <button class="tab-btn" onclick="switchTab('workout')">
+                                <i class="fas fa-dumbbell"></i>
+                                Treino
+                            </button>
+                            <button class="tab-btn" onclick="switchTab('calculation')">
+                                <i class="fas fa-calculator"></i>
+                                Cálculo Energético
+                            </button>
+                            <button class="tab-btn" onclick="switchTab('data')">
+                                <i class="fas fa-database"></i>
+                                Dados
+                            </button>
+                        </div>
+
+                        <!-- Overview Tab -->
+                        <div class="tab-content active" id="overview-tab">
+                            <div class="protocol-grid" id="overviewGrid">
+                                <!-- Overview will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Diet Tab -->
+                        <div class="tab-content" id="diet-tab">
+                            <div class="protocol-grid" id="dietGrid">
+                                <!-- Diets will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Workout Tab -->
+                        <div class="tab-content" id="workout-tab">
+                            <div class="protocol-grid" id="workoutGrid">
+                                <!-- Workouts will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Calculation Tab -->
+                        <div class="tab-content" id="calculation-tab">
+                            <div class="protocol-grid" id="calculationGrid">
+                                <!-- Calculations will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Data Tab -->
+                        <div class="tab-content" id="data-tab">
+                            <div id="studentDataContent">
+                                <!-- Student data will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Student Modal -->
+    <div class="modal" id="studentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Adicionar Novo Aluno</h3>
+                <button class="modal-close" onclick="closeStudentModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="studentForm">
+                <div class="form-group">
+                    <label for="studentName">Nome Completo</label>
+                    <input type="text" id="studentName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentEmail">E-mail</label>
+                    <input type="email" id="studentEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentPhone">Telefone</label>
+                    <input type="tel" id="studentPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentAge">Idade</label>
+                    <input type="number" id="studentAge" min="10" max="100" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentGender">Sexo</label>
+                    <select id="studentGender" required>
+                        <option value="">Selecione</option>
+                        <option value="male">Masculino</option>
+                        <option value="female">Feminino</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentWeight">Peso (kg)</label>
+                    <input type="number" id="studentWeight" step="0.1" min="30" max="200" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentHeight">Altura (cm)</label>
+                    <input type="number" id="studentHeight" min="100" max="250" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentObjective">Objetivo</label>
+                    <select id="studentObjective" required>
+                        <option value="">Selecione</option>
+                        <option value="hipertrofia">Hipertrofia</option>
+                        <option value="emagrecimento">Emagrecimento</option>
+                        <option value="resistencia">Resistência</option>
+                        <option value="saude">Saúde</option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="closeStudentModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Aluno</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Protocol Container (Hidden by default) -->
+    <div class="protocol-container" id="protocolContainer">
+        <!-- Protocol content will be generated here -->
+    </div>
+
+    <script>
+        // Global variables
+        let students = [];
+        let selectedStudentId = null;
+        let currentTab = 'overview';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStudents();
+            setupEventListeners();
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+            }
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 768) {
+                    if (!sidebar.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
+                        sidebar.classList.remove('active');
+                    }
+                }
+            });
+
+            // Active navigation state
+            const currentPath = window.location.pathname;
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                const itemPath = item.getAttribute('href');
+                if (currentPath.includes(itemPath) || (currentPath === '/' && itemPath === 'index.html')) {
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                }
+            });
+
+            // Student form submission
+            document.getElementById('studentForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveStudent();
+            });
+        }
+
+        // Load students from localStorage
+        function loadStudents() {
+            try {
+                students = JSON.parse(localStorage.getItem('students') || '[]');
+                displayStudents();
+            } catch (error) {
+                console.error('Erro ao carregar alunos:', error);
+                students = [];
+            }
+        }
+
+        // Display students
+        function displayStudents() {
+            const studentGrid = document.getElementById('studentGrid');
+            
+            if (students.length === 0) {
+                studentGrid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <i class="fas fa-users"></i>
+                        <h3>Nenhum aluno cadastrado</h3>
+                        <p>Clique em "Adicionar Novo Aluno" para começar</p>
+                    </div>
+                `;
+                return;
+            }
+
+            studentGrid.innerHTML = students.map(student => `
+                <div class="student-card" onclick="selectStudent('${student.id}')" data-student-id="${student.id}">
+                    <div class="student-header">
+                        <div class="student-avatar">
+                            ${student.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="student-info">
+                            <h3>${student.name}</h3>
+                            <p>${student.email || 'Sem e-mail'}</p>
+                        </div>
+                    </div>
+                    <div class="student-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${getStudentDiets(student.id).length}</div>
+                            <div class="stat-label">Dietas</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${getStudentWorkouts(student.id).length}</div>
+                            <div class="stat-label">Treinos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${getStudentCalculations(student.id).length}</div>
+                            <div class="stat-label">Cálculos</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Get student diets
+        function getStudentDiets(studentId) {
+            try {
+                const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
+                return assignments.diets?.filter(d => d.studentId === studentId) || [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        // Get student workouts
+        function getStudentWorkouts(studentId) {
+            try {
+                const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
+                return assignments.workouts?.filter(w => w.studentId === studentId) || [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        // Get student calculations
+        function getStudentCalculations(studentId) {
+            try {
+                const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
+                return assignments.calculations?.filter(c => c.studentId === studentId) || [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        // Select student
+        function selectStudent(studentId) {
+            selectedStudentId = studentId;
+            
+            // Update UI
+            document.querySelectorAll('.student-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.querySelector(`[data-student-id="${studentId}"]`).classList.add('active');
+            
+            // Show student details
+            document.getElementById('studentDetails').classList.add('active');
+            
+            // Load student data
+            loadStudentData(studentId);
+        }
+
+        // Load student data
+        function loadStudentData(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            document.getElementById('selectedStudentName').textContent = student.name;
+
+            // Load data for each tab
+            loadOverviewTab(studentId);
+            loadDietTab(studentId);
+            loadWorkoutTab(studentId);
+            loadCalculationTab(studentId);
+            loadDataTab(studentId);
+        }
+
+        // Load overview tab
+        function loadOverviewTab(studentId) {
+            const overviewGrid = document.getElementById('overviewGrid');
+            const diets = getStudentDiets(studentId);
+            const workouts = getStudentWorkouts(studentId);
+            const calculations = getStudentCalculations(studentId);
+
+            let overviewHTML = '';
+
+            // Add recent diets
+            if (diets.length > 0) {
+                overviewHTML += `
+                    <div class="protocol-card">
+                        <div class="protocol-header">
+                            <div class="protocol-title">
+                                <i class="fas fa-utensils"></i>
+                                Dietas Recentes
+                            </div>
+                        </div>
+                        <div class="protocol-content">
+                            <p>${diets.length} dieta(s) atribuída(s)</p>
+                            <p>Última: ${new Date(diets[diets.length - 1].assignedAt).toLocaleDateString('pt-BR')}</p>
+                        </div>
+                        <div class="protocol-actions">
+                            <button class="btn btn-primary" onclick="switchTab('diet')">
+                                <i class="fas fa-eye"></i>
+                                Ver Todas
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Add recent workouts
+            if (workouts.length > 0) {
+                overviewHTML += `
+                    <div class="protocol-card">
+                        <div class="protocol-header">
+                            <div class="protocol-title">
+                                <i class="fas fa-dumbbell"></i>
+                                Treinos Recentes
+                            </div>
+                        </div>
+                        <div class="protocol-content">
+                            <p>${workouts.length} treino(s) atribuído(s)</p>
+                            <p>Último: ${new Date(workouts[workouts.length - 1].assignedAt).toLocaleDateString('pt-BR')}</p>
+                        </div>
+                        <div class="protocol-actions">
+                            <button class="btn btn-primary" onclick="switchTab('workout')">
+                                <i class="fas fa-eye"></i>
+                                Ver Todos
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Add recent calculations
+            if (calculations.length > 0) {
+                overviewHTML += `
+                    <div class="protocol-card">
+                        <div class="protocol-header">
+                            <div class="protocol-title">
+                                <i class="fas fa-calculator"></i>
+                                Cálculos Recentes
+                            </div>
+                        </div>
+                        <div class="protocol-content">
+                            <p>${calculations.length} cálculo(s) atribuído(s)</p>
+                            <p>Último: ${new Date(calculations[calculations.length - 1].assignedAt).toLocaleDateString('pt-BR')}</p>
+                        </div>
+                        <div class="protocol-actions">
+                            <button class="btn btn-primary" onclick="switchTab('calculation')">
+                                <i class="fas fa-eye"></i>
+                                Ver Todos
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (overviewHTML === '') {
+                overviewHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>Nenhum protocolo atribuído</h3>
+                        <p>Atribua dietas, treinos ou cálculos energéticos a este aluno</p>
+                    </div>
+                `;
+            }
+
+            overviewGrid.innerHTML = overviewHTML;
+        }
+
+        // Load diet tab
+        function loadDietTab(studentId) {
+            const dietGrid = document.getElementById('dietGrid');
+            const diets = getStudentDiets(studentId);
+
+            if (diets.length === 0) {
+                dietGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-utensils"></i>
+                        <h3>Nenhuma dieta atribuída</h3>
+                        <p>Vá para a página de dietas e atribua uma a este aluno</p>
+                    </div>
+                `;
+                return;
+            }
+
+            dietGrid.innerHTML = diets.map(diet => `
+                <div class="protocol-card diet-card">
+                    <div class="protocol-header">
+                        <div class="protocol-title">
+                            <i class="fas fa-utensils"></i>
+                            ${diet.name}
+                        </div>
+                        <div class="protocol-date">
+                            ${new Date(diet.assignedAt).toLocaleDateString('pt-BR')}
+                        </div>
+                    </div>
+                    
+                    <div class="diet-summary">
+                        <div class="summary-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-fire"></i>
+                                <span class="stat-value">${Math.round(diet.totals?.kcal || 0)}</span>
+                                <span class="stat-label">KCAL</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-drumstick-bite"></i>
+                                <span class="stat-value">${(diet.totals?.ptn || 0).toFixed(1)}g</span>
+                                <span class="stat-label">Proteínas</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-bread-slice"></i>
+                                <span class="stat-value">${(diet.totals?.cho || 0).toFixed(1)}g</span>
+                                <span class="stat-label">Carboidratos</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-oil-can"></i>
+                                <span class="stat-value">${(diet.totals?.lip || 0).toFixed(1)}g</span>
+                                <span class="stat-label">Gorduras</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="diet-meals">
+                        <h4><i class="fas fa-clipboard-list"></i> Refeições</h4>
+                        ${diet.meals && diet.meals.length > 0 ? diet.meals.map(meal => `
+                            <div class="meal-section">
+                                <div class="meal-header">
+                                    <h5>${meal.name}</h5>
+                                    <div class="meal-totals">
+                                        <span>KCAL: ${Math.round(meal.totals?.kcal || 0)}</span>
+                                        <span>P: ${(meal.totals?.ptn || 0).toFixed(1)}g</span>
+                                        <span>C: ${(meal.totals?.cho || 0).toFixed(1)}g</span>
+                                        <span>G: ${(meal.totals?.lip || 0).toFixed(1)}g</span>
+                                    </div>
+                                </div>
+                                <div class="meal-foods">
+                                    ${meal.foods && meal.foods.length > 0 ? meal.foods.map(food => `
+                                        <div class="food-item">
+                                            <div class="food-name">${food.name}</div>
+                                            <div class="food-quantity">${food.quantity || '100g'}</div>
+                                            <div class="food-macros">
+                                                <span class="macro kcal">${Math.round((food.kcal || 0) * (food.quantity || 100) / 100)} kcal</span>
+                                                <span class="macro protein">P: ${((food.ptn || 0) * (food.quantity || 100) / 100).toFixed(1)}g</span>
+                                                <span class="macro carb">C: ${((food.cho || 0) * (food.quantity || 100) / 100).toFixed(1)}g</span>
+                                                <span class="macro fat">G: ${((food.lip || 0) * (food.quantity || 100) / 100).toFixed(1)}g</span>
+                                            </div>
+                                        </div>
+                                    `).join('') : '<p class="no-foods">Nenhum aluno adicionado</p>'}
+                                </div>
+                            </div>
+                        `).join('') : '<p class="no-meals">Nenhuma refeição adicionada</p>'}
+                    </div>
+                    
+                    <div class="protocol-actions">
+                        <button class="btn btn-primary" onclick="viewDiet('${diet.id}')">
+                            <i class="fas fa-eye"></i>
+                            Ver Detalhes
+                        </button>
+                        <button class="btn btn-danger" onclick="removeDiet('${diet.id}')">
+                            <i class="fas fa-trash"></i>
+                            Remover
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load workout tab
+        function loadWorkoutTab(studentId) {
+            const workoutGrid = document.getElementById('workoutGrid');
+            const workouts = getStudentWorkouts(studentId);
+
+            if (workouts.length === 0) {
+                workoutGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-dumbbell"></i>
+                        <h3>Nenhum treino atribuído</h3>
+                        <p>Vá para a página de treinos e atribua um a este aluno</p>
+                    </div>
+                `;
+                return;
+            }
+
+            workoutGrid.innerHTML = workouts.map(workout => `
+                <div class="protocol-card workout-card">
+                    <div class="protocol-header">
+                        <div class="protocol-title">
+                            <i class="fas fa-dumbbell"></i>
+                            ${workout.name}
+                        </div>
+                        <div class="protocol-date">
+                            ${new Date(workout.assignedAt).toLocaleDateString('pt-BR')}
+                        </div>
+                    </div>
+                    
+                    <div class="workout-summary">
+                        <div class="summary-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span class="stat-value">${workout.workout?.days?.length || 'N/A'}</span>
+                                <span class="stat-label">Dias</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-dumbbell"></i>
+                                <span class="stat-value">${workout.workout?.days?.reduce((total, day) => total + (day.exercises?.length || 0), 0) || 'N/A'}</span>
+                                <span class="stat-label">Exercícios</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-sync-alt"></i>
+                                <span class="stat-value">${workout.workout?.weeklyFrequency || 'N/A'}</span>
+                                <span class="stat-label">vezes/sem</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="workout-days">
+                        <h4><i class="fas fa-clipboard-list"></i> Dias de Treino</h4>
+                        ${workout.workout?.days && workout.workout.days.length > 0 ? workout.workout.days.map(day => `
+                            <div class="day-section">
+                                <div class="day-header">
+                                    <h5>${day.name}</h5>
+                                    <div class="day-stats">
+                                        <span>${day.exercises?.length || 0} exercícios</span>
+                                    </div>
+                                </div>
+                                <div class="day-exercises">
+                                    ${day.exercises && day.exercises.length > 0 ? day.exercises.map(exercise => `
+                                        <div class="exercise-item">
+                                            <div class="exercise-name">${exercise.name}</div>
+                                            <div class="exercise-details">
+                                                <span class="exercise-sets">${exercise.sets || 'N/A'} séries</span>
+                                                <span class="exercise-reps">${exercise.reps || 'N/A'} reps</span>
+                                                <span class="exercise-rest">${exercise.rest || 'N/A'}s desc</span>
+                                                <span class="exercise-load">${exercise.load || 'N/A'}</span>
+                                            </div>
+                                            ${exercise.notes ? `<div class="exercise-notes">${exercise.notes}</div>` : ''}
+                                        </div>
+                                    `).join('') : '<p class="no-exercises">Nenhum exercício adicionado</p>'}
+                                </div>
+                            </div>
+                        `).join('') : '<p class="no-days">Nenhum dia de treino adicionado</p>'}
+                    </div>
+                    
+                    <div class="protocol-actions">
+                        <button class="btn btn-primary" onclick="viewWorkout('${workout.id}')">
+                            <i class="fas fa-eye"></i>
+                            Ver Detalhes
+                        </button>
+                        <button class="btn btn-danger" onclick="removeWorkout('${workout.id}')">
+                            <i class="fas fa-trash"></i>
+                            Remover
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load calculation tab
+        function loadCalculationTab(studentId) {
+            const calculationGrid = document.getElementById('calculationGrid');
+            const calculations = getStudentCalculations(studentId);
+
+            if (calculations.length === 0) {
+                calculationGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calculator"></i>
+                        <h3>Nenhum cálculo atribuído</h3>
+                        <p>Vá para a página de cálculos e atribua um a este aluno</p>
+                    </div>
+                `;
+                return;
+            }
+
+            calculationGrid.innerHTML = calculations.map(calc => `
+                <div class="protocol-card calculation-card">
+                    <div class="protocol-header">
+                        <div class="protocol-title">
+                            <i class="fas fa-calculator"></i>
+                            ${calc.name}
+                        </div>
+                        <div class="protocol-date">
+                            ${new Date(calc.assignedAt).toLocaleDateString('pt-BR')}
+                        </div>
+                    </div>
+                    
+                    <div class="calculation-summary">
+                        <div class="summary-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-fire"></i>
+                                <span class="stat-value">${calc.tmb || 'N/A'}</span>
+                                <span class="stat-label">TMB (kcal)</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-burn"></i>
+                                <span class="stat-value">${calc.get || 'N/A'}</span>
+                                <span class="stat-label">GET (kcal)</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-chart-line"></i>
+                                <span class="stat-value">${Math.round(((calc.get || 0) - (calc.tmb || 0)) / (calc.tmb || 1) * 100)}%</span>
+                                <span class="stat-label">Déficit/Superávit</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="calculation-details">
+                        <h4><i class="fas fa-user"></i> Dados Pessoais</h4>
+                        <div class="personal-data">
+                            <div class="data-row">
+                                <span class="data-label">Sexo:</span>
+                                <span class="data-value">${calc.gender === 'male' ? 'Masculino' : 'Feminino'}</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-label">Idade:</span>
+                                <span class="data-value">${calc.age || 'N/A'} anos</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-label">Peso:</span>
+                                <span class="data-value">${calc.weight || 'N/A'} kg</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-label">Altura:</span>
+                                <span class="data-value">${calc.height || 'N/A'} cm</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-info">
+                        <h4><i class="fas fa-running"></i> Nível de Atividade</h4>
+                        <div class="activity-details">
+                            <div class="data-row">
+                                <span class="data-label">Fator:</span>
+                                <span class="data-value">${calc.activity || 'N/A'}</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-label">Descrição:</span>
+                                <span class="data-value">${calc.activityText || 'N/A'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="calculation-recommendations">
+                        <h4><i class="fas fa-lightbulb"></i> Recomendações</h4>
+                        <div class="recommendations">
+                            <div class="recommendation-item">
+                                <span class="rec-label">Perda de peso:</span>
+                                <span class="rec-value">${Math.round((calc.get || 0) - 300)} kcal/dia</span>
+                            </div>
+                            <div class="recommendation-item">
+                                <span class="rec-label">Manutenção:</span>
+                                <span class="rec-value">${calc.get || 'N/A'} kcal/dia</span>
+                            </div>
+                            <div class="recommendation-item">
+                                <span class="rec-label">Ganho de peso:</span>
+                                <span class="rec-value">${Math.round((calc.get || 0) * 1.1)} kcal/dia</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="protocol-actions">
+                        <button class="btn btn-primary" onclick="viewCalculation('${calc.id}')">
+                            <i class="fas fa-eye"></i>
+                            Ver Detalhes
+                        </button>
+                        <button class="btn btn-danger" onclick="removeCalculation('${calc.id}')">
+                            <i class="fas fa-trash"></i>
+                            Remover
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load data tab
+        function loadDataTab(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            const dataContent = document.getElementById('studentDataContent');
+            dataContent.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                    <div class="protocol-card">
+                        <div class="protocol-header">
+                            <div class="protocol-title">
+                                <i class="fas fa-user"></i>
+                                Dados Pessoais
+                            </div>
+                        </div>
+                        <div class="protocol-content">
+                            <p><strong>Nome:</strong> ${student.name}</p>
+                            <p><strong>E-mail:</strong> ${student.email || 'Não informado'}</p>
+                            <p><strong>Telefone:</strong> ${student.phone || 'Não informado'}</p>
+                            <p><strong>Idade:</strong> ${student.age || 'Não informado'} anos</p>
+                            <p><strong>Sexo:</strong> ${student.gender === 'male' ? 'Masculino' : student.gender === 'female' ? 'Feminino' : 'Não informado'}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="protocol-card">
+                        <div class="protocol-header">
+                            <div class="protocol-title">
+                                <i class="fas fa-ruler"></i>
+                                Medidas
+                            </div>
+                        </div>
+                        <div class="protocol-content">
+                            <p><strong>Peso:</strong> ${student.weight || 'Não informado'} kg</p>
+                            <p><strong>Altura:</strong> ${student.height || 'Não informado'} cm</p>
+                            <p><strong>IMC:</strong> ${calculateBMI(student.weight, student.height)}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="protocol-card">
+                        <div class="protocol-header">
+                            <div class="protocol-title">
+                                <i class="fas fa-bullseye"></i>
+                                Objetivo
+                            </div>
+                        </div>
+                        <div class="protocol-content">
+                            <p><strong>Objetivo:</strong> ${getObjectiveLabel(student.objective)}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Calculate BMI
+        function calculateBMI(weight, height) {
+            if (!weight || !height) return 'N/A';
+            const bmi = weight / Math.pow(height / 100, 2);
+            return bmi.toFixed(1);
+        }
+
+        // Get objective label
+        function getObjectiveLabel(objective) {
+            const objectives = {
+                'hipertrofia': 'Hipertrofia',
+                'emagrecimento': 'Emagrecimento',
+                'resistencia': 'Resistência',
+                'saude': 'Saúde'
+            };
+            return objectives[objective] || 'Não informado';
+        }
+
+        // Switch tabs
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Reload data for selected tab
+            if (selectedStudentId) {
+                switch(tabName) {
+                    case 'overview':
+                        loadOverviewTab(selectedStudentId);
+                        break;
+                    case 'diet':
+                        loadDietTab(selectedStudentId);
+                        break;
+                    case 'workout':
+                        loadWorkoutTab(selectedStudentId);
+                        break;
+                    case 'calculation':
+                        loadCalculationTab(selectedStudentId);
+                        break;
+                    case 'data':
+                        loadDataTab(selectedStudentId);
+                        break;
+                }
+            }
+        }
+
+        // Modal functions
+        function openStudentModal() {
+            document.getElementById('studentModal').classList.add('active');
+        }
+
+        function closeStudentModal() {
+            document.getElementById('studentModal').classList.remove('active');
+            document.getElementById('studentForm').reset();
+        }
+
+        // Save student
+        function saveStudent() {
+            const formData = {
+                id: Date.now().toString(),
+                name: document.getElementById('studentName').value,
+                email: document.getElementById('studentEmail').value,
+                phone: document.getElementById('studentPhone').value,
+                age: document.getElementById('studentAge').value,
+                gender: document.getElementById('studentGender').value,
+                weight: document.getElementById('studentWeight').value,
+                height: document.getElementById('studentHeight').value,
+                objective: document.getElementById('studentObjective').value,
+                createdAt: new Date().toISOString()
+            };
+
+            students.push(formData);
+            localStorage.setItem('students', JSON.stringify(students));
+            
+            displayStudents();
+            closeStudentModal();
+            
+            alert('Aluno adicionado com sucesso!');
+        }
+
+        // View functions
+        function viewDiet(dietId) {
+            localStorage.setItem('selectedDietId', dietId);
+            window.location.href = 'dieta.html';
+        }
+
+        function viewWorkout(workoutId) {
+            localStorage.setItem('selectedFichaId', workoutId);
+            window.location.href = 'treino.html';
+        }
+
+        function viewCalculation(calcId) {
+            localStorage.setItem('selectedCalculationId', calcId);
+            window.location.href = 'calculo.html';
+        }
+
+        // Remove functions
+        function removeDiet(dietId) {
+            if (confirm('Tem certeza que deseja remover esta dieta?')) {
+                try {
+                    const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
+                    assignments.diets = assignments.diets?.filter(d => d.id !== dietId) || [];
+                    localStorage.setItem('studentAssignments', JSON.stringify(assignments));
+                    loadDietTab(selectedStudentId);
+                    loadOverviewTab(selectedStudentId);
+                    displayStudents();
+                } catch (error) {
+                    console.error('Erro ao remover dieta:', error);
+                }
+            }
+        }
+
+        function removeWorkout(workoutId) {
+            if (confirm('Tem certeza que deseja remover este treino?')) {
+                try {
+                    const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
+                    assignments.workouts = assignments.workouts?.filter(w => w.id !== workoutId) || [];
+                    localStorage.setItem('studentAssignments', JSON.stringify(assignments));
+                    loadWorkoutTab(selectedStudentId);
+                    loadOverviewTab(selectedStudentId);
+                    displayStudents();
+                } catch (error) {
+                    console.error('Erro ao remover treino:', error);
+                }
+            }
+        }
+
+        function removeCalculation(calcId) {
+            if (confirm('Tem certeza que deseja remover este cálculo?')) {
+                try {
+                    const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
+                    assignments.calculations = assignments.calculations?.filter(c => c.id !== calcId) || [];
+                    localStorage.setItem('studentAssignments', JSON.stringify(assignments));
+                    loadCalculationTab(selectedStudentId);
+                    loadOverviewTab(selectedStudentId);
+                    displayStudents();
+                } catch (error) {
+                    console.error('Erro ao remover cálculo:', error);
+                }
+            }
+        }
+
+        // Edit student
+        function editStudent() {
+            const student = students.find(s => s.id === selectedStudentId);
+            if (!student) return;
+
+            // Populate form with student data
+            document.getElementById('studentName').value = student.name;
+            document.getElementById('studentEmail').value = student.email || '';
+            document.getElementById('studentPhone').value = student.phone || '';
+            document.getElementById('studentAge').value = student.age || '';
+            document.getElementById('studentGender').value = student.gender || '';
+            document.getElementById('studentWeight').value = student.weight || '';
+            document.getElementById('studentHeight').value = student.height || '';
+            document.getElementById('studentObjective').value = student.objective || '';
+
+            openStudentModal();
+        }
+
+        // Delete student
+        function deleteStudent() {
+            if (confirm('Tem certeza que deseja excluir este aluno? Esta ação não pode ser desfeita.')) {
+                try {
+                    students = students.filter(s => s.id !== selectedStudentId);
+                    localStorage.setItem('students', JSON.stringify(students));
+                    
+                    // Also remove all assignments for this student
+                    const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
+                    assignments.diets = assignments.diets?.filter(d => d.studentId !== selectedStudentId) || [];
+                    assignments.workouts = assignments.workouts?.filter(w => w.studentId !== selectedStudentId) || [];
+                    assignments.calculations = assignments.calculations?.filter(c => c.studentId !== selectedStudentId) || [];
+                    localStorage.setItem('studentAssignments', JSON.stringify(assignments));
+                    
+                    // Reset UI
+                    selectedStudentId = null;
+                    document.getElementById('studentDetails').classList.remove('active');
+                    displayStudents();
+                    
+                    alert('Aluno excluído com sucesso!');
+                } catch (error) {
+                    console.error('Erro ao excluir aluno:', error);
+                }
+            }
+        }
+
+        // Tema escuro/claro functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const body = document.body;
+
+        // Carregar preferência de tema salva
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                themeText.textContent = 'Tema Claro';
+            }
+        }
+
+        // Alternar tema
+        function toggleTheme() {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                // Mudar para tema escuro
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                themeText.textContent = 'Tema Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                // Mudar para tema claro
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                themeText.textContent = 'Tema Escuro';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Adicionar evento de clique ao botão de tema
+        if (themeToggle) {
+            themeToggle.addEventListener('click', toggleTheme);
+        }
+
+        // Carregar preferência de tema ao iniciar a página
+        document.addEventListener('DOMContentLoaded', loadThemePreference);
+    </script>
+
+    <!-- Botão de Ajuda -->
+    <button class="help-button" onclick="openHelpModal()">?</button>
+
+    <!-- Modal de Ajuda -->
+    <div class="help-modal" id="helpModal">
+        <div class="help-modal-content">
+            <div class="help-modal-header">
+                <h3 class="help-modal-title">
+                    <i class="fas fa-question-circle"></i>
+                    Ajuda - Gestão de Alunos
+                </h3>
+                <button class="help-close" onclick="closeHelpModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-user-plus"></i>
+                    Cadastro de Alunos
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Clique em "Adicionar Aluno" para abrir o formulário</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Preencha todos os campos obrigatórios (nome, email, telefone)</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Adicione informações adicionais como idade, peso, altura</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">Clique em "Cadastrar Aluno" para salvar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-users"></i>
+                    Gerenciamento de Alunos
+                </h4>
+                <div class="help-section-content">
+                    <p>Após cadastrar, você pode gerenciar cada aluno:</p>
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Clique no card do aluno para ver detalhes</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Use o botão "Editar" para modificar informações</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Clique em "Excluir" para remover um aluno</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">Visualize treinos, dietas e cálculos atribuídos</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-search"></i>
+                    Busca e Filtros
+                </h4>
+                <div class="help-section-content">
+                    <p>Encontre alunos rapidamente:</p>
+                    <p><strong>Busca por nome:</strong> Digite o nome do aluno no campo de busca</p>
+                    <p><strong>Filtros avançados:</strong> Filtre por status, data de cadastro</p>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">💡 Dica</div>
+                        <div>A busca é instantânea e funciona enquanto você digita</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-dumbbell"></i>
+                    Integração com Outras Áreas
+                </h4>
+                <div class="help-section-content">
+                    <p>Os alunos cadastrados ficam disponíveis para:</p>
+                    <p><strong>Treinos:</strong> Crie fichas de treino personalizadas</p>
+                    <p><strong>Dietas:</strong> Monte planos alimentares individuais</p>
+                    <p><strong>Cálculos:</strong> Calcule TMB e necessidades energéticas</p>
+                    <p><strong>Pagamentos:</strong> Controle financeiro por aluno</p>
+                    <p><strong>Agenda:</strong> Agende consultas e avaliações</p>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Dicas Importantes
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-tip">
+                        <div class="help-tip-title">📋 Informações Completas</div>
+                        <div>Quanto mais completas as informações, melhor será o acompanhamento</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">🔄 Atualizações</div>
+                        <div>Mantenha os dados atualizados para acompanhamento preciso</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">📱 Mobile</div>
+                        <div>Acesse e gerencie alunos de qualquer dispositivo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funções do Modal de Ajuda
+        function openHelpModal() {
+            document.getElementById('helpModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Impede scroll do fundo
+        }
+
+        function closeHelpModal() {
+            document.getElementById('helpModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restaura scroll
+        }
+
+        // Fechar modal clicando fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('helpModal');
+            if (event.target === modal) {
+                closeHelpModal();
+            }
+        }
+
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeHelpModal();
+            }
+        });
+    </script>
+
+    <script>
+        // Student Protocol Generation Function
+        function printStudentProtocol() {
+            if (!selectedStudentId) {
+                alert('Por favor, selecione um aluno primeiro!');
+                return;
+            }
+
+            const student = students.find(s => s.id === selectedStudentId);
+            if (!student) {
+                alert('Aluno não encontrado!');
+                return;
+            }
+
+            // Generate protocol HTML
+            const protocolHTML = generateProtocolHTML(student);
+            
+            // Show protocol container
+            const protocolContainer = document.getElementById('protocolContainer');
+            protocolContainer.innerHTML = protocolHTML;
+            protocolContainer.style.display = 'block';
+            protocolContainer.classList.add('show');
+            
+            // Force a brief delay to ensure content is rendered
+            setTimeout(() => {
+                // Trigger print
+                window.print();
+                
+                // Hide protocol container after printing dialog closes
+                setTimeout(() => {
+                    protocolContainer.style.display = 'none';
+                    protocolContainer.classList.remove('show');
+                }, 2000);
+            }, 300);
+        }
+
+        function generateProtocolHTML(student) {
+            const currentDate = new Date().toLocaleDateString('pt-BR');
+            
+            // Get student assignments
+            const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
+            const studentDiets = assignments.diets?.filter(d => d.studentId === student.id) || [];
+            const studentWorkouts = assignments.workouts?.filter(w => w.studentId === student.id) || [];
+            const studentCalculations = assignments.calculations?.filter(c => c.studentId === student.id) || [];
+
+            let html = `
+                <div class="protocol-header">
+                    <h1>PROTOCOLO COMPLETO DO ALUNO</h1>
+                    <h2>${student.name}</h2>
+                    <p>Data de Geração: ${currentDate}</p>
+                </div>
+
+                <div class="protocol-section">
+                    <h2>📋 DADOS PESSOAIS</h2>
+                    <div class="protocol-grid">
+                        <div class="protocol-item">
+                            <span class="protocol-label">Nome:</span>
+                            <span class="protocol-value">${student.name}</span>
+                        </div>
+                        <div class="protocol-item">
+                            <span class="protocol-label">Idade:</span>
+                            <span class="protocol-value">${student.age || 'Não informado'} anos</span>
+                        </div>
+                        <div class="protocol-item">
+                            <span class="protocol-label">Sexo:</span>
+                            <span class="protocol-value">${student.gender === 'male' ? 'Masculino' : 'Feminino'}</span>
+                        </div>
+                        <div class="protocol-item">
+                            <span class="protocol-label">Telefone:</span>
+                            <span class="protocol-value">${student.phone || 'Não informado'}</span>
+                        </div>
+                        <div class="protocol-item">
+                            <span class="protocol-label">Email:</span>
+                            <span class="protocol-value">${student.email || 'Não informado'}</span>
+                        </div>
+                        <div class="protocol-item">
+                            <span class="protocol-label">Objetivo:</span>
+                            <span class="protocol-value">${getObjectiveLabel(student.objective)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add Calculations Section
+            if (studentCalculations.length > 0) {
+                html += `
+                    <div class="protocol-section">
+                        <h2>🧮 CÁLCULOS ENERGÉTICOS</h2>
+                `;
+                
+                studentCalculations.forEach((calc, index) => {
+                    // Get activity factor from multiple possible fields
+                    const activityFactor = calc.activityFactor || calc.factor || calc.activityLevel || calc.level;
+                    const tmb = calc.tmb || calc.bmr || 0;
+                    const get = calc.tdee || calc.get || calc.tmb * activityFactor || 0;
+                    
+                    html += `
+                        <div class="protocol-meal">
+                            <h3>Cálculo ${index + 1} - ${new Date(calc.date).toLocaleDateString('pt-BR')}</h3>
+                            <div class="protocol-grid">
+                                <div class="protocol-item">
+                                    <span class="protocol-label">Peso:</span>
+                                    <span class="protocol-value">${calc.weight} kg</span>
+                                </div>
+                                <div class="protocol-item">
+                                    <span class="protocol-label">Altura:</span>
+                                    <span class="protocol-value">${calc.height} cm</span>
+                                </div>
+                                <div class="protocol-item">
+                                    <span class="protocol-label">TMB:</span>
+                                    <span class="protocol-value">${tmb} kcal</span>
+                                </div>
+                                <div class="protocol-item">
+                                    <span class="protocol-label">Fator Atividade:</span>
+                                    <span class="protocol-value">${activityFactor || 'Não informado'} (${getActivityLabel(activityFactor)})</span>
+                                </div>
+                                <div class="protocol-item">
+                                    <span class="protocol-label">GET:</span>
+                                    <span class="protocol-value">${get} kcal</span>
+                                </div>
+                                <div class="protocol-item">
+                                    <span class="protocol-label">Objetivo:</span>
+                                    <span class="protocol-value">${getGoalLabel(calc.goal)}</span>
+                                </div>
+                            </div>
+                            ${calc.targetKcal ? `
+                                <div class="protocol-item">
+                                    <span class="protocol-label">Meta Calórica:</span>
+                                    <span class="protocol-value">${calc.targetKcal} kcal/dia</span>
+                                </div>
+                            ` : ''}
+                            ${activityFactor && tmb ? `
+                                <div class="protocol-item">
+                                    <span class="protocol-label">Cálculo GET:</span>
+                                    <span class="protocol-value">TMB × ${activityFactor} = ${tmb} × ${activityFactor} = ${get} kcal</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            }
+
+            // Add Diet Section
+            if (studentDiets.length > 0) {
+                html += `
+                    <div class="protocol-section">
+                        <h2>🍽️ PLANO ALIMENTAR</h2>
+                `;
+                
+                studentDiets.forEach((diet, index) => {
+                    // Use the diet data directly (it's already complete from the tab loading)
+                    html += `
+                        <div class="protocol-meal">
+                            <h3>Dieta ${index + 1} - ${diet.name || 'Sem nome'}</h3>
+                            <div class="protocol-item">
+                                <span class="protocol-label">Data de Atribuição:</span>
+                                <span class="protocol-value">${new Date(diet.assignedAt || Date.now()).toLocaleDateString('pt-BR')}</span>
+                            </div>
+                            
+                            <h4>Resumo Nutricional:</h4>
+                            <div class="protocol-grid">
+                                <div class="protocol-item">
+                                    <span class="protocol-label">KCAL Total:</span>
+                                    <span class="protocol-value">${Math.round(diet.totals?.kcal || 0)} kcal</span>
+                                </div>
+                                <div class="protocol-item">
+                                    <span class="protocol-label">Proteínas:</span>
+                                    <span class="protocol-value">${(diet.totals?.ptn || 0).toFixed(1)}g</span>
+                                </div>
+                                <div class="protocol-item">
+                                    <span class="protocol-label">Carboidratos:</span>
+                                    <span class="protocol-value">${(diet.totals?.cho || 0).toFixed(1)}g</span>
+                                </div>
+                                <div class="protocol-item">
+                                    <span class="protocol-label">Gorduras:</span>
+                                    <span class="protocol-value">${(diet.totals?.lip || 0).toFixed(1)}g</span>
+                                </div>
+                            </div>
+
+                            <h4>Refeições:</h4>
+                    `;
+                    
+                    // Use the meals data directly from the diet object
+                    if (diet.meals && diet.meals.length > 0) {
+                        diet.meals.forEach(meal => {
+                            html += `
+                                <div class="protocol-meal">
+                                    <h5>${meal.name || 'Refeição sem nome'}</h5>
+                                    <div class="protocol-item">
+                                        <span class="protocol-label">Totais da Refeição:</span>
+                                        <span class="protocol-value">KCAL: ${Math.round(meal.totals?.kcal || 0)} | P: ${(meal.totals?.ptn || 0).toFixed(1)}g | C: ${(meal.totals?.cho || 0).toFixed(1)}g | G: ${(meal.totals?.lip || 0).toFixed(1)}g</span>
+                                    </div>
+                                    <table class="protocol-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Alimento</th>
+                                                <th>Quantidade</th>
+                                                <th>KCAL</th>
+                                                <th>PTN</th>
+                                                <th>CHO</th>
+                                                <th>LIP</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                            `;
+                            
+                            if (meal.foods && meal.foods.length > 0) {
+                                meal.foods.forEach(food => {
+                                    const quantity = food.quantity || '100g';
+                                    const multiplier = (parseInt(quantity) || 100) / 100;
+                                    
+                                    html += `
+                                        <tr>
+                                            <td>${food.name || 'Alimento sem nome'}</td>
+                                            <td>${quantity}</td>
+                                            <td>${Math.round((food.kcal || 0) * multiplier)}</td>
+                                            <td>${((food.ptn || 0) * multiplier).toFixed(1)}g</td>
+                                            <td>${((food.cho || 0) * multiplier).toFixed(1)}g</td>
+                                            <td>${((food.lip || 0) * multiplier).toFixed(1)}g</td>
+                                        </tr>
+                                    `;
+                                });
+                            }
+                            
+                            html += `
+                                        </tbody>
+                                    </table>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        html += `<p>Nenhuma refeição encontrada para esta dieta.</p>`;
+                    }
+                    
+                    html += `</div>`;
+                });
+                
+                html += `</div>`;
+            }
+
+            // Add Workout Section
+            if (studentWorkouts.length > 0) {
+                html += `
+                    <div class="protocol-section">
+                        <h2>💪 PLANO DE TREINO</h2>
+                `;
+                
+                studentWorkouts.forEach((workout, index) => {
+                    // Debug: log workout structure
+                    console.log('Workout data:', workout);
+                    
+                    // Use the workout data directly (it's already complete from the tab loading)
+                    html += `
+                        <div class="protocol-meal">
+                            <h3>Treino ${index + 1} - ${workout.name || 'Sem nome'}</h3>
+                            <div class="protocol-item">
+                                <span class="protocol-label">Data de Atribuição:</span>
+                                <span class="protocol-value">${new Date(workout.assignedAt || Date.now()).toLocaleDateString('pt-BR')}</span>
+                            </div>
+                            
+                            <h4>Resumo do Treino:</h4>
+                            <div class="protocol-grid">
+                                <div class="protocol-item">
+                                    <span class="protocol-label">Dias de Treino:</span>
+                                    <span class="protocol-value">${workout.workout?.days?.length || workout.days?.length || 'N/A'}</span>
+                                </div>
+                                <div class="protocol-item">
+                                    <span class="protocol-label">Total de Exercícios:</span>
+                                    <span class="protocol-value">${(workout.workout?.days || workout.days || []).reduce((total, day) => total + ((day.exercises || []).length), 0) || 'N/A'}</span>
+                                </div>
+                                <div class="protocol-item">
+                                    <span class="protocol-label">Frequência Semanal:</span>
+                                    <span class="protocol-value">${workout.workout?.weeklyFrequency || workout.weeklyFrequency || 'N/A'} vezes por semana</span>
+                                </div>
+                            </div>
+
+                            <h4>Dias e Exercícios:</h4>
+                    `;
+                    
+                    // Use the workout days data directly from the workout object
+                    const workoutDays = workout.workout?.days || workout.days || [];
+                    if (workoutDays.length > 0) {
+                        workoutDays.forEach(day => {
+                            html += `
+                                <div class="protocol-meal">
+                                    <h5>${day.name || 'Dia sem nome'}</h5>
+                                    <div class="protocol-item">
+                                        <span class="protocol-label">Exercícios do dia:</span>
+                                        <span class="protocol-value">${(day.exercises || []).length} exercícios</span>
+                                    </div>
+                            `;
+                            
+                            const exercises = day.exercises || [];
+                            if (exercises.length > 0) {
+                                html += `
+                                    <table class="protocol-table">
+                                        <thead>
+                                            <tr>
+                                                <th>EXERCÍCIO</th>
+                                                <th>SÉRIE</th>
+                                                <th>REPETIÇÕES</th>
+                                                <th>TEMPO DE DESCANSO</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                `;
+                                
+                                exercises.forEach(exercise => {
+                                    const exerciseName = exercise.name || 'Exercício sem nome';
+                                    const sets = exercise.sets || 'N/A';
+                                    const reps = exercise.reps || 'N/A';
+                                    const rest = exercise.rest || 'N/A';
+                                    
+                                    html += `
+                                        <tr>
+                                            <td>${exerciseName}</td>
+                                            <td>${sets}</td>
+                                            <td>${reps}</td>
+                                            <td>${rest}s</td>
+                                        </tr>
+                                    `;
+                                });
+                                
+                                html += `
+                                        </tbody>
+                                    </table>
+                                `;
+                                
+                                // Add observations if any exist
+                                const exercisesWithNotes = exercises.filter(ex => ex.notes || ex.observations);
+                                if (exercisesWithNotes.length > 0) {
+                                    html += `
+                                        <h6>Observações:</h6>
+                                        <div class="protocol-item">
+                                    `;
+                                    exercisesWithNotes.forEach(exercise => {
+                                        const notes = exercise.notes || exercise.observations || '';
+                                        if (notes) {
+                                            html += `
+                                                <div class="protocol-item">
+                                                    <span class="protocol-label">${exercise.name}:</span>
+                                                    <span class="protocol-value">${notes}</span>
+                                                </div>
+                                            `;
+                                        }
+                                    });
+                                    html += `</div>`;
+                                }
+                            } else {
+                                html += `<p>Nenhum exercício encontrado para este dia.</p>`;
+                            }
+                            
+                            html += `</div>`;
+                        });
+                    } else {
+                        html += `<p>Nenhum dia de treino encontrado. Estrutura: ${JSON.stringify(workout).substring(0, 200)}...</p>`;
+                    }
+                    
+                    html += `</div>`;
+                });
+                
+                html += `</div>`;
+            } else {
+                html += `
+                    <div class="protocol-section">
+                        <h2>💪 PLANO DE TREINO</h2>
+                        <p>Nenhum treino atribuído a este aluno.</p>
+                    </div>
+                `;
+            }
+
+            // Add footer
+            html += `
+                <div class="protocol-section">
+                    <p style="text-align: center; font-style: italic; color: #666;">
+                        Protocolo gerado em ${currentDate} pelo sistema GurgelTrack
+                    </p>
+                </div>
+            `;
+
+            return html;
+        }
+
+        // Helper functions
+        function getObjectiveLabel(objective) {
+            const objectives = {
+                'hipertrofia': 'Hipertrofia',
+                'emagrecimento': 'Emagrecimento',
+                'resistencia': 'Resistência',
+                'saude': 'Saúde'
+            };
+            return objectives[objective] || objective || 'Não informado';
+        }
+
+        function getActivityLabel(factor) {
+            const activities = {
+                1.2: 'Sedentário',
+                1.375: 'Levemente Ativo',
+                1.55: 'Moderadamente Ativo',
+                1.725: 'Muito Ativo',
+                1.9: 'Extremamente Ativo'
+            };
+            return activities[factor] || factor;
+        }
+
+        function getGoalLabel(goal) {
+            const goals = {
+                'maintain': 'Manter Peso',
+                'cutting': 'Perder Peso',
+                'bulking': 'Ganhar Massa'
+            };
+            return goals[goal] || goal || 'Não informado';
+        }
+
+        function getDietData(dietId) {
+            // Try multiple possible storage keys
+            let diets = [];
+            
+            // Try savedDiets first
+            try {
+                diets = JSON.parse(localStorage.getItem('savedDiets') || '[]');
+            } catch (e) {
+                console.log('Error loading savedDiets:', e);
+            }
+            
+            // If not found, try diets
+            if (diets.length === 0) {
+                try {
+                    diets = JSON.parse(localStorage.getItem('diets') || '[]');
+                } catch (e) {
+                    console.log('Error loading diets:', e);
+                }
+            }
+            
+            // If still not found, try mealPlans
+            if (diets.length === 0) {
+                try {
+                    diets = JSON.parse(localStorage.getItem('mealPlans') || '[]');
+                } catch (e) {
+                    console.log('Error loading mealPlans:', e);
+                }
+            }
+            
+            return diets.find(d => d.id === dietId);
+        }
+
+        function getWorkoutData(workoutId) {
+            // Try multiple possible storage keys
+            let workouts = [];
+            
+            // Try workoutFichas first
+            try {
+                workouts = JSON.parse(localStorage.getItem('workoutFichas') || '[]');
+            } catch (e) {
+                console.log('Error loading workoutFichas:', e);
+            }
+            
+            // If not found, try workouts
+            if (workouts.length === 0) {
+                try {
+                    workouts = JSON.parse(localStorage.getItem('workouts') || '[]');
+                } catch (e) {
+                    console.log('Error loading workouts:', e);
+                }
+            }
+            
+            // If still not found, try trainingPlans
+            if (workouts.length === 0) {
+                try {
+                    workouts = JSON.parse(localStorage.getItem('trainingPlans') || '[]');
+                } catch (e) {
+                    console.log('Error loading trainingPlans:', e);
+                }
+            }
+            
+            return workouts.find(w => w.id === workoutId);
+        }
+
+        function getCalculationData(calcId) {
+            // Try multiple possible storage keys
+            let calculations = [];
+            
+            // Try savedCalculations first
+            try {
+                calculations = JSON.parse(localStorage.getItem('savedCalculations') || '[]');
+            } catch (e) {
+                console.log('Error loading savedCalculations:', e);
+            }
+            
+            // If not found, try calculations
+            if (calculations.length === 0) {
+                try {
+                    calculations = JSON.parse(localStorage.getItem('calculations') || '[]');
+                } catch (e) {
+                    console.log('Error loading calculations:', e);
+                }
+            }
+            
+            // If still not found, try tmbCalculations
+            if (calculations.length === 0) {
+                try {
+                    calculations = JSON.parse(localStorage.getItem('tmbCalculations') || '[]');
+                } catch (e) {
+                    console.log('Error loading tmbCalculations:', e);
+                }
+            }
+            
+            return calculations.find(c => c.id === calcId);
+        }
+    </script>
+</body>
+</html>

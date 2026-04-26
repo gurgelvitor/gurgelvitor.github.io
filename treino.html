@@ -1,0 +1,2303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Treino - GurgelTrack</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Cores do Tema Claro - Vermelho */
+            --bg-primary: #fff5f5;
+            --bg-secondary: #ffffff;
+            --bg-sidebar: #8b0000;
+            --bg-sidebar-hover: #a52a2a;
+            --accent: #dc143c;
+            --accent-hover: #b91c1c;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-sidebar: #ffffff;
+            --border: #ffcccc;
+            --shadow: 0 4px 12px rgba(220, 20, 60, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode {
+            /* Cores do Tema Escuro - Melhoradas */
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1e1e1e;
+            --bg-sidebar: #1a1a2e;
+            --bg-sidebar-hover: #25253d;
+            --accent: #e91e63;
+            --accent-hover: #f06292;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b8b8b8;
+            --text-sidebar: #ffffff;
+            --border: #333333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            color: var(--text-sidebar);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-sidebar);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-header p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .nav-menu {
+            padding: 1.5rem 0;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: var(--text-sidebar);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-sidebar-hover);
+            border-left-color: var(--accent);
+            color: var(--text-sidebar);
+        }
+
+        .nav-item.active {
+            background: var(--bg-sidebar-hover);
+            border-left-color: var(--accent);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            flex: 1;
+            margin-left: 280px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-header {
+            background: var(--bg-secondary);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .main-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .main-header p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Workout Sections */
+        .workout-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .section-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-success,
+        .btn-primary {
+            white-space: nowrap;
+            font-size: 0.9rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .btn-success:hover,
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        /* Mobile styles for section buttons */
+        @media (max-width: 768px) {
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+                text-align: center;
+                order: -1;
+            }
+            
+            .section-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                width: 100%;
+            }
+            
+            .btn-success,
+            .btn-primary {
+                width: 100%;
+                padding: 1rem;
+                font-size: 1rem;
+                font-weight: 500;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .section-title {
+                font-size: 1.2rem;
+            }
+            
+            .btn-success,
+            .btn-primary {
+                padding: 0.875rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Ficha Cards */
+        .fichas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .ficha-card {
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .ficha-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.15);
+            border-color: var(--accent);
+        }
+
+        .ficha-card.active {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(41, 128, 185, 0.05));
+        }
+
+        .ficha-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .ficha-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .ficha-info {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .ficha-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            background: var(--accent);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon:hover {
+            background: var(--accent-hover);
+            transform: scale(1.1);
+        }
+
+        .btn-icon.delete {
+            background: #e74c3c;
+        }
+
+        .btn-icon.delete:hover {
+            background: #c0392b;
+        }
+
+        /* Days Section */
+        .days-container {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .days-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .days-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .day-card {
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .day-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+            border-radius: 16px 16px 0 0;
+        }
+
+        .day-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(52, 152, 219, 0.15);
+            border-color: var(--accent);
+        }
+
+        .day-card:hover::before {
+            height: 6px;
+            background: linear-gradient(90deg, var(--accent-hover), var(--accent));
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .day-title-section {
+            flex: 1;
+        }
+
+        .day-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .day-title i {
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .day-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .day-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .day-stats {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--bg-primary), rgba(52, 152, 219, 0.05));
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            min-width: 150px;
+        }
+
+        .stat-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+            border-color: var(--accent);
+        }
+
+        .stat-item i {
+            color: var(--accent);
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Exercises Section */
+        .exercises-container {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--border);
+        }
+
+        .exercises-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, var(--bg-primary), rgba(52, 152, 219, 0.05));
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .exercises-header-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .exercises-header-title i {
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        .exercises-count {
+            background: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .empty-exercises {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            background: linear-gradient(135deg, var(--bg-primary), rgba(52, 152, 219, 0.02));
+            border-radius: 12px;
+            border: 2px dashed var(--border);
+            transition: var(--transition);
+        }
+
+        .empty-exercises:hover {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, var(--bg-primary), rgba(52, 152, 219, 0.05));
+        }
+
+        .empty-exercises i {
+            color: var(--accent);
+            font-size: 2.5rem;
+            opacity: 0.7;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-exercises-text {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .empty-exercises-hint {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .exercise-item {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .exercise-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .exercise-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent);
+        }
+
+        .exercise-item:hover::before {
+            opacity: 1;
+        }
+
+        .exercise-info {
+            flex: 1;
+        }
+
+        .exercise-name {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .exercise-details {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .exercise-actions {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #229954, #1e8449);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--text-secondary);
+        }
+
+        .btn-secondary:hover {
+            background: #6c757d;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Footer */
+        .main-footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .layout-container {
+                overflow-x: hidden;
+            }
+            
+            .main-wrapper {
+                margin-left: 0;
+                width: 100%;
+                min-height: 100vh;
+            }
+            
+            .main-content {
+                padding: 1rem;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                z-index: 1001;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 1002;
+                background: var(--accent);
+                color: white;
+                border: none;
+                padding: 0.75rem;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1.25rem;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            }
+            
+            .main-header {
+                padding: 1rem;
+                margin-top: 3rem;
+                text-align: center;
+            }
+            
+            .main-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .main-header p {
+                font-size: 0.9rem;
+            }
+            
+            .page-header {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .content-section {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+                border-radius: 12px;
+            }
+            
+            .content-section h2 {
+                font-size: 1.3rem;
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .fichas-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .ficha-card {
+                padding: 1.5rem;
+                border-radius: 12px;
+                text-align: center;
+                transition: var(--transition);
+            }
+            
+            .ficha-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
+
+            .ficha-header {
+                flex-direction: column;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+                text-align: center;
+            }
+
+            .ficha-title {
+                font-size: 1.3rem;
+            }
+
+            .ficha-meta {
+                font-size: 0.9rem;
+            }
+
+            .ficha-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 0.875rem;
+                font-size: 0.95rem;
+                border-radius: 8px;
+                font-weight: 500;
+                transition: var(--transition);
+            }
+
+            .btn-primary {
+                background: var(--accent);
+                color: white;
+                border: none;
+            }
+
+            .btn-secondary {
+                background: var(--bg-primary);
+                color: var(--text-primary);
+                border: 1px solid var(--border);
+            }
+
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+
+            .days-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .day-card {
+                padding: 1.25rem;
+                border-radius: 12px;
+                text-align: center;
+            }
+
+            .day-header {
+                flex-direction: column;
+                gap: 0.75rem;
+                margin-bottom: 1rem;
+                text-align: center;
+            }
+
+            .day-title {
+                font-size: 1.2rem;
+            }
+
+            .day-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .exercises-list {
+                gap: 0.75rem;
+            }
+
+            .exercise-item {
+                padding: 1rem;
+                border-radius: 8px;
+                text-align: center;
+            }
+
+            .exercise-info {
+                text-align: center;
+            }
+
+            .exercise-name {
+                font-size: 1rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .exercise-details {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
+            }
+
+            .exercise-sets,
+            .exercise-reps,
+            .exercise-weight {
+                font-size: 0.9rem;
+            }
+
+            .exercise-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+
+            .btn-remove-exercise {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .form-group {
+                margin-bottom: 1.5rem;
+            }
+
+            .form-group label {
+                font-size: 0.95rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 1rem;
+                padding: 0.875rem;
+                border-radius: 8px;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                max-width: calc(100% - 2rem);
+                border-radius: 12px;
+            }
+
+            .modal-header {
+                padding: 1.5rem;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .modal-header h3 {
+                font-size: 1.2rem;
+            }
+
+            .modal-body {
+                padding: 1.5rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .form-actions .btn {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 0.75rem;
+            }
+            
+            .content-section {
+                padding: 1rem;
+            }
+            
+            .ficha-card {
+                padding: 1rem;
+            }
+            
+            .ficha-title {
+                font-size: 1.1rem;
+            }
+            
+            .ficha-meta {
+                font-size: 0.85rem;
+            }
+            
+            .btn {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+            
+            .day-card {
+                padding: 1rem;
+            }
+            
+            .day-title {
+                font-size: 1.1rem;
+            }
+            
+            .exercise-item {
+                padding: 0.75rem;
+            }
+            
+            .exercise-name {
+                font-size: 0.9rem;
+            }
+            
+            .exercise-details {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-toggle {
+                display: none;
+            }
+        }
+
+        /* Botão de Ajuda */
+        .help-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border: none;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+            transition: var(--transition);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        /* Modal de Ajuda */
+        .help-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .help-modal-content {
+            position: relative;
+            background: var(--bg-secondary);
+            margin: 50px auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            animation: slideIn 0.3s ease;
+        }
+
+        .help-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .help-modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .help-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-close:hover {
+            background: var(--bg-primary);
+            color: var(--accent);
+        }
+
+        .help-section {
+            margin-bottom: 25px;
+        }
+
+        .help-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .help-section-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .help-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .help-step-number {
+            background: var(--accent);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .help-step-text {
+            flex: 1;
+            color: var(--text-secondary);
+        }
+
+        .help-tip {
+            background: var(--bg-primary);
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .help-tip-title {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .help-button {
+                bottom: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .help-modal-content {
+                margin: 20px;
+                padding: 20px;
+                width: calc(100% - 40px);
+            }
+
+            .help-modal-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="logo-gurgel.png" alt="GurgelTrack Logo" class="logo" style="width: 10vw;">
+                <h1>
+                    <i class="fas fa-dumbbell"></i>
+                    GurgelTrack
+                </h1>
+                <p>Sua plataforma fitness</p>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    Início
+                </a>
+                <a href="alunos.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    Alunos
+                </a>
+                <a href="treino.html" class="nav-item active">
+                    <i class="fas fa-dumbbell"></i>
+                    Treino
+                </a>
+                <a href="dieta.html" class="nav-item">
+                    <i class="fas fa-utensils"></i>
+                    Dieta
+                </a>
+                <a href="calculo.html" class="nav-item">
+                    <i class="fas fa-calculator"></i>
+                    Cálculo
+                </a>
+                <a href="carga.html" class="nav-item">
+                    <i class="fas fa-weight"></i>
+                    Anotações
+                </a>
+                <a href="pagamentos.html" class="nav-item">
+                    <i class="fas fa-credit-card"></i>
+                    Pagamentos
+                </a>
+                <a href="agenda.html" class="nav-item">
+                    <i class="fas fa-calendar"></i>
+                    Agenda
+                </a>
+                <button class="nav-item theme-toggle" id="themeToggle" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                    <span id="themeText">Tema Escuro</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <header class="main-header">
+                <h1><i class="fas fa-dumbbell"></i> Criar Treino</h1>
+                <p>Monte suas fichas de treino personalizadas com exercícios, séries e repetições</p>
+            </header>
+
+            <main class="main-content">
+                <!-- Fichas Section -->
+                <section class="workout-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-clipboard-list"></i>
+                            Minhas Fichas de Treino
+                        </h2>
+                        <div class="section-buttons">
+                            <button class="btn btn-success" onclick="openFichaModal()">
+                                <i class="fas fa-plus"></i>
+                                Nova Ficha
+                            </button>
+                            <button class="btn btn-primary" onclick="openAssignStudentModal()">
+                                <i class="fas fa-user-plus"></i>
+                                Atribuir a Aluno
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="fichas-grid" id="fichasGrid">
+                        <!-- Fichas serão inseridas aqui dinamicamente -->
+                    </div>
+                    
+                    <div class="empty-state" id="emptyFichasState">
+                        <i class="fas fa-dumbbell"></i>
+                        <h3>Nenhuma ficha criada ainda</h3>
+                        <p>Comece criando sua primeira ficha de treino personalizada!</p>
+                    </div>
+                </section>
+
+                <!-- Selected Ficha Details -->
+                <section class="workout-section" id="selectedFichaSection" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-calendar-day"></i>
+                            <span id="selectedFichaTitle">Detalhes da Ficha</span>
+                        </h2>
+                        <button class="btn btn-success btn-small" onclick="openDayModal()">
+                            <i class="fas fa-plus"></i>
+                            Novo Dia
+                        </button>
+                    </div>
+                    
+                    <div class="days-container" id="daysContainer">
+                        <!-- Dias de treino serão inseridos aqui -->
+                    </div>
+                </section>
+            </main>
+
+            <footer class="main-footer">
+                <p>© 2026 GurgelTrack - Todos os direitos reservados à Vitor Gurgel</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Ficha Modal -->
+    <div class="modal" id="fichaModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Criar Nova Ficha</h3>
+                <button class="modal-close" onclick="closeFichaModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="fichaForm">
+                <div class="form-group">
+                    <label for="fichaName">Nome da Ficha:</label>
+                    <input type="text" id="fichaName" placeholder="Ex: Ficha A - Hipertrofia" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fichaDescription">Descrição:</label>
+                    <textarea id="fichaDescription" placeholder="Objetivos, nível, etc..."></textarea>
+                </div>
+                
+                                
+                <div class="form-group">
+                    <label for="weeklyFrequency">Frequência Semanal:</label>
+                    <select id="weeklyFrequency" required>
+                        <option value="3">3 dias por semana</option>
+                        <option value="4">4 dias por semana</option>
+                        <option value="5">5 dias por semana</option>
+                        <option value="6">6 dias por semana</option>
+                        <option value="7">7 dias por semana</option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeFichaModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i>
+                        Criar Ficha
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Day Modal -->
+    <div class="modal" id="dayModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Novo Dia de Treino</h3>
+                <button class="modal-close" onclick="closeDayModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="dayForm">
+                <div class="form-group">
+                    <label for="dayName">Nome do Dia:</label>
+                    <input type="text" id="dayName" placeholder="Ex: Peito e Tríceps" required>
+                </div>
+                
+                                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeDayModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i>
+                        Criar Dia
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Exercise Modal -->
+    <div class="modal" id="exerciseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Adicionar Exercício</h3>
+                <button class="modal-close" onclick="closeExerciseModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="exerciseForm">
+                <div class="form-group">
+                    <label for="exerciseName">Nome do Exercício:</label>
+                    <input type="text" id="exerciseName" placeholder="Ex: Supino Reto" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exerciseSets">Séries:</label>
+                        <input type="number" id="exerciseSets" min="1" value="2" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="exerciseReps">Repetições:</label>
+                        <input type="text" id="exerciseReps" value="5-9" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="exerciseRest">Descanso (seg):</label>
+                        <input type="number" id="exerciseRest" min="0" placeholder="60">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="exerciseLoad">Carga:</label>
+                    <input type="text" id="exerciseLoad" placeholder="Ex: 20kg">
+                </div>
+                
+                <div class="form-group">
+                    <label for="exerciseNotes">Observações:</label>
+                    <textarea id="exerciseNotes" placeholder="Técnica, dicas, etc..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeExerciseModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-plus"></i>
+                        Adicionar Exercício
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para Atribuir a Aluno -->
+    <div class="modal" id="assignStudentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Atribuir Treino a Aluno</h3>
+                <button class="modal-close" onclick="closeAssignStudentModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="assignStudentForm">
+                <div class="form-group">
+                    <label for="studentSelect">Selecione o Aluno:</label>
+                    <select id="studentSelect" required>
+                        <option value="">Carregando alunos...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="workoutSelect">Selecione a Ficha de Treino:</label>
+                    <select id="workoutSelect" required>
+                        <option value="">Carregando fichas...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="workoutName">Nome do Treino:</label>
+                    <input type="text" id="workoutName" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="closeAssignStudentModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Atribuir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Data state
+        let fichas = [];
+        let selectedFicha = null;
+        let selectedDay = null;
+
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('workoutFichas');
+            if (saved) {
+                fichas = JSON.parse(saved);
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('workoutFichas', JSON.stringify(fichas));
+        }
+
+        // Initialize
+        function init() {
+            loadData();
+            renderFichas();
+        }
+
+        // Render fichas
+        function renderFichas() {
+            const grid = document.getElementById('fichasGrid');
+            const emptyState = document.getElementById('emptyFichasState');
+            
+            if (fichas.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+            } else {
+                grid.style.display = 'grid';
+                emptyState.style.display = 'none';
+                grid.innerHTML = '';
+                
+                fichas.forEach(ficha => {
+                    const card = createFichaCard(ficha);
+                    grid.appendChild(card);
+                });
+            }
+        }
+
+        // Create ficha card
+        function createFichaCard(ficha) {
+            const card = document.createElement('div');
+            card.className = 'ficha-card';
+            if (selectedFicha && selectedFicha.id === ficha.id) {
+                card.classList.add('active');
+            }
+            
+            card.innerHTML = `
+                <div class="ficha-header">
+                    <div>
+                        <div class="ficha-title">${ficha.name}</div>
+                        <div class="ficha-info">${ficha.weeklyFrequency} dias/semana</div>
+                        <div class="ficha-info">${ficha.days ? ficha.days.length : 0} dias criados</div>
+                    </div>
+                    <div class="ficha-actions">
+                        <button class="btn-icon" onclick="selectFicha('${ficha.id}')" title="Abrir">
+                            <i class="fas fa-folder-open"></i>
+                        </button>
+                        <button class="btn-icon delete" onclick="deleteFicha('${ficha.id}')" title="Excluir">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                ${ficha.description ? `<p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">${ficha.description}</p>` : ''}
+            `;
+            
+            return card;
+        }
+
+        // Select ficha
+        function selectFicha(fichaId) {
+            selectedFicha = fichas.find(f => f.id === fichaId);
+            if (selectedFicha) {
+                renderFichas();
+                renderSelectedFicha();
+            }
+        }
+
+        // Render selected ficha
+        function renderSelectedFicha() {
+            const section = document.getElementById('selectedFichaSection');
+            const title = document.getElementById('selectedFichaTitle');
+            const container = document.getElementById('daysContainer');
+            
+            if (!selectedFicha) {
+                section.style.display = 'none';
+                return;
+            }
+            
+            section.style.display = 'block';
+            title.textContent = selectedFicha.name;
+            
+            if (!selectedFicha.days || selectedFicha.days.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-plus"></i>
+                        <h3>Nenhum dia criado</h3>
+                        <p>Adicione dias de treino à sua ficha</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="days-grid">
+                        ${selectedFicha.days.map(day => createDayCard(day)).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        // Create day card
+        function createDayCard(day) {
+            return `
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-title-section">
+                            <div class="day-title">
+                                <i class="fas fa-calendar-day"></i>
+                                ${day.name}
+                            </div>
+                            <div class="day-subtitle">Dia de treino</div>
+                        </div>
+                        <div class="day-actions">
+                            <button class="btn-icon" onclick="openExerciseModal('${day.id}')" title="Adicionar Exercício">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="btn-icon delete" onclick="deleteDay('${day.id}')" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="day-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-dumbbell"></i>
+                            <span class="stat-value">${day.exercises ? day.exercises.length : 0}</span>
+                            <span class="stat-label">exercícios</span>
+                        </div>
+                    </div>
+                    ${day.exercises && day.exercises.length > 0 ? `
+                        <div class="exercises-container">
+                            <div class="exercises-header">
+                                <div class="exercises-header-title">
+                                    <i class="fas fa-list"></i>
+                                    <span>Exercícios do Dia</span>
+                                </div>
+                                <div class="exercises-count">${day.exercises.length} exercícios</div>
+                            </div>
+                            ${day.exercises.map(exercise => createExerciseItem(exercise)).join('')}
+                        </div>
+                    ` : `
+                        <div class="empty-exercises">
+                            <i class="fas fa-plus-circle"></i>
+                            <div class="empty-exercises-text">Nenhum exercício adicionado</div>
+                            <div class="empty-exercises-hint">Clique no botão + para adicionar exercícios</div>
+                        </div>
+                    `}
+                </div>
+            `;
+        }
+
+        // Create exercise item
+        function createExerciseItem(exercise) {
+            return `
+                <div class="exercise-item">
+                    <div class="exercise-info">
+                        <div class="exercise-name">${exercise.name}</div>
+                        <div class="exercise-details">
+                            ${exercise.sets} séries × ${exercise.reps} reps
+                            ${exercise.rest ? ` | ${exercise.rest}s desc` : ''}
+                            ${exercise.load ? ` | ${exercise.load}` : ''}
+                        </div>
+                    </div>
+                    <div class="exercise-actions">
+                        <button class="btn-icon delete" onclick="deleteExercise('${exercise.id}')" title="Excluir">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Modal functions
+        function openFichaModal() {
+            document.getElementById('fichaModal').classList.add('show');
+        }
+
+        function closeFichaModal() {
+            document.getElementById('fichaModal').classList.remove('show');
+            document.getElementById('fichaForm').reset();
+        }
+
+        function openDayModal() {
+            if (!selectedFicha) {
+                alert('Selecione uma ficha primeiro!');
+                return;
+            }
+            document.getElementById('dayModal').classList.add('show');
+        }
+
+        function closeDayModal() {
+            document.getElementById('dayModal').classList.remove('show');
+            document.getElementById('dayForm').reset();
+        }
+
+        function openExerciseModal(dayId) {
+            selectedDay = dayId;
+            document.getElementById('exerciseModal').classList.add('show');
+        }
+
+        function closeExerciseModal() {
+            document.getElementById('exerciseModal').classList.remove('show');
+            document.getElementById('exerciseForm').reset();
+            selectedDay = null;
+        }
+
+        // Form submissions
+        document.getElementById('fichaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const ficha = {
+                id: Date.now().toString(),
+                name: document.getElementById('fichaName').value,
+                description: document.getElementById('fichaDescription').value,
+                weeklyFrequency: parseInt(document.getElementById('weeklyFrequency').value),
+                createdAt: new Date().toISOString(),
+                days: []
+            };
+            
+            fichas.push(ficha);
+            saveData();
+            renderFichas();
+            closeFichaModal();
+            
+            alert('Ficha criada com sucesso!');
+        });
+
+        document.getElementById('dayForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const day = {
+                id: Date.now().toString(),
+                name: document.getElementById('dayName').value,
+                exercises: []
+            };
+            
+            if (!selectedFicha.days) {
+                selectedFicha.days = [];
+            }
+            selectedFicha.days.push(day);
+            saveData();
+            renderSelectedFicha();
+            closeDayModal();
+            
+            alert('Dia de treino criado com sucesso!');
+        });
+
+        document.getElementById('exerciseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const exercise = {
+                id: Date.now().toString(),
+                name: document.getElementById('exerciseName').value,
+                sets: parseInt(document.getElementById('exerciseSets').value),
+                reps: document.getElementById('exerciseReps').value,
+                rest: document.getElementById('exerciseRest').value,
+                load: document.getElementById('exerciseLoad').value,
+                notes: document.getElementById('exerciseNotes').value
+            };
+            
+            const day = selectedFicha.days.find(d => d.id === selectedDay);
+            if (day) {
+                if (!day.exercises) {
+                    day.exercises = [];
+                }
+                day.exercises.push(exercise);
+                saveData();
+                renderSelectedFicha();
+                closeExerciseModal();
+                
+                alert('Exercício adicionado com sucesso!');
+            }
+        });
+
+        // Delete functions
+        function deleteFicha(fichaId) {
+            if (confirm('Tem certeza que deseja excluir esta ficha?')) {
+                fichas = fichas.filter(f => f.id !== fichaId);
+                if (selectedFicha && selectedFicha.id === fichaId) {
+                    selectedFicha = null;
+                    renderSelectedFicha();
+                }
+                saveData();
+                renderFichas();
+                alert('Ficha excluída com sucesso!');
+            }
+        }
+
+        function deleteDay(dayId) {
+            if (confirm('Tem certeza que deseja excluir este dia de treino?')) {
+                selectedFicha.days = selectedFicha.days.filter(d => d.id !== dayId);
+                saveData();
+                renderSelectedFicha();
+                alert('Dia excluído com sucesso!');
+            }
+        }
+
+        function deleteExercise(exerciseId) {
+            if (confirm('Tem certeza que deseja excluir este exercício?')) {
+                selectedFicha.days.forEach(day => {
+                    if (day.exercises) {
+                        day.exercises = day.exercises.filter(e => e.id !== exerciseId);
+                    }
+                });
+                saveData();
+                renderSelectedFicha();
+                alert('Exercício excluído com sucesso!');
+            }
+        }
+
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+
+        // Active navigation state
+        const currentPath = window.location.pathname;
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        navItems.forEach(item => {
+            const itemPath = item.getAttribute('href');
+            if (currentPath.includes(itemPath) || (currentPath === '/' && itemPath === 'index.html')) {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+            }
+        });
+
+        // Close modals on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeFichaModal();
+                closeDayModal();
+                closeExerciseModal();
+            }
+        });
+
+        // Close modals on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('show');
+                }
+            });
+        });
+
+        // Funções para atribuir a aluno
+        function openAssignStudentModal() {
+            loadStudents();
+            loadFichas();
+            document.getElementById('assignStudentModal').classList.add('show');
+        }
+
+        function closeAssignStudentModal() {
+            document.getElementById('assignStudentModal').classList.remove('show');
+            document.getElementById('assignStudentForm').reset();
+        }
+
+        function loadStudents() {
+            try {
+                const students = JSON.parse(localStorage.getItem('students') || '[]');
+                const studentSelect = document.getElementById('studentSelect');
+                
+                studentSelect.innerHTML = '<option value="">Selecione um aluno...</option>';
+                students.forEach(student => {
+                    const option = document.createElement('option');
+                    option.value = student.id;
+                    option.textContent = student.name;
+                    studentSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar alunos:', error);
+            }
+        }
+
+        function loadFichas() {
+            try {
+                const workoutFichas = JSON.parse(localStorage.getItem('workoutFichas') || '[]');
+                const workoutSelect = document.getElementById('workoutSelect');
+                
+                workoutSelect.innerHTML = '<option value="">Selecione uma ficha...</option>';
+                workoutFichas.forEach(ficha => {
+                    const option = document.createElement('option');
+                    option.value = ficha.id;
+                    option.textContent = ficha.name;
+                    workoutSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar fichas:', error);
+            }
+        }
+
+        // Form submission for assigning workout
+        document.getElementById('assignStudentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            assignWorkoutToStudent();
+        });
+
+        function assignWorkoutToStudent() {
+            const studentId = document.getElementById('studentSelect').value;
+            const workoutId = document.getElementById('workoutSelect').value;
+            const workoutName = document.getElementById('workoutName').value;
+            
+            if (!studentId) {
+                alert('Selecione um aluno!');
+                return;
+            }
+            
+            if (!workoutId) {
+                alert('Selecione uma ficha de treino!');
+                return;
+            }
+            
+            if (!workoutName.trim()) {
+                alert('Digite um nome para o treino!');
+                return;
+            }
+
+            try {
+                // Get workout data
+                const workoutFichas = JSON.parse(localStorage.getItem('workoutFichas') || '[]');
+                const workout = workoutFichas.find(f => f.id === workoutId);
+                
+                if (!workout) {
+                    alert('Ficha de treino não encontrada!');
+                    return;
+                }
+                
+                // Get current assignments
+                const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
+                if (!assignments.workouts) {
+                    assignments.workouts = [];
+                }
+                
+                // Create workout assignment
+                const workoutAssignment = {
+                    id: Date.now().toString(),
+                    studentId: studentId,
+                    name: workoutName,
+                    workout: workout,
+                    assignedAt: new Date().toISOString()
+                };
+                
+                // Add to assignments
+                assignments.workouts.push(workoutAssignment);
+                localStorage.setItem('studentAssignments', JSON.stringify(assignments));
+                
+                alert(`Treino "${workoutName}" atribuído com sucesso ao aluno!`);
+                closeAssignStudentModal();
+                
+            } catch (error) {
+                console.error('Erro ao atribuir treino:', error);
+                alert('Erro ao atribuir treino. Tente novamente.');
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Tema escuro/claro functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const body = document.body;
+
+        // Carregar preferência de tema salva
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                themeText.textContent = 'Tema Claro';
+            }
+        }
+
+        // Alternar tema
+        function toggleTheme() {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                // Mudar para tema escuro
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                themeText.textContent = 'Tema Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                // Mudar para tema claro
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                themeText.textContent = 'Tema Escuro';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Adicionar evento de clique ao botão de tema
+        if (themeToggle) {
+            themeToggle.addEventListener('click', toggleTheme);
+        }
+
+        // Carregar preferência de tema ao iniciar a página
+        document.addEventListener('DOMContentLoaded', loadThemePreference);
+    </script>
+
+    <!-- Botão de Ajuda -->
+    <button class="help-button" onclick="openHelpModal()">?</button>
+
+    <!-- Modal de Ajuda -->
+    <div class="help-modal" id="helpModal">
+        <div class="help-modal-content">
+            <div class="help-modal-header">
+                <h3 class="help-modal-title">
+                    <i class="fas fa-question-circle"></i>
+                    Ajuda - Montador de Treinos
+                </h3>
+                <button class="help-close" onclick="closeHelpModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-play-circle"></i>
+                    Como Começar
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Clique em "Adicionar Dia de Treino" para criar um novo dia</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Dê um nome para o dia (ex: "Segunda - Peito")</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Adicione exercícios clicando em "Adicionar Exercício"</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">Configure séries, repetições e cargas para cada exercício</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-dumbbell"></i>
+                    Adicionando Exercícios
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Use o campo de busca para encontrar exercícios</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Selecione o exercício desejado na lista</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Defina séries, repetições, carga e intervalo</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">Clique em "Adicionar" para incluir no treino</div>
+                    </div>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">💡 Dica Profissional</div>
+                        <div>Organize os exercícios por músculos trabalhados para melhor fluxo do treino</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-chart-line"></i>
+                    Estrutura do Treino
+                </h4>
+                <div class="help-section-content">
+                    <p><strong>Dias de Treino:</strong> Organize por grupos musculares ou objetivos</p>
+                    <p><strong>Ordem dos Exercícios:</strong> Comece com exercícios compostos</p>
+                    <p><strong>Progressão:</strong> Aumente gradualmente a carga e volume</p>
+                    
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Exercícios grandes (agachamento, supino)</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Exercícios isolados (rosca, elevação lateral)</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Exercícios de estabilização (prancha, abdominal)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-user-plus"></i>
+                    Atribuição a Alunos
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Clique em "Atribuir a Aluno" após finalizar o treino</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Selecione o aluno na lista</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Dê um nome para a ficha de treino</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">O treino ficará disponível para o aluno</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-print"></i>
+                    Funções Adicionais
+                </h4>
+                <div class="help-section-content">
+                    <p><strong>Imprimir Ficha:</strong> Gera versão para impressão com todos os detalhes</p>
+                    <p><strong>Salvar Treino:</strong> Armazena para uso futuro</p>
+                    <p><strong>Duplicar Dia:</strong> Cria cópia de um dia existente</p>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">🎯 Organização</div>
+                        <div>Use nomes descritivos para facilitar a identificação posterior</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Dicas de Montagem
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-tip">
+                        <div class="help-tip-title">⚖️ Equilíbrio Muscular</div>
+                        <div>Trabalhe grupos musculares antagonistas para evitar desequilíbrios</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">🔄 Variedade</div>
+                        <div>Altere exercícios periodicamente para evitar adaptações</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">⏱️ Descanso</div>
+                        <div>Respeite os intervalos para melhor recuperação e performance</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funções do Modal de Ajuda
+        function openHelpModal() {
+            document.getElementById('helpModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Impede scroll do fundo
+        }
+
+        function closeHelpModal() {
+            document.getElementById('helpModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restaura scroll
+        }
+
+        // Fechar modal clicando fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('helpModal');
+            if (event.target === modal) {
+                closeHelpModal();
+            }
+        }
+
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeHelpModal();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Cargas - GurgelTrack</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            /* Cores do Tema Claro - Vermelho */
+            --bg-primary: #fff5f5;
+            --bg-secondary: #ffffff;
+            --bg-sidebar: #8b0000;
+            --bg-sidebar-hover: #a52a2a;
+            --accent: #dc143c;
+            --accent-hover: #b91c1c;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-sidebar: #ffffff;
+            --border: #ffcccc;
+            --shadow: 0 4px 12px rgba(220, 20, 60, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode {
+            /* Cores do Tema Escuro - Melhoradas */
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1e1e1e;
+            --bg-sidebar: #1a1a2e;
+            --bg-sidebar-hover: #25253d;
+            --accent: #e91e63;
+            --accent-hover: #f06292;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b8b8b8;
+            --text-sidebar: #ffffff;
+            --border: #333333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            color: var(--text-sidebar);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-sidebar);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-header p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .nav-menu {
+            padding: 1.5rem 0;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: var(--text-sidebar);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-sidebar-hover);
+            border-left-color: var(--accent);
+            color: var(--text-sidebar);
+        }
+
+        .nav-item.active {
+            background: var(--bg-sidebar-hover);
+            border-left-color: var(--accent);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            flex: 1;
+            margin-left: 280px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-header {
+            background: var(--bg-secondary);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .main-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .main-header p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Workout Selection */
+        .workout-selector {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .selector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .selector-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .form-group select:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        /* Load Tracking Sections - Otimizadas */
+        .load-section {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Abas Colapsáveis */
+        .day-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .day-tab {
+            padding: 0.5rem 1rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px 6px 0 0;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .day-tab:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .day-tab.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .day-content {
+            display: none;
+        }
+
+        .day-content.active {
+            display: block;
+        }
+
+        /* Grid de Exercícios - Responsivo e Sem Overflow */
+        .exercises-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 0.75rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Exercise Load Cards - Compactos e Sem Overflow */
+        .exercise-load-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem;
+            transition: var(--transition);
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .exercise-load-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+            border-color: var(--accent);
+        }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .exercise-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .exercise-info {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        /* Accordion de Semanas - Sem Overflow */
+        .week-accordion {
+            margin-bottom: 0.4rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.4rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .week-header:hover {
+            background: var(--bg-primary);
+            border-color: var(--accent);
+        }
+
+        .week-title {
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .week-toggle {
+            font-size: 0.75rem;
+            transition: var(--transition);
+            margin-left: 0.5rem;
+        }
+
+        .week-content {
+            display: none;
+            padding: 0.4rem;
+            border-left: 2px solid var(--accent);
+            margin-left: 0.4rem;
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .week-content.expanded {
+            display: block;
+        }
+
+        /* Series Container - Compacto e Sem Overflow */
+        .series-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .serie-item {
+            display: grid;
+            grid-template-columns: 45px 1fr 1fr auto;
+            gap: 0.4rem;
+            align-items: center;
+            padding: 0.4rem;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            width: 100%;
+            box-sizing: border-box;
+            min-width: 0;
+        }
+
+        .serie-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+
+        .serie-input {
+            padding: 0.35rem;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.75rem;
+            transition: var(--transition);
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+        .serie-input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .serie-input::placeholder {
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+
+        /* Ações Compactas */
+        .exercise-actions {
+            display: flex;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .week-actions {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        /* Busca de Exercícios */
+        .search-section {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        /* Buttons - Melhorados */
+        .btn {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
+            border: none;
+            padding: 0.875rem 1.75rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 8px rgba(220, 20, 60, 0.2);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(220, 20, 60, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.2);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #229954, #1e8449);
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-success:active {
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--text-secondary), #6c757d);
+            box-shadow: 0 2px 8px rgba(108, 117, 125, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+        }
+
+        .btn-small {
+            padding: 0.625rem 1.25rem;
+            font-size: 0.875rem;
+            border-radius: 10px;
+            min-height: 44px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-icon {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(220, 20, 60, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-icon:hover::before {
+            left: 100%;
+        }
+
+        .btn-icon:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(220, 20, 60, 0.4);
+        }
+
+        .btn-icon:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 8px rgba(220, 20, 60, 0.3);
+        }
+
+        .btn-icon.delete {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.2);
+        }
+
+        .btn-icon.delete:hover {
+            background: linear-gradient(135deg, #c0392b, #a02d2a);
+            box-shadow: 0 4px 16px rgba(231, 76, 60, 0.4);
+        }
+
+        .btn-icon.delete:active {
+            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Footer */
+        .main-footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive - Otimizado para Mobile */
+        @media (max-width: 768px) {
+            .layout-container {
+                overflow-x: hidden;
+            }
+            
+            .main-wrapper {
+                margin-left: 0;
+                width: 100%;
+                min-height: 100vh;
+            }
+            
+            .main-content {
+                padding: 1rem;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                z-index: 1001;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 1002;
+                background: var(--accent);
+                color: white;
+                border: none;
+                padding: 0.75rem;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1.1rem;
+                box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+            }
+            
+            .main-header {
+                padding: 1.5rem 1rem;
+                margin-top: 3.5rem;
+                text-align: center;
+            }
+            
+            .main-header h1 {
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
+                line-height: 1.2;
+            }
+            
+            .main-header p {
+                font-size: 0.9rem;
+                line-height: 1.4;
+            }
+            
+            .workout-selector {
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .search-section {
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .search-input {
+                padding: 0.75rem;
+                font-size: 1rem;
+                border-radius: 6px;
+            }
+            
+            .load-section {
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .section-header {
+                margin-bottom: 1rem;
+                padding-bottom: 0.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+                line-height: 1.3;
+            }
+            
+            .day-tabs {
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            .day-tab {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+                border-radius: 8px;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .exercises-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .exercise-load-card {
+                padding: 1rem;
+                border-radius: 12px;
+            }
+            
+            .exercise-header {
+                margin-bottom: 1rem;
+                padding-bottom: 0.75rem;
+                gap: 0.75rem;
+            }
+            
+            .exercise-name {
+                font-size: 1rem;
+                line-height: 1.3;
+            }
+            
+            .exercise-info {
+                font-size: 0.8rem;
+                line-height: 1.3;
+            }
+            
+            .week-header {
+                padding: 0.75rem;
+                border-radius: 8px;
+                min-height: 48px;
+            }
+            
+            .week-title {
+                font-size: 0.9rem;
+                line-height: 1.3;
+            }
+            
+            .week-content {
+                padding: 0.75rem;
+                border-radius: 8px;
+            }
+            
+            .series-container {
+                gap: 0.75rem;
+            }
+            
+            .serie-item {
+                grid-template-columns: 50px 1fr 1fr auto;
+                padding: 0.75rem;
+                gap: 0.75rem;
+                border-radius: 8px;
+                min-height: 50px;
+            }
+            
+            .serie-label {
+                font-size: 0.85rem;
+                font-weight: 600;
+            }
+            
+            .serie-input {
+                padding: 0.6rem;
+                font-size: 0.9rem;
+                border-radius: 6px;
+                min-height: 40px;
+            }
+            
+            .exercise-actions {
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+            
+            .btn-small {
+                padding: 0.875rem 1.25rem;
+                font-size: 1rem;
+                border-radius: 12px;
+                min-height: 52px;
+                font-weight: 600;
+                box-shadow: 0 3px 12px rgba(220, 20, 60, 0.3);
+            }
+            
+            .btn-small:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(220, 20, 60, 0.5);
+            }
+            
+            .btn-small:active {
+                transform: translateY(0);
+                box-shadow: 0 2px 8px rgba(220, 20, 60, 0.3);
+            }
+            
+            .btn-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 1rem;
+                border-radius: 12px;
+                box-shadow: 0 3px 12px rgba(220, 20, 60, 0.3);
+            }
+            
+            .btn-icon:hover {
+                transform: scale(1.1);
+                box-shadow: 0 6px 20px rgba(220, 20, 60, 0.5);
+            }
+            
+            .btn-icon.delete {
+                box-shadow: 0 3px 12px rgba(231, 76, 60, 0.3);
+            }
+            
+            .btn-icon.delete:hover {
+                box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+            }
+        }
+
+        /* Weight Tracking Styles */
+        .weight-input-container {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .weight-form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .chart-container {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+            height: 400px;
+            position: relative;
+        }
+
+        #weightChart {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .weight-records-container {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .records-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 8px;
+        }
+
+        .weight-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .weight-table th,
+        .weight-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .weight-table th {
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .weight-table tr:hover {
+            background: var(--bg-primary);
+        }
+
+        .weight-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+        }
+
+        .btn-delete:hover {
+            background: linear-gradient(135deg, #c0392b, #a02d2a);
+            transform: translateY(-1px);
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        .btn-edit:hover {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            transform: translateY(-1px);
+        }
+
+        .weight-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .weight-form-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .chart-container {
+                height: 300px;
+                padding: 1rem;
+            }
+
+            .weight-records-container {
+                padding: 1rem;
+            }
+
+            .table-responsive {
+                font-size: 0.85rem;
+            }
+
+            .weight-table th,
+            .weight-table td {
+                padding: 8px 10px;
+            }
+
+            .weight-actions {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .btn-edit,
+            .btn-delete {
+                width: 100%;
+                padding: 8px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-toggle {
+                display: none;
+            }
+        }
+
+        /* Botão de Ajuda */
+        .help-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border: none;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+            transition: var(--transition);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        /* Modal de Ajuda */
+        .help-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .help-modal-content {
+            position: relative;
+            background: var(--bg-secondary);
+            margin: 50px auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            animation: slideIn 0.3s ease;
+        }
+
+        .help-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .help-modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .help-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-close:hover {
+            background: var(--bg-primary);
+            color: var(--accent);
+        }
+
+        .help-section {
+            margin-bottom: 25px;
+        }
+
+        .help-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .help-section-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .help-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .help-step-number {
+            background: var(--accent);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .help-step-text {
+            flex: 1;
+            color: var(--text-secondary);
+        }
+
+        .help-tip {
+            background: var(--bg-primary);
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .help-tip-title {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .help-button {
+                bottom: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .help-modal-content {
+                margin: 20px;
+                padding: 20px;
+                width: calc(100% - 40px);
+            }
+
+            .help-modal-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="logo-gurgel.png" alt="GurgelTrack Logo" class="logo" style="width: 10vw;">
+                <h1>
+                    <i class="fas fa-dumbbell"></i>
+                    GurgelTrack
+                </h1>
+                <p>Sua plataforma fitness</p>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    Início
+                </a>
+                <a href="alunos.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    Alunos
+                </a>
+                <a href="treino.html" class="nav-item">
+                    <i class="fas fa-dumbbell"></i>
+                    Treino
+                </a>
+                <a href="dieta.html" class="nav-item">
+                    <i class="fas fa-utensils"></i>
+                    Dieta
+                </a>
+                <a href="calculo.html" class="nav-item">
+                    <i class="fas fa-calculator"></i>
+                    Cálculo
+                </a>
+                <a href="carga.html" class="nav-item active">
+                    <i class="fas fa-weight"></i>
+                    Anotações
+                </a>
+                <a href="pagamentos.html" class="nav-item">
+                    <i class="fas fa-credit-card"></i>
+                    Pagamentos
+                </a>
+                <a href="agenda.html" class="nav-item">
+                    <i class="fas fa-calendar"></i>
+                    Agenda
+                </a>
+                <button class="nav-item theme-toggle" id="themeToggle" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                    <span id="themeText">Tema Escuro</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <header class="main-header">
+                <h1><i class="fas fa-weight"></i> Registro de Cargas e Peso</h1>
+                <p>Acompanhe sua progressão de cargas ao longo do tempo</p>
+            </header>
+
+            <main class="main-content">
+                <!-- Workout Selector -->
+                <section class="workout-selector">
+                    <div class="selector-header">
+                        <h2 class="selector-title">
+                            <i class="fas fa-clipboard-list"></i>
+                            Selecionar Treino
+                        </h2>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="workoutSelect">Escolha o Treino:</label>
+                        <select id="workoutSelect" onchange="loadWorkout()">
+                            <option value="">Selecione um treino...</option>
+                        </select>
+                    </div>
+                </section>
+
+                <!-- Busca de Exercícios -->
+                <section class="search-section" id="searchSection" style="display: none;">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar exercício..." onkeyup="filterExercises()">
+                </section>
+
+                <!-- Load Tracking Section -->
+                <section class="load-section" id="loadSection" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-chart-line"></i>
+                            <span id="workoutTitle">Progressão de Cargas</span>
+                        </h2>
+                        <button class="btn btn-success btn-small" onclick="saveAllLoads()">
+                            <i class="fas fa-save"></i>
+                            Salvar
+                        </button>
+                    </div>
+                    
+                    <!-- Abas dos Dias de Treino -->
+                    <div class="day-tabs" id="dayTabs">
+                        <!-- Abas serão inseridas dinamicamente -->
+                    </div>
+                    
+                    <!-- Conteúdo dos Dias -->
+                    <div id="loadContainer">
+                        <!-- Conteúdo dinâmico será inserido aqui -->
+                    </div>
+                </section>
+
+                <!-- Weight Tracking Section -->
+                <section class="load-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-weight"></i>
+                            Acompanhamento de Peso
+                        </h2>
+                                            </div>
+                    
+                    <!-- Weight Input Form -->
+                    <div class="weight-input-container">
+                        <div class="weight-form-grid">
+                            <div class="form-group">
+                                <label for="weightDate">Data:</label>
+                                <input type="date" id="weightDate" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="weightValue">Peso (kg):</label>
+                                <input type="number" id="weightValue" class="form-control" step="0.1" placeholder="Ex: 70.5">
+                            </div>
+                            <div class="form-group">
+                                <label for="kcalValue">KCAL/dia:</label>
+                                <input type="number" id="kcalValue" class="form-control" step="10" placeholder="Ex: 2500">
+                            </div>
+                        </div>
+                        <button class="btn" onclick="addWeightRecord()">
+                            <i class="fas fa-plus"></i>
+                            Adicionar Registro
+                        </button>
+                    </div>
+                    
+                    <!-- Weight Evolution Chart -->
+                    <div class="chart-container">
+                        <canvas id="weightChart"></canvas>
+                    </div>
+                    
+                    <!-- Weight Records Table -->
+                    <div class="weight-records-container">
+                        <h3 class="records-title">
+                            <i class="fas fa-list"></i>
+                            Histórico de Registros
+                        </h3>
+                        <div class="table-responsive">
+                            <table class="weight-table">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Peso (kg)</th>
+                                        <th>KCAL/dia</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="weightRecordsBody">
+                                    <!-- Records will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="emptyState">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>Nenhum treino selecionado</h3>
+                    <p>Selecione um treino acima para começar a registrar suas cargas</p>
+                </div>
+            </main>
+
+            <footer class="main-footer">
+                <p>© 2026 GurgelTrack - Todos os direitos reservados à Vitor Gurgel</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Data state
+        let selectedWorkout = null;
+        let workoutLoads = {};
+
+        // Load data from localStorage
+        function loadData() {
+            // Carregar treinos
+            const savedWorkouts = localStorage.getItem('workoutFichas');
+            if (savedWorkouts) {
+                const workouts = JSON.parse(savedWorkouts);
+                populateWorkoutSelect(workouts);
+            }
+            
+            // Carregar cargas salvas
+            const savedLoads = localStorage.getItem('workoutLoads');
+            if (savedLoads) {
+                workoutLoads = JSON.parse(savedLoads);
+            }
+        }
+
+        // Populate workout select
+        function populateWorkoutSelect(workouts) {
+            const select = document.getElementById('workoutSelect');
+            select.innerHTML = '<option value="">Selecione um treino...</option>';
+            
+            workouts.forEach(workout => {
+                const option = document.createElement('option');
+                option.value = workout.id;
+                option.textContent = workout.name;
+                select.appendChild(option);
+            });
+        }
+
+        // Load selected workout
+        function loadWorkout() {
+            const workoutId = document.getElementById('workoutSelect').value;
+            
+            if (!workoutId) {
+                selectedWorkout = null;
+                document.getElementById('loadSection').style.display = 'none';
+                document.getElementById('searchSection').style.display = 'none';
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+            
+            // Buscar treino no localStorage
+            const workouts = JSON.parse(localStorage.getItem('workoutFichas') || '[]');
+            selectedWorkout = workouts.find(w => w.id === workoutId);
+            
+            if (selectedWorkout) {
+                document.getElementById('workoutTitle').textContent = `Progressão de Cargas - ${selectedWorkout.name}`;
+                document.getElementById('loadSection').style.display = 'block';
+                document.getElementById('searchSection').style.display = 'block';
+                document.getElementById('emptyState').style.display = 'none';
+                renderLoadTracking();
+            }
+        }
+
+        // Render load tracking interface com abas
+        function renderLoadTracking() {
+            const tabsContainer = document.getElementById('dayTabs');
+            const contentContainer = document.getElementById('loadContainer');
+            
+            if (!selectedWorkout || !selectedWorkout.days || selectedWorkout.days.length === 0) {
+                contentContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times"></i>
+                        <h3>Este treino não possui dias</h3>
+                        <p>Adicione dias de treino na página de treinos primeiro</p>
+                    </div>
+                `;
+                tabsContainer.innerHTML = '';
+                return;
+            }
+            
+            // Criar abas
+            let tabsHtml = '';
+            let contentHtml = '';
+            
+            selectedWorkout.days.forEach((day, index) => {
+                const isActive = index === 0 ? 'active' : '';
+                const isActiveContent = index === 0 ? 'active' : '';
+                
+                tabsHtml += `
+                    <div class="day-tab ${isActive}" onclick="switchDay('${day.id}')">
+                        <i class="fas fa-calendar-day"></i>
+                        ${day.name}
+                    </div>
+                `;
+                
+                contentHtml += `
+                    <div class="day-content ${isActiveContent}" id="day_${day.id}">
+                        <div class="exercises-grid">
+                            ${renderDayExercises(day)}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            tabsContainer.innerHTML = tabsHtml;
+            contentContainer.innerHTML = contentHtml;
+        }
+        
+        // Render exercises de um dia específico
+        function renderDayExercises(day) {
+            if (!day.exercises || day.exercises.length === 0) {
+                return `
+                    <div class="empty-state">
+                        <i class="fas fa-dumbbell"></i>
+                        <p>Nenhum exercício neste dia</p>
+                    </div>
+                `;
+            }
+            
+            return day.exercises.map(exercise => createExerciseLoadCard(day.id, exercise)).join('');
+        }
+        
+        // Alternar entre abas de dias
+        function switchDay(dayId) {
+            // Remover classe active de todas as abas e conteúdos
+            document.querySelectorAll('.day-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.day-content').forEach(content => content.classList.remove('active'));
+            
+            // Adicionar classe active à aba e conteúdo selecionados
+            event.target.classList.add('active');
+            document.getElementById(`day_${dayId}`).classList.add('active');
+        }
+
+        // Create exercise load card com accordion
+        function createExerciseLoadCard(dayId, exercise) {
+            const exerciseId = `${dayId}_${exercise.id}`;
+            const loads = workoutLoads[exerciseId] || { weeks: [{ series: [{ load: '', reps: '' }] }] };
+            
+            return `
+                <div class="exercise-load-card" data-exercise-id="${exerciseId}">
+                    <div class="exercise-header">
+                        <div class="exercise-name">
+                            <i class="fas fa-dumbbell"></i>
+                            ${exercise.name}
+                        </div>
+                        <div class="exercise-info">
+                            ${exercise.sets} séries × ${exercise.reps} reps
+                            ${exercise.rest ? ` | ${exercise.rest}s desc` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="weeks-accordion" id="weeks_${exerciseId}">
+                        ${renderWeeksAccordion(exerciseId, loads)}
+                    </div>
+                    
+                    <div class="exercise-actions">
+                        <button class="btn btn-success btn-small" onclick="event.stopPropagation(); addWeek('${exerciseId}')">
+                            <i class="fas fa-plus"></i>
+                            Semana
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render weeks como accordion
+        function renderWeeksAccordion(exerciseId, loads) {
+            if (!loads.weeks || loads.weeks.length === 0) {
+                loads.weeks = [{ series: [{ load: '', reps: '' }] }];
+            }
+            
+            return loads.weeks.map((week, weekIndex) => `
+                <div class="week-accordion" id="week_${exerciseId}_${weekIndex}">
+                    <div class="week-header" onclick="toggleWeek('${exerciseId}', ${weekIndex})">
+                        <div class="week-title">
+                            <i class="fas fa-calendar-week"></i>
+                            Semana ${weekIndex + 1}
+                        </div>
+                        <div class="week-actions">
+                            <button class="btn btn-success btn-small" onclick="event.stopPropagation(); addSerie('${exerciseId}', ${weekIndex})">
+                                <i class="fas fa-plus"></i>
+                                Série
+                            </button>
+                            ${loads.weeks.length > 1 ? `
+                                <button class="btn-icon delete" onclick="event.stopPropagation(); removeWeek('${exerciseId}', ${weekIndex})" title="Remover Semana">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            ` : ''}
+                            <i class="fas fa-chevron-down week-toggle" id="toggle_${exerciseId}_${weekIndex}"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="week-content" id="content_${exerciseId}_${weekIndex}">
+                        <div class="series-container">
+                            ${renderSeries(exerciseId, weekIndex, week.series)}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Toggle accordion de semana
+        function toggleWeek(exerciseId, weekIndex) {
+            const content = document.getElementById(`content_${exerciseId}_${weekIndex}`);
+            const toggle = document.getElementById(`toggle_${exerciseId}_${weekIndex}`);
+            
+            content.classList.toggle('expanded');
+            toggle.classList.toggle('fa-chevron-down');
+            toggle.classList.toggle('fa-chevron-up');
+        }
+
+        // Render series de forma compacta
+        function renderSeries(exerciseId, weekIndex, series) {
+            if (!series || series.length === 0) {
+                series = [{ load: '', reps: '' }];
+            }
+            
+            return series.map((serie, serieIndex) => `
+                <div class="serie-item">
+                    <div class="serie-label">S${serieIndex + 1}:</div>
+                    <input type="text" 
+                           class="serie-input" 
+                           placeholder="Carga"
+                           value="${serie.load || ''}"
+                           onchange="updateSerieData('${exerciseId}', ${weekIndex}, ${serieIndex}, 'load', this.value)">
+                    <input type="text" 
+                           class="serie-input" 
+                           placeholder="Reps"
+                           value="${serie.reps || ''}"
+                           onchange="updateSerieData('${exerciseId}', ${weekIndex}, ${serieIndex}, 'reps', this.value)">
+                    ${series.length > 1 ? `
+                        <button class="btn-icon delete" onclick="event.stopPropagation(); removeSerie('${exerciseId}', ${weekIndex}, ${serieIndex})" title="Remover">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Add week to exercise
+        function addWeek(exerciseId) {
+            if (!workoutLoads[exerciseId]) {
+                workoutLoads[exerciseId] = { weeks: [] };
+            }
+            
+            workoutLoads[exerciseId].weeks.push({
+                series: [{ load: '', reps: '' }]
+            });
+            
+            updateWeeksDisplay(exerciseId);
+        }
+
+        // Remove week from exercise
+        function removeWeek(exerciseId, weekIndex) {
+            if (workoutLoads[exerciseId] && workoutLoads[exerciseId].weeks) {
+                workoutLoads[exerciseId].weeks.splice(weekIndex, 1);
+                updateWeeksDisplay(exerciseId);
+            }
+        }
+
+        // Add serie to week
+        function addSerie(exerciseId, weekIndex) {
+            if (!workoutLoads[exerciseId]) {
+                workoutLoads[exerciseId] = { weeks: [] };
+            }
+            
+            if (!workoutLoads[exerciseId].weeks[weekIndex]) {
+                workoutLoads[exerciseId].weeks[weekIndex] = { series: [] };
+            }
+            
+            workoutLoads[exerciseId].weeks[weekIndex].series.push({ load: '', reps: '' });
+            updateWeeksDisplay(exerciseId);
+        }
+
+        // Remove serie from week
+        function removeSerie(exerciseId, weekIndex, serieIndex) {
+            if (workoutLoads[exerciseId] && 
+                workoutLoads[exerciseId].weeks[weekIndex] && 
+                workoutLoads[exerciseId].weeks[weekIndex].series) {
+                
+                workoutLoads[exerciseId].weeks[weekIndex].series.splice(serieIndex, 1);
+                updateWeeksDisplay(exerciseId);
+            }
+        }
+
+        // Update serie data
+        function updateSerieData(exerciseId, weekIndex, serieIndex, field, value) {
+            if (!workoutLoads[exerciseId]) {
+                workoutLoads[exerciseId] = { weeks: [] };
+            }
+            
+            if (!workoutLoads[exerciseId].weeks[weekIndex]) {
+                workoutLoads[exerciseId].weeks[weekIndex] = { series: [] };
+            }
+            
+            if (!workoutLoads[exerciseId].weeks[weekIndex].series[serieIndex]) {
+                workoutLoads[exerciseId].weeks[weekIndex].series[serieIndex] = {};
+            }
+            
+            workoutLoads[exerciseId].weeks[weekIndex].series[serieIndex][field] = value;
+        }
+
+        // Update weeks display com accordion - preservando estado expandido
+        function updateWeeksDisplay(exerciseId) {
+            const container = document.getElementById(`weeks_${exerciseId}`);
+            const loads = workoutLoads[exerciseId] || { weeks: [{ series: [{ load: '', reps: '' }] }] };
+            
+            // Salvar estado das abas expandidas antes de recriar
+            const expandedWeeks = [];
+            const weekContents = container.querySelectorAll('.week-content.expanded');
+            weekContents.forEach(content => {
+                const contentId = content.id;
+                const parts = contentId.split('_');
+                const weekIndex = parseInt(parts[parts.length - 1]);
+                expandedWeeks.push(weekIndex);
+            });
+            
+            // Recriar o HTML
+            container.innerHTML = renderWeeksAccordion(exerciseId, loads);
+            
+            // Restaurar estado das abas expandidas
+            expandedWeeks.forEach(weekIndex => {
+                const content = document.getElementById(`content_${exerciseId}_${weekIndex}`);
+                const toggle = document.getElementById(`toggle_${exerciseId}_${weekIndex}`);
+                if (content && toggle) {
+                    content.classList.add('expanded');
+                    toggle.classList.remove('fa-chevron-down');
+                    toggle.classList.add('fa-chevron-up');
+                }
+            });
+        }
+
+        // Funções de Filtro e Busca
+        function filterExercises() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const exerciseCards = document.querySelectorAll('.exercise-load-card');
+            
+            exerciseCards.forEach(card => {
+                const exerciseName = card.querySelector('.exercise-name').textContent.toLowerCase();
+                const exerciseInfo = card.querySelector('.exercise-info').textContent.toLowerCase();
+                
+                if (exerciseName.includes(searchTerm) || exerciseInfo.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        
+        // Save all loads
+        function saveAllLoads() {
+            localStorage.setItem('workoutLoads', JSON.stringify(workoutLoads));
+            alert('Cargas salvas com sucesso!');
+        }
+
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+
+        // Active navigation state
+        const currentPath = window.location.pathname;
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        navItems.forEach(item => {
+            const itemPath = item.getAttribute('href');
+            if (currentPath.includes(itemPath) || (currentPath === '/' && itemPath === 'index.html')) {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+            }
+        });
+
+        // Tema escuro/claro functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const body = document.body;
+
+        // Carregar preferência de tema salva
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                themeText.textContent = 'Tema Claro';
+            }
+        }
+
+        // Alternar tema
+        function toggleTheme() {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                // Mudar para tema escuro
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                themeText.textContent = 'Tema Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                // Mudar para tema claro
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                themeText.textContent = 'Tema Escuro';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Adicionar evento de clique ao botão de tema
+        if (themeToggle) {
+            themeToggle.addEventListener('click', toggleTheme);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            loadThemePreference();
+        });
+    </script>
+
+    <!-- Botão de Ajuda -->
+    <button class="help-button" onclick="openHelpModal()">?</button>
+
+    <!-- Modal de Ajuda -->
+    <div class="help-modal" id="helpModal">
+        <div class="help-modal-content">
+            <div class="help-modal-header">
+                <h3 class="help-modal-title">
+                    <i class="fas fa-question-circle"></i>
+                    Ajuda - Controle de Cargas
+                </h3>
+                <button class="help-close" onclick="closeHelpModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-weight"></i>
+                    Controle de Cargas e Peso
+                </h4>
+                <div class="help-section-content">
+                    <p>Esta página permite acompanhar sua evolução nos treinos e no peso corporal:</p>
+                    <p><strong>Controle de Cargas:</strong> Acompanhamento de peso nos exercícios</p>
+                    <p><strong>Acompanhamento de Peso:</strong> Registro de peso corporal e kcal diárias</p>
+                    <p><strong>Gráficos de Evolução:</strong> Visualização do progresso ao longo do tempo</p>
+                    <p><strong>Progressão Linear:</strong> Aumento gradual de peso nos exercícios</p>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">🎯 Importância</div>
+                        <div>Controlar cargas e peso é essencial para hipertrofia e acompanhamento metabólico</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-play-circle"></i>
+                    Como Começar
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Para controle de cargas: selecione um treino e adicione registros</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Para acompanhamento de peso: preencha data, peso e kcal/dia</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Visualize sua evolução nos gráficos interativos</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">Edite ou exclua registros conforme necessário</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-chart-line"></i>
+                    Entendendo os Cálculos
+                </h4>
+                <div class="help-section-content">
+                    <p><strong>Volume Total:</strong> Peso × Repetições × Séries</p>
+                    <p><strong>Volume Relativo:</strong> Volume total ÷ peso corporal</p>
+                    <p><strong>Intensidade:</strong> Peso ÷ RM (Repetição Máxima)</p>
+                    <p><strong>Densidade:</strong> Volume total ÷ tempo de treino</p>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">💡 Dica Profissional</div>
+                        <div>Aumente 5-10% na carga quando conseguir completar todas as séries com boa técnica</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-weight"></i>
+                    Acompanhamento de Peso
+                </h4>
+                <div class="help-section-content">
+                    <p>O acompanhamento de peso corporal ajuda a monitorar seu progresso:</p>
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Preencha a data, peso em kg e kcal/dia consumidas</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Visualize a evolução no gráfico de peso e kcal</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Edite registros clicando no botão editar</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">Acompanhe a correlação entre peso e consumo calórico</div>
+                    </div>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">📈 Consistência</div>
+                        <div>Registre seu peso pelo menos 2-3 vezes por semana para melhor precisão</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-history"></i>
+                    Acompanhamento
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Visualize o histórico de evolução de cada exercício</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Compare cargas entre diferentes datas</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Identifique estagnações para ajustar o treino</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">Use os gráficos para visualizar a progressão</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-trophy"></i>
+                    Metas e Objetivos
+                </h4>
+                <div class="help-section-content">
+                    <p><strong>Força:</strong> Aumentar cargas nos exercícios principais</p>
+                    <p><strong>Volume:</strong> Aumentar total de peso movimentado</p>
+                    <p><strong>Frequência:</strong> Manter regularidade nos treinos</p>
+                    <p><strong>Recuperação:</strong> Respeitar períodos de descarga</p>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Dicas de Progressão
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-tip">
+                        <div class="help-tip-title">📈 Dupla Progressão</div>
+                        <div>Aumente repetições primeiro, depois o peso</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">⚖️ Equilíbrio</div>
+                        <div>Progressa igualmente grupos musculares antagonistas</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">🔄 Periodização</div>
+                        <div>Alterne fases de alta intensidade com descarga</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">📯 Especificidade</div>
+                        <div>Foque em cargas relevantes para seu objetivo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Weight Tracking Data
+        let weightRecords = [];
+        let weightChart = null;
+
+        // Initialize weight tracking
+        function initWeightTracking() {
+            loadWeightRecords();
+            setupDefaultDate();
+            initWeightChart();
+            renderWeightTable();
+        }
+
+        // Setup default date to today
+        function setupDefaultDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('weightDate').value = today;
+        }
+
+        // Load weight records from localStorage
+        function loadWeightRecords() {
+            const saved = localStorage.getItem('weightRecords');
+            if (saved) {
+                weightRecords = JSON.parse(saved);
+            }
+        }
+
+        // Save weight records to localStorage
+        function saveWeightRecordsToStorage() {
+            localStorage.setItem('weightRecords', JSON.stringify(weightRecords));
+        }
+
+        // Add new weight record
+        function addWeightRecord() {
+            const date = document.getElementById('weightDate').value;
+            const weight = parseFloat(document.getElementById('weightValue').value);
+            const kcal = parseInt(document.getElementById('kcalValue').value);
+
+            // Validation
+            if (!date || !weight || !kcal) {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+
+            if (weight <= 0 || kcal <= 0) {
+                alert('Peso e KCAL devem ser maiores que zero!');
+                return;
+            }
+
+            // Check if date already exists
+            const existingIndex = weightRecords.findIndex(record => record.date === date);
+            if (existingIndex !== -1) {
+                if (confirm('Já existe um registro para esta data. Deseja substituí-lo?')) {
+                    weightRecords[existingIndex] = {
+                        date: date,
+                        weight: weight,
+                        kcal: kcal,
+                        id: Date.now()
+                    };
+                } else {
+                    return;
+                }
+            } else {
+                // Add new record
+                weightRecords.push({
+                    date: date,
+                    weight: weight,
+                    kcal: kcal,
+                    id: Date.now()
+                });
+            }
+
+            // Sort by date
+            weightRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            // Update UI
+            saveWeightRecordsToStorage();
+            renderWeightTable();
+            updateWeightChart();
+            clearWeightForm();
+            
+            alert('Registro de peso adicionado com sucesso!');
+        }
+
+        // Clear weight form
+        function clearWeightForm() {
+            document.getElementById('weightValue').value = '';
+            document.getElementById('kcalValue').value = '';
+            setupDefaultDate();
+        }
+
+        // Render weight records table
+        function renderWeightTable() {
+            const tbody = document.getElementById('weightRecordsBody');
+            tbody.innerHTML = '';
+
+            if (weightRecords.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-secondary);">Nenhum registro encontrado</td></tr>';
+                return;
+            }
+
+            // Show records in reverse order (newest first)
+            [...weightRecords].reverse().forEach(record => {
+                const row = document.createElement('tr');
+                const formattedDate = new Date(record.date).toLocaleDateString('pt-BR');
+                
+                row.innerHTML = `
+                    <td>${formattedDate}</td>
+                    <td>${record.weight.toFixed(1)} kg</td>
+                    <td>${record.kcal} kcal</td>
+                    <td>
+                        <div class="weight-actions">
+                            <button class="btn-edit" onclick="editWeightRecord(${record.id})">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="btn-delete" onclick="deleteWeightRecord(${record.id})">
+                                <i class="fas fa-trash"></i> Excluir
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Edit weight record
+        function editWeightRecord(id) {
+            const record = weightRecords.find(r => r.id === id);
+            if (!record) return;
+
+            // Fill form with record data
+            document.getElementById('weightDate').value = record.date;
+            document.getElementById('weightValue').value = record.weight;
+            document.getElementById('kcalValue').value = record.kcal;
+
+            // Remove the old record
+            deleteWeightRecord(id, false);
+            
+            // Scroll to form
+            document.querySelector('.weight-input-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Delete weight record
+        function deleteWeightRecord(id, showConfirm = true) {
+            if (showConfirm && !confirm('Tem certeza que deseja excluir este registro?')) {
+                return;
+            }
+
+            weightRecords = weightRecords.filter(record => record.id !== id);
+            saveWeightRecordsToStorage();
+            renderWeightTable();
+            updateWeightChart();
+            
+            if (showConfirm) {
+                alert('Registro excluído com sucesso!');
+            }
+        }
+
+        // Initialize weight chart
+        function initWeightChart() {
+            const ctx = document.getElementById('weightChart').getContext('2d');
+            
+            const chartData = prepareChartData();
+            
+            weightChart = new Chart(ctx, {
+                type: 'line',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Evolução do Peso',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary')
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary')
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        if (context.dataset.label === 'Peso') {
+                                            label += context.parsed.y.toFixed(1) + ' kg';
+                                        } else {
+                                            label += context.parsed.y + ' kcal';
+                                        }
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Data',
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary')
+                            },
+                            ticks: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary')
+                            },
+                            grid: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--border')
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Valores',
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary')
+                            },
+                            ticks: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary')
+                            },
+                            grid: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--border')
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Prepare chart data
+        function prepareChartData() {
+            if (weightRecords.length === 0) {
+                return {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Peso',
+                            data: [],
+                            borderColor: '#dc143c',
+                            backgroundColor: 'rgba(220, 20, 60, 0.1)',
+                            tension: 0.4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'KCAL',
+                            data: [],
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                };
+            }
+
+            const labels = weightRecords.map(record => {
+                const date = new Date(record.date);
+                return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+            });
+
+            const weightData = weightRecords.map(record => record.weight);
+            const kcalData = weightRecords.map(record => record.kcal);
+
+            return {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Peso',
+                        data: weightData,
+                        borderColor: '#dc143c',
+                        backgroundColor: 'rgba(220, 20, 60, 0.1)',
+                        tension: 0.4,
+                        yAxisID: 'y',
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'KCAL',
+                        data: kcalData,
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        tension: 0.4,
+                        yAxisID: 'y1',
+                        borderWidth: 3
+                    }
+                ]
+            };
+        }
+
+        // Update weight chart
+        function updateWeightChart() {
+            if (!weightChart) return;
+            
+            const chartData = prepareChartData();
+            weightChart.data = chartData;
+            weightChart.update();
+        }
+
+        // Save weight record (alias for addWeightRecord)
+        function saveWeightRecord() {
+            addWeightRecord();
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initWeightTracking();
+        });
+    </script>
+
+    <script>
+        // Funções do Modal de Ajuda
+        function openHelpModal() {
+            document.getElementById('helpModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Impede scroll do fundo
+        }
+
+        function closeHelpModal() {
+            document.getElementById('helpModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restaura scroll
+        }
+
+        // Fechar modal clicando fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('helpModal');
+            if (event.target === modal) {
+                closeHelpModal();
+            }
+        }
+
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeHelpModal();
+            }
+        });
+    </script>
+</body>
+</html>

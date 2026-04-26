@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda - GurgelTrack</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Cores do Tema Claro - Vermelho */
+            --bg-primary: #fff5f5;
+            --bg-secondary: #ffffff;
+            --bg-sidebar: #8b0000;
+            --bg-sidebar-hover: #a52a2a;
+            --accent: #dc143c;
+            --accent-hover: #b91c1c;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-sidebar: #ffffff;
+            --border: #ffcccc;
+            --shadow: 0 4px 12px rgba(220, 20, 60, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode {
+            /* Cores do Tema Escuro - Melhoradas */
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1e1e1e;
+            --bg-sidebar: #1a1a2e;
+            --bg-sidebar-hover: #25253d;
+            --accent: #e91e63;
+            --accent-hover: #f06292;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b8b8b8;
+            --text-sidebar: #ffffff;
+            --border: #333333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            color: var(--text-sidebar);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-sidebar);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-header p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .nav-menu {
+            padding: 1.5rem 0;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: var(--text-sidebar);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-sidebar-hover);
+            border-left-color: var(--accent);
+            color: var(--text-sidebar);
+        }
+
+        .nav-item.active {
+            background: var(--bg-sidebar-hover);
+            border-left-color: var(--accent);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            flex: 1;
+            margin-left: 280px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-header {
+            background: var(--bg-secondary);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .main-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .main-header p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Calendar Section */
+        .calendar-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-nav {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-nav:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .calendar-day-header {
+            background: var(--bg-sidebar);
+            color: var(--text-sidebar);
+            padding: 1rem 0.5rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .calendar-day {
+            background: var(--bg-secondary);
+            min-height: 80px;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .calendar-day:hover {
+            background: var(--bg-primary);
+            transform: scale(1.02);
+        }
+
+        .calendar-day.other-month {
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        .calendar-day.today {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
+        }
+
+        .calendar-day.selected {
+            background: #27ae60;
+            color: white;
+        }
+
+        .calendar-day.has-appointments::after {
+            content: '';
+            position: absolute;
+            bottom: 0.25rem;
+            right: 0.25rem;
+            width: 6px;
+            height: 6px;
+            background: #e74c3c;
+            border-radius: 50%;
+        }
+
+        .calendar-day-number {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .calendar-day-appointments {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            max-height: 40px;
+            overflow: hidden;
+        }
+
+        /* Appointments Section */
+        .appointments-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .appointments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .appointments-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .btn-add-appointment {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-add-appointment:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        /* Mobile styles for appointment button */
+        @media (max-width: 768px) {
+            .appointments-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            
+            .appointments-title {
+                font-size: 1.2rem;
+                text-align: center;
+                order: -1;
+            }
+            
+            .btn-add-appointment {
+                width: 100%;
+                padding: 1rem;
+                font-size: 1rem;
+                font-weight: 500;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .appointments-title {
+                font-size: 1.1rem;
+            }
+            
+            .btn-add-appointment {
+                padding: 0.875rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        .btn-add-appointment {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-add-appointment:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .appointments-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .appointment-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .appointment-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .appointment-info {
+            flex: 1;
+        }
+
+        .appointment-time {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+        }
+
+        .appointment-title {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .appointment-description {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .appointment-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-action {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.85rem;
+        }
+
+        .btn-action:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-action.delete {
+            background: #e74c3c;
+        }
+
+        .btn-action.delete:hover {
+            background: #c0392b;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-cancel {
+            background: var(--text-secondary);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-cancel:hover {
+            background: #6c757d;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .main-footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .layout-container {
+                overflow-x: hidden;
+            }
+            
+            .main-wrapper {
+                margin-left: 0;
+                width: 100%;
+                min-height: 100vh;
+            }
+            
+            .main-content {
+                padding: 1rem;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                z-index: 1001;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 1002;
+                background: var(--accent);
+                color: white;
+                border: none;
+                padding: 0.75rem;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1.25rem;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            }
+            
+            .main-header {
+                padding: 1rem;
+                margin-top: 3rem;
+                text-align: center;
+            }
+            
+            .main-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .main-header p {
+                font-size: 0.9rem;
+            }
+            
+            .page-header {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .content-section {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+                border-radius: 12px;
+            }
+            
+            .content-section h2 {
+                font-size: 1.3rem;
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .calendar-header {
+                flex-direction: column;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+                text-align: center;
+            }
+            
+            .calendar-nav {
+                flex-direction: column;
+                gap: 0.75rem;
+                margin-bottom: 1rem;
+            }
+            
+            .calendar-nav button {
+                width: 100%;
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+            
+            .current-month {
+                font-size: 1.1rem;
+            }
+
+            .calendar-grid {
+                font-size: 0.8rem;
+                gap: 0.25rem;
+            }
+
+            .calendar-day {
+                min-height: 50px;
+                padding: 0.5rem;
+                border-radius: 8px;
+            }
+            
+            .calendar-day:hover {
+                transform: scale(1.05);
+            }
+            
+            .calendar-day.today {
+                border-color: var(--accent);
+                background: rgba(52, 152, 219, 0.1);
+            }
+            
+            .calendar-day.has-appointment {
+                background: var(--accent);
+                color: white;
+                font-weight: 600;
+            }
+            
+            .day-number {
+                font-size: 0.9rem;
+            }
+            
+            .appointments-list {
+                margin-top: 1.5rem;
+            }
+            
+            .appointment-item {
+                padding: 1rem;
+                border-radius: 8px;
+                margin-bottom: 0.75rem;
+            }
+            
+            .appointment-time {
+                font-size: 0.85rem;
+                margin-bottom: 0.25rem;
+            }
+            
+            .appointment-title {
+                font-size: 1rem;
+                margin-bottom: 0.25rem;
+            }
+            
+            .appointment-client {
+                font-size: 0.9rem;
+            }
+            
+            .appointment-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 0.75rem;
+            }
+            
+            .btn {
+                width: 100%;
+                padding: 0.625rem;
+                font-size: 0.85rem;
+                border-radius: 6px;
+            }
+            
+            .btn-edit {
+                background: var(--accent);
+                color: white;
+            }
+            
+            .btn-delete {
+                background: var(--danger-color);
+                color: white;
+            }
+            
+            .modal-content {
+                margin: 1rem;
+                max-width: calc(100% - 2rem);
+                border-radius: 12px;
+            }
+
+            .modal-header {
+                padding: 1.5rem;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .modal-header h3 {
+                font-size: 1.2rem;
+            }
+
+            .modal-body {
+                padding: 1.5rem;
+            }
+
+            .form-group {
+                margin-bottom: 1.5rem;
+            }
+
+            .form-group label {
+                font-size: 0.95rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 1rem;
+                padding: 0.875rem;
+                border-radius: 8px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .form-actions .btn {
+                padding: 0.875rem;
+                font-size: 0.95rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 0.75rem;
+            }
+            
+            .content-section {
+                padding: 1rem;
+            }
+            
+            .calendar-grid {
+                font-size: 0.7rem;
+                gap: 0.125rem;
+            }
+            
+            .calendar-day {
+                min-height: 40px;
+                padding: 0.375rem;
+            }
+            
+            .day-number {
+                font-size: 0.8rem;
+            }
+            
+            .appointment-item {
+                padding: 0.75rem;
+            }
+            
+            .appointment-time {
+                font-size: 0.8rem;
+            }
+            
+            .appointment-title {
+                font-size: 0.9rem;
+            }
+            
+            .appointment-client {
+                font-size: 0.85rem;
+            }
+            
+            .btn {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-toggle {
+                display: none;
+            }
+        }
+
+        /* Botão de Ajuda */
+        .help-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border: none;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+            transition: var(--transition);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        /* Modal de Ajuda */
+        .help-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .help-modal-content {
+            position: relative;
+            background: var(--bg-secondary);
+            margin: 50px auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            animation: slideIn 0.3s ease;
+        }
+
+        .help-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .help-modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .help-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-close:hover {
+            background: var(--bg-primary);
+            color: var(--accent);
+        }
+
+        .help-section {
+            margin-bottom: 25px;
+        }
+
+        .help-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .help-section-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .help-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .help-step-number {
+            background: var(--accent);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .help-step-text {
+            flex: 1;
+            color: var(--text-secondary);
+        }
+
+        .help-tip {
+            background: var(--bg-primary);
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .help-tip-title {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .help-button {
+                bottom: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .help-modal-content {
+                margin: 20px;
+                padding: 20px;
+                width: calc(100% - 40px);
+            }
+
+            .help-modal-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="logo-gurgel.png" alt="GurgelTrack Logo" class="logo" style="width: 10vw;">
+                <h1>
+                    <i class="fas fa-dumbbell"></i>
+                    GurgelTrack
+                </h1>
+                <p>Sua plataforma fitness</p>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    Início
+                </a>
+                <a href="alunos.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    Alunos
+                </a>
+                <a href="treino.html" class="nav-item">
+                    <i class="fas fa-dumbbell"></i>
+                    Treino
+                </a>
+                <a href="dieta.html" class="nav-item">
+                    <i class="fas fa-utensils"></i>
+                    Dieta
+                </a>
+                <a href="calculo.html" class="nav-item">
+                    <i class="fas fa-calculator"></i>
+                    Cálculo
+                </a>
+                <a href="carga.html" class="nav-item">
+                    <i class="fas fa-weight"></i>
+                    Anotações
+                </a>
+                <a href="pagamentos.html" class="nav-item">
+                    <i class="fas fa-credit-card"></i>
+                    Pagamentos
+                </a>
+                <a href="agenda.html" class="nav-item active">
+                    <i class="fas fa-calendar"></i>
+                    Agenda
+                </a>
+                <button class="nav-item theme-toggle" id="themeToggle" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                    <span id="themeText">Tema Escuro</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <header class="main-header">
+                <h1><i class="fas fa-calendar"></i> Agenda</h1>
+                <p>Organize seus compromissos e mantenha-se focado em seus objetivos</p>
+            </header>
+
+            <main class="main-content">
+                <!-- Calendar Section -->
+                <section class="calendar-section">
+                    <div class="calendar-header">
+                        <h2 class="calendar-title">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span id="currentMonth">Janeiro 2024</span>
+                        </h2>
+                        <div class="calendar-nav">
+                            <button class="btn-nav" onclick="previousMonth()">
+                                <i class="fas fa-chevron-left"></i>
+                                Anterior
+                            </button>
+                            <button class="btn-nav" onclick="currentMonth()">
+                                Hoje
+                            </button>
+                            <button class="btn-nav" onclick="nextMonth()">
+                                Próximo
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Calendar will be generated here -->
+                    </div>
+                </section>
+
+                <!-- Appointments Section -->
+                <section class="appointments-section">
+                    <div class="appointments-header">
+                        <h2 class="appointments-title">
+                            <i class="fas fa-clock"></i>
+                            Compromissos do Dia
+                            <span id="selectedDateDisplay"></span>
+                        </h2>
+                        <button class="btn-add-appointment" onclick="openAppointmentModal()">
+                            <i class="fas fa-plus"></i>
+                            Adicionar Compromisso
+                        </button>
+                    </div>
+                    
+                    <div class="appointments-list" id="appointmentsList">
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-times"></i>
+                            <p>Selecione um dia no calendário para ver os compromissos</p>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="main-footer">
+                <p>© 2026 GurgelTrack - Todos os direitos reservados à Vitor Gurgel</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Appointment Modal -->
+    <div class="modal" id="appointmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Adicionar Compromisso</h3>
+                <button class="modal-close" onclick="closeAppointmentModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="appointmentForm">
+                <div class="form-group">
+                    <label for="appointmentDate">Data:</label>
+                    <input type="date" id="appointmentDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="appointmentTime">Horário:</label>
+                    <input type="time" id="appointmentTime" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="appointmentTitle">Título:</label>
+                    <input type="text" id="appointmentTitle" placeholder="Ex: Treino de Pernas" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="appointmentDescription">Descrição:</label>
+                    <textarea id="appointmentDescription" placeholder="Detalhes do compromisso..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeAppointmentModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-submit">
+                        Salvar Compromisso
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Calendar state
+        let currentDate = new Date();
+        let selectedDate = null;
+        let appointments = [];
+
+        // Load appointments from localStorage
+        function loadAppointments() {
+            const saved = localStorage.getItem('appointments');
+            if (saved) {
+                appointments = JSON.parse(saved);
+            }
+        }
+
+        // Save appointments to localStorage
+        function saveAppointments() {
+            localStorage.setItem('appointments', JSON.stringify(appointments));
+        }
+
+        // Initialize calendar
+        function initCalendar() {
+            loadAppointments();
+            renderCalendar();
+            updateSelectedDateDisplay();
+        }
+
+        // Render calendar
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            // Update month display
+            const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                              'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            document.getElementById('currentMonth').textContent = `${monthNames[month]} ${year}`;
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInPrevMonth = new Date(year, month, 0).getDate();
+            
+            // Clear calendar grid
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = '';
+            
+            // Add day headers
+            const dayHeaders = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            dayHeaders.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day-header';
+                header.textContent = day;
+                calendarGrid.appendChild(header);
+            });
+            
+            // Add previous month days
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const dayDiv = createDayElement(daysInPrevMonth - i, true, false);
+                calendarGrid.appendChild(dayDiv);
+            }
+            
+            // Add current month days
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const isToday = year === today.getFullYear() && 
+                               month === today.getMonth() && 
+                               day === today.getDate();
+                const dayDiv = createDayElement(day, false, isToday);
+                
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                dayDiv.dataset.date = dateStr;
+                
+                // Check if day has appointments
+                const dayAppointments = appointments.filter(apt => apt.date === dateStr);
+                if (dayAppointments.length > 0) {
+                    dayDiv.classList.add('has-appointments');
+                }
+                
+                dayDiv.addEventListener('click', () => selectDate(dateStr, dayDiv));
+                calendarGrid.appendChild(dayDiv);
+            }
+            
+            // Add next month days
+            const totalCells = calendarGrid.children.length - 7; // Subtract header row
+            const remainingCells = 35 - totalCells;
+            for (let day = 1; day <= remainingCells; day++) {
+                const dayDiv = createDayElement(day, true, false);
+                calendarGrid.appendChild(dayDiv);
+            }
+        }
+
+        // Create day element
+        function createDayElement(day, isOtherMonth, isToday) {
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'calendar-day';
+            
+            if (isOtherMonth) {
+                dayDiv.classList.add('other-month');
+            }
+            
+            if (isToday) {
+                dayDiv.classList.add('today');
+            }
+            
+            dayDiv.innerHTML = `<div class="calendar-day-number">${day}</div>`;
+            return dayDiv;
+        }
+
+        // Select date
+        function selectDate(dateStr, element) {
+            // Remove previous selection
+            document.querySelectorAll('.calendar-day.selected').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Add selection to clicked day
+            element.classList.add('selected');
+            selectedDate = dateStr;
+            
+            // Update appointments list
+            updateAppointmentsList();
+            updateSelectedDateDisplay();
+        }
+
+        // Update selected date display
+        function updateSelectedDateDisplay() {
+            const display = document.getElementById('selectedDateDisplay');
+            if (selectedDate) {
+                const [year, month, day] = selectedDate.split('-');
+                const date = new Date(year, month - 1, day);
+                const formatted = date.toLocaleDateString('pt-BR', { 
+                    day: 'numeric', 
+                    month: 'long', 
+                    year: 'numeric' 
+                });
+                display.textContent = ` - ${formatted}`;
+            } else {
+                display.textContent = '';
+            }
+        }
+
+        // Update appointments list
+        function updateAppointmentsList() {
+            const list = document.getElementById('appointmentsList');
+            
+            if (!selectedDate) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times"></i>
+                        <p>Selecione um dia no calendário para ver os compromissos</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const dayAppointments = appointments
+                .filter(apt => apt.date === selectedDate)
+                .sort((a, b) => a.time.localeCompare(b.time));
+            
+            if (dayAppointments.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-check"></i>
+                        <p>Nenhum compromisso para este dia</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            list.innerHTML = dayAppointments.map(apt => `
+                <div class="appointment-item">
+                    <div class="appointment-info">
+                        <div class="appointment-time">${apt.time}</div>
+                        <div class="appointment-title">${apt.title}</div>
+                        <div class="appointment-description">${apt.description || ''}</div>
+                    </div>
+                    <div class="appointment-actions">
+                        <button class="btn-action delete" onclick="deleteAppointment('${apt.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Navigation functions
+        function previousMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        }
+
+        function currentMonth() {
+            currentDate = new Date();
+            renderCalendar();
+        }
+
+        // Modal functions
+        function openAppointmentModal() {
+            if (!selectedDate) {
+                alert('Por favor, selecione um dia no calendário primeiro!');
+                return;
+            }
+            
+            const modal = document.getElementById('appointmentModal');
+            modal.classList.add('show');
+            
+            // Set default date
+            document.getElementById('appointmentDate').value = selectedDate;
+            
+            // Set default time to current time
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('appointmentTime').value = `${hours}:${minutes}`;
+        }
+
+        function closeAppointmentModal() {
+            const modal = document.getElementById('appointmentModal');
+            modal.classList.remove('show');
+            
+            // Clear form
+            document.getElementById('appointmentForm').reset();
+        }
+
+        // Form submission
+        document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const appointment = {
+                id: Date.now().toString(),
+                date: document.getElementById('appointmentDate').value,
+                time: document.getElementById('appointmentTime').value,
+                title: document.getElementById('appointmentTitle').value,
+                description: document.getElementById('appointmentDescription').value
+            };
+            
+            appointments.push(appointment);
+            saveAppointments();
+            
+            closeAppointmentModal();
+            renderCalendar();
+            updateAppointmentsList();
+            
+            alert('Compromisso adicionado com sucesso!');
+        });
+
+        // Delete appointment
+        function deleteAppointment(appointmentId) {
+            if (confirm('Tem certeza que deseja excluir este compromisso?')) {
+                appointments = appointments.filter(apt => apt.id !== appointmentId);
+                saveAppointments();
+                renderCalendar();
+                updateAppointmentsList();
+                alert('Compromisso excluído com sucesso!');
+            }
+        }
+
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+
+        // Active navigation state
+        const currentPath = window.location.pathname;
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        navItems.forEach(item => {
+            const itemPath = item.getAttribute('href');
+            if (currentPath.includes(itemPath) || (currentPath === '/' && itemPath === 'index.html')) {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+            }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initCalendar);
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeAppointmentModal();
+            }
+        });
+
+        // Close modal on outside click
+        document.getElementById('appointmentModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAppointmentModal();
+            }
+        });
+
+        // Tema escuro/claro functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const body = document.body;
+
+        // Carregar preferência de tema salva
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                themeText.textContent = 'Tema Claro';
+            }
+        }
+
+        // Alternar tema
+        function toggleTheme() {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                // Mudar para tema escuro
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                themeText.textContent = 'Tema Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                // Mudar para tema claro
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                themeText.textContent = 'Tema Escuro';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Adicionar evento de clique ao botão de tema
+        if (themeToggle) {
+            themeToggle.addEventListener('click', toggleTheme);
+        }
+
+        // Carregar preferência de tema ao iniciar a página
+        document.addEventListener('DOMContentLoaded', loadThemePreference);
+    </script>
+
+    <!-- Botão de Ajuda -->
+    <button class="help-button" onclick="openHelpModal()">?</button>
+
+    <!-- Modal de Ajuda -->
+    <div class="help-modal" id="helpModal">
+        <div class="help-modal-content">
+            <div class="help-modal-header">
+                <h3 class="help-modal-title">
+                    <i class="fas fa-question-circle"></i>
+                    Ajuda - Agenda e Compromissos
+                </h3>
+                <button class="help-close" onclick="closeHelpModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-calendar"></i>
+                    O que é a Agenda?
+                </h4>
+                <div class="help-section-content">
+                    <p>Organização completa de seus compromissos e agendamentos:</p>
+                    <p><strong>Consultas:</strong> Agende avaliações e acompanhamentos</p>
+                    <p><strong>Treinos:</strong> Organize sessões individuais</p>
+                    <p><strong>Compromissos:</strong> Registre reuniões e eventos</p>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">🎯 Importância</div>
+                        <div>Agenda organizada melhora produtividade e evita esquecimentos</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-play-circle"></i>
+                    Como Começar
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Clique em "Adicionar Compromisso" no calendário</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Selecione a data e horário desejados</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Preencha título, descrição e selecione o aluno</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">Clique em "Salvar Compromisso"</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-calendar-alt"></i>
+                    Navegação no Calendário
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Use as setas para mudar de mês</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Clique em um dia para ver compromissos</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Clique em "Hoje" para voltar à data atual</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">Dias com compromissos aparecem destacados</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-clock"></i>
+                    Tipos de Compromissos
+                </h4>
+                <div class="help-section-content">
+                    <p><strong>Consulta:</strong> Avaliação física e acompanhamento</p>
+                    <p><strong>Treino:</strong> Sessões de treino individual</p>
+                    <p><strong>Avaliação:</strong> Testes e medições</p>
+                    <p><strong>Reunião:</strong> Reuniões administrativas</p>
+                    <p><strong>Pessoal:</strong> Compromissos pessoais</p>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">💡 Dica Profissional</div>
+                        <div>Cores diferentes ajudam a identificar rapidamente o tipo de compromisso</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-bell"></i>
+                    Lembretes e Notificações
+                </h4>
+                <div class="help-section-content">
+                    <p><strong>Lembretes:</strong> Configure alertas antes dos compromissos</p>
+                    <p><strong>Recorrência:</strong> Crie eventos repetitivos (semanais, mensais)</p>
+                    <p><strong>Confirmação:</strong> Envie lembretes para alunos</p>
+                    
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Ao criar compromisso, configure o lembrete</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Escolha o tempo de antecedência</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Dicas de Organização
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-tip">
+                        <div class="help-tip-title">📅 Planejamento</div>
+                        <div>Agende compromissos com antecedência para melhor organização</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">⏰ Blocos de Tempo</div>
+                        <div>Reserve blocos específicos para tipos de atividades</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">🔄 Revisão Semanal</div>
+                        <div>Revise sua agenda toda semana para ajustar necessidades</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">📱 Sincronização</div>
+                        <div>Mantenha a agenda sempre atualizada</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funções do Modal de Ajuda
+        function openHelpModal() {
+            document.getElementById('helpModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Impede scroll do fundo
+        }
+
+        function closeHelpModal() {
+            document.getElementById('helpModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restaura scroll
+        }
+
+        // Fechar modal clicando fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('helpModal');
+            if (event.target === modal) {
+                closeHelpModal();
+            }
+        }
+
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeHelpModal();
+            }
+        });
+    </script>
+</body>
+</html>
