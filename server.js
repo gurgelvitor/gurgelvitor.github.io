@@ -23,7 +23,7 @@ console.log('🛡️ Service Role:', process.env.SUPABASE_SERVICE_ROLE_KEY ? '�
 // Middlewares
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.'));
+app.use(express.static('public'));
 
 // Configuração de sessão
 app.use(session({
