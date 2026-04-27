@@ -995,6 +995,7 @@
         </div>
     </div>
 
+    <script src="js/auth.js"></script>
     <script>
         // Data state
         let pagamentos = [];
@@ -1007,22 +1008,41 @@
             metodo: ''
         };
 
-        // Load data from localStorage
-        function loadData() {
-            // Carregar alunos do localStorage correto
-            const savedAlunos = localStorage.getItem('students');
-            if (savedAlunos) {
-                alunos = JSON.parse(savedAlunos);
-                populateAlunoSelect();
-                populateFiltroAlunos();
-            } else {
-                console.log('Nenhum aluno encontrado no localStorage');
-            }
-            
-            // Carregar pagamentos
-            const savedPagamentos = localStorage.getItem('pagamentos');
-            if (savedPagamentos) {
-                pagamentos = JSON.parse(savedPagamentos);
+        // Load data from API
+        // Load data from API
+        async function loadData() {
+            try {
+                // Carregar alunos da API
+                const response = await authenticatedFetch('/api/alunos');
+                if (response.ok) {
+                    alunos = await response.json();
+                    // Adicionar campos de compatibilidade
+                    alunos = alunos.map(aluno => ({
+                        ...aluno,
+                        name: aluno.nome,
+                        phone: aluno.telefone
+                    }));
+                    populateAlunoSelect();
+                    populateFiltroAlunos();
+                    console.log(`${alunos.length} alunos carregados da API`);
+                } else {
+                    console.error('Erro ao carregar alunos:', response.statusText);
+                    alunos = [];
+                }
+                
+                // Carregar pagamentos da API
+                const pagamentosResponse = await authenticatedFetch('/api/pagamentos');
+                if (pagamentosResponse.ok) {
+                    pagamentos = await pagamentosResponse.json();
+                    console.log(`${pagamentos.length} pagamentos carregados da API`);
+                } else {
+                    console.error('Erro ao carregar pagamentos:', pagamentosResponse.statusText);
+                    pagamentos = [];
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                alunos = [];
+                pagamentos = [];
             }
             
             // Configurar data atual
@@ -1160,7 +1180,7 @@
         }
 
         // Registrar pagamento
-        function registrarPagamento() {
+        async function registrarPagamento() {
             const alunoId = document.getElementById('alunoSelect').value;
             const valor = parseFloat(document.getElementById('valorInput').value);
             const dataPagamento = document.getElementById('dataPagamento').value;
@@ -1183,7 +1203,6 @@
             const ano = data.getFullYear().toString();
             
             const pagamento = {
-                id: Date.now().toString(),
                 alunoId: alunoId,
                 alunoNome: aluno.name || aluno.nome, // Tenta ambos os formatos
                 mes: mes,
@@ -1195,22 +1214,39 @@
                 dataRegistro: new Date().toISOString()
             };
             
-            pagamentos.push(pagamento);
-            savePagamentos();
-            
-            // Limpar formulário
-            document.getElementById('alunoSelect').value = '';
-            document.getElementById('valorInput').value = '';
-            document.getElementById('metodoPagamento').value = '';
-            document.getElementById('dataPagamento').valueAsDate = new Date();
-            
-            showAlert('Pagamento registrado com sucesso!', 'success');
-            updateStats();
-            renderPaymentTable();
+            try {
+                const response = await authenticatedFetch('/api/pagamentos', {
+                    method: 'POST',
+                    body: JSON.stringify(pagamento)
+                });
+                
+                if (response.ok) {
+                    const newPagamento = await response.json();
+                    pagamentos.unshift({
+                        id: newPagamento.id,
+                        ...pagamento
+                    });
+                    
+                    showAlert('Pagamento registrado com sucesso!', 'success');
+                    updateStats();
+                    renderPaymentTable();
+                    
+                    // Limpar formulário
+                    document.getElementById('alunoSelect').value = '';
+                    document.getElementById('valorInput').value = '';
+                    document.getElementById('metodoPagamento').value = '';
+                    document.getElementById('dataPagamento').valueAsDate = new Date();
+                } else {
+                    throw new Error('Erro ao registrar pagamento');
+                }
+            } catch (error) {
+                console.error('Erro ao registrar pagamento:', error);
+                showAlert('Erro ao registrar pagamento. Tente novamente.', 'error');
+            }
         }
 
         // Registrar como pendente
-        function registrarPendente() {
+        async function registrarPendente() {
             const alunoId = document.getElementById('alunoSelect').value;
             const valor = parseFloat(document.getElementById('valorInput').value);
             const dataPagamento = document.getElementById('dataPagamento').value;
@@ -1239,7 +1275,6 @@
             }
             
             const pagamento = {
-                id: Date.now().toString(),
                 alunoId: alunoId,
                 alunoNome: aluno.name || aluno.nome, // Tenta ambos os formatos
                 mes: mes,
@@ -1251,17 +1286,34 @@
                 dataRegistro: new Date().toISOString()
             };
             
-            pagamentos.push(pagamento);
-            savePagamentos();
-            
-            // Limpar formulário
-            document.getElementById('alunoSelect').value = '';
-            document.getElementById('valorInput').value = '';
-            document.getElementById('dataPagamento').valueAsDate = new Date();
-            
-            showAlert('Pagamento registrado como pendente!', 'warning');
-            updateStats();
-            renderPaymentTable();
+            try {
+                const response = await authenticatedFetch('/api/pagamentos', {
+                    method: 'POST',
+                    body: JSON.stringify(pagamento)
+                });
+                
+                if (response.ok) {
+                    const newPagamento = await response.json();
+                    pagamentos.unshift({
+                        id: newPagamento.id,
+                        ...pagamento
+                    });
+                    
+                    showAlert('Pagamento registrado como pendente!', 'warning');
+                    updateStats();
+                    renderPaymentTable();
+                    
+                    // Limpar formulário
+                    document.getElementById('alunoSelect').value = '';
+                    document.getElementById('valorInput').value = '';
+                    document.getElementById('dataPagamento').valueAsDate = new Date();
+                } else {
+                    throw new Error('Erro ao registrar pagamento pendente');
+                }
+            } catch (error) {
+                console.error('Erro ao registrar pagamento pendente:', error);
+                showAlert('Erro ao registrar pagamento pendente. Tente novamente.', 'error');
+            }
         }
 
         // Update statistics
@@ -1374,33 +1426,60 @@
         }
 
         // Confirmar pagamento pendente
-        function confirmarPagamento(pagamentoId) {
+        async function confirmarPagamento(pagamentoId) {
             const pagamento = pagamentos.find(p => p.id === pagamentoId);
             if (pagamento) {
-                pagamento.status = 'pago';
-                pagamento.dataPagamento = new Date().toISOString().split('T')[0];
-                pagamento.metodo = prompt('Método de pagamento (dinheiro, pix, cartao, boleto, transferencia):') || '';
-                savePagamentos();
-                showAlert('Pagamento confirmado!', 'success');
-                updateStats();
-                renderPaymentTable();
+                const metodo = prompt('Método de pagamento (dinheiro, pix, cartao, boleto, transferencia):') || '';
+                
+                try {
+                    const response = await authenticatedFetch(`/api/pagamentos/${pagamentoId}`, {
+                        method: 'PUT',
+                        body: JSON.stringify({
+                            status: 'pago',
+                            dataPagamento: new Date().toISOString().split('T')[0],
+                            metodo: metodo
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        pagamento.status = 'pago';
+                        pagamento.dataPagamento = new Date().toISOString().split('T')[0];
+                        pagamento.metodo = metodo;
+                        
+                        showAlert('Pagamento confirmado!', 'success');
+                        updateStats();
+                        renderPaymentTable();
+                    } else {
+                        throw new Error('Erro ao confirmar pagamento');
+                    }
+                } catch (error) {
+                    console.error('Erro ao confirmar pagamento:', error);
+                    showAlert('Erro ao confirmar pagamento. Tente novamente.', 'error');
+                }
             }
         }
 
         // Excluir pagamento
-        function excluirPagamento(pagamentoId) {
+        async function excluirPagamento(pagamentoId) {
             if (confirm('Tem certeza que deseja excluir este pagamento?')) {
-                pagamentos = pagamentos.filter(p => p.id !== pagamentoId);
-                savePagamentos();
-                showAlert('Pagamento excluído!', 'success');
-                updateStats();
-                renderPaymentTable();
+                try {
+                    const response = await authenticatedFetch(`/api/pagamentos/${pagamentoId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok) {
+                        pagamentos = pagamentos.filter(p => p.id !== pagamentoId);
+                        showAlert('Pagamento excluído!', 'success');
+                        updateStats();
+                        renderPaymentTable();
+                    } else {
+                        throw new Error('Erro ao excluir pagamento');
+                    }
+                } catch (error) {
+                    console.error('Erro ao excluir pagamento:', error);
+                    showAlert('Erro ao excluir pagamento. Tente novamente.', 'error');
+                }
             }
-        }
-
-        // Save payments to localStorage
-        function savePagamentos() {
-            localStorage.setItem('pagamentos', JSON.stringify(pagamentos));
         }
 
         // Utility functions
@@ -1515,7 +1594,16 @@
         }
 
         // Initialize on load
-        document.addEventListener('DOMContentLoaded', loadData);
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Verificar autenticação
+            if (auth.isAuthenticated()) {
+                await loadData();
+            } else {
+                // Usuário não logado - mostrar mensagem ou estado apropriado
+                console.log('Usuário não autenticado');
+            }
+        });
+
     </script>
 
     <!-- Botão de Ajuda -->

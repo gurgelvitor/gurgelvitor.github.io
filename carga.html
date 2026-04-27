@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/auth.js"></script>
     <style>
         :root {
             /* Cores do Tema Claro - Vermelho */
@@ -1421,23 +1422,80 @@
     </div>
 
     <script>
+        // Verificar autenticação
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('Verificando autenticação...');
+            console.log('Auth status:', auth.isAuthenticated());
+            
+            // Verificar autenticação
+            if (!auth.isAuthenticated()) {
+                console.log('Usuário não autenticado, mostrando estado de login');
+                // Não redirecionar, apenas mostrar estado de não logado
+                return;
+            } else {
+                console.log('Usuário autenticado, carregando dados...');
+            }
+            
+            await loadData();
+        });
+
         // Data state
         let selectedWorkout = null;
         let workoutLoads = {};
 
-        // Load data from localStorage
-        function loadData() {
-            // Carregar treinos
-            const savedWorkouts = localStorage.getItem('workoutFichas');
-            if (savedWorkouts) {
-                const workouts = JSON.parse(savedWorkouts);
-                populateWorkoutSelect(workouts);
-            }
-            
-            // Carregar cargas salvas
-            const savedLoads = localStorage.getItem('workoutLoads');
-            if (savedLoads) {
-                workoutLoads = JSON.parse(savedLoads);
+        // Load data from API
+        async function loadData() {
+            try {
+                console.log('Carregando treinos da API...');
+                // Carregar treinos da API
+                const response = await authenticatedFetch('/api/treinos');
+                console.log('Response status:', response.status);
+                
+                if (response.ok) {
+                    const apiTreinos = await response.json();
+                    console.log('Treinos recebidos:', apiTreinos);
+                    
+                    const workouts = apiTreinos.map(treino => ({
+                        ...treino,
+                        name: treino.nome,
+                        description: treino.descricao,
+                        weeklyFrequency: treino.dias_semana ? treino.dias_semana.length : 0,
+                        days: treino.exercicios || []
+                    }));
+                    console.log('Workouts mapeados:', workouts);
+                    
+                    populateWorkoutSelect(workouts);
+                } else {
+                    console.error('Erro ao carregar treinos:', response.statusText);
+                    const errorText = await response.text();
+                    console.error('Error details:', errorText);
+                }
+                
+                // Carregar cargas da API (em vez de localStorage)
+                console.log('Carregando cargas da API...');
+                const cargasResponse = await authenticatedFetch('/api/cargas');
+                if (cargasResponse.ok) {
+                    const apiCargas = await cargasResponse.json();
+                    console.log('Cargas recebidas:', apiCargas);
+                    
+                    // Converter formato da API para o formato esperado pelo frontend
+                    workoutLoads = {};
+                    apiCargas.forEach(carga => {
+                        try {
+                            const cargaData = JSON.parse(carga.conteudo || '{}');
+                            if (cargaData.workoutId && cargaData.loads) {
+                                workoutLoads[cargaData.workoutId] = cargaData.loads;
+                            }
+                        } catch (e) {
+                            console.error('Erro ao parsear carga:', e);
+                        }
+                    });
+                    console.log('WorkoutLoads mapeado:', workoutLoads);
+                } else {
+                    console.error('Erro ao carregar cargas:', cargasResponse.statusText);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
             }
         }
 
@@ -1446,16 +1504,26 @@
             const select = document.getElementById('workoutSelect');
             select.innerHTML = '<option value="">Selecione um treino...</option>';
             
+            console.log('Populando select com workouts:', workouts);
+            
+            if (!workouts || workouts.length === 0) {
+                console.log('Nenhum treino encontrado');
+                select.innerHTML = '<option value="">Nenhum treino encontrado. Crie treinos na página de treinos primeiro.</option>';
+                return;
+            }
+            
             workouts.forEach(workout => {
                 const option = document.createElement('option');
                 option.value = workout.id;
                 option.textContent = workout.name;
                 select.appendChild(option);
             });
+            
+            console.log('Select populado com', workouts.length, 'treinos');
         }
 
         // Load selected workout
-        function loadWorkout() {
+        async function loadWorkout() {
             const workoutId = document.getElementById('workoutSelect').value;
             
             if (!workoutId) {
@@ -1466,16 +1534,31 @@
                 return;
             }
             
-            // Buscar treino no localStorage
-            const workouts = JSON.parse(localStorage.getItem('workoutFichas') || '[]');
-            selectedWorkout = workouts.find(w => w.id === workoutId);
-            
-            if (selectedWorkout) {
-                document.getElementById('workoutTitle').textContent = `Progressão de Cargas - ${selectedWorkout.name}`;
-                document.getElementById('loadSection').style.display = 'block';
-                document.getElementById('searchSection').style.display = 'block';
-                document.getElementById('emptyState').style.display = 'none';
-                renderLoadTracking();
+            try {
+                // Buscar treino da API
+                const response = await authenticatedFetch('/api/treinos');
+                if (response.ok) {
+                    const apiTreinos = await response.json();
+                    const apiTreino = apiTreinos.find(t => t.id === workoutId);
+                    
+                    if (apiTreino) {
+                        selectedWorkout = {
+                            ...apiTreino,
+                            name: apiTreino.nome,
+                            description: apiTreino.descricao,
+                            weeklyFrequency: apiTreino.dias_semana ? apiTreino.dias_semana.length : 0,
+                            days: apiTreino.exercicios || []
+                        };
+                        
+                        document.getElementById('workoutTitle').textContent = `Progressão de Cargas - ${selectedWorkout.name}`;
+                        document.getElementById('loadSection').style.display = 'block';
+                        document.getElementById('searchSection').style.display = 'block';
+                        document.getElementById('emptyState').style.display = 'none';
+                        renderLoadTracking();
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao carregar treino:', error);
             }
         }
 
@@ -1766,10 +1849,67 @@
         }
         
         
-        // Save all loads
-        function saveAllLoads() {
-            localStorage.setItem('workoutLoads', JSON.stringify(workoutLoads));
-            alert('Cargas salvas com sucesso!');
+        // Save all loads to API
+        async function saveAllLoads() {
+            try {
+                console.log('Salvando cargas na API...');
+                console.log('workoutLoads atual:', workoutLoads);
+                
+                if (!workoutLoads || Object.keys(workoutLoads).length === 0) {
+                    alert('Nenhuma carga para salvar. Adicione cargas aos exercícios primeiro.');
+                    return;
+                }
+                
+                // Para cada workout com cargas, salvar na API
+                for (const [workoutId, loads] of Object.entries(workoutLoads)) {
+                    console.log('Salvando carga para workout:', workoutId, 'loads:', loads);
+                    
+                    const cargaData = {
+                        titulo: `Cargas - Treino ${workoutId}`,
+                        conteudo: JSON.stringify({
+                            workoutId: workoutId,
+                            loads: loads,
+                            updatedAt: new Date().toISOString()
+                        }),
+                        categoria: 'carga'
+                    };
+                    
+                    // Verificar se já existe uma carga para este workout
+                    const existingResponse = await authenticatedFetch('/api/cargas');
+                    if (existingResponse.ok) {
+                        const existingCargas = await existingResponse.json();
+                        const existingCarga = existingCargas.find(c => {
+                            try {
+                                const data = JSON.parse(c.conteudo || '{}');
+                                return data.workoutId === workoutId;
+                            } catch (e) {
+                                return false;
+                            }
+                        });
+                        
+                        if (existingCarga) {
+                            // Atualizar carga existente
+                            const updateResponse = await authenticatedFetch(`/api/cargas/${existingCarga.id}`, {
+                                method: 'PUT',
+                                body: JSON.stringify(cargaData)
+                            });
+                            console.log('Carga atualizada:', existingCarga.id);
+                        } else {
+                            // Criar nova carga
+                            const createResponse = await authenticatedFetch('/api/cargas', {
+                                method: 'POST',
+                                body: JSON.stringify(cargaData)
+                            });
+                            console.log('Nova carga criada');
+                        }
+                    }
+                }
+                
+                alert('Cargas salvas com sucesso!');
+            } catch (error) {
+                console.error('Erro ao salvar cargas:', error);
+                alert('Erro ao salvar cargas. Tente novamente.');
+            }
         }
 
         // Mobile menu toggle
@@ -1846,7 +1986,15 @@
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            loadData();
+            
+        // Verificar autenticação
+        if (!auth.isAuthenticated()) {
+            console.log('Usuário não autenticado, mostrando estado de login');
+            // Não redirecionar, apenas mostrar estado de não logado
+            return;
+        }
+        
+        loadData();
             loadThemePreference();
         });
     </script>
@@ -2031,8 +2179,8 @@
         let weightChart = null;
 
         // Initialize weight tracking
-        function initWeightTracking() {
-            loadWeightRecords();
+        async function initWeightTracking() {
+            await loadWeightRecords();
             setupDefaultDate();
             initWeightChart();
             renderWeightTable();
@@ -2044,69 +2192,101 @@
             document.getElementById('weightDate').value = today;
         }
 
-        // Load weight records from localStorage
-        function loadWeightRecords() {
-            const saved = localStorage.getItem('weightRecords');
-            if (saved) {
-                weightRecords = JSON.parse(saved);
+        // Load weight records from API
+        async function loadWeightRecords() {
+            try {
+                const response = await authenticatedFetch('/api/pesos');
+                if (response.ok) {
+                    const data = await response.json();
+                    weightRecords = data.map(record => ({
+                        id: record.id,
+                        date: record.date,
+                        weight: record.weight,
+                        kcal: record.kcal
+                    }));
+                    console.log('Registros de peso carregados:', weightRecords);
+                } else {
+                    console.error('Erro ao carregar registros de peso:', response.statusText);
+                    weightRecords = [];
+                }
+            } catch (error) {
+                console.error('Erro ao carregar registros de peso:', error);
+                weightRecords = [];
             }
         }
 
         // Save weight records to localStorage
-        function saveWeightRecordsToStorage() {
-            localStorage.setItem('weightRecords', JSON.stringify(weightRecords));
-        }
-
         // Add new weight record
-        function addWeightRecord() {
+        async function addWeightRecord() {
             const date = document.getElementById('weightDate').value;
             const weight = parseFloat(document.getElementById('weightValue').value);
             const kcal = parseInt(document.getElementById('kcalValue').value);
 
-            // Validation
-            if (!date || !weight || !kcal) {
-                alert('Por favor, preencha todos os campos!');
+            if (!date || !weight || isNaN(weight)) {
+                alert('Por favor, preencha a data e o peso corretamente!');
                 return;
             }
 
-            if (weight <= 0 || kcal <= 0) {
-                alert('Peso e KCAL devem ser maiores que zero!');
-                return;
-            }
-
-            // Check if date already exists
-            const existingIndex = weightRecords.findIndex(record => record.date === date);
-            if (existingIndex !== -1) {
-                if (confirm('Já existe um registro para esta data. Deseja substituí-lo?')) {
-                    weightRecords[existingIndex] = {
-                        date: date,
-                        weight: weight,
-                        kcal: kcal,
-                        id: Date.now()
-                    };
+            try {
+                // Check if date already exists
+                const existingIndex = weightRecords.findIndex(record => record.date === date);
+                if (existingIndex !== -1) {
+                    if (confirm('Já existe um registro para esta data. Deseja substituí-lo?')) {
+                        // Update existing record
+                        const existingId = weightRecords[existingIndex].id;
+                        const response = await authenticatedFetch(`/api/pesos/${existingId}`, {
+                            method: 'PUT',
+                            body: JSON.stringify({ date, weight, kcal })
+                        });
+                        
+                        if (response.ok) {
+                            const updated = await response.json();
+                            weightRecords[existingIndex] = {
+                                id: updated.id,
+                                date: date,
+                                weight: weight,
+                                kcal: kcal
+                            };
+                        } else {
+                            throw new Error('Erro ao atualizar registro');
+                        }
+                    } else {
+                        return;
+                    }
                 } else {
-                    return;
+                    // Add new record
+                    const response = await authenticatedFetch('/api/pesos', {
+                        method: 'POST',
+                        body: JSON.stringify({ date, weight, kcal })
+                    });
+                    
+                    if (response.ok) {
+                        const newRecord = await response.json();
+                        weightRecords.push({
+                            id: newRecord.id,
+                            date: date,
+                            weight: weight,
+                            kcal: kcal
+                        });
+                    } else {
+                        throw new Error('Erro ao adicionar registro');
+                    }
                 }
-            } else {
-                // Add new record
-                weightRecords.push({
-                    date: date,
-                    weight: weight,
-                    kcal: kcal,
-                    id: Date.now()
-                });
+
+                // Sort by date
+                weightRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+                // Update UI
+                renderWeightTable();
+                updateWeightChart();
+                clearWeightForm();
+                
+                alert('Registro de peso salvo com sucesso!');
+                
+            } catch (error) {
+                console.error('Erro ao salvar registro de peso:', error);
+                alert('Erro ao salvar registro. Tente novamente.');
             }
-
-            // Sort by date
-            weightRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            // Update UI
-            saveWeightRecordsToStorage();
-            renderWeightTable();
-            updateWeightChart();
-            clearWeightForm();
-            
-            alert('Registro de peso adicionado com sucesso!');
         }
 
         // Clear weight form
@@ -2137,10 +2317,10 @@
                     <td>${record.kcal} kcal</td>
                     <td>
                         <div class="weight-actions">
-                            <button class="btn-edit" onclick="editWeightRecord(${record.id})">
+                            <button class="btn-edit" onclick="editWeightRecord('${record.id}')">
                                 <i class="fas fa-edit"></i> Editar
                             </button>
-                            <button class="btn-delete" onclick="deleteWeightRecord(${record.id})">
+                            <button class="btn-delete" onclick="deleteWeightRecord('${record.id}')">
                                 <i class="fas fa-trash"></i> Excluir
                             </button>
                         </div>
@@ -2160,26 +2340,102 @@
             document.getElementById('weightValue').value = record.weight;
             document.getElementById('kcalValue').value = record.kcal;
 
-            // Remove the old record
-            deleteWeightRecord(id, false);
+            // Store the editing record ID
+            window.editingRecordId = id;
+            
+            // Change button text to indicate editing mode
+            const addButton = document.querySelector('.weight-input-container button');
+            addButton.textContent = 'Atualizar Registro';
+            addButton.onclick = function() {
+                updateWeightRecord(id);
+            };
             
             // Scroll to form
             document.querySelector('.weight-input-container').scrollIntoView({ behavior: 'smooth' });
         }
 
+        // Update weight record (new function)
+        async function updateWeightRecord(id) {
+            const date = document.getElementById('weightDate').value;
+            const weight = parseFloat(document.getElementById('weightValue').value);
+            const kcal = parseInt(document.getElementById('kcalValue').value);
+
+            if (!date || !weight || isNaN(weight)) {
+                alert('Por favor, preencha a data e o peso corretamente!');
+                return;
+            }
+
+            try {
+                const response = await authenticatedFetch(`/api/pesos/${id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ date, weight, kcal })
+                });
+                
+                if (response.ok) {
+                    const updated = await response.json();
+                    
+                    // Update local array
+                    const index = weightRecords.findIndex(r => r.id === id);
+                    if (index !== -1) {
+                        weightRecords[index] = {
+                            id: updated.id,
+                            date: date,
+                            weight: weight,
+                            kcal: kcal
+                        };
+                    }
+                    
+                    // Sort by date
+                    weightRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+                    // Update UI
+                    renderWeightTable();
+                    updateWeightChart();
+                    clearWeightForm();
+                    
+                    // Reset button
+                    const addButton = document.querySelector('.weight-input-container button');
+                    addButton.innerHTML = '<i class="fas fa-plus"></i> Adicionar Registro';
+                    addButton.onclick = addWeightRecord;
+                    
+                    // Clear editing state
+                    window.editingRecordId = null;
+                    
+                    alert('Registro atualizado com sucesso!');
+                } else {
+                    throw new Error('Erro ao atualizar registro');
+                }
+            } catch (error) {
+                console.error('Erro ao atualizar registro de peso:', error);
+                alert('Erro ao atualizar registro. Tente novamente.');
+            }
+        }
+
         // Delete weight record
-        function deleteWeightRecord(id, showConfirm = true) {
+        async function deleteWeightRecord(id, showConfirm = true) {
             if (showConfirm && !confirm('Tem certeza que deseja excluir este registro?')) {
                 return;
             }
 
-            weightRecords = weightRecords.filter(record => record.id !== id);
-            saveWeightRecordsToStorage();
-            renderWeightTable();
-            updateWeightChart();
-            
-            if (showConfirm) {
-                alert('Registro excluído com sucesso!');
+            try {
+                const response = await authenticatedFetch(`/api/pesos/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    weightRecords = weightRecords.filter(record => record.id !== id);
+                    renderWeightTable();
+                    updateWeightChart();
+                    
+                    if (showConfirm) {
+                        alert('Registro excluído com sucesso!');
+                    }
+                } else {
+                    throw new Error('Erro ao excluir registro');
+                }
+            } catch (error) {
+                console.error('Erro ao excluir registro de peso:', error);
+                alert('Erro ao excluir registro. Tente novamente.');
             }
         }
 
@@ -2335,14 +2591,82 @@
             weightChart.update();
         }
 
-        // Save weight record (alias for addWeightRecord)
-        function saveWeightRecord() {
-            addWeightRecord();
+        // Add new weight record
+        async function addWeightRecord() {
+            const date = document.getElementById('weightDate').value;
+            const weight = parseFloat(document.getElementById('weightValue').value);
+            const kcal = parseInt(document.getElementById('kcalValue').value);
+
+            if (!date || !weight || isNaN(weight)) {
+                alert('Por favor, preencha a data e o peso corretamente!');
+                return;
+            }
+
+            try {
+                // Check if date already exists
+                const existingIndex = weightRecords.findIndex(record => record.date === date);
+                if (existingIndex !== -1) {
+                    if (confirm('Já existe um registro para esta data. Deseja substituí-lo?')) {
+                        // Update existing record
+                        const existingId = weightRecords[existingIndex].id;
+                        const response = await authenticatedFetch(`/api/pesos/${existingId}`, {
+                            method: 'PUT',
+                            body: JSON.stringify({ date, weight, kcal })
+                        });
+                        
+                        if (response.ok) {
+                            const updated = await response.json();
+                            weightRecords[existingIndex] = {
+                                id: updated.id,
+                                date: date,
+                                weight: weight,
+                                kcal: kcal
+                            };
+                        } else {
+                            throw new Error('Erro ao atualizar registro');
+                        }
+                    } else {
+                        return;
+                    }
+                } else {
+                    // Add new record
+                    const response = await authenticatedFetch('/api/pesos', {
+                        method: 'POST',
+                        body: JSON.stringify({ date, weight, kcal })
+                    });
+                    
+                    if (response.ok) {
+                        const newRecord = await response.json();
+                        weightRecords.push({
+                            id: newRecord.id,
+                            date: date,
+                            weight: weight,
+                            kcal: kcal
+                        });
+                    } else {
+                        throw new Error('Erro ao adicionar registro');
+                    }
+                }
+
+                // Sort by date
+                weightRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+                // Update UI
+                renderWeightTable();
+                updateWeightChart();
+                clearWeightForm();
+                
+                alert('Registro de peso salvo com sucesso!');
+                
+            } catch (error) {
+                console.error('Erro ao salvar registro de peso:', error);
+                alert('Erro ao salvar registro. Tente novamente.');
+            }
         }
 
         // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            initWeightTracking();
+        document.addEventListener('DOMContentLoaded', async function() {
+            await initWeightTracking();
         });
     </script>
 

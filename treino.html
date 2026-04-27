@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Treino - GurgelTrack</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/auth.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -1586,22 +1587,77 @@
         let selectedFicha = null;
         let selectedDay = null;
 
-        // Load data from localStorage
-        function loadData() {
-            const saved = localStorage.getItem('workoutFichas');
-            if (saved) {
-                fichas = JSON.parse(saved);
+        // Load data from API
+        async function loadData() {
+            try {
+                const response = await authenticatedFetch('/api/treinos');
+                if (response.ok) {
+                    const apiTreinos = await response.json();
+                    // Mapear campos do banco para o formato esperado pelo frontend
+                    fichas = apiTreinos.map(treino => ({
+                        ...treino,
+                        name: treino.nome,           // Mapear nome -> name
+                        description: treino.descricao, // Mapear descricao -> description
+                        weeklyFrequency: treino.dias_semana ? treino.dias_semana.length : 0,
+                        days: treino.exercicios || [] // Mapear exercicios -> days
+                    }));
+                } else {
+                    fichas = [];
+                }
+            } catch (error) {
+                console.error('Erro ao carregar treinos:', error);
+                fichas = [];
             }
         }
 
-        // Save data to localStorage
-        function saveData() {
-            localStorage.setItem('workoutFichas', JSON.stringify(fichas));
+        // Save data to API
+        async function saveData() {
+            // A API já salva automaticamente quando criamos/atualizamos treinos
+            // Esta função pode ser usada para recarregar dados se necessário
+            await loadData();
+        }
+
+        // Save treino with days and exercises to API
+        async function saveTreinoToAPI() {
+            if (!selectedFicha) return;
+            
+            try {
+                // Mapear dados para o formato do banco
+                const treinoData = {
+                    nome: selectedFicha.name,
+                    descricao: selectedFicha.description,
+                    exercicios: selectedFicha.days || [], // Dias viram exercicios no banco
+                    dias_semana: selectedFicha.weeklyFrequency ? [] : [],
+                    ativo: true
+                };
+                
+                const response = await authenticatedFetch(`/api/treinos/${selectedFicha.id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify(treinoData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Erro ao salvar treino');
+                }
+            } catch (error) {
+                console.error('Erro ao salvar treino na API:', error);
+                throw error;
+            }
         }
 
         // Initialize
-        function init() {
-            loadData();
+        async function init() {
+            // Verificar autenticação
+            if (auth.isAuthenticated()) {
+                console.log('Usuário autenticado, carregando dados...');
+                // Carregar dados se autenticado
+            } else {
+                console.log('Usuário não autenticado');
+                // Não redirecionar, apenas mostrar estado de não logado
+                return;
+            }
+            
+            await loadData();
             renderFichas();
         }
 
@@ -1637,7 +1693,6 @@
                 <div class="ficha-header">
                     <div>
                         <div class="ficha-title">${ficha.name}</div>
-                        <div class="ficha-info">${ficha.weeklyFrequency} dias/semana</div>
                         <div class="ficha-info">${ficha.days ? ficha.days.length : 0} dias criados</div>
                     </div>
                     <div class="ficha-actions">
@@ -1801,27 +1856,45 @@
         }
 
         // Form submissions
-        document.getElementById('fichaForm').addEventListener('submit', function(e) {
+        document.getElementById('fichaForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            // Verificar autenticação
+            if (!auth.isAuthenticated()) {
+                alert('Por favor, faça login para criar fichas de treino.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
             const ficha = {
-                id: Date.now().toString(),
-                name: document.getElementById('fichaName').value,
-                description: document.getElementById('fichaDescription').value,
-                weeklyFrequency: parseInt(document.getElementById('weeklyFrequency').value),
-                createdAt: new Date().toISOString(),
-                days: []
+                nome: document.getElementById('fichaName').value,
+                descricao: document.getElementById('fichaDescription').value,
+                exercicios: [],  // Campo correto da tabela
+                dias_semana: []  // Banco espera array JSON, não número
             };
             
-            fichas.push(ficha);
-            saveData();
-            renderFichas();
-            closeFichaModal();
-            
-            alert('Ficha criada com sucesso!');
+            try {
+                const response = await authenticatedFetch('/api/treinos', {
+                    method: 'POST',
+                    body: JSON.stringify(ficha)
+                });
+                
+                if (response.ok) {
+                    const savedFicha = await response.json();
+                    await loadData();
+                    renderFichas();
+                    closeFichaModal();
+                    alert('Ficha criada com sucesso!');
+                } else {
+                    throw new Error('Erro ao salvar ficha');
+                }
+            } catch (error) {
+                console.error('Erro ao criar ficha:', error);
+                alert('Erro ao criar ficha. Tente novamente.');
+            }
         });
 
-        document.getElementById('dayForm').addEventListener('submit', function(e) {
+        document.getElementById('dayForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const day = {
@@ -1834,14 +1907,18 @@
                 selectedFicha.days = [];
             }
             selectedFicha.days.push(day);
-            saveData();
-            renderSelectedFicha();
-            closeDayModal();
             
-            alert('Dia de treino criado com sucesso!');
+            try {
+                await saveTreinoToAPI();
+                renderSelectedFicha();
+                closeDayModal();
+                alert('Dia criado com sucesso!');
+            } catch (error) {
+                alert('Erro ao salvar dia. Tente novamente.');
+            }
         });
 
-        document.getElementById('exerciseForm').addEventListener('submit', function(e) {
+        document.getElementById('exerciseForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const exercise = {
@@ -1860,11 +1937,15 @@
                     day.exercises = [];
                 }
                 day.exercises.push(exercise);
-                saveData();
-                renderSelectedFicha();
-                closeExerciseModal();
                 
-                alert('Exercício adicionado com sucesso!');
+                try {
+                    await saveTreinoToAPI();
+                    renderSelectedFicha();
+                    closeExerciseModal();
+                    alert('Exercício adicionado com sucesso!');
+                } catch (error) {
+                    alert('Erro ao salvar exercício. Tente novamente.');
+                }
             }
         });
 
@@ -1882,25 +1963,35 @@
             }
         }
 
-        function deleteDay(dayId) {
+        async function deleteDay(dayId) {
             if (confirm('Tem certeza que deseja excluir este dia de treino?')) {
                 selectedFicha.days = selectedFicha.days.filter(d => d.id !== dayId);
-                saveData();
-                renderSelectedFicha();
-                alert('Dia excluído com sucesso!');
+                
+                try {
+                    await saveTreinoToAPI();
+                    renderSelectedFicha();
+                    alert('Dia excluído com sucesso!');
+                } catch (error) {
+                    alert('Erro ao excluir dia. Tente novamente.');
+                }
             }
         }
 
-        function deleteExercise(exerciseId) {
+        async function deleteExercise(exerciseId) {
             if (confirm('Tem certeza que deseja excluir este exercício?')) {
                 selectedFicha.days.forEach(day => {
                     if (day.exercises) {
                         day.exercises = day.exercises.filter(e => e.id !== exerciseId);
                     }
                 });
-                saveData();
-                renderSelectedFicha();
-                alert('Exercício excluído com sucesso!');
+                
+                try {
+                    await saveTreinoToAPI();
+                    renderSelectedFicha();
+                    alert('Exercício excluído com sucesso!');
+                } catch (error) {
+                    alert('Erro ao excluir exercício. Tente novamente.');
+                }
             }
         }
 
@@ -1965,16 +2056,17 @@
             document.getElementById('assignStudentForm').reset();
         }
 
-        function loadStudents() {
+        async function loadStudents() {
             try {
-                const students = JSON.parse(localStorage.getItem('students') || '[]');
+                const response = await authenticatedFetch('/api/alunos');
+                const students = await response.json();
                 const studentSelect = document.getElementById('studentSelect');
                 
                 studentSelect.innerHTML = '<option value="">Selecione um aluno...</option>';
                 students.forEach(student => {
                     const option = document.createElement('option');
                     option.value = student.id;
-                    option.textContent = student.name;
+                    option.textContent = student.nome;
                     studentSelect.appendChild(option);
                 });
             } catch (error) {
@@ -1982,16 +2074,17 @@
             }
         }
 
-        function loadFichas() {
+        async function loadFichas() {
             try {
-                const workoutFichas = JSON.parse(localStorage.getItem('workoutFichas') || '[]');
+                const response = await authenticatedFetch('/api/treinos');
+                const workoutFichas = await response.json();
                 const workoutSelect = document.getElementById('workoutSelect');
                 
                 workoutSelect.innerHTML = '<option value="">Selecione uma ficha...</option>';
                 workoutFichas.forEach(ficha => {
                     const option = document.createElement('option');
                     option.value = ficha.id;
-                    option.textContent = ficha.name;
+                    option.textContent = ficha.nome;
                     workoutSelect.appendChild(option);
                 });
             } catch (error) {
@@ -2005,7 +2098,7 @@
             assignWorkoutToStudent();
         });
 
-        function assignWorkoutToStudent() {
+        async function assignWorkoutToStudent() {
             const studentId = document.getElementById('studentSelect').value;
             const workoutId = document.getElementById('workoutSelect').value;
             const workoutName = document.getElementById('workoutName').value;
@@ -2026,37 +2119,21 @@
             }
 
             try {
-                // Get workout data
-                const workoutFichas = JSON.parse(localStorage.getItem('workoutFichas') || '[]');
-                const workout = workoutFichas.find(f => f.id === workoutId);
+                // Atribuir treino ao aluno usando API
+                const response = await authenticatedFetch(`/api/treinos/${workoutId}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        aluno_id: studentId,
+                        nome: workoutName
+                    })
+                });
                 
-                if (!workout) {
-                    alert('Ficha de treino não encontrada!');
-                    return;
+                if (response.ok) {
+                    alert(`Treino "${workoutName}" atribuído com sucesso ao aluno!`);
+                    closeAssignStudentModal();
+                } else {
+                    throw new Error('Erro ao atribuir treino');
                 }
-                
-                // Get current assignments
-                const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
-                if (!assignments.workouts) {
-                    assignments.workouts = [];
-                }
-                
-                // Create workout assignment
-                const workoutAssignment = {
-                    id: Date.now().toString(),
-                    studentId: studentId,
-                    name: workoutName,
-                    workout: workout,
-                    assignedAt: new Date().toISOString()
-                };
-                
-                // Add to assignments
-                assignments.workouts.push(workoutAssignment);
-                localStorage.setItem('studentAssignments', JSON.stringify(assignments));
-                
-                alert(`Treino "${workoutName}" atribuído com sucesso ao aluno!`);
-                closeAssignStudentModal();
-                
             } catch (error) {
                 console.error('Erro ao atribuir treino:', error);
                 alert('Erro ao atribuir treino. Tente novamente.');

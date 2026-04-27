@@ -5,10 +5,10 @@ const { createClient } = require('@supabase/supabase-js');
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Funções para gerenciar pessoas
-export const pessoasAPI = {
+const pessoasAPI = {
     // Listar todas as pessoas (sem senhas)
     async listar() {
         const { data, error } = await supabase
@@ -73,3 +73,5 @@ export const pessoasAPI = {
         return data;
     }
 };
+
+module.exports = { supabase, pessoasAPI };

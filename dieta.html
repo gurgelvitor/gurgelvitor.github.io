@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/auth.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <style>
         :root {
@@ -1744,29 +1745,35 @@
  
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
-            initializeCharts();
-            loadFromLocalStorage();
-            updateCalculations();
+            // Verificar autenticação
+            if (auth.isAuthenticated()) {
+                initializeCharts();
+                loadFromLocalStorage();
+                updateCalculations();
+            } else {
+                // Usuário não logado - mostrar estado apropriado
+                console.log('Usuário não autenticado');
+            }
             
             // Mobile menu toggle
             const mobileMenuToggle = document.getElementById('mobileMenuToggle');
             const sidebar = document.getElementById('sidebar');
             
-            if (mobileMenuToggle) {
-                mobileMenuToggle.addEventListener('click', function() {
+            if (mobileMenuToggle && sidebar) {
+                mobileMenuToggle.addEventListener('click', () => {
                     sidebar.classList.toggle('active');
                 });
-            }
-
-            // Close sidebar when clicking outside on mobile
-            document.addEventListener('click', function(event) {
-                if (window.innerWidth <= 768) {
-                    if (!sidebar.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
-                        sidebar.classList.remove('active');
+                
+                // Close sidebar when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (window.innerWidth <= 768) {
+                        if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                            sidebar.classList.remove('active');
+                        }
                     }
-                }
-            });
-
+                });
+            }
+            
             // Active navigation state
             const currentPath = window.location.pathname;
             const navItems = document.querySelectorAll('.nav-item');
@@ -1780,23 +1787,6 @@
             });
         });
  
-        // Sistema de persistência com localStorage
-        function saveToLocalStorage() {
-            try {
-                const dietData = {
-                    weight: document.getElementById('weight').value,
-                    gender: document.getElementById('gender').value,
-                    meals: meals,
-                    lastSaved: new Date().toISOString()
-                };
-                
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(dietData));
-                console.log('✅ Dados salvos com sucesso');
-            } catch (error) {
-                console.error('❌ Erro ao salvar dados:', error);
-            }
-        }
-
         // Funções para atribuir a aluno
         function openAssignStudentModal() {
             loadStudents();
@@ -1808,16 +1798,17 @@
             document.getElementById('assignStudentForm').reset();
         }
 
-        function loadStudents() {
+        async function loadStudents() {
             try {
-                const students = JSON.parse(localStorage.getItem('students') || '[]');
+                const response = await authenticatedFetch('/api/alunos');
+                const students = await response.json();
                 const studentSelect = document.getElementById('studentSelect');
                 
                 studentSelect.innerHTML = '<option value="">Selecione um aluno...</option>';
                 students.forEach(student => {
                     const option = document.createElement('option');
                     option.value = student.id;
-                    option.textContent = student.name;
+                    option.textContent = student.nome;
                     studentSelect.appendChild(option);
                 });
             } catch (error) {
@@ -1831,7 +1822,7 @@
             assignDietToStudent();
         });
 
-        function assignDietToStudent() {
+        async function assignDietToStudent() {
             const studentId = document.getElementById('studentSelect').value;
             const dietName = document.getElementById('dietName').value;
             
@@ -1866,28 +1857,26 @@
                     };
                 });
                 
-                // Get current assignments
-                const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
-                if (!assignments.diets) {
-                    assignments.diets = [];
-                }
-                
-                // Create diet assignment
-                const dietAssignment = {
-                    id: Date.now().toString(),
-                    studentId: studentId,
-                    name: dietName,
-                    meals: mealsWithTotals,
-                    totals: totals,
-                    assignedAt: new Date().toISOString()
+                // Create diet data for API
+                const dietData = {
+                    nome: dietName,
+                    descricao: `Dieta com ${mealsWithTotals.length} refeições`,
+                    refeicoes: mealsWithTotals,
+                    aluno_id: studentId
                 };
                 
-                // Add to assignments
-                assignments.diets.push(dietAssignment);
-                localStorage.setItem('studentAssignments', JSON.stringify(assignments));
+                // Save to API
+                const response = await authenticatedFetch('/api/dietas', {
+                    method: 'POST',
+                    body: JSON.stringify(dietData)
+                });
                 
-                alert(`Dieta "${dietName}" atribuída com sucesso ao aluno!`);
-                closeAssignStudentModal();
+                if (response.ok) {
+                    alert(`Dieta "${dietName}" atribuída com sucesso ao aluno!`);
+                    closeAssignStudentModal();
+                } else {
+                    throw new Error('Erro ao salvar dieta');
+                }
                 
             } catch (error) {
                 console.error('Erro ao atribuir dieta:', error);
@@ -2370,6 +2359,10 @@
         function updateMealCalculations(mealId, totalDayKcal = 0) {
             const meal = meals.find(m => m.id === mealId);
             
+            if (!meal || !meal.foods || meal.foods.length === 0) {
+                return;
+            }
+            
             let totalKcal = 0;
             let totalPtn = 0;
             let totalCho = 0;
@@ -2388,12 +2381,18 @@
             const lipPercentage = totalGrams > 0 ? ((totalLip / totalGrams) * 100).toFixed(1) : 0;
             const dayPercentage = totalDayKcal > 0 ? ((totalKcal / totalDayKcal) * 100).toFixed(1) : 0;
             
-            // Atualizar valores
-            document.getElementById(`meal-kcal-${mealId}`).textContent = Math.round(totalKcal);
-            document.getElementById(`meal-ptn-${mealId}`).textContent = totalPtn.toFixed(1) + 'g (' + ptnPercentage + '%)';
-            document.getElementById(`meal-cho-${mealId}`).textContent = totalCho.toFixed(1) + 'g (' + choPercentage + '%)';
-            document.getElementById(`meal-lip-${mealId}`).textContent = totalLip.toFixed(1) + 'g (' + lipPercentage + '%)';
-            document.getElementById(`meal-percentage-${mealId}`).textContent = dayPercentage + '%';
+            // Atualizar valores com verificação de existência dos elementos
+            const kcalElement = document.getElementById(`meal-kcal-${mealId}`);
+            const ptnElement = document.getElementById(`meal-ptn-${mealId}`);
+            const choElement = document.getElementById(`meal-cho-${mealId}`);
+            const lipElement = document.getElementById(`meal-lip-${mealId}`);
+            const percentageElement = document.getElementById(`meal-percentage-${mealId}`);
+            
+            if (kcalElement) kcalElement.textContent = Math.round(totalKcal);
+            if (ptnElement) ptnElement.textContent = totalPtn.toFixed(1) + 'g (' + ptnPercentage + '%)';
+            if (choElement) choElement.textContent = totalCho.toFixed(1) + 'g (' + choPercentage + '%)';
+            if (lipElement) lipElement.textContent = totalLip.toFixed(1) + 'g (' + lipPercentage + '%)';
+            if (percentageElement) percentageElement.textContent = dayPercentage + '%';
             
             // Atualizar gráfico
             if (mealCharts[mealId]) {
@@ -2480,6 +2479,23 @@
             saveToLocalStorage();
         }
  
+        // Função para salvar dados no localStorage
+        function saveToLocalStorage() {
+            try {
+                const dietData = {
+                    weight: document.getElementById('weight').value,
+                    gender: document.getElementById('gender').value,
+                    meals: meals,
+                    mealIdCounter: mealIdCounter
+                };
+                
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(dietData));
+                console.log('✅ Dados salvos com sucesso');
+            } catch (error) {
+                console.error('❌ Erro ao salvar dados:', error);
+            }
+        }
+
         // Salvar automaticamente a cada 30 segundos (backup)
         setInterval(function() {
             if (meals.length > 0) {

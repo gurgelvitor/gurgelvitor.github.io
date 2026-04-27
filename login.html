@@ -389,6 +389,7 @@
         </div>
     </div>
 
+    <script src="js/auth.js"></script>
     <script>
         // Form elements
         const loginForm = document.getElementById('loginForm');
@@ -477,25 +478,10 @@
         // Função de login
         async function handleLogin(email, password) {
             try {
-                const response = await fetch('/api/pessoas/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email, password }),
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Erro no login');
-                }
-
+                const data = await auth.login(email, password);
+                
                 // Login sucesso
                 showAlert('success', 'Login realizado com sucesso!');
-                
-                // Salvar dados do usuário
-                localStorage.setItem('currentUser', JSON.stringify(data));
                 
                 // Redirecionar após 1 segundo
                 setTimeout(() => {
@@ -588,6 +574,14 @@
             setLoading(true, true);
             await handleRegister(email, password);
         });
+
+        // Verificar se já está logado
+        if (auth.isAuthenticated()) {
+            showAlert('success', 'Você já está logado! Redirecionando...');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
 
         // Limpar alerts ao digitar
         ['email', 'password'].forEach(id => {

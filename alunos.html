@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/auth.js"></script>
     <style>
         :root {
             --primary-color: #8b0000;
@@ -1989,19 +1990,29 @@
             });
         }
 
-        // Load students from localStorage
-        function loadStudents() {
+        // Load students from API
+        async function loadStudents() {
             try {
-                students = JSON.parse(localStorage.getItem('students') || '[]');
+                const response = await authenticatedFetch('/api/alunos');
+                const apiStudents = await response.json();
+                
+                // Converter campos da API para o formato esperado pela página
+                students = apiStudents.map(student => ({
+                    ...student,
+                    name: student.nome || student.name, // Garantir compatibilidade
+                    phone: student.telefone || student.phone
+                }));
+                
                 displayStudents();
             } catch (error) {
                 console.error('Erro ao carregar alunos:', error);
                 students = [];
+                displayStudents();
             }
         }
 
         // Display students
-        function displayStudents() {
+        async function displayStudents() {
             const studentGrid = document.getElementById('studentGrid');
             
             if (students.length === 0) {
@@ -2015,28 +2026,43 @@
                 return;
             }
 
-            studentGrid.innerHTML = students.map(student => `
+            // Carregar contagens de treinos, dietas e cálculos para cada aluno
+            const studentsWithCounts = await Promise.all(students.map(async (student) => {
+                const [workouts, diets, calculations] = await Promise.all([
+                    getStudentWorkouts(student.id),
+                    getStudentDiets(student.id),
+                    getStudentCalculations(student.id)
+                ]);
+                return {
+                    ...student,
+                    workoutCount: workouts.length,
+                    dietCount: diets.length,
+                    calculationCount: calculations.length
+                };
+            }));
+
+            studentGrid.innerHTML = studentsWithCounts.map(student => `
                 <div class="student-card" onclick="selectStudent('${student.id}')" data-student-id="${student.id}">
                     <div class="student-header">
                         <div class="student-avatar">
-                            ${student.name.charAt(0).toUpperCase()}
+                            ${(student.name || student.nome || '?').charAt(0).toUpperCase()}
                         </div>
                         <div class="student-info">
-                            <h3>${student.name}</h3>
+                            <h3>${student.name || student.nome || 'Sem nome'}</h3>
                             <p>${student.email || 'Sem e-mail'}</p>
                         </div>
                     </div>
                     <div class="student-stats">
                         <div class="stat-item">
-                            <div class="stat-value">${getStudentDiets(student.id).length}</div>
+                            <div class="stat-value">${student.dietCount}</div>
                             <div class="stat-label">Dietas</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">${getStudentWorkouts(student.id).length}</div>
+                            <div class="stat-value">${student.workoutCount}</div>
                             <div class="stat-label">Treinos</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">${getStudentCalculations(student.id).length}</div>
+                            <div class="stat-value">${student.calculationCount}</div>
                             <div class="stat-label">Cálculos</div>
                         </div>
                     </div>
@@ -2044,38 +2070,77 @@
             `).join('');
         }
 
-        // Get student diets
-        function getStudentDiets(studentId) {
+        // Calculate diet totals from refeicoes
+        function calculateDietTotals(refeicoes) {
+            const totals = { kcal: 0, ptn: 0, cho: 0, lip: 0 };
+            
+            if (!refeicoes || !Array.isArray(refeicoes)) {
+                return totals;
+            }
+            
+            refeicoes.forEach(meal => {
+                if (meal.foods && Array.isArray(meal.foods)) {
+                    meal.foods.forEach(food => {
+                        const quantity = food.quantity || 100;
+                        const factor = quantity / 100;
+                        
+                        totals.kcal += (food.kcal || 0) * factor;
+                        totals.ptn += (food.ptn || 0) * factor;
+                        totals.cho += (food.cho || 0) * factor;
+                        totals.lip += (food.lip || 0) * factor;
+                    });
+                }
+            });
+            
+            return totals;
+        }
+
+        // Get student diets from API
+        async function getStudentDiets(studentId) {
             try {
-                const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
-                return assignments.diets?.filter(d => d.studentId === studentId) || [];
+                const response = await authenticatedFetch('/api/dietas');
+                const allDietas = await response.json();
+                
+                // Filtrar dietas atribuídas a este aluno
+                return allDietas.filter(dieta => dieta.aluno_id === studentId);
             } catch (error) {
+                console.error('Erro ao carregar dietas do aluno:', error);
                 return [];
             }
         }
 
-        // Get student workouts
-        function getStudentWorkouts(studentId) {
+        // Get student workouts from API
+        async function getStudentWorkouts(studentId) {
             try {
-                const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
-                return assignments.workouts?.filter(w => w.studentId === studentId) || [];
+                const response = await authenticatedFetch('/api/treinos');
+                const allTreinos = await response.json();
+                
+                // Filtrar treinos atribuídos a este aluno
+                return allTreinos.filter(treino => treino.aluno_id === studentId);
             } catch (error) {
+                console.error('Erro ao carregar treinos do aluno:', error);
                 return [];
             }
         }
 
-        // Get student calculations
-        function getStudentCalculations(studentId) {
+        // Get student calculations from API
+        async function getStudentCalculations(studentId) {
             try {
-                const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
-                return assignments.calculations?.filter(c => c.studentId === studentId) || [];
+                const response = await authenticatedFetch('/api/anotacoes');
+                const allAnotacoes = await response.json();
+                
+                // Filtrar anotações que são cálculos e atribuídas a este aluno
+                return allAnotacoes.filter(anotacao => 
+                    anotacao.categoria === 'calculo' && anotacao.aluno_id === studentId
+                );
             } catch (error) {
+                console.error('Erro ao carregar cálculos do aluno:', error);
                 return [];
             }
         }
 
         // Select student
-        function selectStudent(studentId) {
+        async function selectStudent(studentId) {
             selectedStudentId = studentId;
             
             // Update UI
@@ -2088,30 +2153,30 @@
             document.getElementById('studentDetails').classList.add('active');
             
             // Load student data
-            loadStudentData(studentId);
+            await loadStudentData(studentId);
         }
 
         // Load student data
-        function loadStudentData(studentId) {
+        async function loadStudentData(studentId) {
             const student = students.find(s => s.id === studentId);
             if (!student) return;
 
-            document.getElementById('selectedStudentName').textContent = student.name;
+            document.getElementById('selectedStudentName').textContent = student.name || student.nome || 'Sem nome';
 
             // Load data for each tab
-            loadOverviewTab(studentId);
-            loadDietTab(studentId);
-            loadWorkoutTab(studentId);
-            loadCalculationTab(studentId);
+            await loadOverviewTab(studentId);
+            await loadDietTab(studentId);
+            await loadWorkoutTab(studentId);
+            await loadCalculationTab(studentId);
             loadDataTab(studentId);
         }
 
         // Load overview tab
-        function loadOverviewTab(studentId) {
+        async function loadOverviewTab(studentId) {
             const overviewGrid = document.getElementById('overviewGrid');
-            const diets = getStudentDiets(studentId);
-            const workouts = getStudentWorkouts(studentId);
-            const calculations = getStudentCalculations(studentId);
+            const diets = await getStudentDiets(studentId);
+            const workouts = await getStudentWorkouts(studentId);
+            const calculations = await getStudentCalculations(studentId);
 
             let overviewHTML = '';
 
@@ -2146,12 +2211,15 @@
                         <div class="protocol-header">
                             <div class="protocol-title">
                                 <i class="fas fa-dumbbell"></i>
-                                Treinos Recentes
+                                ${workouts[workouts.length - 1].nome}
+                            </div>
+                            <div class="protocol-date">
+                                ${new Date(workouts[workouts.length - 1].created_at).toLocaleDateString('pt-BR')}
                             </div>
                         </div>
                         <div class="protocol-content">
-                            <p>${workouts.length} treino(s) atribuído(s)</p>
-                            <p>Último: ${new Date(workouts[workouts.length - 1].assignedAt).toLocaleDateString('pt-BR')}</p>
+                            <p>${workouts[workouts.length - 1].descricao || 'Sem descrição'}</p>
+                            <p><strong>Dias criados:</strong> ${workouts[workouts.length - 1].exercicios ? workouts[workouts.length - 1].exercicios.length : 0}</p>
                         </div>
                         <div class="protocol-actions">
                             <button class="btn btn-primary" onclick="switchTab('workout')">
@@ -2201,9 +2269,9 @@
         }
 
         // Load diet tab
-        function loadDietTab(studentId) {
+        async function loadDietTab(studentId) {
             const dietGrid = document.getElementById('dietGrid');
-            const diets = getStudentDiets(studentId);
+            const diets = await getStudentDiets(studentId);
 
             if (diets.length === 0) {
                 dietGrid.innerHTML = `
@@ -2221,10 +2289,10 @@
                     <div class="protocol-header">
                         <div class="protocol-title">
                             <i class="fas fa-utensils"></i>
-                            ${diet.name}
+                            ${diet.nome || 'Dieta sem nome'}
                         </div>
                         <div class="protocol-date">
-                            ${new Date(diet.assignedAt).toLocaleDateString('pt-BR')}
+                            ${diet.created_at ? new Date(diet.created_at).toLocaleDateString('pt-BR') : 'Data não disponível'}
                         </div>
                     </div>
                     
@@ -2232,22 +2300,22 @@
                         <div class="summary-stats">
                             <div class="stat-item">
                                 <i class="fas fa-fire"></i>
-                                <span class="stat-value">${Math.round(diet.totals?.kcal || 0)}</span>
+                                <span class="stat-value">${calculateDietTotals(diet.refeicoes).kcal.toFixed(0)}</span>
                                 <span class="stat-label">KCAL</span>
                             </div>
                             <div class="stat-item">
                                 <i class="fas fa-drumstick-bite"></i>
-                                <span class="stat-value">${(diet.totals?.ptn || 0).toFixed(1)}g</span>
+                                <span class="stat-value">${calculateDietTotals(diet.refeicoes).ptn.toFixed(1)}g</span>
                                 <span class="stat-label">Proteínas</span>
                             </div>
                             <div class="stat-item">
                                 <i class="fas fa-bread-slice"></i>
-                                <span class="stat-value">${(diet.totals?.cho || 0).toFixed(1)}g</span>
+                                <span class="stat-value">${calculateDietTotals(diet.refeicoes).cho.toFixed(1)}g</span>
                                 <span class="stat-label">Carboidratos</span>
                             </div>
                             <div class="stat-item">
                                 <i class="fas fa-oil-can"></i>
-                                <span class="stat-value">${(diet.totals?.lip || 0).toFixed(1)}g</span>
+                                <span class="stat-value">${calculateDietTotals(diet.refeicoes).lip.toFixed(1)}g</span>
                                 <span class="stat-label">Gorduras</span>
                             </div>
                         </div>
@@ -2255,21 +2323,21 @@
                     
                     <div class="diet-meals">
                         <h4><i class="fas fa-clipboard-list"></i> Refeições</h4>
-                        ${diet.meals && diet.meals.length > 0 ? diet.meals.map(meal => `
+                        ${diet.refeicoes && diet.refeicoes.length > 0 ? diet.refeicoes.map(meal => `
                             <div class="meal-section">
                                 <div class="meal-header">
-                                    <h5>${meal.name}</h5>
+                                    <h5>${meal.name || 'Refeição sem nome'}</h5>
                                     <div class="meal-totals">
-                                        <span>KCAL: ${Math.round(meal.totals?.kcal || 0)}</span>
-                                        <span>P: ${(meal.totals?.ptn || 0).toFixed(1)}g</span>
-                                        <span>C: ${(meal.totals?.cho || 0).toFixed(1)}g</span>
-                                        <span>G: ${(meal.totals?.lip || 0).toFixed(1)}g</span>
+                                        <span>KCAL: ${meal.totals ? Math.round(meal.totals.kcal) : 0}</span>
+                                        <span>P: ${meal.totals ? meal.totals.ptn.toFixed(1) : 0}g</span>
+                                        <span>C: ${meal.totals ? meal.totals.cho.toFixed(1) : 0}g</span>
+                                        <span>G: ${meal.totals ? meal.totals.lip.toFixed(1) : 0}g</span>
                                     </div>
                                 </div>
                                 <div class="meal-foods">
                                     ${meal.foods && meal.foods.length > 0 ? meal.foods.map(food => `
                                         <div class="food-item">
-                                            <div class="food-name">${food.name}</div>
+                                            <div class="food-name">${food.name || 'Alimento sem nome'}</div>
                                             <div class="food-quantity">${food.quantity || '100g'}</div>
                                             <div class="food-macros">
                                                 <span class="macro kcal">${Math.round((food.kcal || 0) * (food.quantity || 100) / 100)} kcal</span>
@@ -2278,7 +2346,7 @@
                                                 <span class="macro fat">G: ${((food.lip || 0) * (food.quantity || 100) / 100).toFixed(1)}g</span>
                                             </div>
                                         </div>
-                                    `).join('') : '<p class="no-foods">Nenhum aluno adicionado</p>'}
+                                    `).join('') : '<p class="no-foods">Nenhum alimento adicionado</p>'}
                                 </div>
                             </div>
                         `).join('') : '<p class="no-meals">Nenhuma refeição adicionada</p>'}
@@ -2299,9 +2367,9 @@
         }
 
         // Load workout tab
-        function loadWorkoutTab(studentId) {
+        async function loadWorkoutTab(studentId) {
             const workoutGrid = document.getElementById('workoutGrid');
-            const workouts = getStudentWorkouts(studentId);
+            const workouts = await getStudentWorkouts(studentId);
 
             if (workouts.length === 0) {
                 workoutGrid.innerHTML = `
@@ -2319,10 +2387,10 @@
                     <div class="protocol-header">
                         <div class="protocol-title">
                             <i class="fas fa-dumbbell"></i>
-                            ${workout.name}
+                            ${workout.nome || 'Treino sem nome'}
                         </div>
                         <div class="protocol-date">
-                            ${new Date(workout.assignedAt).toLocaleDateString('pt-BR')}
+                            ${workout.created_at ? new Date(workout.created_at).toLocaleDateString('pt-BR') : 'Data não disponível'}
                         </div>
                     </div>
                     
@@ -2330,41 +2398,40 @@
                         <div class="summary-stats">
                             <div class="stat-item">
                                 <i class="fas fa-calendar-alt"></i>
-                                <span class="stat-value">${workout.workout?.days?.length || 'N/A'}</span>
+                                <span class="stat-value">${workout.exercicios ? workout.exercicios.length : 0}</span>
                                 <span class="stat-label">Dias</span>
                             </div>
                             <div class="stat-item">
                                 <i class="fas fa-dumbbell"></i>
-                                <span class="stat-value">${workout.workout?.days?.reduce((total, day) => total + (day.exercises?.length || 0), 0) || 'N/A'}</span>
+                                <span class="stat-value">${workout.exercicios ? workout.exercicios.reduce((total, dia) => total + (dia.exercises ? dia.exercises.length : 0), 0) : 0}</span>
                                 <span class="stat-label">Exercícios</span>
-                            </div>
-                            <div class="stat-item">
-                                <i class="fas fa-sync-alt"></i>
-                                <span class="stat-value">${workout.workout?.weeklyFrequency || 'N/A'}</span>
-                                <span class="stat-label">vezes/sem</span>
                             </div>
                         </div>
                     </div>
                     
+                    <div class="workout-description">
+                        <p><strong>Descrição:</strong> ${workout.descricao || 'Sem descrição'}</p>
+                    </div>
+                    
                     <div class="workout-days">
                         <h4><i class="fas fa-clipboard-list"></i> Dias de Treino</h4>
-                        ${workout.workout?.days && workout.workout.days.length > 0 ? workout.workout.days.map(day => `
+                        ${workout.exercicios && workout.exercicios.length > 0 ? workout.exercicios.map(dia => `
                             <div class="day-section">
                                 <div class="day-header">
-                                    <h5>${day.name}</h5>
+                                    <h5>${dia.name || 'Dia sem nome'}</h5>
                                     <div class="day-stats">
-                                        <span>${day.exercises?.length || 0} exercícios</span>
+                                        <span>${dia.exercises ? dia.exercises.length : 0} exercícios</span>
                                     </div>
                                 </div>
                                 <div class="day-exercises">
-                                    ${day.exercises && day.exercises.length > 0 ? day.exercises.map(exercise => `
+                                    ${dia.exercises && dia.exercises.length > 0 ? dia.exercises.map(exercise => `
                                         <div class="exercise-item">
-                                            <div class="exercise-name">${exercise.name}</div>
+                                            <div class="exercise-name">${exercise.name || 'Exercício sem nome'}</div>
                                             <div class="exercise-details">
-                                                <span class="exercise-sets">${exercise.sets || 'N/A'} séries</span>
-                                                <span class="exercise-reps">${exercise.reps || 'N/A'} reps</span>
-                                                <span class="exercise-rest">${exercise.rest || 'N/A'}s desc</span>
-                                                <span class="exercise-load">${exercise.load || 'N/A'}</span>
+                                                <span class="exercise-sets">${exercise.sets ? exercise.sets + ' séries' : 'N/A séries'}</span>
+                                                <span class="exercise-reps">${exercise.reps ? exercise.reps + ' reps' : 'N/A reps'}</span>
+                                                <span class="exercise-rest">${exercise.rest ? exercise.rest + 's desc' : 'N/A desc'}</span>
+                                                <span class="exercise-load">${exercise.load || 'N/A carga'}</span>
                                             </div>
                                             ${exercise.notes ? `<div class="exercise-notes">${exercise.notes}</div>` : ''}
                                         </div>
@@ -2389,9 +2456,9 @@
         }
 
         // Load calculation tab
-        function loadCalculationTab(studentId) {
+        async function loadCalculationTab(studentId) {
             const calculationGrid = document.getElementById('calculationGrid');
-            const calculations = getStudentCalculations(studentId);
+            const calculations = await getStudentCalculations(studentId);
 
             if (calculations.length === 0) {
                 calculationGrid.innerHTML = `
@@ -2404,15 +2471,23 @@
                 return;
             }
 
-            calculationGrid.innerHTML = calculations.map(calc => `
-                <div class="protocol-card calculation-card">
+            calculationGrid.innerHTML = calculations.map(calc => {
+                // Parse calculation data from conteudo
+                let calcData = {};
+                try {
+                    calcData = JSON.parse(calc.conteudo || '{}');
+                } catch (e) {
+                    console.error('Erro ao parsear dados do cálculo:', e);
+                }
+
+                return `<div class="protocol-card calculation-card">
                     <div class="protocol-header">
                         <div class="protocol-title">
                             <i class="fas fa-calculator"></i>
-                            ${calc.name}
+                            ${calc.titulo || 'Cálculo sem nome'}
                         </div>
                         <div class="protocol-date">
-                            ${new Date(calc.assignedAt).toLocaleDateString('pt-BR')}
+                            ${calc.created_at ? new Date(calc.created_at).toLocaleDateString('pt-BR') : 'Data não disponível'}
                         </div>
                     </div>
                     
@@ -2420,72 +2495,48 @@
                         <div class="summary-stats">
                             <div class="stat-item">
                                 <i class="fas fa-fire"></i>
-                                <span class="stat-value">${calc.tmb || 'N/A'}</span>
-                                <span class="stat-label">TMB (kcal)</span>
+                                <span class="stat-value">${calcData.tdee || 'N/A'}</span>
+                                <span class="stat-label">TDEE kcal</span>
                             </div>
                             <div class="stat-item">
-                                <i class="fas fa-burn"></i>
-                                <span class="stat-value">${calc.get || 'N/A'}</span>
-                                <span class="stat-label">GET (kcal)</span>
+                                <i class="fas fa-heartbeat"></i>
+                                <span class="stat-value">${calcData.bmr || 'N/A'}</span>
+                                <span class="stat-label">BMR kcal</span>
                             </div>
                             <div class="stat-item">
-                                <i class="fas fa-chart-line"></i>
-                                <span class="stat-value">${Math.round(((calc.get || 0) - (calc.tmb || 0)) / (calc.tmb || 1) * 100)}%</span>
-                                <span class="stat-label">Déficit/Superávit</span>
+                                <i class="fas fa-running"></i>
+                                <span class="stat-value">${calcData.activityFactor || 'N/A'}</span>
+                                <span class="stat-label">Fator Atividade</span>
                             </div>
                         </div>
                     </div>
                     
                     <div class="calculation-details">
                         <h4><i class="fas fa-user"></i> Dados Pessoais</h4>
-                        <div class="personal-data">
-                            <div class="data-row">
-                                <span class="data-label">Sexo:</span>
-                                <span class="data-value">${calc.gender === 'male' ? 'Masculino' : 'Feminino'}</span>
+                        <div class="details-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">Sexo:</span>
+                                <span class="detail-value">${calcData.gender === 'masculino' ? 'Masculino' : calcData.gender === 'feminino' ? 'Feminino' : 'N/A'}</span>
                             </div>
-                            <div class="data-row">
-                                <span class="data-label">Idade:</span>
-                                <span class="data-value">${calc.age || 'N/A'} anos</span>
+                            <div class="detail-item">
+                                <span class="detail-label">Idade:</span>
+                                <span class="detail-value">${calcData.age || 'N/A'} anos</span>
                             </div>
-                            <div class="data-row">
-                                <span class="data-label">Peso:</span>
-                                <span class="data-value">${calc.weight || 'N/A'} kg</span>
+                            <div class="detail-item">
+                                <span class="detail-label">Peso:</span>
+                                <span class="detail-value">${calcData.weight || 'N/A'} kg</span>
                             </div>
-                            <div class="data-row">
-                                <span class="data-label">Altura:</span>
-                                <span class="data-value">${calc.height || 'N/A'} cm</span>
+                            <div class="detail-item">
+                                <span class="detail-label">Altura:</span>
+                                <span class="detail-value">${calcData.height || 'N/A'} cm</span>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="activity-info">
-                        <h4><i class="fas fa-running"></i> Nível de Atividade</h4>
-                        <div class="activity-details">
-                            <div class="data-row">
-                                <span class="data-label">Fator:</span>
-                                <span class="data-value">${calc.activity || 'N/A'}</span>
+                            <div class="detail-item">
+                                <span class="detail-label">Atividade:</span>
+                                <span class="detail-value">${calcData.activityText || 'N/A'}</span>
                             </div>
-                            <div class="data-row">
-                                <span class="data-label">Descrição:</span>
-                                <span class="data-value">${calc.activityText || 'N/A'}</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="calculation-recommendations">
-                        <h4><i class="fas fa-lightbulb"></i> Recomendações</h4>
-                        <div class="recommendations">
-                            <div class="recommendation-item">
-                                <span class="rec-label">Perda de peso:</span>
-                                <span class="rec-value">${Math.round((calc.get || 0) - 300)} kcal/dia</span>
-                            </div>
-                            <div class="recommendation-item">
-                                <span class="rec-label">Manutenção:</span>
-                                <span class="rec-value">${calc.get || 'N/A'} kcal/dia</span>
-                            </div>
-                            <div class="recommendation-item">
-                                <span class="rec-label">Ganho de peso:</span>
-                                <span class="rec-value">${Math.round((calc.get || 0) * 1.1)} kcal/dia</span>
+                            <div class="detail-item">
+                                <span class="detail-label">Calculado em:</span>
+                                <span class="detail-value">${calcData.calculatedAt ? new Date(calcData.calculatedAt).toLocaleDateString('pt-BR') : 'N/A'}</span>
                             </div>
                         </div>
                     </div>
@@ -2500,8 +2551,8 @@
                             Remover
                         </button>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
         }
 
         // Load data tab
@@ -2623,28 +2674,56 @@
             document.getElementById('studentForm').reset();
         }
 
-        // Save student
-        function saveStudent() {
-            const formData = {
-                id: Date.now().toString(),
-                name: document.getElementById('studentName').value,
-                email: document.getElementById('studentEmail').value,
-                phone: document.getElementById('studentPhone').value,
-                age: document.getElementById('studentAge').value,
-                gender: document.getElementById('studentGender').value,
-                weight: document.getElementById('studentWeight').value,
-                height: document.getElementById('studentHeight').value,
-                objective: document.getElementById('studentObjective').value,
-                createdAt: new Date().toISOString()
-            };
+        // Save student to API
+        async function saveStudent() {
+            try {
+                const nameElement = document.getElementById('studentName');
+                const emailElement = document.getElementById('studentEmail');
+                const phoneElement = document.getElementById('studentPhone');
+                
+                if (!nameElement || !emailElement || !phoneElement) {
+                    throw new Error('Elementos do formulário não encontrados');
+                }
+                
+                if (!auth.isAuthenticated()) {
+                    alert('Por favor, faça login para adicionar alunos.');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                const formData = {
+                    nome: nameElement.value,
+                    email: emailElement.value,
+                    telefone: phoneElement.value,
+                    data_nascimento: null,  // Corrigido: null em vez de string vazia
+                    objetivo: null,        // Corrigido: null em vez de string vazia
+                    observacoes: null,     // Corrigido: null em vez de string vazia
+                    status: 'ativo'
+                };
 
-            students.push(formData);
-            localStorage.setItem('students', JSON.stringify(students));
-            
-            displayStudents();
-            closeStudentModal();
-            
-            alert('Aluno adicionado com sucesso!');
+                const response = await authenticatedFetch('/api/alunos', {
+                    method: 'POST',
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    const student = await response.json();
+                    // Adicionar campos de compatibilidade
+                    students.push({
+                        ...student,
+                        name: student.nome,
+                        phone: student.telefone
+                    });
+                    displayStudents();
+                    closeStudentModal();
+                    alert('Aluno criado com sucesso!');
+                } else {
+                    throw new Error('Erro ao salvar aluno');
+                }
+            } catch (error) {
+                console.error('Erro ao salvar aluno:', error);
+                alert('Erro ao salvar aluno. Tente novamente.');
+            }
         }
 
         // View functions
@@ -2664,47 +2743,74 @@
         }
 
         // Remove functions
-        function removeDiet(dietId) {
+        async function removeDiet(dietId) {
             if (confirm('Tem certeza que deseja remover esta dieta?')) {
                 try {
-                    const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
-                    assignments.diets = assignments.diets?.filter(d => d.id !== dietId) || [];
-                    localStorage.setItem('studentAssignments', JSON.stringify(assignments));
-                    loadDietTab(selectedStudentId);
-                    loadOverviewTab(selectedStudentId);
-                    displayStudents();
+                    // Desatribuir dieta do aluno (setar aluno_id para null)
+                    const response = await authenticatedFetch(`/api/dietas/${dietId}`, {
+                        method: 'PUT',
+                        body: JSON.stringify({ aluno_id: null })
+                    });
+                    
+                    if (response.ok) {
+                        loadDietTab(selectedStudentId);
+                        loadOverviewTab(selectedStudentId);
+                        displayStudents();
+                        alert('Dieta removida com sucesso!');
+                    } else {
+                        alert('Erro ao remover dieta. Tente novamente.');
+                    }
                 } catch (error) {
                     console.error('Erro ao remover dieta:', error);
+                    alert('Erro ao remover dieta. Tente novamente.');
                 }
             }
         }
 
-        function removeWorkout(workoutId) {
+        async function removeWorkout(workoutId) {
             if (confirm('Tem certeza que deseja remover este treino?')) {
                 try {
-                    const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
-                    assignments.workouts = assignments.workouts?.filter(w => w.id !== workoutId) || [];
-                    localStorage.setItem('studentAssignments', JSON.stringify(assignments));
-                    loadWorkoutTab(selectedStudentId);
-                    loadOverviewTab(selectedStudentId);
-                    displayStudents();
+                    // Desatribuir treino do aluno (setar aluno_id para null)
+                    const response = await authenticatedFetch(`/api/treinos/${workoutId}`, {
+                        method: 'PUT',
+                        body: JSON.stringify({ aluno_id: null })
+                    });
+                    
+                    if (response.ok) {
+                        loadWorkoutTab(selectedStudentId);
+                        loadOverviewTab(selectedStudentId);
+                        displayStudents();
+                        alert('Treino removido com sucesso!');
+                    } else {
+                        alert('Erro ao remover treino. Tente novamente.');
+                    }
                 } catch (error) {
                     console.error('Erro ao remover treino:', error);
+                    alert('Erro ao remover treino. Tente novamente.');
                 }
             }
         }
 
-        function removeCalculation(calcId) {
+        async function removeCalculation(calcId) {
             if (confirm('Tem certeza que deseja remover este cálculo?')) {
                 try {
-                    const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
-                    assignments.calculations = assignments.calculations?.filter(c => c.id !== calcId) || [];
-                    localStorage.setItem('studentAssignments', JSON.stringify(assignments));
-                    loadCalculationTab(selectedStudentId);
-                    loadOverviewTab(selectedStudentId);
-                    displayStudents();
+                    // Desatribuir cálculo do aluno (setar aluno_id para null)
+                    const response = await authenticatedFetch(`/api/anotacoes/${calcId}`, {
+                        method: 'PUT',
+                        body: JSON.stringify({ aluno_id: null })
+                    });
+                    
+                    if (response.ok) {
+                        loadCalculationTab(selectedStudentId);
+                        loadOverviewTab(selectedStudentId);
+                        displayStudents();
+                        alert('Cálculo removido com sucesso!');
+                    } else {
+                        alert('Erro ao remover cálculo. Tente novamente.');
+                    }
                 } catch (error) {
                     console.error('Erro ao remover cálculo:', error);
+                    alert('Erro ao remover cálculo. Tente novamente.');
                 }
             }
         }
@@ -2728,27 +2834,32 @@
         }
 
         // Delete student
-        function deleteStudent() {
+        async function deleteStudent() {
             if (confirm('Tem certeza que deseja excluir este aluno? Esta ação não pode ser desfeita.')) {
                 try {
-                    students = students.filter(s => s.id !== selectedStudentId);
-                    localStorage.setItem('students', JSON.stringify(students));
+                    // Excluir aluno da API
+                    const response = await authenticatedFetch(`/api/alunos/${selectedStudentId}`, {
+                        method: 'DELETE'
+                    });
                     
-                    // Also remove all assignments for this student
-                    const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
-                    assignments.diets = assignments.diets?.filter(d => d.studentId !== selectedStudentId) || [];
-                    assignments.workouts = assignments.workouts?.filter(w => w.studentId !== selectedStudentId) || [];
-                    assignments.calculations = assignments.calculations?.filter(c => c.studentId !== selectedStudentId) || [];
-                    localStorage.setItem('studentAssignments', JSON.stringify(assignments));
-                    
-                    // Reset UI
-                    selectedStudentId = null;
-                    document.getElementById('studentDetails').classList.remove('active');
-                    displayStudents();
-                    
-                    alert('Aluno excluído com sucesso!');
+                    if (response.ok) {
+                        // Remover aluno do array local imediatamente
+                        students = students.filter(s => s.id !== selectedStudentId);
+                        
+                        // Reset UI
+                        selectedStudentId = null;
+                        document.getElementById('studentDetails').classList.remove('active');
+                        
+                        // Atualizar interface imediatamente
+                        displayStudents();
+                        
+                        alert('Aluno excluído com sucesso!');
+                    } else {
+                        alert('Erro ao excluir aluno. Tente novamente.');
+                    }
                 } catch (error) {
                     console.error('Erro ao excluir aluno:', error);
+                    alert('Erro ao excluir aluno. Tente novamente.');
                 }
             }
         }
@@ -2950,7 +3061,7 @@
 
     <script>
         // Student Protocol Generation Function
-        function printStudentProtocol() {
+        async function printStudentProtocol() {
             if (!selectedStudentId) {
                 alert('Por favor, selecione um aluno primeiro!');
                 return;
@@ -2963,7 +3074,7 @@
             }
 
             // Generate protocol HTML
-            const protocolHTML = generateProtocolHTML(student);
+            const protocolHTML = await generateProtocolHTML(student);
             
             // Show protocol container
             const protocolContainer = document.getElementById('protocolContainer');
@@ -2984,19 +3095,20 @@
             }, 300);
         }
 
-        function generateProtocolHTML(student) {
+        async function generateProtocolHTML(student) {
             const currentDate = new Date().toLocaleDateString('pt-BR');
             
-            // Get student assignments
-            const assignments = JSON.parse(localStorage.getItem('studentAssignments') || '{}');
-            const studentDiets = assignments.diets?.filter(d => d.studentId === student.id) || [];
-            const studentWorkouts = assignments.workouts?.filter(w => w.studentId === student.id) || [];
-            const studentCalculations = assignments.calculations?.filter(c => c.studentId === student.id) || [];
+            // Get student assignments from API
+            const [studentDiets, studentWorkouts, studentCalculations] = await Promise.all([
+                getStudentDiets(student.id),
+                getStudentWorkouts(student.id),
+                getStudentCalculations(student.id)
+            ]);
 
             let html = `
                 <div class="protocol-header">
                     <h1>PROTOCOLO COMPLETO DO ALUNO</h1>
-                    <h2>${student.name}</h2>
+                    <h2>${student.name || student.nome || 'Sem nome'}</h2>
                     <p>Data de Geração: ${currentDate}</p>
                 </div>
 
@@ -3005,7 +3117,7 @@
                     <div class="protocol-grid">
                         <div class="protocol-item">
                             <span class="protocol-label">Nome:</span>
-                            <span class="protocol-value">${student.name}</span>
+                            <span class="protocol-value">${student.name || student.nome || 'Não informado'}</span>
                         </div>
                         <div class="protocol-item">
                             <span class="protocol-label">Idade:</span>
@@ -3013,11 +3125,11 @@
                         </div>
                         <div class="protocol-item">
                             <span class="protocol-label">Sexo:</span>
-                            <span class="protocol-value">${student.gender === 'male' ? 'Masculino' : 'Feminino'}</span>
+                            <span class="protocol-value">${student.gender === 'male' ? 'Masculino' : student.gender === 'female' ? 'Feminino' : 'Não informado'}</span>
                         </div>
                         <div class="protocol-item">
                             <span class="protocol-label">Telefone:</span>
-                            <span class="protocol-value">${student.phone || 'Não informado'}</span>
+                            <span class="protocol-value">${student.phone || student.telefone || 'Não informado'}</span>
                         </div>
                         <div class="protocol-item">
                             <span class="protocol-label">Email:</span>
@@ -3039,54 +3151,47 @@
                 `;
                 
                 studentCalculations.forEach((calc, index) => {
-                    // Get activity factor from multiple possible fields
-                    const activityFactor = calc.activityFactor || calc.factor || calc.activityLevel || calc.level;
-                    const tmb = calc.tmb || calc.bmr || 0;
-                    const get = calc.tdee || calc.get || calc.tmb * activityFactor || 0;
+                    // Parse calculation data from conteudo
+                    let calcData = {};
+                    try {
+                        calcData = JSON.parse(calc.conteudo || '{}');
+                    } catch (e) {
+                        console.error('Erro ao parsear dados do cálculo:', e);
+                    }
                     
-                    html += `
-                        <div class="protocol-meal">
-                            <h3>Cálculo ${index + 1} - ${new Date(calc.date).toLocaleDateString('pt-BR')}</h3>
-                            <div class="protocol-grid">
-                                <div class="protocol-item">
-                                    <span class="protocol-label">Peso:</span>
-                                    <span class="protocol-value">${calc.weight} kg</span>
-                                </div>
-                                <div class="protocol-item">
-                                    <span class="protocol-label">Altura:</span>
-                                    <span class="protocol-value">${calc.height} cm</span>
-                                </div>
-                                <div class="protocol-item">
-                                    <span class="protocol-label">TMB:</span>
-                                    <span class="protocol-value">${tmb} kcal</span>
-                                </div>
-                                <div class="protocol-item">
-                                    <span class="protocol-label">Fator Atividade:</span>
-                                    <span class="protocol-value">${activityFactor || 'Não informado'} (${getActivityLabel(activityFactor)})</span>
-                                </div>
-                                <div class="protocol-item">
-                                    <span class="protocol-label">GET:</span>
-                                    <span class="protocol-value">${get} kcal</span>
-                                </div>
-                                <div class="protocol-item">
-                                    <span class="protocol-label">Objetivo:</span>
-                                    <span class="protocol-value">${getGoalLabel(calc.goal)}</span>
-                                </div>
+                    const activityFactor = calcData.activityFactor || 'N/A';
+                    const tmb = calcData.bmr || 0;
+                    const get = calcData.tdee || 0;
+                    
+                    html += `<div class="protocol-meal">
+                        <h3>Cálculo ${index + 1} - ${calc.titulo || 'Cálculo sem nome'}</h3>
+                        <div class="protocol-grid">
+                            <div class="protocol-item">
+                                <span class="protocol-label">Peso:</span>
+                                <span class="protocol-value">${calcData.weight || 'N/A'} kg</span>
                             </div>
-                            ${calc.targetKcal ? `
-                                <div class="protocol-item">
-                                    <span class="protocol-label">Meta Calórica:</span>
-                                    <span class="protocol-value">${calc.targetKcal} kcal/dia</span>
-                                </div>
-                            ` : ''}
-                            ${activityFactor && tmb ? `
-                                <div class="protocol-item">
-                                    <span class="protocol-label">Cálculo GET:</span>
-                                    <span class="protocol-value">TMB × ${activityFactor} = ${tmb} × ${activityFactor} = ${get} kcal</span>
-                                </div>
-                            ` : ''}
+                            <div class="protocol-item">
+                                <span class="protocol-label">Altura:</span>
+                                <span class="protocol-value">${calcData.height || 'N/A'} cm</span>
+                            </div>
+                            <div class="protocol-item">
+                                <span class="protocol-label">TMB:</span>
+                                <span class="protocol-value">${tmb} kcal</span>
+                            </div>
+                            <div class="protocol-item">
+                                <span class="protocol-label">Fator Atividade:</span>
+                                <span class="protocol-value">${activityFactor} (${calcData.activityText || 'N/A'})</span>
+                            </div>
+                            <div class="protocol-item">
+                                <span class="protocol-label">GET:</span>
+                                <span class="protocol-value">${get} kcal</span>
+                            </div>
+                            <div class="protocol-item">
+                                <span class="protocol-label">Data do Cálculo:</span>
+                                <span class="protocol-value">${calc.created_at ? new Date(calc.created_at).toLocaleDateString('pt-BR') : 'N/A'}</span>
+                            </div>
                         </div>
-                    `;
+                    </div>`;
                 });
                 
                 html += `</div>`;
@@ -3100,46 +3205,45 @@
                 `;
                 
                 studentDiets.forEach((diet, index) => {
-                    // Use the diet data directly (it's already complete from the tab loading)
-                    html += `
-                        <div class="protocol-meal">
-                            <h3>Dieta ${index + 1} - ${diet.name || 'Sem nome'}</h3>
-                            <div class="protocol-item">
-                                <span class="protocol-label">Data de Atribuição:</span>
-                                <span class="protocol-value">${new Date(diet.assignedAt || Date.now()).toLocaleDateString('pt-BR')}</span>
-                            </div>
-                            
-                            <h4>Resumo Nutricional:</h4>
-                            <div class="protocol-grid">
-                                <div class="protocol-item">
-                                    <span class="protocol-label">KCAL Total:</span>
-                                    <span class="protocol-value">${Math.round(diet.totals?.kcal || 0)} kcal</span>
-                                </div>
-                                <div class="protocol-item">
-                                    <span class="protocol-label">Proteínas:</span>
-                                    <span class="protocol-value">${(diet.totals?.ptn || 0).toFixed(1)}g</span>
-                                </div>
-                                <div class="protocol-item">
-                                    <span class="protocol-label">Carboidratos:</span>
-                                    <span class="protocol-value">${(diet.totals?.cho || 0).toFixed(1)}g</span>
-                                </div>
-                                <div class="protocol-item">
-                                    <span class="protocol-label">Gorduras:</span>
-                                    <span class="protocol-value">${(diet.totals?.lip || 0).toFixed(1)}g</span>
-                                </div>
-                            </div>
-
-                            <h4>Refeições:</h4>
-                    `;
+                    // Calculate diet totals from refeicoes
+                    const dietTotals = calculateDietTotals(diet.refeicoes);
                     
-                    // Use the meals data directly from the diet object
-                    if (diet.meals && diet.meals.length > 0) {
-                        diet.meals.forEach(meal => {
-                            html += `
-                                <div class="protocol-meal">
-                                    <h5>${meal.name || 'Refeição sem nome'}</h5>
-                                    <div class="protocol-item">
-                                        <span class="protocol-label">Totais da Refeição:</span>
+                    html += `<div class="protocol-meal">
+                        <h3>Dieta ${index + 1} - ${diet.nome || 'Dieta sem nome'}</h3>
+                        <div class="protocol-item">
+                            <span class="protocol-label">Data de Atribuição:</span>
+                            <span class="protocol-value">${diet.created_at ? new Date(diet.created_at).toLocaleDateString('pt-BR') : 'N/A'}</span>
+                        </div>
+                        
+                        <h4>Resumo Nutricional:</h4>
+                        <div class="protocol-grid">
+                            <div class="protocol-item">
+                                <span class="protocol-label">KCAL Total:</span>
+                                <span class="protocol-value">${Math.round(dietTotals.kcal)} kcal</span>
+                            </div>
+                            <div class="protocol-item">
+                                <span class="protocol-label">Proteínas:</span>
+                                <span class="protocol-value">${dietTotals.ptn.toFixed(1)}g</span>
+                            </div>
+                            <div class="protocol-item">
+                                <span class="protocol-label">Carboidratos:</span>
+                                <span class="protocol-value">${dietTotals.cho.toFixed(1)}g</span>
+                            </div>
+                            <div class="protocol-item">
+                                <span class="protocol-label">Gorduras:</span>
+                                <span class="protocol-value">${dietTotals.lip.toFixed(1)}g</span>
+                            </div>
+                        </div>
+
+                        <h4>Refeições:</h4>`;
+                    
+                    // Use the refeicoes data directly from the diet object
+                    if (diet.refeicoes && diet.refeicoes.length > 0) {
+                        diet.refeicoes.forEach(meal => {
+                            html += `<div class="protocol-meal">
+                                <h5>${meal.name || 'Refeição sem nome'}</h5>
+                                <div class="protocol-item">
+                                    <span class="protocol-label">Totais da Refeição:</span>
                                         <span class="protocol-value">KCAL: ${Math.round(meal.totals?.kcal || 0)} | P: ${(meal.totals?.ptn || 0).toFixed(1)}g | C: ${(meal.totals?.cho || 0).toFixed(1)}g | G: ${(meal.totals?.lip || 0).toFixed(1)}g</span>
                                     </div>
                                     <table class="protocol-table">
@@ -3153,32 +3257,27 @@
                                                 <th>LIP</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                            `;
+                                        <tbody>`;
                             
                             if (meal.foods && meal.foods.length > 0) {
                                 meal.foods.forEach(food => {
                                     const quantity = food.quantity || '100g';
                                     const multiplier = (parseInt(quantity) || 100) / 100;
                                     
-                                    html += `
-                                        <tr>
-                                            <td>${food.name || 'Alimento sem nome'}</td>
-                                            <td>${quantity}</td>
-                                            <td>${Math.round((food.kcal || 0) * multiplier)}</td>
-                                            <td>${((food.ptn || 0) * multiplier).toFixed(1)}g</td>
-                                            <td>${((food.cho || 0) * multiplier).toFixed(1)}g</td>
-                                            <td>${((food.lip || 0) * multiplier).toFixed(1)}g</td>
-                                        </tr>
-                                    `;
+                                    html += `<tr>
+                                        <td>${food.name || 'Alimento sem nome'}</td>
+                                        <td>${quantity}</td>
+                                        <td>${Math.round((food.kcal || 0) * multiplier)}</td>
+                                        <td>${((food.ptn || 0) * multiplier).toFixed(1)}g</td>
+                                        <td>${((food.cho || 0) * multiplier).toFixed(1)}g</td>
+                                        <td>${((food.lip || 0) * multiplier).toFixed(1)}g</td>
+                                    </tr>`;
                                 });
                             }
                             
-                            html += `
-                                        </tbody>
+                            html += `</tbody>
                                     </table>
-                                </div>
-                            `;
+                                </div>`;
                         });
                     } else {
                         html += `<p>Nenhuma refeição encontrada para esta dieta.</p>`;
@@ -3198,127 +3297,78 @@
                 `;
                 
                 studentWorkouts.forEach((workout, index) => {
-                    // Debug: log workout structure
-                    console.log('Workout data:', workout);
-                    
-                    // Use the workout data directly (it's already complete from the tab loading)
-                    html += `
-                        <div class="protocol-meal">
-                            <h3>Treino ${index + 1} - ${workout.name || 'Sem nome'}</h3>
+                    html += `<div class="protocol-meal">
+                        <h3>Treino ${index + 1} - ${workout.nome || 'Treino sem nome'}</h3>
+                        <div class="protocol-item">
+                            <span class="protocol-label">Data de Atribuição:</span>
+                            <span class="protocol-value">${workout.created_at ? new Date(workout.created_at).toLocaleDateString('pt-BR') : 'N/A'}</span>
+                        </div>
+                        
+                        <h4>Resumo do Treino:</h4>
+                        <div class="protocol-grid">
                             <div class="protocol-item">
-                                <span class="protocol-label">Data de Atribuição:</span>
-                                <span class="protocol-value">${new Date(workout.assignedAt || Date.now()).toLocaleDateString('pt-BR')}</span>
+                                <span class="protocol-label">Dias de Treino:</span>
+                                <span class="protocol-value">${workout.exercicios ? workout.exercicios.length : 0}</span>
                             </div>
-                            
-                            <h4>Resumo do Treino:</h4>
-                            <div class="protocol-grid">
-                                <div class="protocol-item">
-                                    <span class="protocol-label">Dias de Treino:</span>
-                                    <span class="protocol-value">${workout.workout?.days?.length || workout.days?.length || 'N/A'}</span>
-                                </div>
-                                <div class="protocol-item">
-                                    <span class="protocol-label">Total de Exercícios:</span>
-                                    <span class="protocol-value">${(workout.workout?.days || workout.days || []).reduce((total, day) => total + ((day.exercises || []).length), 0) || 'N/A'}</span>
-                                </div>
-                                <div class="protocol-item">
-                                    <span class="protocol-label">Frequência Semanal:</span>
-                                    <span class="protocol-value">${workout.workout?.weeklyFrequency || workout.weeklyFrequency || 'N/A'} vezes por semana</span>
-                                </div>
+                            <div class="protocol-item">
+                                <span class="protocol-label">Total de Exercícios:</span>
+                                <span class="protocol-value">${workout.exercicios ? workout.exercicios.reduce((total, dia) => total + (dia.exercises ? dia.exercises.length : 0), 0) : 0}</span>
                             </div>
+                            <div class="protocol-item">
+                                <span class="protocol-label">Descrição:</span>
+                                <span class="protocol-value">${workout.descricao || 'Sem descrição'}</span>
+                            </div>
+                        </div>
 
-                            <h4>Dias e Exercícios:</h4>
-                    `;
+                        <h4>Dias e Exercícios:</h4>`;
                     
-                    // Use the workout days data directly from the workout object
-                    const workoutDays = workout.workout?.days || workout.days || [];
+                    // Use the exercicios data directly from the workout object
+                    const workoutDays = workout.exercicios || [];
                     if (workoutDays.length > 0) {
                         workoutDays.forEach(day => {
-                            html += `
-                                <div class="protocol-meal">
-                                    <h5>${day.name || 'Dia sem nome'}</h5>
-                                    <div class="protocol-item">
-                                        <span class="protocol-label">Exercícios do dia:</span>
-                                        <span class="protocol-value">${(day.exercises || []).length} exercícios</span>
-                                    </div>
-                            `;
+                            html += `<div class="protocol-meal">
+                                <h5>${day.name || 'Dia sem nome'}</h5>
+                                <div class="protocol-item">
+                                    <span class="protocol-label">Exercícios do dia:</span>
+                                    <span class="protocol-value">${(day.exercises || []).length} exercícios</span>
+                                </div>
+                                <table class="protocol-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Exercício</th>
+                                            <th>Séries</th>
+                                            <th>Reps</th>
+                                            <th>Descanso</th>
+                                            <th>Carga</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>`;
                             
                             const exercises = day.exercises || [];
                             if (exercises.length > 0) {
-                                html += `
-                                    <table class="protocol-table">
-                                        <thead>
-                                            <tr>
-                                                <th>EXERCÍCIO</th>
-                                                <th>SÉRIE</th>
-                                                <th>REPETIÇÕES</th>
-                                                <th>TEMPO DE DESCANSO</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                `;
-                                
                                 exercises.forEach(exercise => {
-                                    const exerciseName = exercise.name || 'Exercício sem nome';
-                                    const sets = exercise.sets || 'N/A';
-                                    const reps = exercise.reps || 'N/A';
-                                    const rest = exercise.rest || 'N/A';
-                                    
-                                    html += `
-                                        <tr>
-                                            <td>${exerciseName}</td>
-                                            <td>${sets}</td>
-                                            <td>${reps}</td>
-                                            <td>${rest}s</td>
-                                        </tr>
-                                    `;
+                                    html += `<tr>
+                                        <td>${exercise.name || 'Exercício sem nome'}</td>
+                                        <td>${exercise.sets || 'N/A'}</td>
+                                        <td>${exercise.reps || 'N/A'}</td>
+                                        <td>${exercise.rest || 'N/A'}s</td>
+                                        <td>${exercise.load || 'N/A'}</td>
+                                    </tr>`;
                                 });
-                                
-                                html += `
-                                        </tbody>
-                                    </table>
-                                `;
-                                
-                                // Add observations if any exist
-                                const exercisesWithNotes = exercises.filter(ex => ex.notes || ex.observations);
-                                if (exercisesWithNotes.length > 0) {
-                                    html += `
-                                        <h6>Observações:</h6>
-                                        <div class="protocol-item">
-                                    `;
-                                    exercisesWithNotes.forEach(exercise => {
-                                        const notes = exercise.notes || exercise.observations || '';
-                                        if (notes) {
-                                            html += `
-                                                <div class="protocol-item">
-                                                    <span class="protocol-label">${exercise.name}:</span>
-                                                    <span class="protocol-value">${notes}</span>
-                                                </div>
-                                            `;
-                                        }
-                                    });
-                                    html += `</div>`;
-                                }
-                            } else {
-                                html += `<p>Nenhum exercício encontrado para este dia.</p>`;
                             }
                             
-                            html += `</div>`;
+                            html += `</tbody>
+                                </table>
+                            </div>`;
                         });
                     } else {
-                        html += `<p>Nenhum dia de treino encontrado. Estrutura: ${JSON.stringify(workout).substring(0, 200)}...</p>`;
+                        html += `<p>Nenhum dia de treino encontrado.</p>`;
                     }
                     
                     html += `</div>`;
                 });
                 
                 html += `</div>`;
-            } else {
-                html += `
-                    <div class="protocol-section">
-                        <h2>💪 PLANO DE TREINO</h2>
-                        <p>Nenhum treino atribuído a este aluno.</p>
-                    </div>
-                `;
             }
 
             // Add footer
