@@ -1,66 +1,74 @@
-# Deploy no Vercel - Guia Completo
+# Deploy no Vercel - GurgelTrack
 
-## 📋 Pré-requisitos
+## 🚀 Passo a Passo para Deploy
 
-1. **Conta no Vercel**: [vercel.com](https://vercel.com)
-2. **GitHub**: Repositório com seu código
-3. **Supabase**: Database configurado
+### 1. Preparação do Projeto
 
----
+O projeto já está configurado com:
+- ✅ `vercel.json` - Configuração do Vercel
+- ✅ `package.json` atualizado com script `vercel-build`
+- ✅ `.env.vercel` - Template de variáveis de ambiente
 
-## 🚀 Passo a Passo
-
-### 1. Preparar Repositório
+### 2. Instalar Vercel CLI
 
 ```bash
-# Se ainda não tiver Git
-git init
-git add .
-git commit -m "Deploy preparation for Vercel"
-
-# Adicionar repositório remoto
-git remote add origin https://github.com/seu-usuario/gurgeltrack.git
-git push -u origin main
+npm install -g vercel
 ```
 
-### 2. Conectar com Vercel
+### 3. Fazer Login no Vercel
 
-1. Acesse [vercel.com](https://vercel.com)
-2. Faça login com GitHub
-3. Clique em **"New Project"**
-4. Selecione seu repositório `gurgeltrack`
-
-### 3. Configurar Build
-
-Vercel detectará automaticamente:
-- **Framework**: Other
-- **Root Directory**: `./`
-- **Build Command**: (deixe em branco)
-- **Output Directory**: (deixe em branco)
-- **Install Command**: `npm install`
+```bash
+vercel login
+```
 
 ### 4. Configurar Variáveis de Ambiente
 
-No painel do Vercel, vá em **Settings > Environment Variables** e adicione:
+No painel do Vercel (vercel.com):
+1. Vá para o seu projeto
+2. Settings → Environment Variables
+3. Adicione as seguintes variáveis:
 
 ```
+SUPABASE_URL=https://erhhavvueccaqenzgspp.supabase.co
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGhhdnZ1ZWNjYXFlbnpnc3BwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxNTYwMzcsImV4cCI6MjA5MjczMjAzN30.6o4n-UWfmlhysGdg1JC2CHH3TgVqhnjXSZTgNsMlBcg
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGhhdnZ1ZWNjYXFlbnpnc3BwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzE1NjAzNywiZXhwIjoyMDkyNzMyMDM3fQ.h9BwrTDXDQUHYBClC8raJiN4UqQuz9vaX1t0GM4kMcw
 NODE_ENV=production
-JWT_SECRET=sua_chave_secreta_aqui_minimo_32_caracteres
-SUPABASE_URL=sua_url_supabase_aqui
-SUPABASE_ANON_KEY=sua_chave_anon_supabase
-SUPABASE_SERVICE_ROLE_KEY=sua_chave_service_role_supabase
-PORT=3000
+JWT_SECRET=gurgeltrack-secret-key-change-in-production-secure-random-string
 ```
 
-### 5. Deploy
+**⚠️ IMPORTANTE:** Mude o `JWT_SECRET` para uma string segura e aleatória!
 
-Clique em **"Deploy"** e aguarde o build.
+### 5. Deploy Inicial
 
----
+```bash
+# No diretório do projeto
+vercel
 
-## 🔧 Arquivos de Configuração
+# Siga as instruções:
+# - Link to existing project? N
+# - What's your project's name? gurgeltrack
+# - In which directory is your code located? ./
+# - Want to override the settings? N
+```
+
+### 6. Deploy Automático (Git)
+
+Se você usa Git:
+
+```bash
+# Adicionar Vercel ao projeto
+vercel --prod
+
+# Fazer commit e push
+git add .
+git commit -m "Deploy no Vercel"
+git push origin main
+```
+
+## 🔧 Configurações Específicas
 
 ### vercel.json
+
 ```json
 {
   "version": 2,
@@ -68,22 +76,6 @@ Clique em **"Deploy"** e aguarde o build.
     {
       "src": "server.js",
       "use": "@vercel/node"
-    },
-    {
-      "src": "**/*.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "**/*.css",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "**/*.js",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "img/**/*",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -93,110 +85,76 @@ Clique em **"Deploy"** e aguarde o build.
     },
     {
       "src": "/(.*)",
-      "dest": "/$1"
+      "dest": "/server.js"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "functions": {
-    "server.js": {
-      "maxDuration": 10
-    }
-  }
+  ]
 }
 ```
 
----
+### Estrutura de Arquivos
 
-## ⚠️ Configurações Importantes
-
-### Supabase
-- URL: `https://seu-projeto.supabase.co`
-- Anon Key: Chave pública
-- Service Role Key: Chave privada (admin)
-
-### JWT Secret
-Use uma chave forte:
-```bash
-# Gerar chave segura
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+waylowinicio/
+├── server.js              # Servidor Express
+├── vercel.json           # Config Vercel
+├── package.json          # Dependências
+├── .env.vercel          # Variáveis de ambiente (template)
+├── index.html           # Página principal
+├── alunos.html          # Gestão de alunos
+├── treino.html          # Fichas de treino
+├── dieta.html           # Planejamento dietético
+├── calculo.html         # Cálculos energéticos
+├── carga.html           # Anotações de peso
+├── pagamentos.html      # Controle financeiro
+├── agenda.html          # Agenda
+├── login.html           # Autenticação
+├── js/                  # Scripts JavaScript
+├── css/                 # Estilos
+└── img/                 # Imagens
 ```
 
----
+## 🌐 URLs Após Deploy
 
-## 🐛 Problemas Comuns
-
-### 1. CORS Error
-Verifique se o CORS está configurado no server.js:
-```javascript
-app.use(cors());
-```
-
-### 2. Database Connection
-Verifique variáveis de ambiente no painel Vercel.
-
-### 3. Static Files
-Se arquivos CSS/JS não carregarem, verifique rotas no vercel.json.
-
-### 4. API Routes
-Se APIs não funcionarem, verifique se as rotas começam com `/api/`.
-
----
-
-## 🔄 Deploy Automático
-
-Configure automatic deploy:
-1. No Vercel, vá em **Settings > Git**
-2. Conecte seu branch `main`
-3. Ative **"Automatic Deploy"**
-
-Agora cada `git push` atualizará sua aplicação!
-
----
-
-## 📱 Acessar Aplicação
-
-Após deploy, sua aplicação estará disponível em:
-- URL: `https://seu-projeto.vercel.app`
-- Domínio personalizado: Configure em **Settings > Domains**
-
----
+- **Aplicação:** `https://gurgeltrack.vercel.app`
+- **API:** `https://gurgeltrack.vercel.app/api/*`
+- **Login:** `https://gurgeltrack.vercel.app/login.html`
 
 ## 🛠️ Comandos Úteis
 
 ```bash
-# Ver logs de deploy
-vercel logs
-
-# Fazer deploy manual
+# Deploy de produção
 vercel --prod
 
-# Ver variáveis de ambiente
-vercel env ls
+# Ver logs
+vercel logs
 
-# Adicionar variável de ambiente
-vercel env add JWT_SECRET
+# Verificar domínio
+vercel domains
+
+# Listar projetos
+vercel list
 ```
 
----
+## ⚠️ Considerações de Produção
+
+1. **Segurança:** Mude o `JWT_SECRET` para algo realmente seguro
+2. **HTTPS:** O Vercel já fornece HTTPS automático
+3. **Performance:** O Vercel faz cache automático de assets estáticos
+4. **Logs:** Monitore os logs no painel do Vercel
+5. **Domínio:** Você pode configurar um domínio customizado
+
+## 🔍 Teste Pós-Deploy
+
+1. Acesse a URL do projeto
+2. Teste login/cadastro
+3. Verifique funcionalidades CRUD
+4. Confirme alternância de tema
+5. Teste responsive design
 
 ## 📞 Suporte
 
-- **Vercel Docs**: [vercel.com/docs](https://vercel.com/docs)
-- **Supabase Docs**: [supabase.com/docs](https://supabase.com/docs)
-- **Issues**: Verifique logs no painel Vercel
-
----
-
-## ✅ Checklist Final
-
-- [ ] Repositório no GitHub
-- [ ] Arquivos de configuração criados
-- [ ] Variáveis de ambiente configuradas
-- [ ] Deploy realizado com sucesso
-- [ ] APIs funcionando
-- [ ] Páginas estáticas carregando
-- [ ] Autenticação funcionando
-
-**Sua aplicação GurgelTrack está no ar! 🎉**
+Se tiver problemas:
+- Verifique os logs no painel Vercel
+- Confirme as variáveis de ambiente
+- Teste localmente antes do deploy
+- Use `vercel logs --follow` para logs em tempo real

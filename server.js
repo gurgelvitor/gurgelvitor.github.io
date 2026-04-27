@@ -797,8 +797,5 @@ app.get('/', (req, res) => {
 // Iniciar servidor
 app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+    console.log(`📊 Supabase URL: ${process.env.SUPABASE_URL}`);
 });
-
-// Export para Vercel
-module.exports = app;
-console.log(`📊 Supabase URL: ${process.env.SUPABASE_URL}`);
