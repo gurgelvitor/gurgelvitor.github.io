@@ -1116,17 +1116,138 @@
 
             .btn {
                 width: 100%;
-                padding: 1rem;
-                font-size: 1rem;
-                border-radius: 12px;
-                font-weight: 600;
+                padding: 0.75rem 0.5rem;
+                font-size: 0.85rem;
+                border-radius: 8px;
+                font-weight: 500;
                 transition: var(--transition);
                 text-align: center;
-                min-height: 48px;
+                min-height: 44px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                gap: 0.25rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .details-actions {
+                display: flex;
+                flex-direction: column;
                 gap: 0.5rem;
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            .details-actions .btn {
+                font-size: 0.75rem;
+                padding: 0.6rem 0.4rem;
+                min-height: 40px;
+            }
+            
+            /* Corrigir overflow de informações de dieta */
+            .diet-meals {
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+            
+            .meal-section {
+                margin-bottom: 1rem;
+                padding: 0.75rem;
+                background: var(--bg-primary);
+                border-radius: 8px;
+                border: 1px solid var(--border);
+            }
+            
+            .meal-header {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .meal-header h5 {
+                font-size: 0.9rem;
+                font-weight: 600;
+                margin: 0;
+                word-break: break-word;
+                white-space: normal;
+            }
+            
+            .meal-totals {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.25rem;
+                font-size: 0.7rem;
+            }
+            
+            .meal-totals span {
+                background: var(--bg-secondary);
+                padding: 0.2rem 0.4rem;
+                border-radius: 4px;
+                white-space: nowrap;
+            }
+            
+            .food-item {
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+                padding: 0.5rem;
+                border-bottom: 1px solid var(--border);
+            }
+            
+            .food-name {
+                font-size: 0.8rem;
+                font-weight: 500;
+                word-break: break-word;
+                white-space: normal;
+            }
+            
+            .food-quantity {
+                font-size: 0.7rem;
+                color: var(--text-secondary);
+            }
+            
+            .food-macros {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.2rem;
+            }
+            
+            .food-macros .macro {
+                font-size: 0.65rem;
+                padding: 0.1rem 0.3rem;
+                border-radius: 3px;
+                white-space: nowrap;
+            }
+            
+            .summary-stats {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .summary-stats .stat-item {
+                padding: 0.5rem;
+                text-align: center;
+                background: var(--bg-primary);
+                border-radius: 6px;
+                border: 1px solid var(--border);
+            }
+            
+            .summary-stats .stat-value {
+                font-size: 0.9rem;
+                font-weight: 600;
+                display: block;
+                word-break: break-word;
+            }
+            
+            .summary-stats .stat-label {
+                font-size: 0.65rem;
+                color: var(--text-secondary);
+                display: block;
             }
 
             .btn-primary {
