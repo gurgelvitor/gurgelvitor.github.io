@@ -1,6 +1,8 @@
 {
   "version": 2,
-  "outputDirectory": "public",
+  "buildCommand": "npm install",
+  "outputDirectory": ".",
+  "installCommand": "npm install",
   "builds": [
     {
       "src": "server.js",
