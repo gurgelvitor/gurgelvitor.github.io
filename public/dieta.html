@@ -951,6 +951,26 @@
                 overflow-x: hidden;
             }
             
+            /* Prevenir overflow de texto */
+            * {
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                -webkit-hyphens: auto;
+                -ms-hyphens: auto;
+                hyphens: auto;
+            }
+            
+            .meal-title,
+            .food-name,
+            .form-group label,
+            .section-title {
+                max-width: 100%;
+                word-break: break-word;
+                white-space: normal;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
             .sidebar {
                 transform: translateX(-100%);
                 width: 280px;
@@ -2564,37 +2584,7 @@
             }
         }
 
-        // Mobile menu toggle
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        const sidebar = document.getElementById('sidebar');
         
-        if (mobileMenuToggle) {
-            mobileMenuToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('active');
-            });
-        }
-
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', function(event) {
-            if (window.innerWidth <= 768) {
-                if (!sidebar.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
-                    sidebar.classList.remove('active');
-                }
-            }
-        });
-
-        // Active navigation state
-        const currentPath = window.location.pathname;
-        const navItems = document.querySelectorAll('.nav-item');
-        
-        navItems.forEach(item => {
-            const itemPath = item.getAttribute('href');
-            if (currentPath.includes(itemPath) || (currentPath === '/' && itemPath === 'index.html')) {
-                navItems.forEach(nav => nav.classList.remove('active'));
-                item.classList.add('active');
-            }
-        });
-
         // Tema escuro/claro functionality
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');

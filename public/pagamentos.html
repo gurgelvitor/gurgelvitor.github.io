@@ -444,6 +444,10 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .layout-container {
+                overflow-x: hidden;
+            }
+            
             .main-wrapper {
                 margin-left: 0;
                 width: 100%;
@@ -477,6 +481,28 @@
 
             .main-content {
                 padding: 1rem;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+            
+            /* Prevenir overflow de texto */
+            * {
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                -webkit-hyphens: auto;
+                -ms-hyphens: auto;
+                hyphens: auto;
+            }
+            
+            .section-title,
+            .form-group label,
+            .payment-table td,
+            .payment-table th {
+                max-width: 100%;
+                word-break: break-word;
+                white-space: normal;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .main-header {
@@ -489,12 +515,18 @@
             }
 
             .btn-small {
-                padding: 0.875rem 1.25rem;
+                padding: 1rem;
                 font-size: 1rem;
                 border-radius: 12px;
                 min-height: 52px;
                 font-weight: 600;
                 box-shadow: 0 3px 12px rgba(220, 20, 60, 0.3);
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                width: 100%;
             }
             
             .btn-small:hover {
