@@ -1950,16 +1950,30 @@
         });
 
         // Delete functions
-        function deleteFicha(fichaId) {
+        async function deleteFicha(fichaId) {
             if (confirm('Tem certeza que deseja excluir esta ficha?')) {
-                fichas = fichas.filter(f => f.id !== fichaId);
-                if (selectedFicha && selectedFicha.id === fichaId) {
-                    selectedFicha = null;
-                    renderSelectedFicha();
+                try {
+                    // Excluir da API
+                    const response = await authenticatedFetch(`/api/treinos/${fichaId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok) {
+                        // Remover da variável local
+                        fichas = fichas.filter(f => f.id !== fichaId);
+                        if (selectedFicha && selectedFicha.id === fichaId) {
+                            selectedFicha = null;
+                            renderSelectedFicha();
+                        }
+                        renderFichas();
+                        alert('Ficha excluída com sucesso!');
+                    } else {
+                        throw new Error('Erro ao excluir ficha');
+                    }
+                } catch (error) {
+                    console.error('Erro ao excluir ficha:', error);
+                    alert('Erro ao excluir ficha. Tente novamente.');
                 }
-                saveData();
-                renderFichas();
-                alert('Ficha excluída com sucesso!');
             }
         }
 
