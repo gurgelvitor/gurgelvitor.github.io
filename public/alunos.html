@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alunos - GurgelTrack</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/auth.js"></script>
@@ -13,19 +14,17 @@
             --primary-color: #8b0000;
             --secondary-color: #a52a2a;
             --accent-color: #dc143c;
+            --bg-primary: #ffffff;
+            --bg-secondary: #ffffff;
+            --accent: #dc143c;
             --accent-hover: #b91c1c;
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
-            --danger-color: #e74c3c;
-            --light-color: #fff5f5;
-            --dark-color: #333333;
             --text-primary: #333333;
             --text-secondary: #666666;
-            --bg-primary: #ffffff;
-            --bg-secondary: #fff5f5;
             --border: #ffcccc;
-            --shadow: 0 2px 10px rgba(220,20,60,0.15);
-            --transition: all 0.3s ease;
+            --shadow: 0 4px 12px rgba(220, 20, 60, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --danger-color: #dc143c;
+            --success-color: #27ae60;
         }
 
         body.dark-mode {
@@ -33,17 +32,57 @@
             --secondary-color: #25253d;
             --accent-color: #e91e63;
             --accent-hover: #f06292;
-            --success-color: #4caf50;
-            --warning-color: #ff9800;
-            --danger-color: #f44336;
-            --light-color: #0f0f0f;
-            --dark-color: #f5f5f5;
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1e1e1e;
+            --accent: #e91e63;
+            --accent-hover: #f06292;
             --text-primary: #f5f5f5;
             --text-secondary: #b8b8b8;
-            --bg-primary: #1e1e1e;
-            --bg-secondary: #0f0f0f;
             --border: #333333;
-            --shadow: 0 2px 10px rgba(0,0,0,0.4);
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --danger-color: #e91e63;
+            --success-color: #27ae60;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 999;
+            font-size: 20px;
+            color: var(--accent);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(0, 0, 0, 0.8);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+        }
+
+        body.dark-mode .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
         }
 
         * {
@@ -53,10 +92,11 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-secondary);
-            min-height: 100vh;
+            background-color: var(--bg-primary);
             color: var(--text-primary);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
         }
 
         .layout-container {
@@ -64,68 +104,211 @@
             min-height: 100vh;
         }
 
-        /* Sidebar */
+        /* Sidebar Styles */
         .sidebar {
             width: 280px;
-            background: var(--primary-color);
-            color: white;
-            padding: 2rem 0;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
             position: fixed;
             height: 100vh;
             overflow-y: auto;
             z-index: 1000;
             transition: var(--transition);
+            border-right: 1px solid var(--border);
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
         }
 
         .sidebar-header {
-            padding: 0 2rem 2rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
         }
 
-        .sidebar-header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .sidebar-logo {
+            width: 80px;
+            height: 80px;
             margin-bottom: 0.5rem;
+            border-radius: 8px;
+            vertical-align: middle;
         }
 
-        .sidebar-header p {
-            font-size: 0.9rem;
-            opacity: 0.8;
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0.25rem 0 0 0;
         }
 
         .nav-menu {
-            list-style: none;
+            padding: 1rem 0;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            padding: 1rem 2rem;
-            color: rgba(255,255,255,0.8);
+            padding: 0.75rem 1.5rem;
+            color: var(--text-primary);
             text-decoration: none;
             transition: var(--transition);
             border-left: 3px solid transparent;
+            gap: 0.75rem;
         }
 
         .nav-item:hover {
-            background: rgba(255,255,255,0.1);
-            color: white;
+            background: var(--bg-primary);
+            color: var(--accent);
+            border-left-color: var(--accent);
         }
 
         .nav-item.active {
-            background: rgba(255,255,255,0.15);
-            color: white;
-            border-left-color: var(--accent-color);
+            background: var(--bg-primary);
+            color: var(--accent);
+            border-left-color: var(--accent);
+            font-weight: 500;
         }
 
         .nav-item i {
             width: 20px;
             text-align: center;
+        }
+
+        /* Menu Category Separators */
+        .nav-category {
+            padding: 0.5rem 1.5rem;
+            margin: 0.5rem 0 0.25rem 0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-category:first-child {
+            margin-top: 0;
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0.5rem 1.5rem;
+            opacity: 0.3;
+        }
+
+        /* Sidebar Login/Logout Area */
+        .sidebar-auth {
+            padding: 1rem;
+            margin: 1rem;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .sidebar-login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-login-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .sidebar-user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .sidebar-user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .sidebar-user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-user-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar-user-email {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-logout-btn {
+            padding: 0.5rem;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .sidebar-logout-btn:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+        }
+
+        /* Responsive Sidebar */
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+            }
         }
 
         /* Main Content */
@@ -143,11 +326,10 @@
         }
 
         .main-header {
-            background: var(--bg-primary);
-            padding: 2rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow);
+            background: var(--bg-secondary);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             text-align: center;
         }
 
@@ -547,10 +729,11 @@
             border: 1px solid var(--border);
         }
 
-        .meal-foods {
+        .main-wrapper {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            margin-left: 280px;
+            transition: var(--transition);
         }
 
         .food-item {
@@ -929,6 +1112,22 @@
             justify-content: flex-end;
         }
 
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .layout-container {
@@ -947,53 +1146,9 @@
                 overflow-x: hidden;
             }
             
-            /* Prevenir overflow de texto */
-            * {
-                word-wrap: break-word;
-                overflow-wrap: break-word;
-                -webkit-hyphens: auto;
-                -ms-hyphens: auto;
-                hyphens: auto;
-            }
             
-            .student-info h3,
-            .student-info p {
-                max-width: 100%;
-                word-break: break-word;
-                white-space: normal;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            
-            .student-info p {
-                font-size: 0.9rem;
-                line-height: 1.3;
-            }
-            
-            .sidebar {
-                transform: translateX(-100%);
-                width: 280px;
-                z-index: 1001;
-            }
-
-            .sidebar.active {
-                transform: translateX(0);
-            }
-
             .mobile-menu-toggle {
                 display: block;
-                position: fixed;
-                top: 5.5rem;
-                left: 1rem;
-                z-index: 1002;
-                background: var(--accent-color);
-                color: white;
-                border: none;
-                padding: 0.75rem;
-                border-radius: 8px;
-                cursor: pointer;
-                font-size: 1.25rem;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             }
             
             .main-header {
@@ -1008,15 +1163,6 @@
             
             .main-header p {
                 font-size: 0.9rem;
-            }
-            
-            .page-header {
-                padding: 20px;
-                margin-bottom: 20px;
-            }
-            
-            .page-title {
-                font-size: 1.8rem;
             }
             
             .tabs-nav {
@@ -1108,12 +1254,6 @@
                 font-weight: 600;
             }
 
-            .student-actions {
-                flex-direction: column;
-                gap: 0.75rem;
-                margin-top: 1.5rem;
-            }
-
             .btn {
                 width: 100%;
                 padding: 0.75rem 0.5rem;
@@ -1145,127 +1285,6 @@
                 padding: 0.6rem 0.4rem;
                 min-height: 40px;
             }
-            
-            /* Corrigir overflow de informações de dieta */
-            .diet-meals {
-                max-width: 100%;
-                overflow-x: hidden;
-            }
-            
-            .meal-section {
-                margin-bottom: 1rem;
-                padding: 0.75rem;
-                background: var(--bg-primary);
-                border-radius: 8px;
-                border: 1px solid var(--border);
-            }
-            
-            .meal-header {
-                display: flex;
-                flex-direction: column;
-                gap: 0.5rem;
-                margin-bottom: 0.75rem;
-            }
-            
-            .meal-header h5 {
-                font-size: 0.9rem;
-                font-weight: 600;
-                margin: 0;
-                word-break: break-word;
-                white-space: normal;
-            }
-            
-            .meal-totals {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.25rem;
-                font-size: 0.7rem;
-            }
-            
-            .meal-totals span {
-                background: var(--bg-secondary);
-                padding: 0.2rem 0.4rem;
-                border-radius: 4px;
-                white-space: nowrap;
-            }
-            
-            .food-item {
-                display: flex;
-                flex-direction: column;
-                gap: 0.25rem;
-                padding: 0.5rem;
-                border-bottom: 1px solid var(--border);
-            }
-            
-            .food-name {
-                font-size: 0.8rem;
-                font-weight: 500;
-                word-break: break-word;
-                white-space: normal;
-            }
-            
-            .food-quantity {
-                font-size: 0.7rem;
-                color: var(--text-secondary);
-            }
-            
-            .food-macros {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.2rem;
-            }
-            
-            .food-macros .macro {
-                font-size: 0.65rem;
-                padding: 0.1rem 0.3rem;
-                border-radius: 3px;
-                white-space: nowrap;
-            }
-            
-            .summary-stats {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
-                margin-bottom: 1rem;
-            }
-            
-            .summary-stats .stat-item {
-                padding: 0.5rem;
-                text-align: center;
-                background: var(--bg-primary);
-                border-radius: 6px;
-                border: 1px solid var(--border);
-            }
-            
-            .summary-stats .stat-value {
-                font-size: 0.9rem;
-                font-weight: 600;
-                display: block;
-                word-break: break-word;
-            }
-            
-            .summary-stats .stat-label {
-                font-size: 0.65rem;
-                color: var(--text-secondary);
-                display: block;
-            }
-
-            .btn-primary {
-                background: var(--accent-color);
-                color: white;
-                border: none;
-            }
-
-            .btn-secondary {
-                background: var(--bg-primary);
-                color: var(--text-primary);
-                border: 1px solid var(--border);
-            }
-
-            .btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            }
 
             .protocol-grid {
                 grid-template-columns: 1fr;
@@ -1285,19 +1304,8 @@
                 text-align: center;
             }
 
-            .protocol-icon {
-                width: 60px;
-                height: 60px;
-                font-size: 1.5rem;
-                margin: 0 auto;
-            }
-
             .protocol-title {
                 font-size: 1.2rem;
-            }
-
-            .protocol-meta {
-                font-size: 0.9rem;
             }
 
             .protocol-actions {
@@ -1311,44 +1319,9 @@
                 border-radius: 12px;
             }
 
-            .modal-header {
-                padding: 1.5rem;
-                border-bottom: 1px solid var(--border);
-            }
-
-            .modal-header h3 {
-                font-size: 1.2rem;
-            }
-
-            .modal-body {
-                padding: 1.5rem;
-            }
-
-            .form-group {
-                margin-bottom: 1.5rem;
-            }
-
-            .form-group label {
-                font-size: 0.95rem;
-                margin-bottom: 0.5rem;
-            }
-
-            .form-group input,
-            .form-group select,
-            .form-group textarea {
-                font-size: 1rem;
-                padding: 0.875rem;
-                border-radius: 8px;
-            }
-
             .form-actions {
                 flex-direction: column;
                 gap: 1rem;
-            }
-
-            .form-actions .btn {
-                padding: 1rem;
-                font-size: 1rem;
             }
         }
         
@@ -1583,318 +1556,222 @@
                 font-size: 1.3rem;
             }
         }
-    </style>
 
-    <style>
-        /* Print Styles for Student Protocol */
+        /* Print Styles for Protocol */
         @media print {
-            @page {
-                margin: 2mm;
-                size: A4;
-            }
-
-            html, body {
-                background: white !important;
-                color: black !important;
-                font-size: 11pt;
-                line-height: 1.2;
-                margin: 0 !important;
-                padding: 0 !important;
-                height: auto;
-                overflow: visible;
-                width: 100%;
-                position: absolute;
-                top: 0;
-                left: 0;
-            }
-
-            /* Force no blank first page */
-            * {
+            /* Hide all page elements except protocol */
+            body * {
                 visibility: hidden;
-                position: relative;
             }
-
-            .protocol-container,
-            .protocol-container * {
+            
+            /* Show only protocol content */
+            #protocolContainer,
+            #protocolContainer * {
                 visibility: visible;
             }
-
-            .layout-container > *:not(.protocol-container) {
-                display: none !important;
-                height: 0 !important;
-                margin: 0 !important;
-                padding: 0 !important;
+            
+            /* Position protocol at top */
+            #protocolContainer {
                 position: absolute;
-                top: -9999px;
-                left: -9999px;
-            }
-
-            .layout-container {
-                display: block !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                height: auto;
-                width: 100%;
-                position: relative;
-                top: 0;
                 left: 0;
+                top: 0;
+                width: 100%;
+                background: white !important;
             }
-
-            .protocol-container {
-                display: block !important;
-                position: absolute !important;
-                top: 0 !important;
-                left: 0 !important;
-                width: 100% !important;
-                max-width: none !important;
-                margin: 0 !important;
-                padding: 2px !important;
+            
+            /* Remove all backgrounds and colors */
+            #protocolContainer,
+            #protocolContainer * {
                 background: white !important;
                 color: black !important;
-                height: auto;
-                overflow: visible;
-                page-break-inside: avoid;
-                page-break-before: auto;
-                page-break-after: auto;
+                box-shadow: none !important;
+                border-color: #ddd !important;
             }
-
-            .protocol-header {
-                text-align: center;
-                border-bottom: 2px solid #333;
-                padding-bottom: 8px;
-                margin-bottom: 15px;
-                margin-top: 0;
-                page-break-after: avoid;
-                page-break-before: avoid;
-            }
-
-            .protocol-section {
-                margin-bottom: 20px;
-                page-break-inside: avoid;
-                margin-top: 0;
-                padding-top: 0;
-                orphans: 3;
-                widows: 3;
-                page-break-before: auto;
-                padding: 8px;
-                border: 1px solid #e0e0e0;
-                border-radius: 4px;
-                background-color: #fafafa;
-            }
-
-            .protocol-section:first-child {
-                page-break-before: auto;
-                margin-top: 0;
-                padding-top: 8px;
-            }
-
-            .protocol-section:last-child {
-                margin-bottom: 0;
-                page-break-after: auto;
-            }
-
-            .protocol-section h2 {
-                font-size: 15pt;
-                font-weight: bold;
-                margin-bottom: 12px;
-                margin-top: 0;
-                color: #333;
-                border-bottom: 1px solid #ccc;
-                padding-bottom: 4px;
-                page-break-after: avoid;
-                page-break-before: avoid;
-                orphans: 2;
-                widows: 2;
-            }
-
-            .protocol-section h3 {
-                font-size: 13pt;
-                font-weight: bold;
-                margin: 10px 0 6px 0;
-                color: #555;
-                page-break-after: avoid;
-            }
-
-            .protocol-section h4 {
-                font-size: 12pt;
-                font-weight: bold;
-                margin: 8px 0 4px 0;
-                color: #666;
-            }
-
-            .protocol-section h5 {
-                font-size: 11pt;
-                font-weight: bold;
-                margin: 6px 0 3px 0;
-                color: #777;
-            }
-
-            .protocol-section h6 {
-                font-size: 10pt;
-                font-weight: bold;
-                margin: 5px 0 2px 0;
-                color: #888;
-            }
-
-            .protocol-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 6px;
-                margin-bottom: 10px;
-            }
-
-            .protocol-item {
-                margin-bottom: 4px;
-                font-size: 10pt;
-                page-break-inside: avoid;
-            }
-
-            .protocol-label {
-                font-weight: bold;
-                color: #333;
-            }
-
-            .protocol-value {
-                color: #555;
-            }
-
+            
             .protocol-table {
                 width: 100%;
                 border-collapse: collapse;
-                margin-bottom: 5px;
-                font-size: 9pt;
-                page-break-inside: avoid;
+                font-size: 10pt;
+                margin: 8px 0;
             }
-
+            
             .protocol-table th,
             .protocol-table td {
-                border: 1px solid #ccc;
-                padding: 1px;
+                border: 1px solid #ddd;
+                padding: 4px 6px;
                 text-align: left;
+                vertical-align: top;
             }
-
+            
             .protocol-table th {
                 background-color: #f5f5f5;
                 font-weight: bold;
                 font-size: 9pt;
             }
-
-            .protocol-meal {
-                margin-bottom: 6px;
+            
+            .protocol-section {
                 page-break-inside: avoid;
+                margin-bottom: 20px;
             }
-
-            .protocol-exercise {
+            
+            .protocol-meal {
+                margin-bottom: 15px;
+            }
+            
+            .protocol-meal h3,
+            .protocol-meal h4,
+            .protocol-meal h5 {
+                margin: 8px 0 4px 0;
+                font-size: 11pt;
+            }
+            
+            .protocol-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+                margin: 8px 0;
+            }
+            
+            .protocol-item {
+                margin-bottom: 4px;
+            }
+            
+            .protocol-label {
+                font-weight: bold;
+                margin-right: 4px;
+            }
+            
+            .protocol-value {
+                font-size: 9pt;
+            }
+            
+            /* Reduce spacing between sections */
+            .protocol-header {
+                margin-bottom: 15px;
+            }
+            
+            .protocol-header h1 {
+                font-size: 14pt;
+                margin-bottom: 5px;
+            }
+            
+            .protocol-header h2 {
+                font-size: 12pt;
                 margin-bottom: 3px;
-                padding: 1px;
-                border-left: 1px solid #333;
-                background-color: #f9f9f9;
             }
-
-            .no-print {
-                display: none !important;
-                height: 0 !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
+            
+            .protocol-header p {
+                font-size: 9pt;
+                margin-bottom: 0;
             }
-
-            .page-break {
-                page-break-before: always;
+            
+            /* Compact layout for diet and workout tables */
+            .protocol-table.compact {
+                font-size: 8pt;
             }
-
-            /* Aggressive prevention of blank pages */
-            body::before,
-            body::after,
-            html::before,
-            html::after {
-                content: none !important;
-                display: none !important;
+            
+            .protocol-table.compact th,
+            .protocol-table.compact td {
+                padding: 2px 4px;
             }
-
-            /* Force content to start at top */
-            * {
-                box-sizing: border-box;
-            }
-
-            /* Remove any potential extra spacing */
-            br {
-                display: none !important;
-            }
-
-            /* Ensure no empty elements create pages */
-            :empty {
-                display: none !important;
-            }
-
-            /* Force protocol to start immediately */
-            .protocol-container {
-                transform: translateY(0) !important;
-            }
-        }
-
-        .protocol-container {
-            display: none;
-        }
-
-        .protocol-container.show {
-            display: block;
         }
     </style>
+
 </head>
 <body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
     <div class="layout-container">
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <img src="logo-gurgel.png" alt="GurgelTrack Logo" class="logo" style="width: 10vw;">
-                <h1>
-                    <i class="fas fa-dumbbell"></i>
-                    GurgelTrack
-                </h1>
-                <p>Sua plataforma fitness</p>
+                <img src="logo-gurgel.png" alt="GurgelTrack Logo" class="sidebar-logo">
+                <div class="sidebar-title">GurgelTrack</div>
+                <div class="sidebar-subtitle">Sua plataforma fitness</div>
             </div>
             
             <nav class="nav-menu">
-                <a href="index.html" class="nav-item">
+                <!-- Dashboard -->
+                <a href="index.html" class="nav-item" data-page="home">
                     <i class="fas fa-home"></i>
-                    Início
+                    <span>Início</span>
                 </a>
-                <a href="alunos.html" class="nav-item active">
-                    <i class="fas fa-users"></i>
-                    Alunos
-                </a>
-                <a href="treino.html" class="nav-item">
+                
+                <div class="nav-divider"></div>
+                
+                <!-- Treino e Nutrição -->
+                <div class="nav-category">Treino & Nutrição</div>
+                <a href="treino.html" class="nav-item" data-page="treino">
                     <i class="fas fa-dumbbell"></i>
-                    Treino
+                    <span>Treinos</span>
                 </a>
-                <a href="dieta.html" class="nav-item">
+                <a href="dieta.html" class="nav-item" data-page="dieta">
                     <i class="fas fa-utensils"></i>
-                    Dieta
+                    <span>Dieta</span>
                 </a>
-                <a href="calculo.html" class="nav-item">
+                <a href="calculo.html" class="nav-item" data-page="calculo">
                     <i class="fas fa-calculator"></i>
-                    Cálculo
+                    <span>Cálculo</span>
                 </a>
-                <a href="carga.html" class="nav-item">
+                <a href="carga.html" class="nav-item" data-page="carga">
                     <i class="fas fa-weight"></i>
-                    Anotações
+                    <span>Cargas</span>
                 </a>
-                <a href="pagamentos.html" class="nav-item">
+                
+                <div class="nav-divider"></div>
+                
+                <!-- Gestão -->
+                <div class="nav-category">Gestão</div>
+                <a href="alunos.html" class="nav-item active" data-page="alunos">
+                    <i class="fas fa-users"></i>
+                    <span>Alunos</span>
+                </a>
+                <a href="pagamentos.html" class="nav-item" data-page="pagamentos">
                     <i class="fas fa-credit-card"></i>
-                    Pagamentos
+                    <span>Pagamentos</span>
                 </a>
-                <a href="agenda.html" class="nav-item">
+                <a href="agenda.html" class="nav-item" data-page="agenda">
                     <i class="fas fa-calendar"></i>
-                    Agenda
+                    <span>Agenda</span>
                 </a>
-                <button class="nav-item theme-toggle" id="themeToggle" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
-                    <i class="fas fa-moon" id="themeIcon"></i>
-                    <span id="themeText">Tema Escuro</span>
-                </button>
+                
+                <div class="nav-divider"></div>
+                
+                <!-- Comunidade -->
+                <div class="nav-category">Comunidade</div>
+                <a href="amigos.html" class="nav-item" data-page="amigos">
+                    <i class="fas fa-user-friends"></i>
+                    <span>Amigos</span>
+                </a>
             </nav>
+            
+            <!-- Sidebar Login/Logout Area -->
+            <div class="sidebar-auth">
+                <!-- Login button (shown when not logged in) -->
+                <a href="login.html" class="sidebar-login-btn" id="sidebarLoginBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Entrar</span>
+                </a>
+                
+                <!-- User info (shown when logged in) -->
+                <div class="sidebar-user-info" id="sidebarUserInfo" style="display: none;">
+                    <div class="sidebar-user-profile">
+                        <div class="sidebar-user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="sidebar-user-details">
+                            <div class="sidebar-user-email" id="sidebarUserEmail">user@example.com</div>
+                        </div>
+                    </div>
+                    <button class="sidebar-logout-btn" id="sidebarLogoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </button>
+                </div>
+            </div>
         </aside>
 
         <!-- Main Content -->
@@ -2100,39 +1977,23 @@
             setupEventListeners();
         });
 
+        
+        // Active navigation state
+        const currentPath = window.location.pathname;
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        navItems.forEach(item => {
+            const itemPath = item.getAttribute('href');
+            if (currentPath.includes(itemPath) || (currentPath === '/' && itemPath === 'index.html')) {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+            }
+        });
+
         // Setup event listeners
         function setupEventListeners() {
-            // Mobile menu toggle
-            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-            const sidebar = document.getElementById('sidebar');
+
             
-            if (mobileMenuToggle) {
-                mobileMenuToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('active');
-                });
-            }
-
-            // Close sidebar when clicking outside on mobile
-            document.addEventListener('click', function(event) {
-                if (window.innerWidth <= 768) {
-                    if (!sidebar.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
-                        sidebar.classList.remove('active');
-                    }
-                }
-            });
-
-            // Active navigation state
-            const currentPath = window.location.pathname;
-            const navItems = document.querySelectorAll('.nav-item');
-            
-            navItems.forEach(item => {
-                const itemPath = item.getAttribute('href');
-                if (currentPath.includes(itemPath) || (currentPath === '/' && itemPath === 'index.html')) {
-                    navItems.forEach(nav => nav.classList.remove('active'));
-                    item.classList.add('active');
-                }
-            });
-
             // Student form submission
             document.getElementById('studentForm').addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -3014,49 +2875,7 @@
             }
         }
 
-        // Tema escuro/claro functionality
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        const themeText = document.getElementById('themeText');
-        const body = document.body;
-
-        // Carregar preferência de tema salva
-        function loadThemePreference() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                body.classList.add('dark-mode');
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-                themeText.textContent = 'Tema Claro';
-            }
-        }
-
-        // Alternar tema
-        function toggleTheme() {
-            body.classList.toggle('dark-mode');
-            
-            if (body.classList.contains('dark-mode')) {
-                // Mudar para tema escuro
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-                themeText.textContent = 'Tema Claro';
-                localStorage.setItem('theme', 'dark');
-            } else {
-                // Mudar para tema claro
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-                themeText.textContent = 'Tema Escuro';
-                localStorage.setItem('theme', 'light');
-            }
-        }
-
-        // Adicionar evento de clique ao botão de tema
-        if (themeToggle) {
-            themeToggle.addEventListener('click', toggleTheme);
-        }
-
-        // Carregar preferência de tema ao iniciar a página
-        document.addEventListener('DOMContentLoaded', loadThemePreference);
+        // Tema escuro/claro functionality (já implementado no initThemeToggle)
     </script>
 
     <!-- Botão de Ajuda -->
@@ -3396,11 +3215,11 @@
                                     <span class="protocol-label">Totais da Refeição:</span>
                                         <span class="protocol-value">KCAL: ${Math.round(meal.totals?.kcal || 0)} | P: ${(meal.totals?.ptn || 0).toFixed(1)}g | C: ${(meal.totals?.cho || 0).toFixed(1)}g | G: ${(meal.totals?.lip || 0).toFixed(1)}g</span>
                                     </div>
-                                    <table class="protocol-table">
+                                    <table class="protocol-table compact">
                                         <thead>
                                             <tr>
                                                 <th>Alimento</th>
-                                                <th>Quantidade</th>
+                                                <th>Qtd</th>
                                                 <th>KCAL</th>
                                                 <th>PTN</th>
                                                 <th>CHO</th>
@@ -3482,13 +3301,13 @@
                                     <span class="protocol-label">Exercícios do dia:</span>
                                     <span class="protocol-value">${(day.exercises || []).length} exercícios</span>
                                 </div>
-                                <table class="protocol-table">
+                                <table class="protocol-table compact">
                                     <thead>
                                         <tr>
                                             <th>Exercício</th>
                                             <th>Séries</th>
                                             <th>Reps</th>
-                                            <th>Descanso</th>
+                                            <th>Desc</th>
                                             <th>Carga</th>
                                         </tr>
                                     </thead>
@@ -3658,6 +3477,106 @@
             }
             
             return calculations.find(c => c.id === calcId);
+        }
+
+        // Sidebar Login/Logout functionality
+        function updateSidebarAuth() {
+            // Verificar usando o sistema de autenticação existente
+            const currentUser = localStorage.getItem('currentUser');
+            const isLoggedIn = !!currentUser;
+            
+            let userEmail = 'user@example.com';
+            if (isLoggedIn) {
+                try {
+                    const userData = JSON.parse(currentUser);
+                    userEmail = userData.email || userEmail;
+                } catch (error) {
+                    console.error('Erro ao parsear dados do usuário:', error);
+                }
+            }
+            
+            const loginBtn = document.getElementById('sidebarLoginBtn');
+            const userInfo = document.getElementById('sidebarUserInfo');
+            const userEmailElement = document.getElementById('sidebarUserEmail');
+            
+            if (isLoggedIn && loginBtn && userInfo && userEmailElement) {
+                loginBtn.style.display = 'none';
+                userInfo.style.display = 'flex';
+                userEmailElement.textContent = userEmail;
+            } else if (loginBtn && userInfo) {
+                loginBtn.style.display = 'flex';
+                userInfo.style.display = 'none';
+            }
+        }
+
+        // Sidebar logout functionality
+        document.getElementById('sidebarLogoutBtn').addEventListener('click', function() {
+            // Usar o sistema de autenticação existente
+            if (window.auth && window.auth.logout) {
+                window.auth.logout();
+            } else {
+                // Fallback manual
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('token');
+                updateSidebarAuth();
+                
+                // Redirect to login page
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Mobile menu toggle functionality
+        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.classList.toggle('active');
+            }
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            
+            if (window.innerWidth <= 768 && 
+                sidebar && 
+                !sidebar.contains(event.target) && 
+                !mobileToggle.contains(event.target) &&
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+            }
+        });
+
+        // Update auth state on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSidebarAuth();
+            initThemeToggle();
+        });
+
+        // Theme Toggle Functionality
+        function initThemeToggle() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const body = document.body;
+            
+            // Load saved theme or default to light
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeIcon.className = 'fas fa-sun';
+            }
+            
+            themeToggle.addEventListener('click', function() {
+                body.classList.toggle('dark-mode');
+                
+                if (body.classList.contains('dark-mode')) {
+                    themeIcon.className = 'fas fa-sun';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    themeIcon.className = 'fas fa-moon';
+                    localStorage.setItem('theme', 'light');
+                }
+            });
         }
     </script>
 </body>

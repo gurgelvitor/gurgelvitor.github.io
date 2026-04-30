@@ -1,0 +1,3143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amigos - GurgelTrack</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/auth.js"></script>
+    <style>
+        :root {
+            --primary-color: #8b0000;
+            --secondary-color: #a52a2a;
+            --accent-color: #dc143c;
+            --accent-hover: #b91c1c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-color: #fff5f5;
+            --dark-color: #333333;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --bg-primary: #ffffff;
+            --bg-secondary: #ffffff;
+            --border: #ffcccc;
+            --shadow: 0 2px 10px rgba(220,20,60,0.15);
+            --transition: all 0.3s ease;
+            --danger-color: #dc143c;
+        }
+
+        body.dark-mode {
+            --primary-color: #1a1a2e;
+            --secondary-color: #25253d;
+            --accent-color: #e91e63;
+            --accent-hover: #f06292;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --light-color: #0f0f0f;
+            --dark-color: #f5f5f5;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b8b8b8;
+            --bg-primary: #1e1e1e;
+            --bg-secondary: #0f0f0f;
+            --border: #333333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --danger-color: #e91e63;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 999;
+            font-size: 20px;
+            color: var(--accent);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(0, 0, 0, 0.8);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+        }
+
+        body.dark-mode .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: var(--transition);
+            border-right: 1px solid var(--border);
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .sidebar-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            vertical-align: middle;
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0.25rem 0 0 0;
+        }
+
+        .nav-menu {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            gap: 0.75rem;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-primary);
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+
+        .nav-item.active {
+            background: var(--bg-primary);
+            color: var(--accent);
+            border-left-color: var(--accent);
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Menu Category Separators */
+        .nav-category {
+            padding: 0.5rem 1.5rem;
+            margin: 0.5rem 0 0.25rem 0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-category:first-child {
+            margin-top: 0;
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0.5rem 1.5rem;
+            opacity: 0.3;
+        }
+
+        /* Sidebar Login/Logout Area */
+        .sidebar-auth {
+            padding: 1rem;
+            margin: 1rem;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .sidebar-login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-login-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .sidebar-user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .sidebar-user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .sidebar-auth .sidebar-user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--accent-color) !important;
+            color: white !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 0.9rem !important;
+        }
+
+        .sidebar-user-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar-user-email {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-logout-btn {
+            padding: 0.5rem;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .sidebar-logout-btn:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+        }
+
+        /* Responsive Sidebar */
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+            }
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            width: 100%;
+            margin-left: 280px;
+            flex: 1;
+            background: var(--bg-secondary);
+            min-height: 100vh;
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .main-header {
+            background: var(--bg-secondary);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .main-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .main-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Friend Requests Section */
+        .friend-requests {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .friend-requests h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .request-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .request-item:hover {
+            border-color: var(--accent-color);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        /* Header Actions Styles */
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--bg-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .user-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .logout-btn {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+
+        .login-btn {
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .login-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .friend-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .friend-email {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .request-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: var(--bg-primary);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .search-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* User Result */
+        .user-result {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: none;
+            transition: var(--transition);
+        }
+
+        .user-result.show {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-result:hover {
+            border-color: var(--accent-color);
+        }
+
+        /* Friends List */
+        .friends-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .friends-section {
+            background: var(--bg-primary);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            min-width: 0;
+        }
+
+        .friends-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .friends-header h2 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .friends-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .friend-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            min-width: 0;
+        }
+
+        .friend-item:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .friend-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Chat Section */
+        .chat-section {
+            background: var(--bg-primary);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: none;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .chat-section.active {
+            display: block;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 1.5rem;
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .chat-header-info {
+            flex: 1;
+        }
+
+        .chat-header-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .chat-header-email {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 1rem;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .message.sent {
+            flex-direction: row-reverse;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            word-wrap: break-word;
+        }
+
+        .message.sent .message-bubble {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .message.received .message-bubble {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 0.25rem;
+        }
+
+        /* Anamnese Message Styles */
+        .anamnese-message {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover)) !important;
+            color: white !important;
+            border: none !important;
+            padding: 1rem !important;
+        }
+
+        .anamnese-message-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .anamnese-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .anamnese-text {
+            flex: 1;
+            line-height: 1.4;
+            white-space: pre-line;
+        }
+
+        .respond-anamnese-btn {
+            background: white !important;
+            color: var(--accent-color) !important;
+            border: none !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 6px !important;
+            font-size: 0.85rem !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: var(--transition) !important;
+            margin-top: 0.5rem;
+        }
+
+        .respond-anamnese-btn:hover {
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(255,255,255,0.3) !important;
+        }
+
+        /* Anamnese Response Modal Styles */
+        .anamnese-response-content {
+            padding: 1rem 0;
+        }
+
+        .anamnese-info {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .anamnese-info h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .anamnese-info p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .questions-response-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .question-response-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .question-response-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .question-response-number {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .question-response-text {
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .question-response-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .question-response-input:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        .question-response-photo {
+            margin-top: 0.75rem;
+        }
+
+        .question-photo-label {
+            display: block;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border: 2px dashed var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .question-photo-label:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .question-photo-input {
+            display: none;
+        }
+
+        .photo-response-preview {
+            margin-top: 0.5rem;
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
+
+        .question-response-photo img {
+            max-width: 250px;
+            max-height: 180px;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
+
+        .question-response-options {
+            margin-top: 0.75rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .option-label:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .option-radio {
+            margin: 0;
+        }
+
+        .option-text {
+            font-size: 0.95rem;
+            color: inherit;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex !important;
+        }
+
+        .modal-content {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Botão de Ajuda */
+        .help-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(220, 20, 60, 0.9), rgba(220, 20, 60, 0.8));
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(220, 20, 60, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .help-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .help-button {
+                bottom: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+        }
+
+        /* Help Modal Styles */
+        .help-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow-x: hidden;
+        }
+
+        .help-modal-content {
+            background-color: var(--bg-primary);
+            margin: 5% auto;
+            padding: 0;
+            border: 2px solid var(--accent-color);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .help-modal-header {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .help-modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .help-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .help-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .help-section {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .help-section:last-child {
+            border-bottom: none;
+        }
+
+        .help-section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .help-section-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .help-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+
+        .help-step-number {
+            background: var(--accent-color);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .help-step-text {
+            flex: 1;
+        }
+
+        .help-tip {
+            background: rgba(220, 20, 60, 0.05);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .help-tip-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .friends-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .chat-container {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-wrapper {
+                margin-left: 0;
+                padding: 0.75rem;
+            }
+
+            
+            .mobile-menu-toggle {
+                display: block;
+                position: fixed;
+                top: 0.75rem;
+                left: 0.75rem;
+                z-index: 1002;
+                background: var(--accent-color);
+                color: white;
+                border: none;
+                padding: 0.6rem;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1.1rem;
+                box-shadow: var(--shadow);
+                width: 44px;
+                height: 44px;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .main-header {
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .main-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .main-header p {
+                font-size: 0.9rem;
+            }
+
+            .friends-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .search-section {
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .search-form {
+                flex-direction: column;
+                gap: 0.75rem;
+                width: 100%;
+            }
+
+            .search-input {
+                width: 100%;
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 0.8rem;
+                font-size: 0.9rem;
+                justify-content: center;
+            }
+
+            .user-result.show {
+                flex-direction: column;
+                text-align: center;
+                padding: 1rem;
+                max-width: 100%;
+            }
+
+            .result-info {
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+
+            .result-info h3 {
+                font-size: 1rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .result-info p {
+                font-size: 0.85rem;
+            }
+
+            .friends-section {
+                padding: 1.5rem;
+            }
+
+            .friends-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            .friends-header h2 {
+                font-size: 1.2rem;
+            }
+
+            .friends-list, .friend-requests {
+                padding: 0;
+            }
+
+            .friend-item, .request-item {
+                padding: 0.75rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .friend-info, .request-info {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .friend-info h4, .request-info h4 {
+                font-size: 0.9rem;
+                margin-bottom: 0.25rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .friend-info p, .request-info p {
+                font-size: 0.8rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .friend-actions, .request-actions {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                width: 100%;
+                max-width: 120px;
+            }
+
+            .friend-actions button, .request-actions button {
+                width: 100%;
+                padding: 0.5rem;
+                font-size: 0.8rem;
+                text-align: center;
+            }
+
+            .chat-section {
+                padding: 1.5rem;
+            }
+
+            .chat-container {
+                height: 350px;
+            }
+
+            .chat-messages {
+                height: 250px;
+                padding: 0.75rem;
+            }
+
+            .message {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .chat-input {
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 0.75rem;
+            }
+
+            .chat-input input {
+                width: 100%;
+                padding: 0.6rem;
+                font-size: 0.85rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .chat-input button {
+                width: 100%;
+                padding: 0.6rem;
+                font-size: 0.85rem;
+            }
+
+            .section-title {
+                font-size: 1.1rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-wrapper {
+                padding: 0.5rem;
+            }
+
+            
+            .mobile-menu-toggle {
+                top: 0.5rem;
+                left: 0.5rem;
+                padding: 0.5rem;
+                font-size: 1rem;
+                width: 40px;
+                height: 40px;
+            }
+
+            .main-content {
+                padding: 0.75rem;
+            }
+
+            .main-header {
+                padding: 1rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .main-header h1 {
+                font-size: 1.3rem;
+            }
+
+            .main-header p {
+                font-size: 0.85rem;
+            }
+
+            .search-section {
+                padding: 1rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .search-form {
+                gap: 0.5rem;
+            }
+
+            .search-input {
+                padding: 0.7rem;
+                font-size: 0.85rem;
+            }
+
+            .btn {
+                padding: 0.7rem;
+                font-size: 0.85rem;
+            }
+
+            .user-result.show {
+                padding: 0.75rem;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .result-info h3 {
+                font-size: 0.95rem;
+            }
+
+            .result-info p {
+                font-size: 0.8rem;
+            }
+
+            .friends-section {
+                padding: 1rem;
+            }
+
+            .friends-header {
+                gap: 0.5rem;
+            }
+
+            .friends-header h2 {
+                font-size: 1.1rem;
+            }
+
+            .friend-item, .request-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+                padding: 0.6rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .friend-info, .request-info {
+                width: 100%;
+                text-align: center;
+            }
+
+            .friend-info h4, .request-info h4 {
+                font-size: 0.85rem;
+                text-align: center;
+                margin-bottom: 0.25rem;
+            }
+
+            .friend-info p, .request-info p {
+                font-size: 0.75rem;
+                text-align: center;
+            }
+
+            .friend-actions, .request-actions {
+                width: 100%;
+                flex-direction: row;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+
+            .friend-actions button, .request-actions button {
+                flex: 1;
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+                min-width: 60px;
+            }
+
+            .chat-section {
+                padding: 1rem;
+            }
+
+            .chat-container {
+                height: 280px;
+            }
+
+            .chat-messages {
+                height: 180px;
+                padding: 0.5rem;
+            }
+
+            .message {
+                padding: 0.4rem;
+                font-size: 0.8rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .chat-input {
+                padding: 0.5rem;
+                gap: 0.4rem;
+            }
+
+            .chat-input input {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .chat-input button {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .section-title {
+                font-size: 1rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .chat-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .chat-header-name {
+                font-size: 1rem;
+            }
+
+            .chat-header-email {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-toggle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
+    <div class="layout-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="logo-gurgel.png" alt="GurgelTrack Logo" class="sidebar-logo">
+                <div class="sidebar-title">GurgelTrack</div>
+                <div class="sidebar-subtitle">Sua plataforma fitness</div>
+            </div>
+            
+            <nav class="nav-menu">
+                <!-- Dashboard -->
+                <a href="index.html" class="nav-item" data-page="home">
+                    <i class="fas fa-home"></i>
+                    <span>Início</span>
+                </a>
+                
+                <div class="nav-divider"></div>
+                
+                <!-- Treino e Nutrição -->
+                <div class="nav-category">Treino & Nutrição</div>
+                <a href="treino.html" class="nav-item" data-page="treino">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Treinos</span>
+                </a>
+                <a href="dieta.html" class="nav-item" data-page="dieta">
+                    <i class="fas fa-utensils"></i>
+                    <span>Dieta</span>
+                </a>
+                <a href="calculo.html" class="nav-item" data-page="calculo">
+                    <i class="fas fa-calculator"></i>
+                    <span>Cálculo</span>
+                </a>
+                <a href="carga.html" class="nav-item" data-page="carga">
+                    <i class="fas fa-weight"></i>
+                    <span>Cargas</span>
+                </a>
+                
+                <div class="nav-divider"></div>
+                
+                <!-- Gestão -->
+                <div class="nav-category">Gestão</div>
+                <a href="alunos.html" class="nav-item" data-page="alunos">
+                    <i class="fas fa-users"></i>
+                    <span>Alunos</span>
+                </a>
+                <a href="pagamentos.html" class="nav-item" data-page="pagamentos">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Pagamentos</span>
+                </a>
+                <a href="agenda.html" class="nav-item" data-page="agenda">
+                    <i class="fas fa-calendar"></i>
+                    <span>Agenda</span>
+                </a>
+                
+                <div class="nav-divider"></div>
+                
+                <!-- Comunidade -->
+                <div class="nav-category">Comunidade</div>
+                <a href="amigos.html" class="nav-item active" data-page="amigos">
+                    <i class="fas fa-user-friends"></i>
+                    <span>Amigos</span>
+                </a>
+            </nav>
+            
+            <!-- Sidebar Login/Logout Area -->
+            <div class="sidebar-auth">
+                <!-- Login button (shown when not logged in) -->
+                <a href="login.html" class="sidebar-login-btn" id="sidebarLoginBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Entrar</span>
+                </a>
+                
+                <!-- User info (shown when logged in) -->
+                <div class="sidebar-user-info" id="sidebarUserInfo" style="display: none;">
+                    <div class="sidebar-user-profile">
+                        <div class="sidebar-user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="sidebar-user-details">
+                            <div class="sidebar-user-email" id="sidebarUserEmail">user@example.com</div>
+                        </div>
+                    </div>
+                    <button class="sidebar-logout-btn" id="sidebarLogoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <header class="main-header">
+                <div class="header-content">
+                    <div class="header-text">
+                        <h1><i class="fas fa-user-friends"></i> Amigos</h1>
+                        <p>Conecte-se com outros usuários e compartilhe suas experiências fitness</p>
+                    </div>
+                    <div class="header-actions">
+                        <!-- Login button (shown when not logged in) -->
+                        <a href="login.html" class="login-btn" id="loginBtn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Login
+                        </a>
+                        
+                        <!-- User info (shown when logged in) -->
+                        <div class="user-info" id="userInfo" style="display: none;">
+                            <div class="user-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="user-details">
+                                <span class="user-name" id="userName">Usuário</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="main-content">
+                <!-- Friend Requests Section -->
+                <div class="friend-requests" id="friendRequestsSection">
+                    <h2><i class="fas fa-user-plus"></i> Pedidos de Amizade</h2>
+                    <div id="friendRequestsList">
+                        <div class="empty-state">
+                            <i class="fas fa-user-plus"></i>
+                            <h3>Nenhum pedido de amizade</h3>
+                            <p>Quando alguém te adicionar, os pedidos aparecerão aqui</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Friends Layout -->
+                <div class="friends-container">
+                    <!-- Search Section -->
+                    <div class="search-section">
+                        <h2><i class="fas fa-search"></i> Buscar Amigos</h2>
+                        <form class="search-form" id="searchForm">
+                            <input 
+                                type="email" 
+                                class="search-input" 
+                                id="searchInput"
+                                placeholder="Digite o email do usuário..."
+                                required
+                            >
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                                Buscar
+                            </button>
+                        </form>
+
+                        <!-- Search Result -->
+                        <div class="user-result" id="userResult">
+                            <div class="user-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="user-details">
+                                <h3 id="resultName">Nome do Usuário</h3>
+                                <p id="resultEmail">email@exemplo.com</p>
+                            </div>
+                            <div class="user-actions">
+                                <button class="btn btn-success" id="addFriendBtn">
+                                    <i class="fas fa-user-plus"></i>
+                                    Adicionar Amigo
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Friends List -->
+                        <div class="friends-list-small">
+                            <h3><i class="fas fa-users"></i> Seus Amigos</h3>
+                            <div id="friendsList">
+                                <div class="empty-state">
+                                    <i class="fas fa-user-friends"></i>
+                                    <h3>Nenhum amigo ainda</h3>
+                                    <p>Use a busca para encontrar novos amigos!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Section -->
+                    <div class="chat-section" id="chatSection">
+                        <div class="chat-header">
+                            <div class="user-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="chat-header-info">
+                                <div class="chat-header-name" id="chatFriendName">Nome do Amigo</div>
+                                <div class="chat-header-email" id="chatFriendEmail">email@exemplo.com</div>
+                            </div>
+                            <button class="btn btn-small" id="closeChatBtn">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="empty-state">
+                                <i class="fas fa-comments"></i>
+                                <h3>Nenhuma mensagem ainda</h3>
+                                <p>Seja o primeiro a iniciar a conversa!</p>
+                            </div>
+                        </div>
+
+                        <div class="chat-input">
+                            <input 
+                                type="text" 
+                                id="messageInput"
+                                placeholder="Digite sua mensagem..."
+                            >
+                            <button class="btn btn-primary" id="sendMessageBtn">
+                                <i class="fas fa-paper-plane"></i>
+                                Enviar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Friends Section (when no chat selected) -->
+                    <div class="friends-section" id="friendsSection">
+                        <div class="friends-header">
+                            <h2><i class="fas fa-users"></i> Seus Amigos</h2>
+                            <span id="friendsCount">0 amigos</span>
+                        </div>
+                        <div class="friends-list" id="friendsListMain">
+                            <div class="empty-state">
+                                <i class="fas fa-user-friends"></i>
+                                <h3>Nenhum amigo ainda</h3>
+                                <p>Use a busca para encontrar novos amigos!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    
+    <script>
+        // Global variables
+        let currentUser = null;
+        let friends = [];
+        let friendRequests = [];
+        let selectedFriend = null;
+        let messages = [];
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', async function() {
+            await initializeApp();
+            setupEventListeners();
+        });
+
+        // Initialize app
+        async function initializeApp() {
+            if (!auth.isAuthenticated()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            currentUser = auth.currentUser;
+            updateUIForLoggedInUser();
+            
+            // Load initial data
+            await Promise.all([
+                loadFriends(),
+                loadFriendRequests()
+            ]);
+        }
+
+        // Update UI for logged in user
+        function updateUIForLoggedInUser() {
+            const loginBtn = document.getElementById('loginBtn');
+            const userInfo = document.getElementById('userInfo');
+            const userName = document.getElementById('userName');
+            
+            const currentPath = window.location.pathname;
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                const itemPath = item.getAttribute('href');
+                if (currentPath.includes(itemPath) || (currentPath === '/' && itemPath === 'index.html')) {
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                }
+            });
+
+            if (currentUser) {
+                loginBtn.style.display = 'none';
+                userInfo.style.display = 'flex';
+                userName.textContent = currentUser.email?.split('@')[0] || 'Usuário';
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search form
+            document.getElementById('searchForm').addEventListener('submit', handleSearch);
+            
+            // Add friend button (não adiciona evento aqui, será adicionado dinamicamente)
+            
+            // Chat functionality
+            document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
+            document.getElementById('messageInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Close chat
+            document.getElementById('closeChatBtn').addEventListener('click', closeChat);
+            
+                    }
+
+        // Search user by email
+        async function handleSearch(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('searchInput').value.trim();
+            if (!email) return;
+
+            const searchBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = searchBtn.innerHTML;
+            
+            try {
+                searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+                searchBtn.disabled = true;
+
+                const response = await authenticatedFetch(`/api/users/search?email=${encodeURIComponent(email)}`);
+                
+                if (response.ok) {
+                    const users = await response.json();
+                    displaySearchResult(users.length > 0 ? users[0] : null);
+                } else {
+                    displaySearchResult(null);
+                }
+            } catch (error) {
+                console.error('Error searching user:', error);
+                displaySearchResult(null);
+            } finally {
+                searchBtn.innerHTML = originalText;
+                searchBtn.disabled = false;
+            }
+        }
+
+        // Display search result
+        function displaySearchResult(user) {
+            const userResult = document.getElementById('userResult');
+            const resultName = document.getElementById('resultName');
+            const resultEmail = document.getElementById('resultEmail');
+            const addFriendBtn = document.getElementById('addFriendBtn');
+
+            if (user) {
+                console.log('Usuário encontrado:', user);
+                resultName.textContent = user.name || user.email?.split('@')[0] || 'Usuário';
+                resultEmail.textContent = user.email;
+                
+                // Check if already friends or request sent
+                const isFriend = friends.some(f => f.id === user.id);
+                const requestSent = friendRequests.some(r => r.receiver_id === user.id);
+                
+                console.log('Verificando status:', { isFriend, requestSent, userId: user.id });
+                
+                if (isFriend) {
+                    addFriendBtn.innerHTML = '<i class="fas fa-check"></i> Já são amigos';
+                    addFriendBtn.disabled = true;
+                } else if (requestSent) {
+                    addFriendBtn.innerHTML = '<i class="fas fa-clock"></i> Pedido enviado';
+                    addFriendBtn.disabled = true;
+                } else {
+                    addFriendBtn.innerHTML = '<i class="fas fa-user-plus"></i> Adicionar Amigo';
+                    addFriendBtn.disabled = false;
+                    // Armazenar o userId no botão para usar no evento
+                    addFriendBtn.setAttribute('data-user-id', user.id);
+                    addFriendBtn.onclick = function(e) {
+                        e.preventDefault();
+                        const userId = this.getAttribute('data-user-id');
+                        sendFriendRequest(userId);
+                    };
+                }
+                
+                userResult.classList.add('show');
+            } else {
+                resultName.textContent = 'Usuário não encontrado';
+                resultEmail.textContent = 'Tente outro email';
+                addFriendBtn.style.display = 'none';
+                userResult.classList.add('show');
+                
+                setTimeout(() => {
+                    userResult.classList.remove('show');
+                    addFriendBtn.style.display = 'block';
+                }, 3000);
+            }
+        }
+
+        // Send friend request
+        async function sendFriendRequest(userId) {
+            try {
+                // Garantir que userId seja uma string válida
+                const userIdStr = String(userId);
+                console.log('Enviando pedido para userId:', userIdStr, 'tipo:', typeof userIdStr);
+                
+                const response = await authenticatedFetch('/api/friend-requests', {
+                    method: 'POST',
+                    body: JSON.stringify({ receiver_id: userIdStr })
+                });
+
+                if (response.ok) {
+                    alert('Pedido de amizade enviado com sucesso!');
+                    document.getElementById('userResult').classList.remove('show');
+                    document.getElementById('searchForm').reset();
+                } else {
+                    const error = await response.json();
+                    alert(error.error || 'Erro ao enviar pedido de amizade');
+                }
+            } catch (error) {
+                console.error('Error sending friend request:', error);
+                alert('Erro ao enviar pedido de amizade');
+            }
+        }
+
+        // Load friends
+        async function loadFriends() {
+            try {
+                const response = await authenticatedFetch('/api/friends');
+                
+                if (response.ok) {
+                    friends = await response.json();
+                    displayFriends();
+                } else {
+                    friends = [];
+                    displayFriends();
+                }
+            } catch (error) {
+                console.error('Error loading friends:', error);
+                friends = [];
+                displayFriends();
+            }
+        }
+
+        // Display friends
+        function displayFriends() {
+            const friendsListMain = document.getElementById('friendsListMain');
+            const friendsListSmall = document.getElementById('friendsList');
+            const friendsCount = document.getElementById('friendsCount');
+
+            friendsCount.textContent = `${friends.length} amigo${friends.length !== 1 ? 's' : ''}`;
+
+            if (friends.length === 0) {
+                const emptyHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-user-friends"></i>
+                        <h3>Nenhum amigo ainda</h3>
+                        <p>Use a busca para encontrar novos amigos!</p>
+                    </div>
+                `;
+                friendsListMain.innerHTML = emptyHTML;
+                friendsListSmall.innerHTML = emptyHTML;
+                return;
+            }
+
+            const friendsHTML = friends.map(friend => `
+                <div class="friend-item">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="friend-info">
+                        <div class="friend-name">${friend.name || friend.email?.split('@')[0] || 'Usuário'}</div>
+                        <div class="friend-email">${friend.email}</div>
+                    </div>
+                    <div class="friend-actions">
+                        <button class="btn btn-small btn-primary" onclick="openChat('${friend.id}')" style="margin-right: 0.5rem;">
+                            <i class="fas fa-comment"></i>
+                            Conversar
+                        </button>
+                        <button class="btn btn-small btn-danger" onclick="unfriend('${friend.id}')">
+                            <i class="fas fa-user-minus"></i>
+                            Desfazer
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            friendsListMain.innerHTML = friendsHTML;
+            friendsListSmall.innerHTML = friendsHTML;
+        }
+
+        // Load friend requests
+        async function loadFriendRequests() {
+            try {
+                const response = await authenticatedFetch('/api/friend-requests/received');
+                
+                if (response.ok) {
+                    friendRequests = await response.json();
+                    displayFriendRequests();
+                } else {
+                    friendRequests = [];
+                    displayFriendRequests();
+                }
+            } catch (error) {
+                console.error('Error loading friend requests:', error);
+                friendRequests = [];
+                displayFriendRequests();
+            }
+        }
+
+        // Display friend requests
+        function displayFriendRequests() {
+            const friendRequestsSection = document.getElementById('friendRequestsSection');
+            const friendRequestsList = document.getElementById('friendRequestsList');
+
+            if (friendRequests.length === 0) {
+                friendRequestsSection.style.display = 'none';
+                return;
+            }
+
+            friendRequestsSection.style.display = 'block';
+
+            const requestsHTML = friendRequests.map(request => `
+                <div class="request-item">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <div class="friend-name">${request.sender_name || request.sender_email?.split('@')[0] || 'Usuário'}</div>
+                        <div class="friend-email">${request.sender_email}</div>
+                    </div>
+                    <div class="request-actions">
+                        <button class="btn btn-small btn-success" onclick="acceptFriendRequest('${request.id}')">
+                            <i class="fas fa-check"></i> Aceitar
+                        </button>
+                        <button class="btn btn-small btn-danger" onclick="rejectFriendRequest('${request.id}')">
+                            <i class="fas fa-times"></i> Recusar
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            friendRequestsList.innerHTML = requestsHTML;
+        }
+
+        // Accept friend request
+        async function acceptFriendRequest(requestId) {
+            try {
+                const response = await authenticatedFetch(`/api/friend-requests/${requestId}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ status: 'accepted' })
+                });
+
+                if (response.ok) {
+                    alert('Amizade aceita com sucesso!');
+                    await Promise.all([
+                        loadFriends(),
+                        loadFriendRequests()
+                    ]);
+                } else {
+                    const error = await response.json();
+                    alert(error.error || 'Erro ao aceitar pedido de amizade');
+                }
+            } catch (error) {
+                console.error('Error accepting friend request:', error);
+                alert('Erro ao aceitar pedido de amizade');
+            }
+        }
+
+        // Reject friend request
+        async function rejectFriendRequest(requestId) {
+            try {
+                const response = await authenticatedFetch(`/api/friend-requests/${requestId}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ status: 'rejected' })
+                });
+
+                if (response.ok) {
+                    await loadFriendRequests();
+                } else {
+                    const error = await response.json();
+                    alert(error.error || 'Erro ao recusar pedido de amizade');
+                }
+            } catch (error) {
+                console.error('Error rejecting friend request:', error);
+                alert('Erro ao recusar pedido de amizade');
+            }
+        }
+
+        // Unfriend
+        async function unfriend(friendId) {
+            if (confirm('Tem certeza que deseja desfazer esta amizade?')) {
+                try {
+                    const response = await authenticatedFetch(`/api/friends/${friendId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        await loadFriends();
+                        if (selectedFriend && selectedFriend.id === friendId) {
+                            closeChat();
+                        }
+                    } else {
+                        const error = await response.json();
+                        alert(error.error || 'Erro ao desfazer amizade');
+                    }
+                } catch (error) {
+                    console.error('Error unfriending:', error);
+                    alert('Erro ao desfazer amizade');
+                }
+            }
+        }
+
+        // Open chat with friend
+        function openChat(friendId) {
+            selectedFriend = friends.find(f => f.id === friendId);
+            if (!selectedFriend) return;
+
+            // Update chat header
+            document.getElementById('chatFriendName').textContent = selectedFriend.name || selectedFriend.email?.split('@')[0] || 'Usuário';
+            document.getElementById('chatFriendEmail').textContent = selectedFriend.email;
+
+            // Show chat section, hide friends section
+            document.getElementById('friendsSection').style.display = 'none';
+            document.getElementById('chatSection').classList.add('active');
+
+            // Load messages
+            loadMessages();
+        }
+
+        // Close chat
+        function closeChat() {
+            selectedFriend = null;
+            document.getElementById('chatSection').classList.remove('active');
+            document.getElementById('friendsSection').style.display = 'flex';
+        }
+
+        // Load messages
+        async function loadMessages() {
+            if (!selectedFriend) return;
+
+            try {
+                const response = await authenticatedFetch(`/api/messages/${selectedFriend.id}`);
+                
+                if (response.ok) {
+                    messages = await response.json();
+                    displayMessages();
+                } else {
+                    messages = [];
+                    displayMessages();
+                }
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                messages = [];
+                displayMessages();
+            }
+        }
+
+        // Display messages
+        function displayMessages() {
+            const chatMessages = document.getElementById('chatMessages');
+
+            if (messages.length === 0) {
+                chatMessages.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-comments"></i>
+                        <h3>Nenhuma mensagem ainda</h3>
+                        <p>Envie uma mensagem para começar a conversar</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const messagesHTML = messages.map(msg => {
+                const isSent = msg.sender_id === currentUser.id;
+                const time = new Date(msg.created_at).toLocaleTimeString('pt-BR', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                // Verificar se é uma mensagem de anamnese
+                if (msg.anamnese_id) {
+                    return `
+                        <div class="message ${isSent ? 'sent' : 'received'}">
+                            <div class="message-bubble anamnese-message">
+                                <div class="anamnese-message-content">
+                                    <div class="anamnese-icon">📋</div>
+                                    <div class="anamnese-text">${msg.content}</div>
+                                </div>
+                                <button class="btn btn-primary btn-small respond-anamnese-btn" onclick="openAnamneseResponse('${msg.anamnese_id}')">
+                                    Responder
+                                </button>
+                                <div class="message-time">${time}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                return `
+                    <div class="message ${isSent ? 'sent' : 'received'}">
+                        <div class="message-bubble">
+                            <div>${msg.content}</div>
+                            <div class="message-time">${time}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            chatMessages.innerHTML = messagesHTML;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Send message
+        async function sendMessage() {
+            if (!selectedFriend) return;
+
+            const messageInput = document.getElementById('messageInput');
+            const content = messageInput.value.trim();
+            
+            if (!content) return;
+
+            try {
+                const response = await authenticatedFetch('/api/messages', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        receiver_id: selectedFriend.id,
+                        content: content
+                    })
+                });
+
+                if (response.ok) {
+                    messageInput.value = '';
+                    await loadMessages();
+                } else {
+                    const error = await response.json();
+                    alert(error.error || 'Erro ao enviar mensagem');
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('Erro ao enviar mensagem');
+            }
+        }
+
+        // Anamnese Response Functions
+        let currentAnamneseId = null;
+        let currentAnamneseData = null;
+
+        function openAnamneseResponse(anamneseId) {
+            currentAnamneseId = anamneseId;
+            loadAnamneseForResponse(anamneseId);
+        }
+
+        async function loadAnamneseForResponse(anamneseId) {
+            try {
+                console.log('Carregando anamnese ID:', anamneseId);
+                
+                // Buscar anamnese do endpoint público (funciona para qualquer usuário)
+                const response = await fetch(`/api/public/anamneses/${anamneseId}`);
+                if (response.ok) {
+                    currentAnamneseData = await response.json();
+                    console.log('Anamnese encontrada:', currentAnamneseData.title);
+                    showAnamneseResponseModal();
+                } else {
+                    console.error('Erro ao buscar anamnese pública');
+                    alert('Erro ao carregar anamnese');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar anamnese:', error);
+                alert('Erro ao carregar anamnese: ' + error.message);
+            }
+        }
+
+        function showAnamneseResponseModal() {
+            console.log('Abrindo modal de resposta da anamnese:', currentAnamneseData);
+            
+            const modal = document.getElementById('anamneseResponseModal');
+            const title = document.getElementById('responseAnamneseTitle');
+            const description = document.getElementById('responseAnamneseDescription');
+            const container = document.getElementById('questionsResponseContainer');
+            
+            console.log('Modal encontrado:', modal);
+            console.log('Title encontrado:', title);
+            console.log('Description encontrado:', description);
+            console.log('Container encontrado:', container);
+            
+            if (!modal || !title || !description || !container) {
+                console.error('Elementos do modal não encontrados');
+                alert('Erro ao encontrar elementos do modal');
+                return;
+            }
+            
+            title.textContent = currentAnamneseData.title;
+            description.textContent = currentAnamneseData.description || 'Sem descrição';
+            
+            console.log('Renderizando', currentAnamneseData.questions.length, 'perguntas');
+            
+            // Log detalhado das perguntas
+            currentAnamneseData.questions.forEach((question, index) => {
+                console.log(`Pergunta ${index}:`, question);
+                console.log(`Tipo: ${question.type}`);
+                console.log(`Tem foto:`, !!question.photo);
+                console.log(`URL da foto:`, question.photo);
+            });
+            
+            // Renderizar perguntas para resposta
+            container.innerHTML = '';
+            if (currentAnamneseData.questions.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666;">Esta anamnese não possui perguntas para responder.</p>';
+            } else {
+                currentAnamneseData.questions.forEach((question, index) => {
+                    const questionHtml = createResponseQuestion(question, index);
+                    container.innerHTML += questionHtml;
+                });
+            }
+            
+            console.log('Modal pronto, adicionando classe show');
+            console.log('Classes do modal antes:', modal.className);
+            modal.classList.add('show');
+            console.log('Classes do modal depois:', modal.className);
+            console.log('Display do modal:', window.getComputedStyle(modal).display);
+        }
+
+        function createResponseQuestion(question, index) {
+            const inputTypes = {
+                'text': 'text',
+                'date': 'date',
+                'number': 'number',
+                'photo': 'file'
+            };
+
+            const inputPlaceholder = {
+                'text': 'Digite sua resposta...',
+                'date': '',
+                'number': 'Digite um número...',
+                'photo': 'Selecione uma foto...'
+            };
+
+            return `
+                <div class="question-response-item">
+                    <div class="question-response-header">
+                        <span class="question-response-number">Pergunta ${index + 1}</span>
+                    </div>
+                    <div class="question-response-text">${question.text}</div>
+                    
+                    ${question.type === 'photo' ? `
+                        <div class="question-response-photo">
+                            ${question.photo ? `
+                                <div class="original-photo-container">
+                                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">Foto da pergunta:</p>
+                                    <img src="${question.photo}" alt="Foto da pergunta" class="original-photo-img" style="max-width: 300px; max-height: 200px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem;">
+                                </div>
+                            ` : ''}
+                            <label class="question-photo-label">
+                                <i class="fas fa-camera"></i> ${inputPlaceholder[question.type]}
+                                <input type="file" class="question-photo-input" accept="image/*" onchange="handleResponsePhoto(event, ${index})">
+                            </label>
+                            <div id="photoResponsePreview_${index}" class="photo-preview-container"></div>
+                        </div>
+                    ` : question.type === 'option' ? `
+                        <div class="question-response-options">
+                            ${question.options && question.options.length > 0 ? question.options.map((option, optionIndex) => `
+                                <label class="option-label">
+                                    <input type="radio" name="response_${index}" value="${option}" class="option-radio">
+                                    <span class="option-text">${option}</span>
+                                </label>
+                            `).join('') : '<p style="color: #666; font-style: italic;">Nenhuma opção disponível</p>'}
+                        </div>
+                    ` : `
+                        <input type="${inputTypes[question.type]}" 
+                               class="question-response-input" 
+                               id="response_${index}"
+                               placeholder="${inputPlaceholder[question.type]}"
+                               ${question.type === 'text' ? 'required' : ''}>
+                    `}
+                </div>
+            `;
+        }
+
+        function handleResponsePhoto(event, questionIndex) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewContainer = document.getElementById(`photoResponsePreview_${questionIndex}`);
+                    previewContainer.innerHTML = `<img src="${e.target.result}" class="photo-response-preview" alt="Preview">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function closeAnamneseResponseModal() {
+            document.getElementById('anamneseResponseModal').classList.remove('show');
+            document.getElementById('anamneseResponseForm').reset();
+            currentAnamneseId = null;
+            currentAnamneseData = null;
+        }
+
+        async function submitAnamneseResponse(event) {
+            event.preventDefault();
+            
+            if (!currentAnamneseId || !selectedFriend) {
+                alert('Dados incompletos para responder anamnese');
+                return;
+            }
+            
+            console.log('=== RESPONDENDO ANAMNESE ===');
+            console.log('Anamnese ID:', currentAnamneseId);
+            console.log('Selected Friend ID:', selectedFriend.id);
+            
+            const responses = {};
+            currentAnamneseData.questions.forEach((question, index) => {
+                if (question.type === 'photo') {
+                    const preview = document.getElementById(`photoResponsePreview_${index}`).querySelector('img');
+                    responses[index] = preview ? preview.src : null;
+                } else if (question.type === 'option') {
+                    const selectedOption = document.querySelector(`input[name="response_${index}"]:checked`);
+                    responses[index] = selectedOption ? selectedOption.value : '';
+                } else {
+                    const input = document.getElementById(`response_${index}`);
+                    responses[index] = input ? input.value : '';
+                }
+            });
+            
+            console.log('Responses:', responses);
+            
+            try {
+                const response = await authenticatedFetch('/api/anamnese-responses', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        anamnese_id: currentAnamneseId,
+                        responses: responses,
+                        receiver_id: selectedFriend.id
+                    })
+                });
+                
+                if (response.ok) {
+                    console.log('Resposta enviada com sucesso');
+                    // Enviar mensagem de confirmação no chat
+                    await sendResponseConfirmation();
+                    
+                    closeAnamneseResponseModal();
+                    alert('Anamnese respondida com sucesso!');
+                } else {
+                    throw new Error('Erro ao enviar resposta');
+                }
+            } catch (error) {
+                console.error('Erro ao responder anamnese:', error);
+                alert('Erro ao responder anamnese. Tente novamente.');
+            }
+        }
+
+        async function sendResponseConfirmation() {
+            const messageText = `✅ Anamnese "${currentAnamneseData.title}" respondida com sucesso!`;
+            
+            try {
+                const response = await authenticatedFetch('/api/messages', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        receiver_id: selectedFriend.id,
+                        content: messageText
+                    })
+                });
+                
+                if (response.ok) {
+                    await loadMessages();
+                }
+            } catch (error) {
+                console.error('Erro ao enviar confirmação:', error);
+            }
+        }
+
+        // Theme Toggle Functionality (já implementado no initThemeToggle)
+
+        // Sidebar Login/Logout functionality
+        function updateSidebarAuth() {
+            // Verificar usando o sistema de autenticação existente
+            const currentUser = localStorage.getItem('currentUser');
+            const isLoggedIn = !!currentUser;
+            
+            let userEmail = 'user@example.com';
+            if (isLoggedIn) {
+                try {
+                    const userData = JSON.parse(currentUser);
+                    userEmail = userData.email || userEmail;
+                } catch (error) {
+                    console.error('Erro ao parsear dados do usuário:', error);
+                }
+            }
+            
+            const loginBtn = document.getElementById('sidebarLoginBtn');
+            const userInfo = document.getElementById('sidebarUserInfo');
+            const userEmailElement = document.getElementById('sidebarUserEmail');
+            
+            if (isLoggedIn && loginBtn && userInfo && userEmailElement) {
+                loginBtn.style.display = 'none';
+                userInfo.style.display = 'flex';
+                userEmailElement.textContent = userEmail;
+            } else if (loginBtn && userInfo) {
+                loginBtn.style.display = 'flex';
+                userInfo.style.display = 'none';
+            }
+        }
+
+        // Sidebar logout functionality
+        document.getElementById('sidebarLogoutBtn').addEventListener('click', function() {
+            // Usar o sistema de autenticação existente
+            if (window.auth && window.auth.logout) {
+                window.auth.logout();
+            } else {
+                // Fallback manual
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('token');
+                updateSidebarAuth();
+                
+                // Redirect to login page
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Mobile menu toggle functionality
+        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.classList.toggle('active');
+            }
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            
+            if (window.innerWidth <= 768 && 
+                sidebar && 
+                !sidebar.contains(event.target) && 
+                !mobileToggle.contains(event.target) &&
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+            }
+        });
+
+        // Update auth state on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSidebarAuth();
+            initThemeToggle();
+        });
+
+        // Theme Toggle Functionality
+        function initThemeToggle() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const body = document.body;
+            
+            // Load saved theme or default to light
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeIcon.className = 'fas fa-sun';
+            }
+            
+            themeToggle.addEventListener('click', function() {
+                body.classList.toggle('dark-mode');
+                
+                if (body.classList.contains('dark-mode')) {
+                    themeIcon.className = 'fas fa-sun';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    themeIcon.className = 'fas fa-moon';
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        }
+    </script>
+<!-- Anamnese Response Modal -->
+    <div class="modal" id="anamneseResponseModal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Responder Anamnese</h3>
+                <button class="modal-close" onclick="closeAnamneseResponseModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="anamnese-response-content">
+                <div class="anamnese-info">
+                    <h4 id="responseAnamneseTitle"></h4>
+                    <p id="responseAnamneseDescription"></p>
+                </div>
+                
+                <form id="anamneseResponseForm" onsubmit="submitAnamneseResponse(event)">
+                    <div class="questions-response-container" id="questionsResponseContainer">
+                        <!-- Perguntas serão renderizadas aqui -->
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeAnamneseResponseModal()">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-paper-plane"></i>
+                            Enviar Respostas
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<!-- Help Modal -->
+    <div class="help-modal" id="helpModal">
+        <div class="help-modal-content">
+            <div class="help-modal-header">
+                <h3 class="help-modal-title">
+                    <i class="fas fa-question-circle"></i>
+                    Ajuda - Amigos e Comunidade
+                </h3>
+                <button class="help-close" onclick="closeHelpModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-user-friends"></i>
+                    Bem-vindo à Comunidade
+                </h4>
+                <div class="help-section-content">
+                    <p>Conecte-se com outros usuários, compartilhe experiências e cresça junto na sua jornada fitness!</p>
+                    <p><strong>Funcionalidades principais:</strong></p>
+                    <p>• Buscar e adicionar novos amigos</p>
+                    <p>• Conversar por mensagens privadas</p>
+                    <p>• Compartilhar anamneses e treinos</p>
+                    <p>• Acompanhar progresso dos amigos</p>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-search"></i>
+                    Como Começar
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Use a barra de busca para encontrar outros usuários</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Envie solicitações de amizade para quem desejar conectar</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Aguarde a aceitação do seu pedido</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">Comece a conversar e compartilhar experiências</div>
+                    </div>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">💡 Dica</div>
+                        <div>Seja específico na busca para encontrar usuários com objetivos similares aos seus</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-user-plus"></i>
+                    Pedidos de Amizade
+                </h4>
+                <div class="help-section-content">
+                    <p>Gerencie suas conexões facilmente:</p>
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Visualize pedidos recebidos na seção "Pedidos de Amizade"</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Aceite ou recuse pedidos conforme desejar</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Envie novos pedidos para expandir sua rede</div>
+                    </div>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">🎯 Networking</div>
+                        <div>Conectar-se com pessoas experientes pode acelerar seu aprendizado</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-comments"></i>
+                    Conversas e Mensagens
+                </h4>
+                <div class="help-section-content">
+                    <p>Comunique-se de forma eficaz:</p>
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Clique em um amigo para abrir a conversa</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Digite e envie mensagens instantaneamente</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Compartilhe treinos, dietas e dicas</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">Responda anamneses enviadas pelos amigos</div>
+                    </div>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">📱 Notificações</div>
+                        <div>Fique atento às novas mensagens e pedidos de amizade</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-clipboard-question"></i>
+                    Compartilhando Anamneses
+                </h4>
+                <div class="help-section-content">
+                    <p>Colabore com questionários personalizados:</p>
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Receba anamneses de amigos na conversa</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Responda às perguntas detalhadamente</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Envie confirmação após responder</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">Aguarde feedback e orientações personalizadas</div>
+                    </div>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">🎯 Benefícios</div>
+                        <div>Respostas detalhadas ajudam a criar planos mais personalizados e eficazes</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-shield-alt"></i>
+                    Privacidade e Segurança
+                </h4>
+                <div class="help-section-content">
+                    <p>Mantenha suas informações seguras:</p>
+                    <p><strong>Controle de Privacidade:</strong> Apenas amigos podem ver suas informações</p>
+                    <p><strong>Moderação:</strong> Reporte comportamentos inadequados</p>
+                    <p><strong>Dados Pessoais:</strong> Compartilhe apenas o necessário</p>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">🔐 Boas Práticas</div>
+                        <div>Respeite a privacidade dos outros e mantenha um ambiente positivo e construtivo</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Dicas de Networking
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-tip">
+                        <div class="help-tip-title">🤝 Seja Proativo</div>
+                        <div>Inicie conversas e compartilhe suas experiências para criar conexões significativas</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">📚 Aprenda e Ensine</div>
+                        <div>Troque conhecimentos e ajude outros usuários em suas jornadas</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">🎯 Objetivos em Comum</div>
+                        <div>Conecte-se com pessoas que têm metas similares para maior motivação</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">📈 Crescimento Juntos</div>
+                        <div>Use a comunidade para accountability e suporte mútuo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funções do Modal de Ajuda
+        function openHelpModal() {
+            document.getElementById('helpModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Impede scroll do fundo
+        }
+
+        function closeHelpModal() {
+            document.getElementById('helpModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restaura scroll
+        }
+
+        // Fechar modal clicando fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('helpModal');
+            if (event.target === modal) {
+                closeHelpModal();
+            }
+        }
+    </script>
+
+<!-- Botão de Ajuda -->
+    <button class="help-button" onclick="openHelpModal()">?</button>
+
+    <!-- Modal de Ajuda -->
+    <div class="help-modal" id="helpModal">
+        <div class="help-modal-content">
+            <div class="help-modal-header">
+                <h3 class="help-modal-title">
+                    <i class="fas fa-question-circle"></i>
+                    Ajuda - Amigos e Comunidade
+                </h3>
+                <button class="help-close" onclick="closeHelpModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-user-friends"></i>
+                    Bem-vindo à Comunidade
+                </h4>
+                <div class="help-section-content">
+                    <p>Conecte-se com outros usuários, compartilhe experiências e cresça junto na sua jornada fitness!</p>
+                    <p><strong>Funcionalidades principais:</strong></p>
+                    <p>• Buscar e adicionar novos amigos</p>
+                    <p>• Conversar por mensagens privadas</p>
+                    <p>• Compartilhar anamneses e treinos</p>
+                    <p>• Acompanhar progresso dos amigos</p>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-search"></i>
+                    Como Começar
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Use a barra de busca para encontrar outros usuários</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Envie solicitações de amizade para quem desejar conectar</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Aguarde a aceitação do seu pedido</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">Comece a conversar e compartilhar experiências</div>
+                    </div>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">💡 Dica</div>
+                        <div>Seja específico na busca para encontrar usuários com objetivos similares aos seus</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-user-plus"></i>
+                    Pedidos de Amizade
+                </h4>
+                <div class="help-section-content">
+                    <p>Gerencie suas conexões facilmente:</p>
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Visualize pedidos recebidos na seção "Pedidos de Amizade"</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Aceite ou recuse pedidos conforme desejar</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Envie novos pedidos para expandir sua rede</div>
+                    </div>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">🎯 Networking</div>
+                        <div>Conectar-se com pessoas experientes pode acelerar seu aprendizado</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-comments"></i>
+                    Conversas e Mensagens
+                </h4>
+                <div class="help-section-content">
+                    <p>Comunique-se de forma eficaz:</p>
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Clique em um amigo para abrir a conversa</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Digite e envie mensagens instantaneamente</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Compartilhe treinos, dietas e dicas</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">Responda anamneses enviadas pelos amigos</div>
+                    </div>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">📱 Notificações</div>
+                        <div>Fique atento às novas mensagens e pedidos de amizade</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-clipboard-question"></i>
+                    Compartilhando Anamneses
+                </h4>
+                <div class="help-section-content">
+                    <p>Colabore com questionários personalizados:</p>
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <div class="help-step-text">Receba anamneses de amigos na conversa</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <div class="help-step-text">Responda às perguntas detalhadamente</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <div class="help-step-text">Envie confirmação após responder</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <div class="help-step-text">Aguarde feedback e orientações personalizadas</div>
+                    </div>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">🎯 Benefícios</div>
+                        <div>Respostas detalhadas ajudam a criar planos mais personalizados e eficazes</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-shield-alt"></i>
+                    Privacidade e Segurança
+                </h4>
+                <div class="help-section-content">
+                    <p>Mantenha suas informações seguras:</p>
+                    <p><strong>Controle de Privacidade:</strong> Apenas amigos podem ver suas informações</p>
+                    <p><strong>Moderação:</strong> Reporte comportamentos inadequados</p>
+                    <p><strong>Dados Pessoais:</strong> Compartilhe apenas o necessário</p>
+                    
+                    <div class="help-tip">
+                        <div class="help-tip-title">🔐 Boas Práticas</div>
+                        <div>Respeite a privacidade dos outros e mantenha um ambiente positivo e construtivo</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h4 class="help-section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Dicas de Networking
+                </h4>
+                <div class="help-section-content">
+                    <div class="help-tip">
+                        <div class="help-tip-title">🤝 Seja Proativo</div>
+                        <div>Inicie conversas e compartilhe suas experiências para criar conexões significativas</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">📚 Aprenda e Ensine</div>
+                        <div>Troque conhecimentos e ajude outros usuários em suas jornadas</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">🎯 Objetivos em Comum</div>
+                        <div>Conecte-se com pessoas que têm metas similares para maior motivação</div>
+                    </div>
+                    <div class="help-tip">
+                        <div class="help-tip-title">📈 Crescimento Juntos</div>
+                        <div>Use a comunidade para accountability e suporte mútuo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funções do Modal de Ajuda
+        function openHelpModal() {
+            document.getElementById('helpModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Impede scroll do fundo
+        }
+
+        function closeHelpModal() {
+            document.getElementById('helpModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restaura scroll
+        }
+
+        // Fechar modal clicando fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('helpModal');
+            if (event.target === modal) {
+                closeHelpModal();
+            }
+        }
+    </script>
+
+</body>
+</html>
