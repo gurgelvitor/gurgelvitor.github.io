@@ -613,18 +613,38 @@
             box-sizing: border-box;
         }
 
-        /* Prevenir rolagem horizontal em todos os dispositivos */
+        /* Prevenir rolagem horizontal em todos os dispositivos - CORREÇÕES AGRESSIVAS */
         * {
             box-sizing: border-box;
         }
         
-        body {
-            overflow-x: hidden;
-            max-width: 100vw;
+        html, body {
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+            width: 100% !important;
         }
         
         .main-content {
-            overflow-x: hidden;
+            overflow-x: hidden !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+        
+        /* Prevenir overflow em todos os elementos */
+        div, section, article, main, aside, header, footer, nav {
+            overflow-x: hidden !important;
+            max-width: 100% !important;
+        }
+        
+        /* Corrigir sidebar para não causar overflow */
+        .sidebar {
+            position: fixed;
+            z-index: 1000;
+        }
+        
+        .main-wrapper {
+            overflow-x: hidden !important;
+            max-width: 100% !important;
         }
         
         /* Responsive Design */
@@ -2600,7 +2620,8 @@
                     .personal-data-table td:first-child {
                         font-weight: 600;
                         color: var(--text-secondary);
-                        width: 150px;
+                        max-width: 150px;
+                        min-width: auto !important;
                     }
                     
                     .personal-data-table td:last-child {
@@ -2802,8 +2823,9 @@
                         }
                         
                         .exercise-table, .foods-table {
-                            min-width: 600px;
                             width: 100%;
+                            max-width: 100%;
+                            min-width: auto !important;
                         }
                         
                         /* Prevenir overflow em elementos de tabela */
@@ -2813,10 +2835,10 @@
                         }
                         
                         .exercise-name-cell, .food-name-cell {
-                            min-width: 120px;
                             max-width: 150px;
                             word-wrap: break-word;
                             overflow-wrap: break-word;
+                            min-width: auto !important;
                         }
                         
                         .exercise-table th, .foods-table th, .totals-table th {
@@ -2831,7 +2853,7 @@
                         }
                         
                         .exercise-name-cell, .food-name-cell {
-                            min-width: 150px;
+                            min-width: auto !important;
                         }
                         
                         .notes-cell {
@@ -2873,7 +2895,9 @@
                         }
                         
                         .exercise-table, .foods-table {
-                            min-width: 500px;
+                            width: 100%;
+                            max-width: 100%;
+                            min-width: auto !important;
                         }
                     }
                 `;
