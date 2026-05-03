@@ -638,6 +638,23 @@
 
             .main-content {
                 padding: 1rem;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+            
+            /* Prevenir rolagem lateral */
+            body {
+                overflow-x: hidden;
+            }
+            
+            .main-wrapper {
+                overflow-x: hidden;
+            }
+            
+            /* Ajustar containers para mobile */
+            .protocols-section, .anamneses-section {
+                padding: 1rem;
+                margin: 0 0 1rem 0;
             }
         }
 
@@ -1850,12 +1867,6 @@
                                         </div>
                                         <div style="color: var(--text-primary); font-weight: 600; margin-bottom: 0.5rem;">
                                             Clique para adicionar uma foto
-                                        </div>
-                                        <div style="color: var(--text-secondary); font-size: 0.9rem;">
-                                            Formatos aceitos: JPG, PNG, GIF (máx. 10MB)
-                                        </div>
-                                    </div>
-                                </div>
                                 <div id="${questionId}_preview" style="display: none;">
                                     <div style="
                                         position: relative;
@@ -1875,15 +1886,43 @@
                                                 color: white;
                                                 border: none;
                                                 border-radius: 50%;
-                                                width: 32px;
-                                                height: 32px;
+                                                width: 30px;
+                                                height: 30px;
                                                 cursor: pointer;
-                                                font-size: 1rem;
-                                                transition: all 0.3s ease;
-                                            " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"
+                                                display: flex;
+                                                align-items: center;
+                                                justify-content: center;
+                                                font-size: 14px;
+                                            "
                                         >
                                             <i class="fas fa-times"></i>
                                         </button>
+                                    </div>
+                                </div>
+                                <input 
+                                    type="file" 
+                                    id="${questionId}" 
+                                    name="${questionId}"
+                                    accept="image/*"
+                                    required
+                                    style="display: none;"
+                                    onchange="handlePhotoUpload(this, '${questionId}')"
+                                >
+                                <div 
+                                    id="${questionId}_upload_btn"
+                                    onclick="triggerFileInput('${questionId}')" 
+                                    style="cursor: pointer; padding: 1rem; border: 2px dashed var(--border); border-radius: 12px; text-align: center; transition: all 0.3s ease;"
+                                    onmouseover="this.style.borderColor='var(--accent)'"
+                                    onmouseout="this.style.borderColor='var(--border)'"
+                                >
+                                    <div style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;">
+                                        <i class="fas fa-camera"></i>
+                                    </div>
+                                    <div style="color: var(--text-primary); font-weight: 500;">
+                                        Clique para tirar foto ou selecionar imagem
+                                    </div>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;">
+                                        Formatos: JPG, PNG, GIF (máx. 10MB)
                                     </div>
                                 </div>
                             </div>
@@ -2007,38 +2046,65 @@
 
         // Funções para upload de fotos
         function handlePhotoUpload(input, questionId) {
-            const file = input.files[0];
-            
-            // Validar arquivo
-            if (!file) return;
-            
-            // Validar tipo
-            if (!file.type.startsWith('image/')) {
-                alert('Por favor, selecione apenas arquivos de imagem (JPG, PNG, GIF).');
-                input.value = '';
-                return;
-            }
-            
-            // Validar tamanho (10MB)
-            if (file.size > 10 * 1024 * 1024) {
-                alert('A imagem não pode ser maior que 10MB.');
-                input.value = '';
-                return;
-            }
-            
-            // Mostrar preview
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById(`${questionId}_preview`);
-                const img = document.getElementById(`${questionId}_img`);
+            // Adicionar delay para dispositivos móveis
+            setTimeout(() => {
+                const file = input.files[0];
                 
-                img.src = e.target.result;
-                preview.style.display = 'block';
+                // Validar arquivo
+                if (!file) {
+                    console.log('Nenhum arquivo selecionado');
+                    return;
+                }
                 
-                // Esconder o botão de upload
-                input.parentElement.style.display = 'none';
-            };
-            reader.readAsDataURL(file);
+                // Validar tipo
+                if (!file.type.startsWith('image/')) {
+                    alert('Por favor, selecione apenas arquivos de imagem (JPG, PNG, GIF).');
+                    input.value = '';
+                    return;
+                }
+                
+                // Validar tamanho (10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('A imagem não pode ser maior que 10MB.');
+                    input.value = '';
+                    return;
+                }
+                
+                console.log('Processando imagem:', file.name);
+                
+                // Mostrar preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById(`${questionId}_preview`);
+                    const img = document.getElementById(`${questionId}_img`);
+                    
+                    img.src = e.target.result;
+                    preview.style.display = 'block';
+                    
+                    // Esconder o botão de upload
+                    input.parentElement.style.display = 'none';
+                    
+                    console.log('Imagem carregada com sucesso');
+                };
+                
+                reader.onerror = function(e) {
+                    console.error('Erro ao ler arquivo:', e);
+                    alert('Erro ao carregar a imagem. Tente novamente.');
+                };
+                
+                reader.readAsDataURL(file);
+            }, 100); // Delay para dispositivos móveis
+        }
+        
+        // Função para disparar input de arquivo de forma compatível com mobile
+        function triggerFileInput(questionId) {
+            const input = document.getElementById(questionId);
+            if (input) {
+                // Prevenir múltiplos cliques em dispositivos móveis
+                setTimeout(() => {
+                    input.click();
+                }, 50);
+            }
         }
         
         function removePhoto(questionId) {
