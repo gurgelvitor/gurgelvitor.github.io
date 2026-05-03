@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/auth.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <style>
@@ -297,6 +298,32 @@
         .sidebar-logout-btn:hover {
             background: #c0392b;
             transform: translateY(-1px);
+        }
+
+        .sidebar-personal-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: calc(100% - 2rem);
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+            margin: 0.5rem 1rem;
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+            box-sizing: border-box;
+        }
+
+        .sidebar-personal-btn:hover {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
         }
 
         /* Responsive Sidebar */
@@ -767,6 +794,162 @@
             box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
         }
  
+        .btn-save-diet {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            margin-right: 10px;
+        }
+
+        .btn-save-diet:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        /* Dietas Salvas Section */
+        .saved-diets-section {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+            order: -1; /* Garante que fique no topo */
+        }
+
+        .saved-diets-container {
+            margin-top: 20px;
+        }
+
+        .no-saved-diets {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .no-saved-diets i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .no-saved-diets h3 {
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+        }
+
+        .no-saved-diets p {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .saved-diets-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .saved-diet-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .saved-diet-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 15px rgba(220, 20, 60, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .saved-diet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .saved-diet-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .saved-diet-date {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .saved-diet-totals {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .saved-diet-total {
+            text-align: center;
+            padding: 8px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+        }
+
+        .saved-diet-total-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .saved-diet-total-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .saved-diet-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .saved-diet-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .saved-diet-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .saved-diet-btn.load:hover {
+            background: var(--kcal-color);
+            border-color: var(--kcal-color);
+        }
+
+        .saved-diet-btn.delete:hover {
+            background: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+ 
         /* Seletor de Alimentos */
         .food-selector {
             background: var(--bg-hover);
@@ -980,23 +1163,7 @@
             background: var(--accent-hover);
         }
 
-        .btn-assign-student {
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
-            border: none;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            white-space: nowrap;
-        }
-
-        .btn-assign-student:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
-        }
-
+        
         /* Dados Pessoais */
         .personal-data {
             background: var(--bg-secondary);
@@ -1361,13 +1528,6 @@
                 font-size: 1rem;
                 padding: 0.75rem;
             }
-            
-            .btn-assign-student {
-                width: 100%;
-                padding: 0.75rem;
-                margin-bottom: 0.5rem;
-                font-size: 0.9rem;
-            }
         }
         
         @media (max-width: 480px) {
@@ -1672,11 +1832,7 @@
                 
                 <!-- Gestão -->
                 <div class="nav-category">Gestão</div>
-                <a href="alunos.html" class="nav-item" data-page="alunos">
-                    <i class="fas fa-users"></i>
-                    <span>Alunos</span>
-                </a>
-                <a href="pagamentos.html" class="nav-item" data-page="pagamentos">
+                                <a href="pagamentos.html" class="nav-item" data-page="pagamentos">
                     <i class="fas fa-credit-card"></i>
                     <span>Pagamentos</span>
                 </a>
@@ -1684,14 +1840,19 @@
                     <i class="fas fa-calendar"></i>
                     <span>Agenda</span>
                 </a>
+                <a href="acompanhamento.html" class="nav-item" data-page="acompanhamento">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Acompanhamento</span>
+                </a>
                 
                 <div class="nav-divider"></div>
                 
-                <!-- Comunidade -->
-                <div class="nav-category">Comunidade</div>
-                <a href="amigos.html" class="nav-item" data-page="amigos">
-                    <i class="fas fa-user-friends"></i>
-                    <span>Amigos</span>
+                <div class="nav-divider"></div>
+                
+                <!-- Área do Aluno -->
+                <a href="homealuno.html" class="sidebar-personal-btn" data-page="homealuno">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Sou Aluno</span>
                 </a>
             </nav>
             
@@ -1733,6 +1894,24 @@
             </header>
 
             <main class="main-content">
+                <!-- Dietas Salvas -->
+        <div class="saved-diets-section">
+            <h2 class="section-title">
+                <i class="fas fa-bookmark"></i>
+                Dietas Salvas
+            </h2>
+            <div class="saved-diets-container" id="savedDietsContainer">
+                <div class="no-saved-diets" id="noSavedDiets">
+                    <i class="fas fa-bookmark"></i>
+                    <h3>Nenhuma dieta salva</h3>
+                    <p>Crie e salve suas dietas para acessá-las facilmente depois.</p>
+                </div>
+                <div class="saved-diets-list" id="savedDietsList" style="display: none;">
+                    <!-- Dietas salvas serão inseridas aqui dinamicamente -->
+                </div>
+            </div>
+        </div>
+
                 <!-- Dados Pessoais -->
                 <div class="personal-data">
     <h2 class="section-title">
@@ -1762,9 +1941,9 @@
                     Resumo Nutricional Total
                 </h2>
                 <div class="summary-actions">
-                    <button class="btn-assign-student" onclick="openAssignStudentModal()">
-                        <i class="fas fa-user-plus"></i>
-                        Atribuir a Aluno
+                    <button class="btn-save-diet" onclick="saveDiet()">
+                        <i class="fas fa-save"></i>
+                        Salvar Dieta
                     </button>
                 </div>
             </div>
@@ -1809,7 +1988,7 @@
                 </button>
             </div>
         </div>
- 
+
         <!-- Refeições -->
         <div class="meals-section" id="meals-container">
             <h2 class="section-title">
@@ -1820,37 +1999,7 @@
         </div>
     </div>
 
-    <!-- Modal para Atribuir a Aluno -->
-    <div class="modal" id="assignStudentModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Atribuir Dieta a Aluno</h3>
-                <button class="modal-close" onclick="closeAssignStudentModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <form id="assignStudentForm">
-                <div class="form-group">
-                    <label for="studentSelect">Selecione o Aluno:</label>
-                    <select id="studentSelect" required>
-                        <option value="">Carregando alunos...</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="dietName">Nome da Dieta:</label>
-                    <input type="text" id="dietName" required>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="button" class="btn" onclick="closeAssignStudentModal()">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Atribuir</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
+    
     <script>
         // Banco de dados de alimentos
         const foodDatabase = [
@@ -2028,103 +2177,6 @@
             
                     });
  
-        // Funções para atribuir a aluno
-        function openAssignStudentModal() {
-            loadStudents();
-            document.getElementById('assignStudentModal').classList.add('active');
-        }
-
-        function closeAssignStudentModal() {
-            document.getElementById('assignStudentModal').classList.remove('active');
-            document.getElementById('assignStudentForm').reset();
-        }
-
-        async function loadStudents() {
-            try {
-                const response = await authenticatedFetch('/api/alunos');
-                const students = await response.json();
-                const studentSelect = document.getElementById('studentSelect');
-                
-                studentSelect.innerHTML = '<option value="">Selecione um aluno...</option>';
-                students.forEach(student => {
-                    const option = document.createElement('option');
-                    option.value = student.id;
-                    option.textContent = student.nome;
-                    studentSelect.appendChild(option);
-                });
-            } catch (error) {
-                console.error('Erro ao carregar alunos:', error);
-            }
-        }
-
-        // Form submission for assigning diet
-        document.getElementById('assignStudentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            assignDietToStudent();
-        });
-
-        async function assignDietToStudent() {
-            const studentId = document.getElementById('studentSelect').value;
-            const dietName = document.getElementById('dietName').value;
-            
-            if (!studentId) {
-                alert('Selecione um aluno!');
-                return;
-            }
-            
-            if (!dietName.trim()) {
-                alert('Digite um nome para a dieta!');
-                return;
-            }
-
-            try {
-                // Calculate totals
-                const totals = calculateTotals();
-                
-                // Calculate meal totals for each meal
-                const mealsWithTotals = meals.map(meal => {
-                    let mealTotals = { kcal: 0, ptn: 0, cho: 0, lip: 0 };
-                    
-                    meal.foods.forEach(food => {
-                        mealTotals.kcal += (food.kcal || 0) * (food.quantity || 100) / 100;
-                        mealTotals.ptn += (food.ptn || 0) * (food.quantity || 100) / 100;
-                        mealTotals.cho += (food.cho || 0) * (food.quantity || 100) / 100;
-                        mealTotals.lip += (food.lip || 0) * (food.quantity || 100) / 100;
-                    });
-                    
-                    return {
-                        ...meal,
-                        totals: mealTotals
-                    };
-                });
-                
-                // Create diet data for API
-                const dietData = {
-                    nome: dietName,
-                    descricao: `Dieta com ${mealsWithTotals.length} refeições`,
-                    refeicoes: mealsWithTotals,
-                    aluno_id: studentId
-                };
-                
-                // Save to API
-                const response = await authenticatedFetch('/api/dietas', {
-                    method: 'POST',
-                    body: JSON.stringify(dietData)
-                });
-                
-                if (response.ok) {
-                    alert(`Dieta "${dietName}" atribuída com sucesso ao aluno!`);
-                    closeAssignStudentModal();
-                } else {
-                    throw new Error('Erro ao salvar dieta');
-                }
-                
-            } catch (error) {
-                console.error('Erro ao atribuir dieta:', error);
-                alert('Erro ao atribuir dieta. Tente novamente.');
-            }
-        }
-
         function calculateTotals() {
             let totals = { kcal: 0, ptn: 0, cho: 0, lip: 0 };
             
@@ -2208,6 +2260,11 @@
  
         // Inicializar gráficos
         function initializeCharts() {
+            // Destruir gráfico existente se houver
+            if (totalChart) {
+                totalChart.destroy();
+            }
+            
             const ctx = document.getElementById('total-chart').getContext('2d');
             totalChart = new Chart(ctx, {
                 type: 'pie',
@@ -2368,6 +2425,11 @@
 
         // Inicializar gráfico da refeição
         function initializeMealChart(mealId) {
+            // Destruir gráfico existente se houver
+            if (mealCharts[mealId]) {
+                mealCharts[mealId].destroy();
+            }
+            
             const ctx = document.getElementById(`meal-chart-${mealId}`).getContext('2d');
             mealCharts[mealId] = new Chart(ctx, {
                 type: 'pie',
@@ -2746,7 +2808,7 @@
         }, 30000);
 
         // Função para salvar dieta com nome
-        function saveDiet() {
+        async function saveDiet() {
             if (meals.length === 0) {
                 alert('Não há refeições para salvar!');
                 return;
@@ -2758,8 +2820,17 @@
             }
             
             try {
-                // Obter dietas salvas existentes
-                const savedDiets = JSON.parse(localStorage.getItem('savedDiets') || '[]');
+                // Obter usuário logado
+                const currentUser = localStorage.getItem('currentUser');
+                let userEmail = null;
+                if (currentUser) {
+                    try {
+                        const userData = JSON.parse(currentUser);
+                        userEmail = userData.email;
+                    } catch (error) {
+                        console.error('Erro ao obter email do usuário:', error);
+                    }
+                }
                 
                 // Calcular totais da dieta
                 let totalKcal = 0;
@@ -2776,36 +2847,322 @@
                     });
                 });
                 
-                // Criar objeto da dieta
                 const dietData = {
-                    id: Date.now(),
-                    name: dietName,
-                    date: new Date().toISOString(),
-                    weight: document.getElementById('weight').value,
-                    gender: document.getElementById('gender').value,
-                    meals: meals,
+                    name: dietName.trim(),
+                    personal_email: userEmail,
+                    meals_data: JSON.stringify(meals), // Deep copy
+                    personal_data: {
+                        weight: document.getElementById('weight')?.value || '',
+                        height: document.getElementById('height')?.value || '',
+                        age: document.getElementById('age')?.value || '',
+                        gender: document.getElementById('gender')?.value || '',
+                        activity_level: document.getElementById('activityLevel')?.value || '',
+                        goal: document.getElementById('goal')?.value || ''
+                    },
                     totals: {
-                        kcal: Math.round(totalKcal),
-                        ptn: totalPtn.toFixed(1),
-                        cho: totalCho.toFixed(1),
-                        lip: totalLip.toFixed(1)
+                        kcal: totalKcal.toFixed(2),
+                        ptn: totalPtn.toFixed(2),
+                        cho: totalCho.toFixed(2),
+                        lip: totalLip.toFixed(2)
                     }
                 };
                 
-                // Adicionar dieta salva
-                savedDiets.push(dietData);
-                localStorage.setItem('savedDiets', JSON.stringify(savedDiets));
-                
-                alert(`✅ Dieta "${dietName}" salva com sucesso!`);
-                console.log('Dieta salva:', dietData);
+                // Salvar no Supabase
+                if (userEmail) {
+                    const { data, error } = await supabase
+                        .from('saved_diets')
+                        .insert([dietData])
+                        .select();
+                    
+                    if (error) {
+                        console.error('Erro ao salvar no Supabase:', error);
+                        // Fallback para localStorage
+                        saveToLocalStorageFallback(dietData);
+                    } else {
+                        console.log('Dieta salva no Supabase:', data);
+                        alert(`✅ Dieta "${dietName}" salva com sucesso na nuvem!`);
+                    }
+                } else {
+                    // Salvar apenas no localStorage se não estiver logado
+                    saveToLocalStorageFallback(dietData);
+                    alert(`✅ Dieta "${dietName}" salva localmente! Faça login para salvar na nuvem.`);
+                }
                 
             } catch (error) {
                 console.error('❌ Erro ao salvar dieta:', error);
                 alert('❌ Erro ao salvar dieta. Tente novamente.');
             }
         }
-
         
+        // Fallback para localStorage
+        function saveToLocalStorageFallback(dietData) {
+            try {
+                const savedDiets = JSON.parse(localStorage.getItem('savedDiets') || '[]');
+                dietData.id = Date.now().toString();
+                dietData.created_at = new Date().toISOString();
+                savedDiets.push(dietData);
+                localStorage.setItem('savedDiets', JSON.stringify(savedDiets));
+                console.log('Dieta salva no localStorage:', dietData);
+                loadSavedDiets(); // Atualizar lista após salvar
+            } catch (error) {
+                console.error('Erro ao salvar no localStorage:', error);
+                throw error;
+            }
+        }
+
+        // Carregar dietas salvas
+        async function loadSavedDiets() {
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                let userEmail = null;
+                if (currentUser) {
+                    try {
+                        const userData = JSON.parse(currentUser);
+                        userEmail = userData.email;
+                    } catch (error) {
+                        console.error('Erro ao obter email do usuário:', error);
+                    }
+                }
+
+                let savedDiets = [];
+
+                if (userEmail) {
+                    // Carregar do Supabase se estiver logado
+                    const { data, error } = await supabase
+                        .from('saved_diets')
+                        .select('*')
+                        .eq('personal_email', userEmail)
+                        .order('created_at', { ascending: false });
+                    
+                    if (error) {
+                        console.error('Erro ao carregar do Supabase:', error);
+                        // Fallback para localStorage
+                        savedDiets = JSON.parse(localStorage.getItem('savedDiets') || '[]');
+                    } else {
+                        savedDiets = data || [];
+                    }
+                } else {
+                    // Carregar apenas do localStorage se não estiver logado
+                    savedDiets = JSON.parse(localStorage.getItem('savedDiets') || '[]');
+                }
+
+                renderSavedDiets(savedDiets);
+            } catch (error) {
+                console.error('Erro ao carregar dietas salvas:', error);
+            }
+        }
+
+        // Renderizar dietas salvas
+        function renderSavedDiets(savedDiets) {
+            const noSavedDiets = document.getElementById('noSavedDiets');
+            const savedDietsList = document.getElementById('savedDietsList');
+
+            if (savedDiets.length === 0) {
+                noSavedDiets.style.display = 'block';
+                savedDietsList.style.display = 'none';
+                return;
+            }
+
+            noSavedDiets.style.display = 'none';
+            savedDietsList.style.display = 'grid';
+
+            savedDietsList.innerHTML = savedDiets.map(diet => {
+                const totals = typeof diet.totals === 'string' ? JSON.parse(diet.totals) : diet.totals;
+                const createdDate = new Date(diet.created_at).toLocaleDateString('pt-BR');
+                
+                return `
+                    <div class="saved-diet-card">
+                        <div class="saved-diet-header">
+                            <h4 class="saved-diet-name">${diet.name}</h4>
+                            <p class="saved-diet-date">${createdDate}</p>
+                        </div>
+                        <div class="saved-diet-totals">
+                            <div class="saved-diet-total">
+                                <div class="saved-diet-total-value">${totals.kcal}</div>
+                                <div class="saved-diet-total-label">KCAL</div>
+                            </div>
+                            <div class="saved-diet-total">
+                                <div class="saved-diet-total-value">${totals.ptn}g</div>
+                                <div class="saved-diet-total-label">Proteínas</div>
+                            </div>
+                            <div class="saved-diet-total">
+                                <div class="saved-diet-total-value">${totals.cho}g</div>
+                                <div class="saved-diet-total-label">Carboidratos</div>
+                            </div>
+                            <div class="saved-diet-total">
+                                <div class="saved-diet-total-value">${totals.lip}g</div>
+                                <div class="saved-diet-total-label">Gorduras</div>
+                            </div>
+                        </div>
+                        <div class="saved-diet-actions">
+                            <button class="saved-diet-btn load" onclick="loadDiet('${diet.id}')">
+                                <i class="fas fa-download"></i> Carregar
+                            </button>
+                            <button class="saved-diet-btn delete" onclick="deleteDiet('${diet.id}')">
+                                <i class="fas fa-trash"></i> Excluir
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Carregar dieta salva
+        async function loadDiet(dietId) {
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                let userEmail = null;
+                if (currentUser) {
+                    try {
+                        const userData = JSON.parse(currentUser);
+                        userEmail = userData.email;
+                    } catch (error) {
+                        console.error('Erro ao obter email do usuário:', error);
+                    }
+                }
+
+                let diet = null;
+
+                if (userEmail) {
+                    // Buscar do Supabase
+                    const { data, error } = await supabase
+                        .from('saved_diets')
+                        .select('*')
+                        .eq('id', dietId)
+                        .single();
+                    
+                    if (error) {
+                        console.error('Erro ao carregar do Supabase:', error);
+                        // Fallback para localStorage
+                        const savedDiets = JSON.parse(localStorage.getItem('savedDiets') || '[]');
+                        diet = savedDiets.find(d => d.id === dietId);
+                    } else {
+                        diet = data;
+                    }
+                } else {
+                    // Buscar do localStorage
+                    const savedDiets = JSON.parse(localStorage.getItem('savedDiets') || '[]');
+                    diet = savedDiets.find(d => d.id === dietId);
+                }
+
+                if (!diet) {
+                    alert('Dieta não encontrada!');
+                    return;
+                }
+
+                // Restaurar dados pessoais
+                const personalData = typeof diet.personal_data === 'string' ? JSON.parse(diet.personal_data) : diet.personal_data;
+                if (personalData) {
+                    const weightEl = document.getElementById('weight');
+                    const heightEl = document.getElementById('height');
+                    const ageEl = document.getElementById('age');
+                    const genderEl = document.getElementById('gender');
+                    const activityLevelEl = document.getElementById('activityLevel');
+                    const goalEl = document.getElementById('goal');
+                    
+                    if (weightEl) weightEl.value = personalData.weight || '';
+                    if (heightEl) heightEl.value = personalData.height || '';
+                    if (ageEl) ageEl.value = personalData.age || '';
+                    if (genderEl) genderEl.value = personalData.gender || '';
+                    if (activityLevelEl) activityLevelEl.value = personalData.activity_level || '';
+                    if (goalEl) goalEl.value = personalData.goal || '';
+                }
+
+                // Restaurar refeições
+                const mealsData = typeof diet.meals_data === 'string' ? JSON.parse(diet.meals_data) : diet.meals_data;
+                meals = mealsData || [];
+                
+                // Limpar refeições existentes
+                document.getElementById('meals-list').innerHTML = '';
+                
+                // Renderizar refeições carregadas
+                meals.forEach(meal => renderMeal(meal));
+                
+                // Atualizar cálculos
+                updateCalculations();
+                
+                alert(`✅ Dieta "${diet.name}" carregada com sucesso!`);
+                console.log('Dieta carregada:', diet);
+
+            } catch (error) {
+                console.error('❌ Erro ao carregar dieta:', error);
+                alert('❌ Erro ao carregar dieta. Tente novamente.');
+            }
+        }
+
+        // Excluir dieta salva
+        async function deleteDiet(dietId) {
+            if (!confirm('Tem certeza que deseja excluir esta dieta?')) {
+                return;
+            }
+
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                let userEmail = null;
+                if (currentUser) {
+                    try {
+                        const userData = JSON.parse(currentUser);
+                        userEmail = userData.email;
+                    } catch (error) {
+                        console.error('Erro ao obter email do usuário:', error);
+                    }
+                }
+
+                if (userEmail) {
+                    // Excluir do Supabase
+                    const { error } = await supabase
+                        .from('saved_diets')
+                        .delete()
+                        .eq('id', dietId);
+                    
+                    if (error) {
+                        console.error('Erro ao excluir do Supabase:', error);
+                        // Fallback para localStorage
+                        deleteFromLocalStorage(dietId);
+                    } else {
+                        console.log('Dieta excluída do Supabase');
+                        loadSavedDiets(); // Atualizar lista
+                    }
+                } else {
+                    // Excluir do localStorage
+                    deleteFromLocalStorage(dietId);
+                }
+
+                alert('✅ Dieta excluída com sucesso!');
+
+            } catch (error) {
+                console.error('❌ Erro ao excluir dieta:', error);
+                alert('❌ Erro ao excluir dieta. Tente novamente.');
+            }
+        }
+
+        // Excluir do localStorage
+        function deleteFromLocalStorage(dietId) {
+            try {
+                const savedDiets = JSON.parse(localStorage.getItem('savedDiets') || '[]');
+                const updatedDiets = savedDiets.filter(diet => diet.id !== dietId);
+                localStorage.setItem('savedDiets', JSON.stringify(updatedDiets));
+                console.log('Dieta excluída do localStorage');
+                loadSavedDiets(); // Atualizar lista
+            } catch (error) {
+                console.error('Erro ao excluir do localStorage:', error);
+                throw error;
+            }
+        }
+
+        // Configuração do Supabase
+        var supabaseUrl = 'https://erhhavvueccaqenzgspp.supabase.co';
+        var supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGhhdnZ1ZWNjYXFlbnpnc3BwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzE1NjAzNywiZXhwIjoyMDkyNzMyMDM3fQ.h9BwrTDXDQUHYBClC8raJiN4UqQuz9vaX1t0GM4kMcw'; // Service Role Key
+        
+        // Verificar se o cliente Supabase já existe
+        var supabase;
+        if (window.supabaseClient) {
+            supabase = window.supabaseClient;
+        } else {
+            supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+            window.supabaseClient = supabase;
+        }
+
         // Tema escuro/claro functionality (já implementado no initThemeToggle)
 
         // Sidebar Login/Logout functionality
@@ -2857,6 +3214,8 @@
         // Update auth state on page load
         document.addEventListener('DOMContentLoaded', function() {
             updateSidebarAuth();
+            loadFromLocalStorage();
+            loadSavedDiets(); // Carregar dietas salvas
             initThemeToggle();
         });
 
@@ -2981,7 +3340,7 @@
                     Funções Adicionais
                 </h4>
                 <div class="help-section-content">
-                    <p><strong>Atribuir a Aluno:</strong> Salva a dieta para um aluno específico no sistema</p>
+                    <p><strong>Salvar Dieta:</strong> Salva a dieta para acesso futuro na seção de dietas salvas</p>
                     <p><strong>Gráfico Nutricional:</strong> Visualização em pizza das proporções de macros</p>
                 </div>
             </div>

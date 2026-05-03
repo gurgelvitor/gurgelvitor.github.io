@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Aluno - GurgelTrack</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/auth.js"></script>
+    <style>
+        :root {
+            /* Cores do Tema Claro - Vermelho */
+            --bg-primary: #ffffff;
+            --bg-secondary: #ffffff;
+            --accent: #dc143c;
+            --accent-hover: #b91c1c;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border: #ffcccc;
+            --shadow: 0 4px 12px rgba(220, 20, 60, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --danger-color: #dc143c;
+        }
+
+        body.dark-mode {
+            /* Cores do Tema Escuro - Melhoradas */
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1e1e1e;
+            --accent: #e91e63;
+            --accent-hover: #f06292;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b8b8b8;
+            --border: #333333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --danger-color: #e91e63;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 999;
+            font-size: 20px;
+            color: var(--accent);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(0, 0, 0, 0.8);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+        }
+
+        body.dark-mode .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: var(--transition);
+            border-right: 1px solid var(--border);
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .sidebar-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            vertical-align: middle;
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0.25rem 0 0 0;
+        }
+
+        .nav-menu {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            gap: 0.75rem;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-primary);
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+
+        .nav-item.active {
+            background: var(--bg-primary);
+            color: var(--accent);
+            border-left-color: var(--accent);
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Menu Category Separators */
+        .nav-category {
+            padding: 0.5rem 1.5rem;
+            margin: 0.5rem 0 0.25rem 0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-category:first-child {
+            margin-top: 0;
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0.5rem 1.5rem;
+            opacity: 0.3;
+        }
+
+        /* Sidebar Login/Logout Area */
+        .sidebar-auth {
+            padding: 1rem;
+            margin: 1rem;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .sidebar-login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-login-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .sidebar-user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .sidebar-user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .sidebar-user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-user-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar-user-email {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-logout-btn {
+            padding: 0.5rem;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-logout-btn:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+        }
+
+        .sidebar-personal-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: calc(100% - 2rem);
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+            margin: 0.5rem 1rem;
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+            box-sizing: border-box;
+        }
+
+        .sidebar-personal-btn:hover {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+        }
+
+        
+        /* Main Content */
+        .main-wrapper {
+            flex: 1;
+            margin-left: 280px;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-header {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-title i {
+            color: var(--accent);
+        }
+
+        .header-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .main-header {
+                padding: 1rem;
+            }
+
+            .header-title {
+                font-size: 1.5rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+        }
+
+        /* Welcome Section Styles */
+        .welcome-section {
+            margin-bottom: 3rem;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border-radius: 50%;
+            transform: translate(50%, -50%);
+            opacity: 0.1;
+        }
+
+        .welcome-content {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            box-shadow: 0 8px 24px rgba(220, 20, 60, 0.3);
+        }
+
+        .welcome-text h2 {
+            color: var(--text-primary);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-text p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .welcome-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            position: relative;
+            z-index: 1;
+            margin-top: 2rem;
+        }
+
+        /* Section Titles */
+        .section-title {
+            color: var(--text-primary);
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            color: var(--accent);
+        }
+
+        
+        .action-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(220, 20, 60, 0.15);
+            border-color: var(--accent);
+        }
+
+        .action-card.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .action-card.disabled:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: var(--border);
+        }
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .action-card.disabled .action-icon {
+            background: var(--text-secondary);
+        }
+
+        .action-content {
+            flex: 1;
+        }
+
+        .action-content h3 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .action-arrow {
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .action-card:hover .action-arrow {
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        
+        /* Motivation Section */
+        .motivation-section {
+            margin-bottom: 3rem;
+        }
+
+        .motivation-card {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border-radius: 20px;
+            padding: 2rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .motivation-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+
+        .motivation-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .motivation-content {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .motivation-content h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .motivation-content p {
+            font-size: 1rem;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .welcome-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+
+            .welcome-stats {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .quick-actions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .motivation-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+
+            .welcome-text h2 {
+                font-size: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
+    <div class="layout-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="logo-gurgel.png" alt="GurgelTrack Logo" class="sidebar-logo">
+                <div class="sidebar-title">GurgelTrack</div>
+                <div class="sidebar-subtitle">Sua plataforma fitness</div>
+            </div>
+            
+            <nav class="nav-menu">
+                <!-- Área do Aluno -->
+                <div class="nav-category">Área do Aluno</div>
+                <a href="homealuno.html" class="nav-item active" data-page="homealuno">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Início Aluno</span>
+                </a>
+                <a href="acompanhamentoaluno.html" class="nav-item" data-page="acompanhamentoaluno">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Acompanhamento</span>
+                </a>
+                <a href="cargaaluno.html" class="nav-item" data-page="cargas">
+                    <i class="fas fa-weight"></i>
+                    <span>Cargas</span>
+                </a>
+            </nav>
+            
+            <!-- Sou Personal Button -->
+            <a href="index.html" class="sidebar-personal-btn">
+                <i class="fas fa-user-tie"></i>
+                <span>Sou Personal</span>
+            </a>
+            
+            <!-- Sidebar Login/Logout Area -->
+            <div class="sidebar-auth">
+                <!-- Login button (shown when not logged in) -->
+                <a href="login.html" class="sidebar-login-btn" id="sidebarLoginBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Entrar</span>
+                </a>
+                
+                <!-- User info (shown when logged in) -->
+                <div class="sidebar-user-info" id="sidebarUserInfo" style="display: none;">
+                    <div class="sidebar-user-profile">
+                        <div class="sidebar-user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="sidebar-user-details">
+                            <div class="sidebar-user-email" id="sidebarUserEmail">user@example.com</div>
+                        </div>
+                    </div>
+                    <button class="sidebar-logout-btn" id="sidebarLogoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <header class="main-header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1 class="header-title">
+                            <i class="fas fa-graduation-cap"></i>
+                            Área do Aluno
+                        </h1>
+                        <p class="header-subtitle">Bem-vindo à sua área personalizada</p>
+                    </div>
+                </div>
+            </header>
+
+            <main class="main-content">
+                <!-- Welcome Section -->
+                <section class="welcome-section">
+                    <div class="welcome-card">
+                        <div class="welcome-content">
+                            <div class="welcome-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="welcome-text">
+                                <h2 id="welcomeMessage">Bem-vindo, Aluno!</h2>
+                                <p id="welcomeDescription">Prepare-se para alcançar seus objetivos fitness com acompanhamento profissional</p>
+                            </div>
+                        </div>
+                        <div class="welcome-actions">
+                            <div class="action-card" onclick="window.location.href='acompanhamentoaluno.html'">
+                                <div class="action-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="action-content">
+                                    <h3>Meu Acompanhamento</h3>
+                                    <p>Visualize protocolos e anamneses atribuídos</p>
+                                </div>
+                                <div class="action-arrow">
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+                            </div>
+
+                            <div class="action-card" onclick="window.location.href='cargas.html'">
+                                <div class="action-icon">
+                                    <i class="fas fa-weight"></i>
+                                </div>
+                                <div class="action-content">
+                                    <h3>Minhas Cargas</h3>
+                                    <p>Registre e acompanhe suas cargas de treino</p>
+                                </div>
+                                <div class="action-arrow">
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                
+                
+                <!-- Motivational Section -->
+                <section class="motivation-section">
+                    <div class="motivation-card">
+                        <div class="motivation-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="motivation-content">
+                            <h3 id="motivationalTitle">Continue focado!</h3>
+                            <p id="motivationalMessage">Cada treino te aproxima dos seus objetivos. Você está no caminho certo!</p>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeIcon.className = 'fas fa-sun';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            const isDark = body.classList.contains('dark-mode');
+            themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+
+        // Sidebar Login/Logout functionality
+        function updateSidebarAuth() {
+            // Verificar usando o sistema de autenticação existente
+            const currentUser = localStorage.getItem('currentUser');
+            const isLoggedIn = !!currentUser;
+            
+            let userEmail = 'user@example.com';
+            if (isLoggedIn) {
+                try {
+                    const userData = JSON.parse(currentUser);
+                    userEmail = userData.email || userEmail;
+                } catch (error) {
+                    console.error('Erro ao parsear dados do usuário:', error);
+                }
+            }
+            
+            const loginBtn = document.getElementById('sidebarLoginBtn');
+            const userInfo = document.getElementById('sidebarUserInfo');
+            const userEmailElement = document.getElementById('sidebarUserEmail');
+            
+            if (isLoggedIn && loginBtn && userInfo && userEmailElement) {
+                loginBtn.style.display = 'none';
+                userInfo.style.display = 'flex';
+                userEmailElement.textContent = userEmail;
+            } else if (loginBtn && userInfo) {
+                loginBtn.style.display = 'flex';
+                userInfo.style.display = 'none';
+            }
+        }
+
+        // Sidebar logout functionality
+        document.getElementById('sidebarLogoutBtn').addEventListener('click', function() {
+            // Usar o sistema de autenticação existente
+            if (window.auth && window.auth.logout) {
+                window.auth.logout();
+            } else {
+                // Fallback manual
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('token');
+                updateSidebarAuth();
+                
+                // Redirect to login page
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Initialize auth UI
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSidebarAuth();
+            initializeDashboard();
+        });
+
+        // Initialize Dashboard
+        function initializeDashboard() {
+            personalizeWelcomeMessage();
+            updateMotivationalMessage();
+        }
+
+        // Personalize Welcome Message
+        function personalizeWelcomeMessage() {
+            const currentUser = localStorage.getItem('currentUser');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            const welcomeDescription = document.getElementById('welcomeDescription');
+            
+            if (currentUser && welcomeMessage && welcomeDescription) {
+                try {
+                    const userData = JSON.parse(currentUser);
+                    const userName = userData.nome_pessoa || userData.name || userData.email?.split('@')[0] || 'Aluno';
+                    
+                    welcomeMessage.textContent = `Bem-vindo, ${userName}!`;
+                    
+                    // Update description based on time of day
+                    const hour = new Date().getHours();
+                    let greeting = '';
+                    if (hour < 12) {
+                        greeting = 'Bom dia! ';
+                    } else if (hour < 18) {
+                        greeting = 'Boa tarde! ';
+                    } else {
+                        greeting = 'Boa noite! ';
+                    }
+                    
+                    welcomeDescription.textContent = greeting + 'Prepare-se para alcançar seus objetivos fitness com acompanhamento profissional';
+                    
+                } catch (error) {
+                    console.error('Erro ao personalizar mensagem:', error);
+                }
+            }
+        }
+
+        
+        // Update Motivational Message
+        function updateMotivationalMessage() {
+            const motivationalTitle = document.getElementById('motivationalTitle');
+            const motivationalMessage = document.getElementById('motivationalMessage');
+            
+            const messages = [
+                {
+                    title: "Continue focado!",
+                    message: "Cada treino te aproxima dos seus objetivos. Você está no caminho certo!"
+                },
+                {
+                    title: "Força e determinação!",
+                    message: "Seu esforço de hoje é o sucesso de amanhã. Continue assim!"
+                },
+                {
+                    title: "Supere seus limites!",
+                    message: "Cada repetição, cada gota de suor te torna mais forte!"
+                },
+                {
+                    title: "Você é capaz!",
+                    message: "Acredite no seu potencial. Os resultados estão aparecendo!"
+                },
+                {
+                    title: "Mantenha a disciplina!",
+                    message: "A consistência é o segredo para alcançar grandes resultados!"
+                }
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            
+            if (motivationalTitle) motivationalTitle.textContent = randomMessage.title;
+            if (motivationalMessage) motivationalMessage.textContent = randomMessage.message;
+        }
+
+        
+        // Navigation active state
+        const navItems = document.querySelectorAll('.nav-item');
+        const currentPage = 'homealuno';
+
+        navItems.forEach(item => {
+            if (item.dataset.page === currentPage) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

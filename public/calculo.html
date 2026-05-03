@@ -286,6 +286,32 @@
             transform: translateY(-1px);
         }
 
+        .sidebar-personal-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: calc(100% - 2rem);
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+            margin: 0.5rem 1rem;
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+            box-sizing: border-box;
+        }
+
+        .sidebar-personal-btn:hover {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+        }
+
         /* Responsive Sidebar */
         .sidebar.active {
             transform: translateX(0);
@@ -753,20 +779,57 @@
                 font-weight: 600;
             }
             
-            .btn-calculate:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-            }
-            
-            .btn-assign-student {
-                width: 100%;
-                padding: 0.875rem;
-                font-size: 1rem;
-                margin-top: 1rem;
-            }
-        }
         
-        @media (max-width: 480px) {
+@media (max-width: 480px) {
+    .main-content {
+        padding: 0.75rem;
+    }
+    
+    .content-section {
+        padding: 1rem;
+    }
+    
+    .calculator-form {
+        padding: 0.75rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .activity-card {
+        padding: 1rem;
+    }
+    
+    .activity-icon {
+        font-size: 1.5rem;
+    }
+    
+    .activity-title {
+        font-size: 1rem;
+    }
+    
+    .activity-description {
+        font-size: 0.85rem;
+    }
+    
+    .result-card {
+        padding: 1rem;
+    }
+    
+    .result-value {
+        font-size: 1.5rem;
+    }
+    
+    .result-label {
+        font-size: 0.9rem;
+    }
+    
+    .btn-calculate {
+        padding: 0.875rem;
+        font-size: 1rem;
+    }
+}
             .main-content {
                 padding: 0.75rem;
             }
@@ -1243,8 +1306,9 @@
             background: var(--bg-primary);
             border: 2px solid var(--accent);
             border-radius: 16px;
-            padding: 2rem;
+            padding: 1.5rem;
             margin-top: 2rem;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
         }
 
         .macros-header {
@@ -1261,6 +1325,147 @@
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
+        }
+
+        /* Saved Calculations Section */
+        .saved-calculations-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .saved-calculations-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .saved-calculations-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .saved-calculations-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .saved-calculation-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .saved-calculation-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.15);
+        }
+
+        .saved-calculation-info {
+            flex: 1;
+        }
+
+        .saved-calculation-date {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .saved-calculation-data {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .saved-calculation-tdee {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        .saved-calculation-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-load-calculation {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .btn-load-calculation:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-delete-calculation {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete-calculation:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+        }
+
+        .empty-saved-calculations {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-saved-calculations i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .btn-save-calculation {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-save-calculation:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
         }
 
         .macros-summary {
@@ -1537,11 +1742,7 @@
                 
                 <!-- Gestão -->
                 <div class="nav-category">Gestão</div>
-                <a href="alunos.html" class="nav-item" data-page="alunos">
-                    <i class="fas fa-users"></i>
-                    <span>Alunos</span>
-                </a>
-                <a href="pagamentos.html" class="nav-item" data-page="pagamentos">
+                                <a href="pagamentos.html" class="nav-item" data-page="pagamentos">
                     <i class="fas fa-credit-card"></i>
                     <span>Pagamentos</span>
                 </a>
@@ -1549,14 +1750,19 @@
                     <i class="fas fa-calendar"></i>
                     <span>Agenda</span>
                 </a>
+                <a href="acompanhamento.html" class="nav-item" data-page="acompanhamento">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Acompanhamento</span>
+                </a>
                 
                 <div class="nav-divider"></div>
                 
-                <!-- Comunidade -->
-                <div class="nav-category">Comunidade</div>
-                <a href="amigos.html" class="nav-item" data-page="amigos">
-                    <i class="fas fa-user-friends"></i>
-                    <span>Amigos</span>
+                <div class="nav-divider"></div>
+                
+                <!-- Área do Aluno -->
+                <a href="homealuno.html" class="sidebar-personal-btn" data-page="homealuno">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Sou Aluno</span>
                 </a>
             </nav>
             
@@ -1598,6 +1804,23 @@
             </header>
 
             <main class="main-content">
+                <!-- Saved Calculations Section -->
+                <section class="saved-calculations-section" id="savedCalculationsSection">
+                    <div class="saved-calculations-header">
+                        <h2>
+                            <i class="fas fa-save"></i>
+                            Cálculos Salvos
+                        </h2>
+                    </div>
+                    <div class="saved-calculations-list" id="savedCalculationsList">
+                        <div class="empty-saved-calculations">
+                            <i class="fas fa-folder-open"></i>
+                            <h4>Nenhum cálculo salvo</h4>
+                            <p>Seus cálculos energéticos salvos aparecerão aqui</p>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- Calculator Section -->
                 <section class="calculator-section">
                     <h2>
@@ -1652,13 +1875,7 @@
                         </div>
                     </form>
                     
-                    <div class="form-actions">
-                        <button class="btn btn-primary" onclick="openAssignStudentModal()">
-                            <i class="fas fa-user-plus"></i>
-                            Atribuir a Aluno
-                        </button>
-                    </div>
-                </section>
+                                    </section>
 
                 <!-- Results Section -->
                 <section class="results-section" id="resultsSection">
@@ -1680,6 +1897,11 @@
                             <div class="result-label">Gasto Energético Total (GET)</div>
                         </div>
                     </div>
+                    
+                    <button class="btn-save-calculation" id="saveCalculationBtn" onclick="saveCalculation()" style="display: none;">
+                        <i class="fas fa-save"></i>
+                        Salvar Cálculo
+                    </button>
                     
                     <!-- Goal Selection Section -->
                     <div class="goal-section" id="goalSection" style="display: none;">
@@ -1951,37 +2173,7 @@
         </div>
     </div>
 
-    <!-- Modal para Atribuir a Aluno -->
-    <div class="modal" id="assignStudentModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Atribuir Cálculo Energético a Aluno</h3>
-                <button class="modal-close" onclick="closeAssignStudentModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <form id="assignStudentForm">
-                <div class="form-group">
-                    <label for="studentSelect">Selecione o Aluno:</label>
-                    <select id="studentSelect" required>
-                        <option value="">Carregando alunos...</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="calculationName">Nome do Cálculo:</label>
-                    <input type="text" id="calculationName" required>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="button" class="btn" onclick="closeAssignStudentModal()">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Atribuir</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         
@@ -2248,12 +2440,18 @@
                 const savedCalculations = JSON.parse(localStorage.getItem('savedCalculations') || '[]');
                 
                 // Obter dados do formulário
-                const gender = document.getElementById('gender').value;
-                const age = document.getElementById('age').value;
-                const weight = document.getElementById('weight').value;
-                const height = document.getElementById('height').value;
-                const activity = document.getElementById('activity').value;
-                const activityText = document.getElementById('activity').options[document.getElementById('activity').selectedIndex].text;
+                const genderElement = document.getElementById('gender');
+                const ageElement = document.getElementById('age');
+                const weightElement = document.getElementById('weight');
+                const heightElement = document.getElementById('height');
+                const activityElement = document.getElementById('activity');
+                
+                const gender = genderElement ? genderElement.value : 'male';
+                const age = ageElement ? ageElement.value : '25';
+                const weight = weightElement ? weightElement.value : '70';
+                const height = heightElement ? heightElement.value : '175';
+                const activity = activityElement ? activityElement.value : '1.2';
+                const activityText = activityElement ? activityElement.options[activityElement.selectedIndex].text : 'Sedentário';
                 
                 // Criar objeto do cálculo
                 const calculationData = {
@@ -2277,115 +2475,207 @@
                 alert(`✅ Cálculo "${calcName}" salvo com sucesso!`);
                 console.log('Cálculo salvo:', calculationData);
                 
+                // Atualizar lista de cálculos salvos
+                loadSavedCalculations();
+                
             } catch (error) {
                 console.error('❌ Erro ao salvar cálculo:', error);
                 alert('❌ Erro ao salvar cálculo. Tente novamente.');
             }
         }
 
-        // Funções para atribuir a aluno
-        function openAssignStudentModal() {
-            loadStudents();
-            document.getElementById('assignStudentModal').classList.add('show');
-        }
-
-        function closeAssignStudentModal() {
-            document.getElementById('assignStudentModal').classList.remove('show');
-            document.getElementById('assignStudentForm').reset();
-        }
-
-        async function loadStudents() {
+        // Função para limpar cálculos corrompidos
+        function cleanCorruptedCalculations() {
             try {
-                const response = await authenticatedFetch('/api/alunos');
-                const students = await response.json();
-                const studentSelect = document.getElementById('studentSelect');
+                const savedCalculations = JSON.parse(localStorage.getItem('savedCalculations') || '[]');
                 
-                studentSelect.innerHTML = '<option value="">Selecione um aluno...</option>';
-                students.forEach(student => {
-                    const option = document.createElement('option');
-                    option.value = student.id;
-                    option.textContent = student.nome;
-                    studentSelect.appendChild(option);
+                // Filtrar apenas cálculos válidos
+                const validCalculations = savedCalculations.filter(calc => {
+                    return calc && 
+                           calc.id && 
+                           calc.name && 
+                           calc.date && 
+                           calc.gender && 
+                           calc.age && 
+                           calc.weight && 
+                           calc.height && 
+                           calc.activity && 
+                           calc.activityText && 
+                           calc.tmb && 
+                           calc.get &&
+                           !isNaN(new Date(calc.date).getTime());
                 });
-            } catch (error) {
-                console.error('Erro ao carregar alunos:', error);
-            }
-        }
-
-        // Form submission for assigning calculation
-        document.getElementById('assignStudentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            assignCalculationToStudent();
-        });
-
-        async function assignCalculationToStudent() {
-            const studentId = document.getElementById('studentSelect').value;
-            const calculationName = document.getElementById('calculationName').value;
-            
-            if (!studentId) {
-                alert('Selecione um aluno!');
-                return;
-            }
-            
-            if (!calculationName.trim()) {
-                alert('Digite um nome para o cálculo!');
-                return;
-            }
-
-            try {
-                // Obter dados do cálculo atual
-                const gender = document.getElementById('gender').value;
-                const age = parseInt(document.getElementById('age').value);
-                const weight = parseFloat(document.getElementById('weight').value);
-                const height = parseFloat(document.getElementById('height').value);
-                const activity = document.getElementById('activity').value;
-                const activityFactor = parseFloat(activity);
                 
-                // Calcular TDEE
-                let bmr;
-                if (gender === 'masculino') {
-                    bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
-                } else {
-                    bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+                if (validCalculations.length !== savedCalculations.length) {
+                    console.log(`Limpando ${savedCalculations.length - validCalculations.length} cálculos corrompidos`);
+                    localStorage.setItem('savedCalculations', JSON.stringify(validCalculations));
+                    return validCalculations;
                 }
                 
-                const tdee = Math.round(bmr * activityFactor);
-                const activityText = document.getElementById('activity').options[document.getElementById('activity').selectedIndex].text;
+                return savedCalculations;
+            } catch (error) {
+                console.error('Erro ao limpar cálculos corrompidos:', error);
+                return [];
+            }
+        }
+
+        // Função para carregar cálculos salvos
+        function loadSavedCalculations() {
+            try {
+                // Limpar cálculos corrompidos primeiro
+                const savedCalculations = cleanCorruptedCalculations();
+                const container = document.getElementById('savedCalculationsList');
                 
-                // Criar dados do cálculo para API
-                const calculationData = {
-                    titulo: calculationName,
-                    conteudo: JSON.stringify({
-                        tdee: tdee,
-                        bmr: Math.round(bmr),
-                        activityFactor: activityFactor,
-                        activityText: activityText,
-                        gender: gender,
-                        age: age,
-                        weight: weight,
-                        height: height,
-                        calculatedAt: new Date().toISOString()
-                    }),
-                    categoria: 'calculo',
-                    aluno_id: studentId
+                if (savedCalculations.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-saved-calculations">
+                            <i class="fas fa-folder-open"></i>
+                            <h4>Nenhum cálculo salvo</h4>
+                            <p>Seus cálculos energéticos salvos aparecerão aqui</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Ordenar por data (mais recente primeiro)
+                savedCalculations.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                container.innerHTML = savedCalculations.map(calc => {
+                    // Validar e formatar data
+                    let formattedDate = 'Data inválida';
+                    try {
+                        const date = new Date(calc.date);
+                        if (!isNaN(date.getTime())) {
+                            formattedDate = date.toLocaleDateString('pt-BR') + ' ' + date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                        }
+                    } catch (error) {
+                        console.warn('Data inválida:', calc.date);
+                    }
+                    
+                    // Validar dados do cálculo
+                    const safeName = calc.name || 'Cálculo sem nome';
+                    const safeGender = calc.gender || 'male';
+                    const safeAge = calc.age || '25';
+                    const safeWeight = calc.weight || '70';
+                    const safeHeight = calc.height || '175';
+                    const safeActivityText = calc.activityText || 'Sedentário';
+                    const safeGet = calc.get || '0';
+                    
+                    return `
+                        <div class="saved-calculation-item">
+                            <div class="saved-calculation-info">
+                                <div class="saved-calculation-date">${formattedDate}</div>
+                                <div class="saved-calculation-data">
+                                    <strong>${safeName}</strong><br>
+                                    ${safeGender === 'male' ? 'Masculino' : 'Feminino'}, ${safeAge} anos, ${safeWeight}kg, ${safeHeight}cm<br>
+                                    ${safeActivityText}<br>
+                                    <span class="saved-calculation-tdee">${safeGet} kcal/dia</span>
+                                </div>
+                            </div>
+                            <div class="saved-calculation-actions">
+                                <button class="btn-load-calculation" onclick="loadCalculation(${calc.id})">
+                                    <i class="fas fa-redo"></i>
+                                    Carregar
+                                </button>
+                                <button class="btn-delete-calculation" onclick="deleteCalculation(${calc.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+            } catch (error) {
+                console.error('Erro ao carregar cálculos salvos:', error);
+            }
+        }
+
+        // Função para carregar um cálculo salvo no formulário
+        function loadCalculation(calcId) {
+            try {
+                const savedCalculations = JSON.parse(localStorage.getItem('savedCalculations') || '[]');
+                const calculation = savedCalculations.find(calc => calc.id === calcId);
+                
+                if (!calculation) {
+                    alert('❌ Cálculo não encontrado!');
+                    return;
+                }
+                
+                // Preencher formulário com os dados do cálculo
+                document.getElementById('gender').value = calculation.gender;
+                document.getElementById('age').value = calculation.age;
+                document.getElementById('weight').value = calculation.weight;
+                document.getElementById('height').value = calculation.height;
+                document.getElementById('activity').value = calculation.activity;
+                
+                // Preencher resultados
+                document.getElementById('bmr').textContent = calculation.tmb + ' kcal';
+                document.getElementById('tdee').textContent = calculation.get + ' kcal';
+                
+                // Mostrar seção de resultados
+                const resultsSection = document.getElementById('resultsSection');
+                resultsSection.classList.add('show');
+                
+                // Mostrar seção de objetivos
+                const goalSection = document.getElementById('goalSection');
+                goalSection.style.display = 'block';
+                
+                // Mostrar botão de salvar
+                const saveBtn = document.getElementById('saveCalculationBtn');
+                saveBtn.style.display = 'flex';
+                
+                // Rolar até o resultado
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+                
+                // Salvar cálculo atual para uso no cálculo de macros
+                window.currentCalculation = {
+                    bmr: calculation.tmb,
+                    tdee: calculation.get
                 };
                 
-                // Salvar via API
-                const response = await authenticatedFetch('/api/anotacoes', {
-                    method: 'POST',
-                    body: JSON.stringify(calculationData)
-                });
-                
-                if (response.ok) {
-                    alert(`Cálculo "${calculationName}" atribuído com sucesso ao aluno!`);
-                    closeAssignStudentModal();
-                } else {
-                    throw new Error('Erro ao salvar cálculo');
-                }
+                alert(`✅ Cálculo "${calculation.name}" carregado com sucesso!`);
                 
             } catch (error) {
-                console.error('Erro ao atribuir cálculo:', error);
-                alert('Erro ao atribuir cálculo. Tente novamente.');
+                console.error('Erro ao carregar cálculo:', error);
+                alert('❌ Erro ao carregar cálculo. Tente novamente.');
+            }
+        }
+
+        // Função para deletar um cálculo salvo
+        function deleteCalculation(calcId) {
+            if (!confirm('❗ Tem certeza que deseja deletar este cálculo?')) {
+                return;
+            }
+            
+            try {
+                console.log('Tentando deletar cálculo ID:', calcId);
+                
+                const savedCalculations = JSON.parse(localStorage.getItem('savedCalculations') || '[]');
+                console.log('Cálculos antes de deletar:', savedCalculations.length);
+                
+                const updatedCalculations = savedCalculations.filter(calc => calc.id !== calcId);
+                console.log('Cálculos depois de deletar:', updatedCalculations.length);
+                
+                localStorage.setItem('savedCalculations', JSON.stringify(updatedCalculations));
+                
+                // Verificar se foi deletado
+                const verifyCalculations = JSON.parse(localStorage.getItem('savedCalculations') || '[]');
+                const wasDeleted = !verifyCalculations.some(calc => calc.id === calcId);
+                
+                if (wasDeleted) {
+                    alert('✅ Cálculo deletado com sucesso!');
+                    console.log('Cálculo deletado com sucesso');
+                } else {
+                    alert('❌ Erro: o cálculo não foi encontrado para deletar.');
+                    console.error('Cálculo não encontrado para deletar');
+                }
+                
+                // Recarregar lista
+                loadSavedCalculations();
+                
+            } catch (error) {
+                console.error('Erro ao deletar cálculo:', error);
+                alert('❌ Erro ao deletar cálculo. Tente novamente.');
             }
         }
 
@@ -2463,6 +2753,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             updateSidebarAuth();
             initThemeToggle();
+            
+            // Garantir que o DOM esteja completamente carregado antes de carregar cálculos salvos
+            setTimeout(() => {
+                loadSavedCalculations();
+            }, 100);
         });
 
         // Theme Toggle Functionality
@@ -2590,7 +2885,7 @@
                 <div class="help-section-content">
                     <div class="help-step">
                         <div class="help-step-number">1</div>
-                        <div class="help-step-text">Após calcular, clique em "Atribuir a Aluno"</div>
+                        <div class="help-step-text">Salve seu cálculo para acesso futuro</div>
                     </div>
                     <div class="help-step">
                         <div class="help-step-number">2</div>

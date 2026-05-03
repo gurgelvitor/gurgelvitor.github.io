@@ -1,0 +1,4356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acompanhamento - GurgelTrack</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
+    <style>
+        :root {
+            /* Cores do Tema Claro - Vermelho */
+            --bg-primary: #ffffff;
+            --bg-secondary: #ffffff;
+            --accent: #dc143c;
+            --accent-hover: #b91c1c;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border: #ffcccc;
+            --shadow: 0 4px 12px rgba(220, 20, 60, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --danger-color: #dc143c;
+        }
+
+        body.dark-mode {
+            /* Cores do Tema Escuro - Melhoradas */
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1e1e1e;
+            --accent: #e91e63;
+            --accent-hover: #f06292;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b8b8b8;
+            --border: #333333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --danger-color: #e91e63;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 999;
+            font-size: 20px;
+            color: var(--accent);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(0, 0, 0, 0.8);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+        }
+
+        body.dark-mode .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: var(--transition);
+            border-right: 1px solid var(--border);
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .sidebar-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            vertical-align: middle;
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0.25rem 0 0 0;
+        }
+
+        .nav-menu {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            gap: 0.75rem;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-primary);
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+
+        .nav-item.active {
+            background: var(--bg-primary);
+            color: var(--accent);
+            border-left-color: var(--accent);
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Menu Category Separators */
+        .nav-category {
+            padding: 0.5rem 1.5rem;
+            margin: 0.5rem 0 0.25rem 0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-category:first-child {
+            margin-top: 0;
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0.5rem 1.5rem;
+            opacity: 0.3;
+        }
+
+        /* Sidebar Login/Logout Area */
+        .sidebar-auth {
+            padding: 1rem;
+            margin: 1rem;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .sidebar-login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-login-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .sidebar-user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .sidebar-user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .sidebar-user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-user-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar-user-email {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-logout-btn {
+            padding: 0.5rem;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-logout-btn:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+        }
+
+        .sidebar-personal-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: calc(100% - 2rem);
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+            margin: 0.5rem 1rem;
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+            box-sizing: border-box;
+        }
+
+        .sidebar-personal-btn:hover {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+        }
+
+        /* Friendship Request Styles */
+        .friendship-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .friendship-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .friendship-header h2 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .friendship-header h2 i {
+            color: var(--accent);
+        }
+
+        .friendship-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .btn-friendship {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-friendship:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-friendship:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .friendship-status {
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .friendship-status.success {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+
+        .friendship-status.error {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+
+        .friendship-status.info {
+            background: rgba(23, 162, 184, 0.1);
+            color: #17a2b8;
+            border: 1px solid #17a2b8;
+        }
+
+        /* My Students Section Styles */
+        .my-students-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .my-students-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .my-students-header h2 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .my-students-header h2 i {
+            color: var(--accent);
+        }
+
+        .students-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .student-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .student-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.1);
+        }
+
+        .student-item.clickable {
+            cursor: pointer;
+        }
+
+        .student-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .student-arrow {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        .student-item:hover .student-arrow {
+            color: var(--accent);
+        }
+
+        .student-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .student-details {
+            flex: 1;
+        }
+
+        .student-details h3 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 0.25rem 0;
+        }
+
+        .student-details p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .empty-students {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-students i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-students h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .empty-students p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Student Details Section Styles */
+        .student-details-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .student-details-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .back-btn {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .back-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .student-details-header h2 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .student-details-header h2 i {
+            color: var(--accent);
+        }
+
+        .student-email {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .student-email i {
+            color: var(--accent);
+        }
+
+        .details-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .details-content {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .protocol-section, .anamnesis-section, .workout-section, .calculation-section, .diet-section {
+                padding: 1rem;
+            }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-header h3 i {
+            color: var(--accent);
+        }
+
+        .add-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .add-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .protocol-list, .anamnesis-list, .workout-list, .calculation-list, .diet-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .protocol-item, .anamnesis-item, .workout-item, .calculation-item, .diet-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            transition: var(--transition);
+        }
+
+        .protocol-item:hover, .anamnesis-item:hover, .workout-item:hover, .calculation-item:hover, .diet-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 2px 8px rgba(220, 20, 60, 0.1);
+        }
+
+        .item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-title {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .protocol-type-badge {
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            margin-left: auto;
+        }
+
+        .item-date {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .item-action-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.7rem;
+        }
+
+        .item-action-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .empty-protocol, .empty-anamnesis, .empty-workout, .empty-calculation, .empty-diet {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-protocol i, .empty-anamnesis i, .empty-workout i, .empty-calculation i, .empty-diet i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-protocol h4, .empty-anamnesis h4, .empty-workout h4, .empty-calculation h4, .empty-diet h4 {
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .empty-protocol p, .empty-anamnesis p {
+            margin: 0;
+            font-size: 0.8rem;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .protocol-modal {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .protocol-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .protocol-modal-header h3 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .protocol-modal-description {
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .protocol-type-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .protocol-type-btn {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            text-align: center;
+        }
+
+        .protocol-type-btn:hover {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.2);
+        }
+
+        .protocol-type-btn i {
+            font-size: 2rem;
+            color: var(--accent);
+        }
+
+        .protocol-type-btn:hover i {
+            color: white;
+        }
+
+        .protocol-type-btn span {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Items Modal */
+        .items-modal {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border);
+            animation: modalSlideIn 0.3s ease-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .items-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .items-modal-header h3 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .items-modal-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .items-search {
+            position: relative;
+        }
+
+        .items-search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .items-search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
+        }
+
+        .items-search::before {
+            content: '\f002';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .items-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .item-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .item-card:hover {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: white;
+        }
+
+        .item-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-card-title {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .item-card-date {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .item-card-description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .items-empty {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .items-empty i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .items-empty h4 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .items-empty p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            flex: 1;
+            margin-left: 280px;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-header {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-title i {
+            color: var(--accent);
+        }
+
+        .main-footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .header-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .main-header {
+                padding: 1rem;
+            }
+
+            .header-title {
+                font-size: 1.5rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+        }
+
+        /* Anamnese Responses Styles */
+        .anamnese-responses-section {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .anamnese-response-item {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .anamnese-response-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 20, 60, 0.1);
+        }
+
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .response-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .response-title i {
+            color: var(--accent);
+            font-size: 1rem;
+        }
+
+        .response-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .response-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .item-action-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .item-action-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .item-action-btn.delete-btn {
+            background: #dc3545;
+        }
+
+        .item-action-btn.delete-btn:hover {
+            background: #c82333;
+        }
+
+        .empty-anamnese-responses {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-anamnese-responses i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        .empty-anamnese-responses h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .empty-anamnese-responses p {
+            margin: 0;
+            opacity: 0.8;
+        }
+
+        /* Modal Styles for Response View */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .response-modal-content {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+        }
+
+        .response-answer {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
+
+        .response-answer strong {
+            color: var(--accent);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .response-answer p {
+            margin: 0;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
+    <div class="layout-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="logo-gurgel.png" alt="GurgelTrack Logo" class="sidebar-logo">
+                <div class="sidebar-title">GurgelTrack</div>
+                <div class="sidebar-subtitle">Sua plataforma fitness</div>
+            </div>
+            
+            <nav class="nav-menu">
+                <!-- Dashboard -->
+                <a href="index.html" class="nav-item active" data-page="home">
+                    <i class="fas fa-home"></i>
+                    <span>Início</span>
+                </a>
+                
+                <div class="nav-divider"></div>
+                
+                <!-- Treino e Nutrição -->
+                <div class="nav-category">Treino & Nutrição</div>
+                <a href="treino.html" class="nav-item" data-page="treino">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Treinos</span>
+                </a>
+                <a href="dieta.html" class="nav-item" data-page="dieta">
+                    <i class="fas fa-utensils"></i>
+                    <span>Dieta</span>
+                </a>
+                <a href="calculo.html" class="nav-item" data-page="calculo">
+                    <i class="fas fa-calculator"></i>
+                    <span>Cálculo</span>
+                </a>
+                <a href="carga.html" class="nav-item" data-page="carga">
+                    <i class="fas fa-weight"></i>
+                    <span>Cargas</span>
+                </a>
+                
+                <div class="nav-divider"></div>
+                
+                <!-- Gestão -->
+                <div class="nav-category">Gestão</div>
+                                <a href="pagamentos.html" class="nav-item" data-page="pagamentos">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Pagamentos</span>
+                </a>
+                <a href="agenda.html" class="nav-item" data-page="agenda">
+                    <i class="fas fa-calendar"></i>
+                    <span>Agenda</span>
+                </a>
+                <a href="acompanhamento.html" class="nav-item" data-page="acompanhamento">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Acompanhamento</span>
+                </a>
+                
+                <div class="nav-divider"></div>
+                
+                <div class="nav-divider"></div>
+                
+                <!-- Área do Aluno -->
+                <a href="homealuno.html" class="sidebar-personal-btn" data-page="homealuno">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Sou Aluno</span>
+                </a>
+            </nav>
+            
+            <!-- Sidebar Login/Logout Area -->
+            <div class="sidebar-auth">
+                <!-- Login button (shown when not logged in) -->
+                <a href="login.html" class="sidebar-login-btn" id="sidebarLoginBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Entrar</span>
+                </a>
+                
+                <!-- User info (shown when logged in) -->
+                <div class="sidebar-user-info" id="sidebarUserInfo" style="display: none;">
+                    <div class="sidebar-user-profile">
+                        <div class="sidebar-user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="sidebar-user-details">
+                            <div class="sidebar-user-email" id="sidebarUserEmail">user@example.com</div>
+                        </div>
+                    </div>
+                    <button class="sidebar-logout-btn" id="sidebarLogoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+            <header class="main-header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1 class="header-title">
+                            <i class="fas fa-chart-line"></i>
+                            Acompanhamento
+                        </h1>
+                        <p class="header-subtitle">Gerencie o acompanhamento dos seus alunos</p>
+                    </div>
+                </div>
+            </header>
+
+            <main class="main-content">
+                <!-- Friendship Request Section -->
+                <section class="friendship-section">
+                    <div class="friendship-header">
+                        <h2>
+                            <i class="fas fa-user-plus"></i>
+                            Solicitar Amizade de Aluno
+                        </h2>
+                    </div>
+                    
+                    <form class="friendship-form" id="friendshipForm">
+                        <div class="form-group">
+                            <label class="form-label" for="studentEmail">
+                                Email do Aluno
+                            </label>
+                            <input 
+                                type="email" 
+                                id="studentEmail" 
+                                class="form-input" 
+                                placeholder="Digite o email do aluno que deseja adicionar"
+                                required
+                            >
+                        </div>
+                        
+                        <button type="submit" class="btn-friendship" id="sendFriendshipBtn">
+                            <i class="fas fa-paper-plane"></i>
+                            Enviar Solicitação de Amizade
+                        </button>
+                    </form>
+                    
+                    <div id="friendshipStatus"></div>
+                </section>
+
+                <!-- My Students Section -->
+                <section class="my-students-section" id="myStudentsSection" style="display: none;">
+                    <div class="my-students-header">
+                        <h2>
+                            <i class="fas fa-users"></i>
+                            Meus Alunos
+                        </h2>
+                    </div>
+                    
+                    <div class="students-list" id="studentsList">
+                        <!-- Lista de alunos será inserida aqui dinamicamente -->
+                    </div>
+                    
+                    <div class="empty-students" id="emptyStudents">
+                        <i class="fas fa-users"></i>
+                        <h3>Você ainda não tem alunos</h3>
+                        <p>Quando os alunos aceitarem seus pedidos de amizade, eles aparecerão aqui.</p>
+                    </div>
+                </section>
+
+                <!-- Student Details Section -->
+                <section class="student-details-section" id="studentDetailsSection" style="display: none;">
+                    <div class="student-details-header">
+                        <button class="back-btn" id="backToStudentsBtn">
+                            <i class="fas fa-arrow-left"></i>
+                            Voltar para Meus Alunos
+                        </button>
+                        <h2>
+                            <i class="fas fa-user"></i>
+                            <span id="studentDetailsName">Selecione um aluno</span>
+                        </h2>
+                        <div class="student-email" id="studentDetailsEmail" style="display: none;">
+                            <i class="fas fa-envelope"></i>
+                            <span id="studentDetailsEmailText"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="details-content">
+                        <!-- Protocol Section -->
+                        <div class="protocol-section">
+                            <div class="section-header">
+                                <h3>
+                                    <i class="fas fa-dumbbell"></i>
+                                    Protocolo
+                                </h3>
+                                <button class="add-btn" id="addProtocolBtn">
+                                    <i class="fas fa-plus"></i>
+                                    Adicionar Protocolo
+                                </button>
+                            </div>
+                            
+                            <div class="protocol-list" id="protocolList">
+                                <!-- Protocolos serão inseridos aqui dinamicamente -->
+                            </div>
+                            
+                            <div class="empty-protocol" id="emptyProtocol">
+                                <i class="fas fa-dumbbell"></i>
+                                <h4>Nenhum protocolo adicionado</h4>
+                                <p>Adicione um protocolo de treino para este aluno.</p>
+                            </div>
+                        </div>
+
+                        <!-- Anamnesis Section -->
+                        <div class="anamnesis-section">
+                            <div class="section-header">
+                                <h3>
+                                    <i class="fas fa-calculator"></i>
+                                    Anamneses
+                                </h3>
+                                <button class="add-btn" id="addAnamnesisBtn">
+                                    <i class="fas fa-plus"></i>
+                                    Adicionar Anamnese
+                                </button>
+                            </div>
+                            
+                            <div class="anamnesis-list" id="anamnesisList">
+                                <!-- Anamneses serão inseridas aqui dinamicamente -->
+                            </div>
+                            
+                            <div class="empty-anamnesis" id="emptyAnamnesis">
+                                <i class="fas fa-calculator"></i>
+                                <h4>Nenhuma anamnese adicionada</h4>
+                                <p>Adicione uma anamnese para este aluno.</p>
+                            </div>
+                        </div>
+
+                        <!-- Anamnese Responses Section -->
+                        <div class="anamnese-responses-section">
+                            <div class="section-header">
+                                <h3>
+                                    <i class="fas fa-clipboard-check"></i>
+                                    Respostas de Anamnese
+                                </h3>
+                            </div>
+                            
+                            <div class="anamnese-responses-list" id="anamneseResponsesList">
+                                <!-- Respostas serão inseridas aqui dinamicamente -->
+                            </div>
+                            
+                            <div class="empty-anamnese-responses" id="emptyAnamneseResponses">
+                                <i class="fas fa-clipboard-check"></i>
+                                <h4>Nenhuma resposta recebida</h4>
+                                <p>O aluno ainda não respondeu nenhuma anamnese.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="main-footer">
+                <p>2026 GurgelTrack - Todos os direitos reservados à Vitor Gurgel</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal para Adicionar Protocolo -->
+    <div class="modal-overlay" id="protocolModalOverlay">
+        <div class="protocol-modal">
+            <div class="protocol-modal-header">
+                <h3>Adicionar Protocolo</h3>
+                <button class="modal-close-btn" id="closeProtocolModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="protocol-modal-content">
+                <p class="protocol-modal-description">Selecione o tipo de protocolo que deseja adicionar:</p>
+                
+                <div class="protocol-type-buttons">
+                    <button class="protocol-type-btn" id="protocolWorkoutBtn" data-type="workout">
+                        <i class="fas fa-dumbbell"></i>
+                        <span>Treino</span>
+                    </button>
+                    
+                    <button class="protocol-type-btn" id="protocolDietBtn" data-type="diet">
+                        <i class="fas fa-utensils"></i>
+                        <span>Dieta</span>
+                    </button>
+                    
+                    <button class="protocol-type-btn" id="protocolCalculationBtn" data-type="calculation">
+                        <i class="fas fa-calculator"></i>
+                        <span>Cálculo</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Selecionar Itens Salvos -->
+    <div class="modal-overlay" id="itemsModalOverlay">
+        <div class="items-modal">
+            <div class="items-modal-header">
+                <h3 id="itemsModalTitle">Selecionar Treino</h3>
+                <button class="modal-close-btn" id="closeItemsModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="items-modal-content">
+                <div class="items-search">
+                    <input type="text" class="items-search-input" id="itemsSearchInput" placeholder="Buscar...">
+                </div>
+                
+                <div class="items-list" id="itemsList">
+                    <!-- Items serão carregados dinamicamente -->
+                </div>
+                
+                <div class="items-empty" id="itemsEmpty">
+                    <i class="fas fa-inbox"></i>
+                    <h4>Nenhum item encontrado</h4>
+                    <p>Não há itens salvos deste tipo.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tratamento de erro para ignorar erros de extensão do navegador
+        window.addEventListener('error', function(event) {
+            if (event.message && event.message.includes('Extension context invalidated')) {
+                console.warn('Ignorando erro de extensão do navegador:', event.message);
+                event.preventDefault();
+                return true;
+            }
+        });
+
+        // Configuração do Supabase (declarado no início para evitar conflitos)
+        var supabaseUrl = 'https://erhhavvueccaqenzgspp.supabase.co';
+        var supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGhhdnZ1ZWNjYXFlbnpnc3BwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzE1NjAzNywiZXhwIjoyMDkyNzMyMDM3fQ.h9BwrTDXDQUHYBClC8raJiN4UqQuz9vaX1t0GM4kMcw'; // Service Role Key
+        
+        // Verificar se o cliente Supabase já existe
+        var supabase;
+        if (window.supabaseClient) {
+            supabase = window.supabaseClient;
+        } else {
+            supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+            window.supabaseClient = supabase;
+        }
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeIcon.className = 'fas fa-sun';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            const isDark = body.classList.contains('dark-mode');
+            themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        if (mobileMenuToggle && sidebar) {
+            mobileMenuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+            });
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && sidebar && mobileMenuToggle) {
+                if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+
+        // Sidebar Login/Logout functionality
+        function updateSidebarAuth() {
+            // Verificar usando o sistema de autenticação existente
+            const currentUser = localStorage.getItem('currentUser');
+            const isLoggedIn = !!currentUser;
+            
+            let userEmail = 'user@example.com';
+            if (isLoggedIn) {
+                try {
+                    const userData = JSON.parse(currentUser);
+                    userEmail = userData.email || userEmail;
+                } catch (error) {
+                    console.error('Erro ao parsear dados do usuário:', error);
+                }
+            }
+            
+            const loginBtn = document.getElementById('sidebarLoginBtn');
+            const userInfo = document.getElementById('sidebarUserInfo');
+            const userEmailElement = document.getElementById('sidebarUserEmail');
+            
+            if (isLoggedIn && loginBtn && userInfo && userEmailElement) {
+                loginBtn.style.display = 'none';
+                userInfo.style.display = 'flex';
+                userEmailElement.textContent = userEmail;
+            } else if (loginBtn && userInfo) {
+                loginBtn.style.display = 'flex';
+                userInfo.style.display = 'none';
+            }
+        }
+
+        // Sidebar logout functionality
+        document.getElementById('sidebarLogoutBtn').addEventListener('click', function() {
+            // Usar o sistema de autenticação existente
+            if (window.auth && window.auth.logout) {
+                window.auth.logout();
+            } else {
+                // Fallback manual
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('token');
+                updateSidebarAuth();
+                
+                // Redirect to login page
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Initialize auth UI
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSidebarAuth();
+            loadMyStudents();
+        });
+
+        // Friendship Request functionality
+        document.getElementById('friendshipForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const emailInput = document.getElementById('studentEmail');
+            const sendBtn = document.getElementById('sendFriendshipBtn');
+            const statusDiv = document.getElementById('friendshipStatus');
+            
+            const studentEmail = emailInput.value.trim();
+            
+            if (!studentEmail) {
+                showFriendshipStatus('Por favor, digite um email válido.', 'error');
+                return;
+            }
+            
+            // Desabilitar botão durante o processamento
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
+            
+            try {
+                // Verificar se o usuário está logado
+                const currentUser = localStorage.getItem('currentUser');
+                if (!currentUser) {
+                    showFriendshipStatus('Você precisa estar logado para enviar solicitações de amizade.', 'error');
+                    return;
+                }
+                
+                const userData = JSON.parse(currentUser);
+                
+                // Verificar se o email existe no Supabase
+                const studentExists = await checkStudentExists(studentEmail);
+                
+                if (!studentExists) {
+                    showFriendshipStatus('Este email não foi encontrado no sistema. Verifique o email digitado.', 'error');
+                    return;
+                }
+                
+                // Enviar solicitação de amizade
+                const success = await sendFriendshipRequest(userData.email, studentEmail);
+                
+                if (success) {
+                    showFriendshipStatus('Solicitação de amizade enviada com sucesso! O aluno receberá uma notificação.', 'success');
+                    emailInput.value = '';
+                } else {
+                    showFriendshipStatus('Erro ao enviar solicitação. Tente novamente.', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Erro na solicitação de amizade:', error);
+                showFriendshipStatus('Ocorreu um erro. Tente novamente mais tarde.', 'error');
+            } finally {
+                // Reabilitar botão
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Solicitação de Amizade';
+            }
+        });
+
+        // Configuração do Supabase já foi declarada no início do script
+
+        // Função para verificar se o aluno existe no Supabase
+        async function checkStudentExists(email) {
+            try {
+                // Verificar formato do email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    return false;
+                }
+                
+                // Buscar email no Supabase
+                console.log('Buscando email:', email.toLowerCase().trim());
+                
+                const { data, error } = await supabase
+                    .from('pessoas') // Voltar para nome correto
+                    .select('*') // Listar todos os campos para debug
+                    .limit(1); // Buscar apenas o primeiro registro para ver estrutura
+                
+                console.log('Resultado da busca:', { data, error });
+                
+                if (error) {
+                    console.error('Erro ao buscar email no Supabase:', error);
+                    return false;
+                }
+                
+                // Mostrar estrutura da tabela
+                console.log('Estrutura da tabela (primeiro registro):', data);
+                console.log('Array de dados:', Array.isArray(data) ? 'É array' : 'Não é array');
+                
+                if (!data || (Array.isArray(data) && data.length === 0)) {
+                    console.log('Tabela vazia ou sem dados');
+                    return false;
+                }
+                
+                // Pegar o primeiro registro para analisar estrutura
+                const firstRecord = Array.isArray(data) ? data[0] : data;
+                console.log('Primeiro registro:', firstRecord);
+                
+                // Verificar se o email existe em algum campo
+                const emailFields = Object.keys(firstRecord || {}).filter(key => 
+                    key.toLowerCase().includes('email')
+                );
+                
+                console.log('Campos de email encontrados:', emailFields);
+                
+                // Agora vamos buscar o email específico
+                if (emailFields.length > 0) {
+                    const emailField = emailFields[0];
+                    console.log('Usando campo de email:', emailField);
+                    
+                    const { data: emailData, error: emailError } = await supabase
+                        .from('pessoas')
+                        .select(emailField)
+                        .eq(emailField, email.toLowerCase().trim())
+                        .maybeSingle();
+                    
+                    console.log('Busca específica do email:', { emailData, emailError });
+                    
+                    if (!emailError && emailData && emailData[emailField]) {
+                        console.log('Email encontrado!');
+                        return true;
+                    }
+                }
+                
+                console.log('Email não encontrado');
+                return false;
+                
+            } catch (error) {
+                console.error('Erro ao verificar aluno:', error);
+                return false;
+            }
+        }
+
+        // Função para enviar solicitação de amizade
+        async function sendFriendshipRequest(fromEmail, toEmail) {
+            try {
+                console.log('Enviando solicitação de amizade:', { fromEmail, toEmail });
+                
+                // Verificar se já existe um pedido pendente
+                const { data: existingRequest, error: checkError } = await supabase
+                    .from('friendship_requests')
+                    .select('*')
+                    .eq('from_email', fromEmail)
+                    .eq('to_email', toEmail)
+                    .eq('status', 'pending')
+                    .maybeSingle();
+                
+                if (checkError) {
+                    console.error('Erro ao verificar pedido existente:', checkError);
+                }
+                
+                if (existingRequest) {
+                    showFriendshipStatus('Você já enviou uma solicitação de amizade para este email.', 'error');
+                    return false;
+                }
+                
+                // Inserir novo pedido de amizade
+                const { data, error } = await supabase
+                    .from('friendship_requests')
+                    .insert([
+                        {
+                            from_email: fromEmail,
+                            to_email: toEmail,
+                            status: 'pending'
+                        }
+                    ])
+                    .select();
+                
+                if (error) {
+                    console.error('Erro ao enviar solicitação:', error);
+                    showFriendshipStatus('Ocorreu um erro ao enviar a solicitação. Tente novamente.', 'error');
+                    return false;
+                }
+                
+                console.log('Solicitação enviada com sucesso:', data);
+                return true;
+                
+            } catch (error) {
+                console.error('Erro na solicitação de amizade:', error);
+                showFriendshipStatus('Ocorreu um erro. Tente novamente mais tarde.', 'error');
+                return false;
+            }
+        }
+
+        // Função para exibir mensagens de status
+        function showFriendshipStatus(message, type) {
+            const statusDiv = document.getElementById('friendshipStatus');
+            statusDiv.className = `friendship-status ${type}`;
+            statusDiv.textContent = message;
+            statusDiv.style.display = 'block';
+            
+            // Esconder mensagem após 5 segundos
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Load My Students functionality
+        async function loadMyStudents() {
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                if (!currentUser) {
+                    return;
+                }
+                
+                const userData = JSON.parse(currentUser);
+                const userEmail = userData.email;
+                
+                console.log('Carregando informações dos alunos para:', userEmail);
+                
+                // Buscar amizades ativas onde o usuário é o personal
+                const { data, error } = await supabase
+                    .from('friendships')
+                    .select('*')
+                    .eq('personal_email', userEmail)
+                    .eq('status', 'active');
+                
+                if (error) {
+                    console.error('Erro ao carregar informações dos alunos:', error);
+                    return;
+                }
+                
+                console.log('Amizades encontradas:', data);
+                renderMyStudents(data || []);
+                
+            } catch (error) {
+                console.error('Erro ao carregar informações dos alunos:', error);
+            }
+        }
+
+        function renderMyStudents(friendships) {
+            const studentsList = document.getElementById('studentsList');
+            const emptyStudents = document.getElementById('emptyStudents');
+            const myStudentsSection = document.getElementById('myStudentsSection');
+            
+            // Verificar se elementos existem
+            if (!studentsList || !emptyStudents || !myStudentsSection) {
+                console.error('Elementos DOM não encontrados');
+                return;
+            }
+            
+            if (friendships.length === 0) {
+                studentsList.style.display = 'none';
+                emptyStudents.style.display = 'block';
+                myStudentsSection.style.display = 'none';
+                return;
+            }
+            
+            myStudentsSection.style.display = 'block';
+            studentsList.style.display = 'flex';
+            emptyStudents.style.display = 'none';
+            
+            // Buscar informações completas de cada aluno
+            const studentPromises = friendships.map(async (friendship) => {
+                const alunoEmail = friendship.aluno_email;
+                
+                const { data: alunoData, error } = await supabase
+                    .from('pessoas')
+                    .select('*')
+                    .eq('email', alunoEmail)
+                    .maybeSingle();
+                
+                if (error) {
+                    console.error('Erro ao buscar dados do aluno:', error);
+                    return null;
+                }
+                
+                return {
+                    ...friendship,
+                    alunoData
+                };
+            });
+            
+            Promise.all(studentPromises).then(students => {
+                const validStudents = students.filter(s => s !== null);
+                
+                studentsList.innerHTML = validStudents.map(student => {
+                    const alunoData = student.alunoData;
+                    const firstName = alunoData?.nome_pessoa || alunoData?.name || 'Aluno';
+                    const firstLetter = firstName.charAt(0).toUpperCase();
+                    const userEmail = student.aluno_email;
+                    
+                    return `
+                        <div class="student-item clickable" onclick="openStudentDetails('${userEmail}', '${firstName}')">
+                            <div class="student-avatar">
+                                ${firstLetter}
+                            </div>
+                            <div class="student-details">
+                                <h3>${firstName}</h3>
+                                <p>${userEmail}</p>
+                            </div>
+                            <div class="student-actions">
+                                <button class="btn btn-danger btn-small" onclick="event.stopPropagation(); deleteFriendship('${student.id}')" title="Excluir Amizade">
+                                    <i class="fas fa-user-times"></i>
+                                </button>
+                            </div>
+                            <div class="student-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            });
+        }
+
+        // Delete friendship functionality
+        async function deleteFriendship(friendshipId) {
+            if (!confirm('Tem certeza que deseja excluir esta amizade? Esta ação não pode ser desfeita.')) {
+                return;
+            }
+            
+            try {
+                console.log('Excluindo amizade:', friendshipId);
+                
+                // Excluir amizade do Supabase
+                const { error } = await supabase
+                    .from('friendships')
+                    .delete()
+                    .eq('id', friendshipId);
+
+                if (error) {
+                    console.error('Erro ao excluir amizade:', error);
+                    alert('Erro ao excluir amizade. Tente novamente.');
+                    return;
+                }
+                
+                console.log('Amizade excluída com sucesso');
+                alert('Amizade excluída com sucesso!');
+                
+                // Recarregar lista de alunos
+                loadMyStudents();
+                
+            } catch (error) {
+                console.error('Erro ao excluir amizade:', error);
+                alert('Ocorreu um erro. Tente novamente.');
+            }
+        }
+
+        // Student Details functionality
+        let currentStudentEmail = null;
+        let currentStudentName = null;
+
+        function openStudentDetails(studentEmail, studentName) {
+            console.log('openStudentDetails chamado com:', { studentEmail, studentName });
+            
+            currentStudentEmail = studentEmail;
+            currentStudentName = studentName;
+            
+            // Atualizar nome do aluno no header
+            const nameElement = document.getElementById('studentDetailsName');
+            console.log('Elemento encontrado:', nameElement);
+            nameElement.textContent = studentName;
+            console.log('Nome atualizado para:', studentName);
+            
+            // Exibir email do aluno
+            const emailElement = document.getElementById('studentDetailsEmail');
+            const emailTextElement = document.getElementById('studentDetailsEmailText');
+            emailElement.style.display = 'flex';
+            emailTextElement.textContent = studentEmail;
+            
+            // Esconder seção de alunos e mostrar detalhes
+            document.getElementById('myStudentsSection').style.display = 'none';
+            document.getElementById('studentDetailsSection').style.display = 'block';
+            
+            // Carregar protocolos, anamneses e respostas do aluno
+            loadStudentProtocols();
+            loadStudentAnamneses();
+            loadStudentAnamneseResponses();
+        }
+
+        function backToStudents() {
+            // Esconder detalhes e mostrar lista de alunos
+            document.getElementById('studentDetailsSection').style.display = 'none';
+            document.getElementById('myStudentsSection').style.display = 'block';
+            
+            currentStudentEmail = null;
+            currentStudentName = null;
+        }
+
+        async function loadStudentProtocols() {
+            try {
+                // Carregar protocolos das três tabelas separadas
+                const [workoutsResult, dietsResult, calculationsResult] = await Promise.all([
+                    supabase
+                        .from('student_workouts')
+                        .select('*')
+                        .eq('student_email', currentStudentEmail)
+                        .order('assigned_at', { ascending: false }),
+                    
+                    supabase
+                        .from('student_diets')
+                        .select('*')
+                        .eq('student_email', currentStudentEmail)
+                        .order('assigned_at', { ascending: false }),
+                    
+                    supabase
+                        .from('student_calculations')
+                        .select('*')
+                        .eq('student_email', currentStudentEmail)
+                        .order('assigned_at', { ascending: false })
+                ]);
+
+                // Combinar todos os protocolos em um formato unificado
+                const allProtocols = [
+                    ...(workoutsResult.data || []).map(item => ({
+                        id: item.id,
+                        protocol_name: item.workout_name,
+                        protocol_type: 'workout',
+                        protocol_data: JSON.parse(item.workout_data || '{}'),
+                        created_at: item.assigned_at,
+                        type: 'workout'
+                    })),
+                    ...(dietsResult.data || []).map(item => ({
+                        id: item.id,
+                        protocol_name: item.diet_name,
+                        protocol_type: 'diet',
+                        protocol_data: JSON.parse(item.diet_data || '{}'),
+                        created_at: item.assigned_at,
+                        type: 'diet'
+                    })),
+                    ...(calculationsResult.data || []).map(item => ({
+                        id: item.id,
+                        protocol_name: item.calculation_name,
+                        protocol_type: 'calculation',
+                        protocol_data: JSON.parse(item.calculation_data || '{}'),
+                        created_at: item.assigned_at,
+                        type: 'calculation'
+                    }))
+                ];
+
+                // Ordenar por data
+                allProtocols.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+                renderProtocols(allProtocols);
+            } catch (error) {
+                console.error('Erro ao carregar protocolos:', error);
+            }
+        }
+
+        async function loadStudentAnamneses() {
+            try {
+                const { data, error } = await supabase
+                    .from('student_anamneses')
+                    .select('*')
+                    .eq('aluno_email', currentStudentEmail)
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Erro ao carregar anamneses:', error);
+                    return;
+                }
+                
+                renderAnamneses(data || []);
+            } catch (error) {
+                console.error('Erro ao carregar anamneses:', error);
+            }
+        }
+
+        // Carregar respostas de anamnese respondidas
+        async function loadStudentAnamneseResponses() {
+            try {
+                const { data, error } = await supabase
+                    .from('anamnese_responses')
+                    .select('*')
+                    .eq('student_email', currentStudentEmail)
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Erro ao carregar respostas de anamnese:', error);
+                    return;
+                }
+                
+                renderAnamneseResponses(data || []);
+            } catch (error) {
+                console.error('Erro ao carregar respostas de anamnese:', error);
+            }
+        }
+
+        // Renderizar respostas de anamnese
+        function renderAnamneseResponses(responses) {
+            const responsesContainer = document.getElementById('anamneseResponsesList');
+            const emptyResponses = document.getElementById('emptyAnamneseResponses');
+            
+            if (!responsesContainer || !emptyResponses) return;
+            
+            if (responses.length === 0) {
+                responsesContainer.style.display = 'none';
+                emptyResponses.style.display = 'block';
+                return;
+            }
+            
+            responsesContainer.style.display = 'block';
+            emptyResponses.style.display = 'none';
+            
+            responsesContainer.innerHTML = responses.map(response => {
+                console.log('DEBUG: Dados da resposta:', response);
+                console.log('DEBUG: Campos disponíveis:', Object.keys(response));
+                
+                return `
+                <div class="anamnese-response-item">
+                    <div class="response-header">
+                        <div class="response-title">
+                            <i class="fas fa-clipboard-check"></i>
+                            ${response.anamnese_name || response.title || response.name || response.anamneseTitle || 'Anamnese'}
+                        </div>
+                        <div class="response-date">${formatDate(response.created_at)}</div>
+                    </div>
+                    <div class="response-actions">
+                        <button class="item-action-btn" onclick="viewAnamneseResponse('${response.id}')">
+                            <i class="fas fa-eye"></i> Ver Resposta
+                        </button>
+                        <button class="item-action-btn delete-btn" onclick="deleteAnamneseResponse('${response.id}')">
+                            <i class="fas fa-trash"></i> Apagar
+                        </button>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        // Visualizar resposta da anamnese
+        async function viewAnamneseResponse(responseId) {
+            try {
+                const { data, error } = await supabase
+                    .from('anamnese_responses')
+                    .select('*')
+                    .eq('id', responseId)
+                    .single();
+
+                if (error || !data) {
+                    console.error('Erro ao buscar resposta:', error);
+                    alert('Resposta não encontrada!');
+                    return;
+                }
+
+                // Exibir resposta em um modal
+                showAnamneseResponseModal(data);
+
+            } catch (error) {
+                console.error('Erro ao visualizar resposta:', error);
+                alert('Erro ao visualizar resposta. Tente novamente.');
+            }
+        }
+
+        // Modal para visualizar resposta da anamnese
+        function showAnamneseResponseModal(responseData) {
+            const modalHtml = `
+                <div class="modal-overlay active" id="viewResponseModal" style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    backdrop-filter: blur(8px);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 9999;
+                ">
+                    <div class="response-modal" style="
+                        background: var(--bg-primary);
+                        border-radius: 20px;
+                        max-width: 800px;
+                        width: 90%;
+                        max-height: 85vh;
+                        overflow-y: auto;
+                        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                        border: 1px solid var(--border);
+                        animation: modalSlideIn 0.3s ease-out;
+                        position: relative;
+                    ">
+                        <!-- Header -->
+                        <div class="response-modal-header" style="
+                            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+                            color: white;
+                            padding: 2rem;
+                            border-radius: 20px 20px 0 0;
+                            position: relative;
+                        ">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h2 style="margin: 0; font-size: 1.8rem; font-weight: 700; display: flex; align-items: center; gap: 1rem;">
+                                        <i class="fas fa-clipboard-check" style="font-size: 1.5rem;"></i>
+                                        Resposta da Anamnese
+                                    </h2>
+                                    <p style="margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 0.95rem;">
+                                        ${responseData.anamnese_name || 'Anamnese'}
+                                    </p>
+                                </div>
+                                <button class="modal-close-btn" onclick="closeViewResponseModal()" style="
+                                    background: rgba(255, 255, 255, 0.2);
+                                    border: none;
+                                    color: white;
+                                    width: 40px;
+                                    height: 40px;
+                                    border-radius: 50%;
+                                    cursor: pointer;
+                                    font-size: 1.2rem;
+                                    transition: all 0.3s ease;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                " onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="response-modal-content" style="padding: 2rem;">
+                            <!-- Info Cards -->
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                                <div style="
+                                    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+                                    border: 1px solid var(--border);
+                                    border-radius: 12px;
+                                    padding: 1.5rem;
+                                    text-align: center;
+                                ">
+                                    <div style="color: var(--accent); font-size: 2rem; margin-bottom: 0.5rem;">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Aluno</div>
+                                    <div style="font-weight: 600; color: var(--text-primary); word-break: break-all;">
+                                        ${responseData.student_email}
+                                    </div>
+                                </div>
+                                
+                                <div style="
+                                    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+                                    border: 1px solid var(--border);
+                                    border-radius: 12px;
+                                    padding: 1.5rem;
+                                    text-align: center;
+                                ">
+                                    <div style="color: var(--accent); font-size: 2rem; margin-bottom: 0.5rem;">
+                                        <i class="fas fa-calendar"></i>
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Data da Resposta</div>
+                                    <div style="font-weight: 600; color: var(--text-primary);">
+                                        ${formatDate(responseData.created_at)}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Questions and Answers -->
+                            <div style="
+                                background: var(--bg-secondary);
+                                border-radius: 16px;
+                                padding: 2rem;
+                                border: 1px solid var(--border);
+                            ">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                                    <div style="
+                                        background: var(--accent);
+                                        color: white;
+                                        width: 40px;
+                                        height: 40px;
+                                        border-radius: 50%;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                    ">
+                                        <i class="fas fa-question-answer"></i>
+                                    </div>
+                                    <div>
+                                        <h3 style="margin: 0; color: var(--text-primary); font-size: 1.5rem; font-weight: 600;">
+                                            Respostas do Aluno
+                                        </h3>
+                                        <p style="margin: 0.25rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">
+                                            Confira as respostas fornecidas pelo aluno
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                ${renderResponseAnswers(responseData.answers || [])}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        // Renderizar respostas das perguntas
+        function renderResponseAnswers(answers) {
+            if (!answers || answers.length === 0) {
+                return `
+                    <div style="text-align: center; padding: 3rem 2rem; color: var(--text-secondary);">
+                        <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Nenhuma resposta encontrada</h4>
+                        <p>Esta anamnese não possui respostas registradas.</p>
+                    </div>
+                `;
+            }
+
+            return answers.map((answer, index) => `
+                <div style="
+                    background: var(--bg-primary);
+                    border: 1px solid var(--border);
+                    border-radius: 12px;
+                    padding: 1.5rem;
+                    margin-bottom: 1rem;
+                ">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                        <div style="
+                            background: var(--accent);
+                            color: white;
+                            width: 24px;
+                            height: 24px;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 0.75rem;
+                            font-weight: 600;
+                        ">
+                            ${index + 1}
+                        </div>
+                        <h4 style="margin: 0; color: var(--text-primary); font-weight: 600;">
+                            ${answer.question || `Pergunta ${index + 1}`}
+                        </h4>
+                    </div>
+                    
+                    ${answer.isImage ? `
+                    <div style="
+                        background: var(--bg-secondary);
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        padding: 1rem;
+                        text-align: center;
+                    ">
+                        <img src="${answer.answer}" alt="${answer.fileName || 'Imagem'}" style="
+                            max-width: 100%;
+                            max-height: 300px;
+                            border-radius: 8px;
+                            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                        ">
+                        <div style="
+                            margin-top: 0.5rem;
+                            font-size: 0.85rem;
+                            color: var(--text-secondary);
+                        ">
+                            <i class="fas fa-image"></i> ${answer.fileName || 'Imagem enviada'}
+                        </div>
+                    </div>
+                ` : `
+                    <div style="
+                        background: var(--bg-secondary);
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        padding: 1rem;
+                        color: var(--text-primary);
+                        line-height: 1.5;
+                    ">
+                        ${answer.answer || 'Sem resposta'}
+                    </div>
+                `}
+                </div>
+            `).join('');
+        }
+
+        // Fechar modal de resposta
+        function closeViewResponseModal() {
+            const modal = document.getElementById('viewResponseModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Deletar resposta de anamnese
+        async function deleteAnamneseResponse(responseId) {
+            // Confirmar antes de deletar
+            if (!confirm('Tem certeza que deseja apagar esta resposta de anamnese? Esta ação não pode ser desfeita.')) {
+                return;
+            }
+
+            try {
+                const { data, error } = await supabase
+                    .from('anamnese_responses')
+                    .delete()
+                    .eq('id', responseId)
+                    .select();
+
+                if (error) {
+                    console.error('Erro ao deletar resposta:', error);
+                    alert('Ocorreu um erro ao apagar a resposta. Tente novamente.');
+                    return;
+                }
+
+                // Recarregar lista de respostas
+                await loadStudentAnamneseResponses();
+                
+                // Mostrar mensagem de sucesso
+                alert('Resposta de anamnese apagada com sucesso!');
+                
+            } catch (error) {
+                console.error('Erro ao deletar resposta:', error);
+                alert('Ocorreu um erro. Tente novamente.');
+            }
+        }
+
+        function renderProtocols(protocols) {
+            const protocolList = document.getElementById('protocolList');
+            const emptyProtocol = document.getElementById('emptyProtocol');
+            
+            if (protocols.length === 0) {
+                protocolList.style.display = 'none';
+                emptyProtocol.style.display = 'block';
+                return;
+            }
+            
+            protocolList.style.display = 'flex';
+            emptyProtocol.style.display = 'none';
+            
+            protocolList.innerHTML = protocols.map(protocol => {
+                const typeIcon = getProtocolTypeIcon(protocol.type);
+                const typeName = getProtocolTypeName(protocol.type);
+                
+                return `
+                    <div class="protocol-item">
+                        <div class="item-header">
+                            <div class="item-title">
+                                <i class="${typeIcon}"></i>
+                                ${protocol.protocol_name}
+                            </div>
+                            <div class="item-date">${formatDate(protocol.created_at)}</div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="item-action-btn" onclick="viewProtocol('${protocol.id}', '${protocol.type}')">
+                                <i class="fas fa-eye"></i> Ver
+                            </button>
+                            <button class="item-action-btn" onclick="deleteProtocol('${protocol.id}', '${protocol.type}')">
+                                <i class="fas fa-trash"></i> Excluir
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getProtocolTypeIcon(type) {
+            switch (type) {
+                case 'workout': return 'fas fa-dumbbell';
+                case 'diet': return 'fas fa-utensils';
+                case 'calculation': return 'fas fa-calculator';
+                default: return 'fas fa-file';
+            }
+        }
+
+        function getProtocolTypeName(type) {
+            switch (type) {
+                case 'workout': return 'Treino';
+                case 'diet': return 'Dieta';
+                case 'calculation': return 'Cálculo';
+                default: return 'Protocolo';
+            }
+        }
+
+        async function viewProtocol(protocolId, type) {
+            try {
+                let tableName, dataField;
+                
+                switch (type) {
+                    case 'workout':
+                        tableName = 'student_workouts';
+                        dataField = 'workout_data';
+                        break;
+                    case 'diet':
+                        tableName = 'student_diets';
+                        dataField = 'diet_data';
+                        break;
+                    case 'calculation':
+                        tableName = 'student_calculations';
+                        dataField = 'calculation_data';
+                        break;
+                    default:
+                        alert('Tipo de protocolo inválido!');
+                        return;
+                }
+
+                // Buscar protocolo do Supabase
+                const { data, error } = await supabase
+                    .from(tableName)
+                    .select('*')
+                    .eq('id', protocolId)
+                    .single();
+
+                if (error || !data) {
+                    console.error('Erro ao buscar protocolo:', error);
+                    alert('Protocolo não encontrado!');
+                    return;
+                }
+
+                // Exibir protocolo em um modal
+                showProtocolModal(data, type);
+
+            } catch (error) {
+                console.error('Erro ao visualizar protocolo:', error);
+                alert('Erro ao visualizar protocolo. Tente novamente.');
+            }
+        }
+
+        async function deleteProtocol(protocolId, type) {
+            if (!confirm('Tem certeza que deseja excluir este protocolo?')) {
+                return;
+            }
+
+            try {
+                let tableName;
+                
+                switch (type) {
+                    case 'workout':
+                        tableName = 'student_workouts';
+                        break;
+                    case 'diet':
+                        tableName = 'student_diets';
+                        break;
+                    case 'calculation':
+                        tableName = 'student_calculations';
+                        break;
+                    default:
+                        alert('Tipo de protocolo inválido!');
+                        return;
+                }
+
+                // Excluir protocolo do Supabase
+                const { error } = await supabase
+                    .from(tableName)
+                    .delete()
+                    .eq('id', protocolId);
+
+                if (error) {
+                    console.error('Erro ao excluir protocolo:', error);
+                    alert('Erro ao excluir protocolo. Tente novamente.');
+                    return;
+                }
+
+                // Recarregar protocolos
+                loadStudentProtocols();
+                alert('✅ Protocolo excluído com sucesso!');
+
+            } catch (error) {
+                console.error('Erro ao excluir protocolo:', error);
+                alert('Erro ao excluir protocolo. Tente novamente.');
+            }
+        }
+
+        async function deleteAnamnesis(anamnesisId) {
+            if (!confirm('Tem certeza que deseja excluir esta anamnese?')) {
+                return;
+            }
+
+            try {
+                // Excluir anamnese do Supabase
+                const { error } = await supabase
+                    .from('student_anamneses')
+                    .delete()
+                    .eq('id', anamnesisId);
+
+                if (error) {
+                    console.error('Erro ao excluir anamnese:', error);
+                    alert('Erro ao excluir anamnese. Tente novamente.');
+                    return;
+                }
+
+                // Recarregar anamneses
+                loadStudentAnamneses();
+                alert('✅ Anamnese excluída com sucesso!');
+
+            } catch (error) {
+                console.error('Erro ao excluir anamnese:', error);
+                alert('Erro ao excluir anamnese. Tente novamente.');
+            }
+        }
+
+        async function viewAnamnesis(anamnesisId) {
+            try {
+                // Buscar dados completos da anamnese
+                const { data, error } = await supabase
+                    .from('student_anamneses')
+                    .select('*')
+                    .eq('id', anamnesisId)
+                    .single();
+
+                if (error) {
+                    console.error('Erro ao carregar anamnese:', error);
+                    alert('Erro ao carregar anamnese. Tente novamente.');
+                    return;
+                }
+
+                // Exibir modal com detalhes da anamnese
+                showAnamnesisModal(data);
+
+            } catch (error) {
+                console.error('Erro ao visualizar anamnese:', error);
+                alert('Erro ao visualizar anamnese. Tente novamente.');
+            }
+        }
+
+        function showAnamnesisModal(anamnesisData) {
+            // Parse dos dados da anamnese
+            let anamnesisContent;
+            try {
+                anamnesisContent = typeof anamnesisData.anamnesis_data === 'string' 
+                    ? JSON.parse(anamnesisData.anamnesis_data) 
+                    : anamnesisData.anamnesis_data;
+            } catch (error) {
+                console.error('Erro ao parsear dados da anamnese:', error);
+                anamnesisContent = { data: [] };
+            }
+
+            // Criar modal para exibir a anamnese completa
+            const modalHtml = `
+                <div class="modal-overlay active" id="anamnesisViewModal" style="backdrop-filter: blur(8px);">
+                    <div class="anamnese-modal" style="
+                        background: var(--bg-primary);
+                        border-radius: 20px;
+                        max-width: 800px;
+                        width: 90%;
+                        max-height: 85vh;
+                        overflow-y: auto;
+                        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                        border: 1px solid var(--border);
+                        animation: modalSlideIn 0.3s ease-out;
+                    ">
+                        <!-- Header -->
+                        <div class="anamnese-modal-header" style="
+                            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+                            color: white;
+                            padding: 2rem;
+                            border-radius: 20px 20px 0 0;
+                            position: relative;
+                        ">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h2 style="margin: 0; font-size: 1.8rem; font-weight: 700; display: flex; align-items: center; gap: 1rem;">
+                                        <i class="fas fa-clipboard-question" style="font-size: 1.5rem;"></i>
+                                        ${anamnesisData.anamnesis_name}
+                                    </h2>
+                                    <p style="margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 0.95rem;">
+                                        Anamnese Detalhada
+                                    </p>
+                                </div>
+                                <button class="modal-close-btn" onclick="closeAnamnesisViewModal()" style="
+                                    background: rgba(255, 255, 255, 0.2);
+                                    border: none;
+                                    color: white;
+                                    width: 40px;
+                                    height: 40px;
+                                    border-radius: 50%;
+                                    cursor: pointer;
+                                    font-size: 1.2rem;
+                                    transition: all 0.3s ease;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                " onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="anamnese-modal-content" style="padding: 2rem;">
+                            <!-- Info Cards -->
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                                <div style="
+                                    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+                                    border: 1px solid var(--border);
+                                    border-radius: 12px;
+                                    padding: 1.5rem;
+                                    text-align: center;
+                                ">
+                                    <div style="color: var(--accent); font-size: 2rem; margin-bottom: 0.5rem;">
+                                        <i class="fas fa-user-tie"></i>
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Personal</div>
+                                    <div style="font-weight: 600; color: var(--text-primary); word-break: break-all;">
+                                        ${anamnesisData.personal_email}
+                                    </div>
+                                </div>
+                                
+                                <div style="
+                                    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+                                    border: 1px solid var(--border);
+                                    border-radius: 12px;
+                                    padding: 1.5rem;
+                                    text-align: center;
+                                ">
+                                    <div style="color: var(--accent); font-size: 2rem; margin-bottom: 0.5rem;">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Aluno</div>
+                                    <div style="font-weight: 600; color: var(--text-primary); word-break: break-all;">
+                                        ${anamnesisData.aluno_email}
+                                    </div>
+                                </div>
+                                
+                                <div style="
+                                    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+                                    border: 1px solid var(--border);
+                                    border-radius: 12px;
+                                    padding: 1.5rem;
+                                    text-align: center;
+                                ">
+                                    <div style="color: var(--accent); font-size: 2rem; margin-bottom: 0.5rem;">
+                                        <i class="fas fa-calendar"></i>
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Data</div>
+                                    <div style="font-weight: 600; color: var(--text-primary);">
+                                        ${formatDate(anamnesisData.created_at)}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Questions Section -->
+                            <div style="
+                                background: var(--bg-secondary);
+                                border-radius: 16px;
+                                padding: 2rem;
+                                border: 1px solid var(--border);
+                            ">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                                    <div style="
+                                        background: var(--accent);
+                                        color: white;
+                                        width: 40px;
+                                        height: 40px;
+                                        border-radius: 50%;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        font-weight: 700;
+                                        font-size: 1.2rem;
+                                    ">
+                                        ${anamnesisContent.data ? anamnesisContent.data.length : 0}
+                                    </div>
+                                    <div>
+                                        <h3 style="margin: 0; color: var(--text-primary); font-size: 1.5rem; font-weight: 600;">
+                                            Perguntas da Anamnese
+                                        </h3>
+                                        <p style="margin: 0.25rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">
+                                            Questionário completo para avaliação
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                ${renderAnamnesisQuestions(anamnesisContent.data || [])}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Adicionar modal ao body
+            const modalContainer = document.createElement('div');
+            modalContainer.innerHTML = modalHtml;
+            document.body.appendChild(modalContainer);
+        }
+
+        function renderAnamnesisQuestions(questions) {
+            if (!questions || questions.length === 0) {
+                return `
+                    <div style="text-align: center; padding: 3rem 2rem; color: var(--text-secondary);">
+                        <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Nenhuma pergunta encontrada</h4>
+                        <p>Esta anamnese não possui perguntas cadastradas.</p>
+                    </div>
+                `;
+            }
+
+            return questions.map((question, index) => {
+                const questionType = question.type || 'texto';
+                const questionText = question.question || question.text || 'Sem pergunta definida';
+                const hasOptions = question.options && Array.isArray(question.options) && question.options.length > 0;
+                
+                return `
+                    <div class="question-card" style="
+                        background: var(--bg-primary);
+                        border: 2px solid var(--border);
+                        border-radius: 16px;
+                        padding: 1.5rem;
+                        margin-bottom: 1.5rem;
+                        position: relative;
+                        transition: all 0.3s ease;
+                    " onmouseover="this.style.borderColor='var(--accent)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(220, 20, 60, 0.15)';" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        
+                        <!-- Question Header with Number -->
+                        <div style="
+                            display: flex;
+                            align-items: center;
+                            gap: 1rem;
+                            margin-bottom: 1.5rem;
+                            padding-bottom: 1rem;
+                            border-bottom: 2px solid var(--border);
+                        ">
+                            <!-- Question Number Badge -->
+                            <div style="
+                                background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+                                color: white;
+                                padding: 0.6rem 1.2rem;
+                                border-radius: 50px;
+                                font-weight: 700;
+                                font-size: 0.9rem;
+                                box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                                min-width: fit-content;
+                            ">
+                                <i class="fas fa-hashtag" style="font-size: 0.8rem;"></i>
+                                Pergunta ${index + 1}
+                            </div>
+                            
+                            <!-- Question Type Badge -->
+                            <div style="
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                                background: var(--bg-secondary);
+                                border: 1px solid var(--border);
+                                border-radius: 20px;
+                                padding: 0.4rem 1rem;
+                                font-size: 0.85rem;
+                                color: var(--text-secondary);
+                            ">
+                                <i class="fas ${getQuestionTypeIcon(questionType)}" style="color: var(--accent);"></i>
+                                <span style="font-weight: 600; text-transform: capitalize;">${questionType}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Question Content -->
+                        <div>
+                            <!-- Question Text -->
+                            <div style="
+                                font-size: 1.1rem;
+                                font-weight: 600;
+                                color: var(--text-primary);
+                                line-height: 1.6;
+                                margin-bottom: 1.5rem;
+                                padding: 1.2rem;
+                                background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+                                border-radius: 12px;
+                                border-left: 4px solid var(--accent);
+                            ">
+                                ${questionText}
+                            </div>
+                            
+                            <!-- Options (if exists) -->
+                            ${hasOptions ? `
+                                <div style="
+                                    background: var(--bg-secondary);
+                                    border-radius: 12px;
+                                    padding: 1.2rem;
+                                    border: 1px solid var(--border);
+                                ">
+                                    <div style="
+                                        font-size: 0.9rem;
+                                        font-weight: 600;
+                                        color: var(--text-secondary);
+                                        margin-bottom: 1rem;
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 0.5rem;
+                                    ">
+                                        <i class="fas fa-list"></i>
+                                        Opções de Resposta:
+                                    </div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 0.6rem;">
+                                        ${question.options.map((option, optIndex) => `
+                                            <span style="
+                                                background: var(--bg-primary);
+                                                border: 1px solid var(--accent);
+                                                color: var(--accent);
+                                                padding: 0.5rem 1rem;
+                                                border-radius: 20px;
+                                                font-size: 0.85rem;
+                                                font-weight: 500;
+                                                transition: all 0.2s ease;
+                                            " onmouseover="this.style.background='var(--accent)'; this.style.color='white';" onmouseout="this.style.background='var(--bg-primary)'; this.style.color='var(--accent)';">
+                                                ${String.fromCharCode(65 + optIndex)}. ${option}
+                                            </span>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : `
+                                <div style="
+                                    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+                                    border-radius: 12px;
+                                    padding: 1.2rem;
+                                    border: 1px solid var(--border);
+                                    font-style: italic;
+                                    color: var(--text-secondary);
+                                    text-align: center;
+                                    font-size: 0.9rem;
+                                ">
+                                    <i class="fas fa-edit"></i> Resposta livre
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getQuestionTypeIcon(type) {
+            const icons = {
+                'texto': 'fa-align-left',
+                'text': 'fa-align-left',
+                'select': 'fa-list',
+                'radio': 'fa-dot-circle',
+                'checkbox': 'fa-check-square',
+                'number': 'fa-hashtag',
+                'date': 'fa-calendar',
+                'email': 'fa-envelope',
+                'phone': 'fa-phone'
+            };
+            return icons[type] || 'fa-question';
+        }
+
+        function closeAnamnesisViewModal() {
+            const modal = document.getElementById('anamnesisViewModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function showProtocolModal(protocolData, type) {
+            // Criar modal para exibir o protocolo completo
+            const modalHtml = `
+                <div class="modal-overlay active" id="protocolViewModal">
+                    <div class="protocol-view-modal">
+                        <div class="protocol-view-header">
+                            <h3>
+                                <i class="${getProtocolTypeIcon(type)}"></i>
+                                ${getProtocolTypeName(type)}: ${getProtocolName(protocolData, type)}
+                            </h3>
+                            <button class="modal-close-btn" onclick="closeProtocolViewModal()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="protocol-view-content">
+                            ${formatProtocolContent(protocolData, type)}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Adicionar modal ao body
+            const modalContainer = document.createElement('div');
+            modalContainer.innerHTML = modalHtml;
+            document.body.appendChild(modalContainer);
+
+            // Adicionar estilos se não existirem
+            if (!document.getElementById('protocol-view-styles')) {
+                const styles = document.createElement('style');
+                styles.id = 'protocol-view-styles';
+                styles.textContent = `
+                    .protocol-view-modal {
+                        background: var(--bg-primary);
+                        border-radius: 16px;
+                        padding: 2rem;
+                        max-width: 800px;
+                        width: 90%;
+                        max-height: 80vh;
+                        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                        border: 1px solid var(--border);
+                        animation: modalSlideIn 0.3s ease-out;
+                        overflow-y: auto;
+                    }
+                    .protocol-view-header {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        margin-bottom: 1.5rem;
+                        padding-bottom: 1rem;
+                        border-bottom: 1px solid var(--border);
+                    }
+                    .protocol-view-header h3 {
+                        color: var(--text-primary);
+                        font-size: 1.5rem;
+                        font-weight: 600;
+                        margin: 0;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                    }
+                    .protocol-view-content {
+                        color: var(--text-primary);
+                    }
+                    .protocol-view-content pre {
+                        background: var(--bg-secondary);
+                        padding: 1rem;
+                        border-radius: 8px;
+                        overflow-x: auto;
+                        font-size: 0.9rem;
+                    }
+                    
+                    /* Estilos para conteúdo de protocolos */
+                    .protocol-info {
+                        background: var(--bg-secondary);
+                        padding: 1rem;
+                        border-radius: 8px;
+                        margin-bottom: 1rem;
+                    }
+                    
+                    .diet-content, .workout-content, .calculation-content {
+                        color: var(--text-primary);
+                    }
+                    
+                    .diet-content h5, .workout-content h5, .calculation-content h5 {
+                        color: var(--accent);
+                        margin-top: 1.5rem;
+                        margin-bottom: 1rem;
+                        border-bottom: 1px solid var(--border);
+                        padding-bottom: 0.5rem;
+                    }
+                    
+                    .diet-content h6, .workout-content h6 {
+                        color: var(--text-primary);
+                        margin-top: 1rem;
+                        margin-bottom: 0.5rem;
+                    }
+                    
+                    /* Estilos para dietas */
+                    .personal-data ul, .calc-personal-data ul {
+                        list-style: none;
+                        padding: 0;
+                        margin: 0.5rem 0;
+                    }
+                    
+                    .personal-data li, .calc-personal-data li {
+                        padding: 0.25rem 0;
+                        border-bottom: 1px solid var(--border);
+                    }
+                    
+                    .totals-grid, .macros-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                        gap: 1rem;
+                        margin: 1rem 0;
+                    }
+                    
+                    .total-item, .macro-item {
+                        background: var(--bg-secondary);
+                        padding: 1rem;
+                        border-radius: 8px;
+                        text-align: center;
+                        border: 1px solid var(--border);
+                    }
+                    
+                    .total-value, .macro-value {
+                        display: block;
+                        font-size: 1.5rem;
+                        font-weight: 700;
+                        color: var(--accent);
+                        margin-bottom: 0.25rem;
+                    }
+                    
+                    .total-label, .macro-label {
+                        font-size: 0.8rem;
+                        color: var(--text-secondary);
+                        text-transform: uppercase;
+                    }
+                    
+                    .meal-card {
+                        background: var(--bg-secondary);
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+                    
+                    .foods-list {
+                        margin-top: 0.5rem;
+                    }
+                    
+                    .food-item {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 0.5rem 0;
+                        border-bottom: 1px solid var(--border);
+                    }
+                    
+                    .food-item:last-child {
+                        border-bottom: none;
+                    }
+                    
+                    .food-name {
+                        font-weight: 600;
+                        color: var(--text-primary);
+                    }
+                    
+                    .food-details {
+                        font-size: 0.8rem;
+                        color: var(--text-secondary);
+                    }
+                    
+                    /* Estilos para treinos */
+                    .day-card {
+                        background: var(--bg-secondary);
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+                    
+                    .exercise-item {
+                        background: var(--bg-primary);
+                        border: 1px solid var(--border);
+                        border-radius: 6px;
+                        padding: 0.75rem;
+                        margin: 0.5rem 0;
+                    }
+                    
+                    .exercise-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 0.5rem;
+                    }
+                    
+                    .exercise-name {
+                        font-weight: 600;
+                        color: var(--text-primary);
+                    }
+                    
+                    .exercise-sets {
+                        background: var(--accent);
+                        color: white;
+                        padding: 0.2rem 0.5rem;
+                        border-radius: 12px;
+                        font-size: 0.7rem;
+                        font-weight: 600;
+                    }
+                    
+                    .exercise-details {
+                        display: flex;
+                        gap: 1rem;
+                        font-size: 0.8rem;
+                        color: var(--text-secondary);
+                        flex-wrap: wrap;
+                    }
+                    
+                    .exercise-reps, .exercise-load, .exercise-rest {
+                        background: var(--bg-secondary);
+                        padding: 0.2rem 0.5rem;
+                        border-radius: 4px;
+                    }
+                    
+                    .exercise-notes {
+                        margin-top: 0.5rem;
+                        font-style: italic;
+                        color: var(--text-secondary);
+                        font-size: 0.8rem;
+                    }
+                    
+                    /* Estilos para cálculos */
+                    .calc-results {
+                        margin: 1rem 0;
+                    }
+                    
+                    .calc-results p {
+                        margin: 0.5rem 0;
+                        padding: 0.5rem;
+                        background: var(--bg-secondary);
+                        border-radius: 6px;
+                        border-left: 4px solid var(--accent);
+                    }
+                    
+                    .macro-targets {
+                        margin-top: 1rem;
+                    }
+                    
+                    .no-foods, .no-exercises {
+                        text-align: center;
+                        color: var(--text-secondary);
+                        font-style: italic;
+                        padding: 1rem;
+                    }
+                    
+                    /* Estilos para tabelas de protocolos */
+                    .exercise-table-container, .foods-table-container {
+                        overflow-x: auto;
+                        margin: 1rem 0;
+                    }
+                    
+                    .exercise-table, .foods-table, .personal-data-table, .totals-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        background: var(--bg-primary);
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    }
+                    
+                    .exercise-table th, .foods-table th, .totals-table th {
+                        background: var(--accent);
+                        color: white;
+                        padding: 0.75rem;
+                        text-align: left;
+                        font-weight: 600;
+                        font-size: 0.9rem;
+                        border-bottom: 2px solid var(--accent);
+                    }
+                    
+                    .exercise-table td, .foods-table td, .totals-table td, 
+                    .personal-data-table td {
+                        padding: 0.75rem;
+                        border-bottom: 1px solid var(--border);
+                        color: var(--text-primary);
+                        font-size: 0.9rem;
+                    }
+                    
+                    .exercise-table tr:last-child td, 
+                    .foods-table tr:last-child td, 
+                    .totals-table tr:last-child td,
+                    .personal-data-table tr:last-child td {
+                        border-bottom: none;
+                    }
+                    
+                    /* Remover hover completamente das tabelas de alimentos */
+                    .foods-table tr:hover {
+                        background: transparent !important;
+                    }
+                    
+                    /* Fazer totais ficarem iguais às outras células */
+                    .total-cell,
+                    .meal-total-cell {
+                        font-weight: 600;
+                        color: var(--text-primary) !important;
+                        background: transparent !important;
+                    }
+                    
+                    .foods-table .meal-totals-row {
+                        background: transparent !important;
+                    }
+                    
+                    .foods-table .meal-totals-row td {
+                        background: transparent !important;
+                        color: var(--text-primary) !important;
+                    }
+                    
+                    .personal-data-table {
+                        margin: 1rem 0;
+                    }
+                    
+                    .personal-data-table td:first-child {
+                        font-weight: 600;
+                        color: var(--text-secondary);
+                        width: 150px;
+                    }
+                    
+                    .personal-data-table td:last-child {
+                        color: var(--text-primary);
+                    }
+                    
+                    .totals-table th, .totals-table td {
+                        text-align: center;
+                    }
+                    
+                    .total-cell {
+                        font-weight: 700;
+                        color: var(--accent);
+                        font-size: 1rem;
+                    }
+                    
+                    .exercise-name-cell, .food-name-cell {
+                        font-weight: 600;
+                        color: var(--text-primary);
+                        min-width: 200px;
+                    }
+                    
+                    .center-cell {
+                        text-align: center;
+                        color: var(--text-secondary);
+                    }
+                    
+                    .notes-cell {
+                        color: var(--text-secondary);
+                        font-style: italic;
+                        font-size: 0.8rem;
+                        max-width: 200px;
+                        word-wrap: break-word;
+                    }
+                    
+                    .no-data-cell {
+                        text-align: center;
+                        color: var(--text-secondary);
+                        font-style: italic;
+                        padding: 1.5rem;
+                        background: var(--bg-secondary);
+                    }
+                    
+                    /* Estilos para linha de totais da refeição */
+                    .meal-totals-row {
+                        background: var(--bg-secondary);
+                        border-top: 2px solid var(--border);
+                        font-weight: 700;
+                    }
+                    
+                    .meal-totals-row td {
+                        color: var(--text-primary) !important;
+                        border-bottom: none;
+                        padding: 1rem 0.75rem;
+                    }
+                    
+                    .meal-totals-label {
+                        text-align: left !important;
+                        font-size: 0.9rem;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    }
+                    
+                    .meal-total-cell {
+                        font-size: 1rem;
+                        font-weight: 800;
+                        color: var(--accent);
+                    }
+                    
+                    /* Responsive tables */
+                    @media (max-width: 768px) {
+                        .exercise-table-container, .foods-table-container {
+                            overflow-x: auto;
+                        }
+                        
+                        .exercise-table, .foods-table {
+                            min-width: 600px;
+                        }
+                        
+                        .exercise-table th, .foods-table th, .totals-table th {
+                            padding: 0.5rem;
+                            font-size: 0.8rem;
+                        }
+                        
+                        .exercise-table td, .foods-table td, .totals-table td,
+                        .personal-data-table td {
+                            padding: 0.5rem;
+                            font-size: 0.8rem;
+                        }
+                        
+                        .exercise-name-cell, .food-name-cell {
+                            min-width: 150px;
+                        }
+                        
+                        .notes-cell {
+                            max-width: 100px;
+                        }
+                    }
+                `;
+                document.head.appendChild(styles);
+            }
+        }
+
+        function closeProtocolViewModal() {
+            const modal = document.getElementById('protocolViewModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function getProtocolName(protocolData, type) {
+            switch (type) {
+                case 'workout': return protocolData.workout_name || 'Treino';
+                case 'diet': return protocolData.diet_name || 'Dieta';
+                case 'calculation': return protocolData.calculation_name || 'Cálculo';
+                default: return 'Protocolo';
+            }
+        }
+
+        function formatProtocolContent(protocolData, type) {
+            let dataField;
+            switch (type) {
+                case 'workout': dataField = 'workout_data'; break;
+                case 'diet': dataField = 'diet_data'; break;
+                case 'calculation': dataField = 'calculation_data'; break;
+                default: return '<p>Dados não disponíveis</p>';
+            }
+
+            const data = typeof protocolData[dataField] === 'string' 
+                ? JSON.parse(protocolData[dataField] || '{}')
+                : protocolData[dataField] || {};
+
+            let contentHTML = `
+                <div class="protocol-details">
+                    <div class="protocol-info">
+                        <p><strong>Data de atribuição:</strong> ${formatDate(protocolData.assigned_at)}</p>
+                        <p><strong>Email do aluno:</strong> ${protocolData.student_email}</p>
+                        <p><strong>Email do personal:</strong> ${protocolData.personal_email}</p>
+                    </div>
+                    <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+            `;
+
+            switch (type) {
+                case 'diet':
+                    contentHTML += formatDietContent(data);
+                    break;
+                case 'workout':
+                    contentHTML += formatWorkoutContent(data);
+                    break;
+                case 'calculation':
+                    contentHTML += formatCalculationContent(data);
+                    break;
+                default:
+                    contentHTML += `<h4>Dados Completos:</h4><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            }
+
+            contentHTML += `</div>`;
+            return contentHTML;
+        }
+
+        function formatDietContent(data) {
+            let html = '<div class="diet-content"><h4>🍽️ Detalhes da Dieta</h4>';
+            
+            // Dados pessoais
+            if (data.personal_data) {
+                const personalData = typeof data.personal_data === 'string' 
+                    ? JSON.parse(data.personal_data || '{}')
+                    : data.personal_data || {};
+                
+                html += '<div class="personal-data"><h5>Dados Pessoais:</h5>';
+                html += `
+                    <table class="personal-data-table">
+                        <tbody>
+                            ${personalData.weight ? `<tr><td><strong>Peso:</strong></td><td>${personalData.weight} kg</td></tr>` : ''}
+                            ${personalData.height ? `<tr><td><strong>Altura:</strong></td><td>${personalData.height} cm</td></tr>` : ''}
+                            ${personalData.age ? `<tr><td><strong>Idade:</strong></td><td>${personalData.age} anos</td></tr>` : ''}
+                            ${personalData.gender ? `<tr><td><strong>Gênero:</strong></td><td>${personalData.gender === 'male' ? 'Masculino' : 'Feminino'}</td></tr>` : ''}
+                            ${personalData.activity_level ? `<tr><td><strong>Nível de Atividade:</strong></td><td>${personalData.activity_level}</td></tr>` : ''}
+                            ${personalData.goal ? `<tr><td><strong>Objetivo:</strong></td><td>${personalData.goal}</td></tr>` : ''}
+                        </tbody>
+                    </table>
+                </div>`;
+            }
+
+            // Totais
+            if (data.totals) {
+                const totals = typeof data.totals === 'string' 
+                    ? JSON.parse(data.totals || '{}')
+                    : data.totals || {};
+                
+                html += '<div class="diet-totals"><h5>Totais Diários:</h5>';
+                html += `
+                    <table class="totals-table">
+                        <thead>
+                            <tr>
+                                <th>kcal</th>
+                                <th>Proteína</th>
+                                <th>Carboidratos</th>
+                                <th>Gorduras</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="total-cell">${totals.kcal || '0'}</td>
+                                <td class="total-cell">${totals.ptn || '0'}g</td>
+                                <td class="total-cell">${totals.cho || '0'}g</td>
+                                <td class="total-cell">${totals.lip || '0'}g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>`;
+            }
+
+            // Refeições
+            if (data.meals_data) {
+                const meals = typeof data.meals_data === 'string' 
+                    ? JSON.parse(data.meals_data || '[]')
+                    : data.meals_data || [];
+                
+                html += '<div class="meals-section"><h5>Refeições:</h5>';
+                meals.forEach((meal, index) => {
+                    html += `
+                        <div class="meal-card">
+                            <h6>🍴 Refeição ${meal.id || index + 1}: ${meal.name || 'Sem nome'}</h6>
+                            <div class="foods-table-container">
+                                <table class="foods-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Alimento</th>
+                                            <th>Quantidade</th>
+                                            <th>kcal</th>
+                                            <th>Proteína</th>
+                                            <th>Carboidratos</th>
+                                            <th>Gorduras</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                    `;
+                    
+                    if (meal.foods && meal.foods.length > 0) {
+                        // Calcular totais da refeição
+                        let mealTotals = {
+                            kcal: 0,
+                            ptn: 0,
+                            cho: 0,
+                            lip: 0
+                        };
+                        
+                        meal.foods.forEach(food => {
+                            // Extrair quantidade e unidade
+                            const quantityStr = food.quantity || food.unit || '100g';
+                            const quantity = parseFloat(quantityStr) || 100;
+                            
+                            // Valores nutricionais por 100g
+                            const kcalPer100g = parseFloat(food.kcal) || 0;
+                            const ptnPer100g = parseFloat(food.ptn) || 0;
+                            const choPer100g = parseFloat(food.cho) || 0;
+                            const lipPer100g = parseFloat(food.lip) || 0;
+                            
+                            // Calcular valores proporcionais
+                            const factor = quantity / 100;
+                            const kcal = (kcalPer100g * factor).toFixed(2);
+                            const ptn = (ptnPer100g * factor).toFixed(1);
+                            const cho = (choPer100g * factor).toFixed(1);
+                            const lip = (lipPer100g * factor).toFixed(1);
+                            
+                            // Adicionar aos totais
+                            mealTotals.kcal += parseFloat(kcal);
+                            mealTotals.ptn += parseFloat(ptn);
+                            mealTotals.cho += parseFloat(cho);
+                            mealTotals.lip += parseFloat(lip);
+                            
+                            html += `
+                                <tr>
+                                    <td class="food-name-cell">${food.name || 'N/A'}</td>
+                                    <td class="center-cell">${quantityStr}</td>
+                                    <td class="center-cell">${kcal}</td>
+                                    <td class="center-cell">${ptn}g</td>
+                                    <td class="center-cell">${cho}g</td>
+                                    <td class="center-cell">${lip}g</td>
+                                </tr>
+                            `;
+                        });
+                        
+                        // Adicionar linha de totais da refeição
+                        html += `
+                            <tr class="meal-totals-row">
+                                <td class="meal-totals-label"><strong>TOTAL DA REFEIÇÃO</strong></td>
+                                <td class="center-cell">-</td>
+                                <td class="center-cell meal-total-cell">${mealTotals.kcal.toFixed(2)}</td>
+                                <td class="center-cell meal-total-cell">${mealTotals.ptn.toFixed(1)}g</td>
+                                <td class="center-cell meal-total-cell">${mealTotals.cho.toFixed(1)}g</td>
+                                <td class="center-cell meal-total-cell">${mealTotals.lip.toFixed(1)}g</td>
+                            </tr>
+                        `;
+                    } else {
+                        html += `
+                            <tr>
+                                <td colspan="6" class="no-data-cell">Nenhum alimento cadastrado</td>
+                            </tr>
+                        `;
+                    }
+                    
+                    html += `
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        function formatWorkoutContent(data) {
+            let html = '<div class="workout-content"><h4>🏋️ Detalhes do Treino</h4>';
+            
+            if (data.description) {
+                html += `<p><strong>Descrição:</strong> ${data.description}</p>`;
+            }
+            
+            if (data.data && Array.isArray(data.data)) {
+                data.data.forEach((day, index) => {
+                    html += `
+                        <div class="day-card">
+                            <h5>📅 Dia: ${day.name || 'Sem nome'}</h5>
+                            <div class="exercise-table-container">
+                                <table class="exercise-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Exercício</th>
+                                            <th>Séries</th>
+                                            <th>Reps</th>
+                                            <th>Carga</th>
+                                            <th>Descanso</th>
+                                            <th>Observações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                    `;
+                    
+                    if (day.exercises && day.exercises.length > 0) {
+                        day.exercises.forEach((exercise, exIndex) => {
+                            html += `
+                                <tr>
+                                    <td class="exercise-name-cell">${exIndex + 1}. ${exercise.name || 'N/A'}</td>
+                                    <td class="center-cell">${exercise.sets || 0}</td>
+                                    <td class="center-cell">${exercise.reps || 'N/A'}</td>
+                                    <td class="center-cell">${exercise.load || '-'}</td>
+                                    <td class="center-cell">${exercise.rest || '-'}</td>
+                                    <td class="notes-cell">${exercise.notes || '-'}</td>
+                                </tr>
+                            `;
+                        });
+                    } else {
+                        html += `
+                            <tr>
+                                <td colspan="6" class="no-data-cell">Nenhum exercício cadastrado</td>
+                            </tr>
+                        `;
+                    }
+                    
+                    html += `
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                html += '<p>Nenhum dia de treino cadastrado</p>';
+            }
+            
+            html += '</div>';
+            return html;
+        }
+
+        function formatCalculationContent(data) {
+            let html = '<div class="calculation-content"><h4>🧮 Detalhes do Cálculo</h4>';
+            
+            // Dados pessoais
+            html += '<div class="calc-personal-data"><h5>Dados Pessoais:</h5><ul>';
+            if (data.gender) html += `<li><strong>Gênero:</strong> ${data.gender === 'male' ? 'Masculino' : 'Feminino'}</li>`;
+            if (data.age) html += `<li><strong>Idade:</strong> ${data.age} anos</li>`;
+            if (data.weight) html += `<li><strong>Peso:</strong> ${data.weight} kg</li>`;
+            if (data.height) html += `<li><strong>Altura:</strong> ${data.height} cm</li>`;
+            if (data.activity_level) html += `<li><strong>Nível de Atividade:</strong> ${data.activity_level}</li>`;
+            if (data.goal) html += `<li><strong>Objetivo:</strong> ${data.goal}</li>`;
+            html += '</ul></div>';
+
+            // Resultados
+            html += '<div class="calc-results"><h5>Resultados:</h5>';
+            if (data.tmb) html += `<p><strong>TMB (Taxa Metabólica Basal):</strong> ${data.tmb} kcal/dia</p>`;
+            if (data.get) html += `<p><strong>GET (Gasto Energético Total):</strong> ${data.get} kcal/dia</p>`;
+            if (data.total_calories) html += `<p><strong>Calorias Totais:</strong> ${data.total_calories} kcal/dia</p>`;
+            
+            // Macronutrientes
+            html += '<div class="macro-targets"><h6>Targets de Macronutrientes:</h6>';
+            html += `
+                <div class="macros-grid">
+                    <div class="macro-item">
+                        <span class="macro-value">${data.proteins || '0'}g</span>
+                        <span class="macro-label">Proteínas</span>
+                    </div>
+                    <div class="macro-item">
+                        <span class="macro-value">${data.carbs || '0'}g</span>
+                        <span class="macro-label">Carboidratos</span>
+                    </div>
+                    <div class="macro-item">
+                        <span class="macro-value">${data.fats || '0'}g</span>
+                        <span class="macro-label">Gorduras</span>
+                    </div>
+                </div>
+            </div>`;
+            
+            html += '</div></div>';
+            return html;
+        }
+
+        function renderAnamneses(anamneses) {
+            const anamnesisList = document.getElementById('anamnesisList');
+            const emptyAnamnesis = document.getElementById('emptyAnamnesis');
+            
+            if (anamneses.length === 0) {
+                anamnesisList.style.display = 'none';
+                emptyAnamnesis.style.display = 'block';
+                return;
+            }
+            
+            anamnesisList.style.display = 'flex';
+            emptyAnamnesis.style.display = 'none';
+            
+            anamnesisList.innerHTML = anamneses.map(anamnesis => `
+                <div class="anamnesis-item">
+                    <div class="item-header">
+                        <div class="item-title">${anamnesis.anamnesis_name}</div>
+                        <div class="item-date">${formatDate(anamnesis.created_at)}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="item-action-btn" onclick="viewAnamnesis('${anamnesis.id}')">Ver</button>
+                        <button class="item-action-btn" onclick="deleteAnamnesis('${anamnesis.id}')">Excluir</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        // Funções para carregar treinos, cálculos e dietas do aluno
+        async function loadStudentWorkouts() {
+            try {
+                const { data, error } = await supabase
+                    .from('student_workouts')
+                    .select('*')
+                    .eq('student_email', currentStudentEmail)
+                    .order('assigned_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Erro ao carregar treinos:', error);
+                    return;
+                }
+                
+                renderWorkouts(data || []);
+            } catch (error) {
+                console.error('Erro ao carregar treinos:', error);
+            }
+        }
+
+        async function loadStudentCalculations() {
+            try {
+                const { data, error } = await supabase
+                    .from('student_calculations')
+                    .select('*')
+                    .eq('student_email', currentStudentEmail)
+                    .order('assigned_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Erro ao carregar cálculos:', error);
+                    return;
+                }
+                
+                renderCalculations(data || []);
+            } catch (error) {
+                console.error('Erro ao carregar cálculos:', error);
+            }
+        }
+
+        async function loadStudentDiets() {
+            try {
+                const { data, error } = await supabase
+                    .from('student_diets')
+                    .select('*')
+                    .eq('student_email', currentStudentEmail)
+                    .order('assigned_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Erro ao carregar dietas:', error);
+                    return;
+                }
+                
+                renderDiets(data || []);
+            } catch (error) {
+                console.error('Erro ao carregar dietas:', error);
+            }
+        }
+
+        function renderWorkouts(workouts) {
+            const workoutList = document.getElementById('workoutList');
+            const emptyWorkout = document.getElementById('emptyWorkout');
+            
+            if (workouts.length === 0) {
+                workoutList.style.display = 'none';
+                emptyWorkout.style.display = 'block';
+                return;
+            }
+            
+            workoutList.style.display = 'flex';
+            emptyWorkout.style.display = 'none';
+            
+            workoutList.innerHTML = workouts.map(workout => `
+                <div class="workout-item">
+                    <div class="item-header">
+                        <div class="item-title">${workout.workout_name}</div>
+                        <div class="item-date">${formatDate(workout.assigned_at)}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="item-action-btn" onclick="viewWorkout('${workout.id}')">Ver</button>
+                        <button class="item-action-btn" onclick="deleteWorkout('${workout.id}')">Excluir</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCalculations(calculations) {
+            const calculationList = document.getElementById('calculationList');
+            const emptyCalculation = document.getElementById('emptyCalculation');
+            
+            if (calculations.length === 0) {
+                calculationList.style.display = 'none';
+                emptyCalculation.style.display = 'block';
+                return;
+            }
+            
+            calculationList.style.display = 'flex';
+            emptyCalculation.style.display = 'none';
+            
+            calculationList.innerHTML = calculations.map(calculation => `
+                <div class="calculation-item">
+                    <div class="item-header">
+                        <div class="item-title">${calculation.calculation_name}</div>
+                        <div class="item-date">${formatDate(calculation.assigned_at)}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="item-action-btn" onclick="viewCalculation('${calculation.id}')">Ver</button>
+                        <button class="item-action-btn" onclick="deleteCalculation('${calculation.id}')">Excluir</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderDiets(diets) {
+            const dietList = document.getElementById('dietList');
+            const emptyDiet = document.getElementById('emptyDiet');
+            
+            if (diets.length === 0) {
+                dietList.style.display = 'none';
+                emptyDiet.style.display = 'block';
+                return;
+            }
+            
+            dietList.style.display = 'flex';
+            emptyDiet.style.display = 'none';
+            
+            dietList.innerHTML = diets.map(diet => `
+                <div class="diet-item">
+                    <div class="item-header">
+                        <div class="item-title">${diet.diet_name}</div>
+                        <div class="item-date">${formatDate(diet.assigned_at)}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="item-action-btn" onclick="viewDiet('${diet.id}')">Ver</button>
+                        <button class="item-action-btn" onclick="deleteDiet('${diet.id}')">Excluir</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Event Listeners
+        document.getElementById('backToStudentsBtn').addEventListener('click', backToStudents);
+
+        // Modal functionality
+        let currentProtocolType = null;
+        let savedItems = [];
+
+        // Open protocol modal when clicking "Adicionar Protocolo"
+        document.getElementById('addProtocolBtn').addEventListener('click', function() {
+            document.getElementById('protocolModalOverlay').classList.add('active');
+        });
+
+        // Close protocol modal
+        document.getElementById('closeProtocolModal').addEventListener('click', function() {
+            document.getElementById('protocolModalOverlay').classList.remove('active');
+        });
+
+        // Close items modal
+        document.getElementById('closeItemsModal').addEventListener('click', function() {
+            document.getElementById('itemsModalOverlay').classList.remove('active');
+        });
+
+        // Close modals when clicking outside
+        document.getElementById('protocolModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+            }
+        });
+
+        document.getElementById('itemsModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+            }
+        });
+
+        // Protocol type buttons
+        document.getElementById('protocolWorkoutBtn').addEventListener('click', function() {
+            currentProtocolType = 'workout';
+            loadSavedWorkouts();
+            showItemsModal('Selecionar Treino');
+        });
+
+        document.getElementById('protocolDietBtn').addEventListener('click', function() {
+            currentProtocolType = 'diet';
+            loadSavedDiets();
+            showItemsModal('Selecionar Dieta');
+        });
+
+        document.getElementById('protocolCalculationBtn').addEventListener('click', function() {
+            currentProtocolType = 'calculation';
+            loadSavedCalculations();
+            showItemsModal('Selecionar Cálculo');
+        });
+
+        // Adicionar Anamnese button
+        document.getElementById('addAnamnesisBtn').addEventListener('click', function() {
+            currentProtocolType = 'anamnesis';
+            loadSavedAnamneses();
+            showItemsModal('Selecionar Anamnese');
+        });
+
+        // Search functionality
+        document.getElementById('itemsSearchInput').addEventListener('input', function(e) {
+            filterItems(e.target.value);
+        });
+
+        function showItemsModal(title) {
+            document.getElementById('protocolModalOverlay').classList.remove('active');
+            document.getElementById('itemsModalTitle').textContent = title;
+            document.getElementById('itemsModalOverlay').classList.add('active');
+            document.getElementById('itemsSearchInput').value = '';
+            document.getElementById('itemsSearchInput').focus();
+        }
+
+        async function loadSavedWorkouts() {
+            try {
+                // Carregar treinos da API como na página treino.html
+                const response = await authenticatedFetch('/api/treinos');
+                
+                if (response.ok) {
+                    const apiTreinos = await response.json();
+                    // Mapear campos do banco para o formato esperado
+                    savedItems = apiTreinos.map(treino => ({
+                        id: treino.id,
+                        name: treino.nome,           // Mapear nome -> name
+                        date: treino.created_at,
+                        type: 'workout',
+                        description: treino.descricao, // Mapear descricao -> description
+                        data: treino.exercicios || [] // Mapear exercicios -> days
+                    }));
+                } else {
+                    savedItems = [];
+                }
+                
+                renderItems(savedItems);
+            } catch (error) {
+                console.error('Erro ao carregar treinos:', error);
+                savedItems = [];
+                renderItems([]);
+            }
+        }
+
+        async function loadSavedAnamneses() {
+            try {
+                // Carregar anamneses da API como na página treino.html
+                const response = await authenticatedFetch('/api/anamneses');
+                
+                if (response.ok) {
+                    const apiAnamneses = await response.json();
+                    // Mapear campos do banco para o formato esperado
+                    savedItems = apiAnamneses.map(anamnese => ({
+                        id: anamnese.id,
+                        name: anamnese.title,
+                        date: anamnese.created_at,
+                        type: 'anamnesis',
+                        description: anamnese.description,
+                        data: anamnese.questions || []
+                    }));
+                } else {
+                    savedItems = [];
+                }
+                
+                renderItems(savedItems);
+            } catch (error) {
+                console.error('Erro ao carregar anamneses:', error);
+                savedItems = [];
+                renderItems([]);
+            }
+        }
+
+        async function loadSavedDiets() {
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                let userEmail = null;
+                if (currentUser) {
+                    try {
+                        const userData = JSON.parse(currentUser);
+                        userEmail = userData.email;
+                    } catch (error) {
+                        console.error('Erro ao obter email do usuário:', error);
+                    }
+                }
+
+                let savedDiets = [];
+
+                if (userEmail) {
+                    // Carregar do Supabase se estiver logado
+                    const { data, error } = await supabase
+                        .from('saved_diets')
+                        .select('*')
+                        .eq('personal_email', userEmail)
+                        .order('created_at', { ascending: false });
+                    
+                    if (error) {
+                        console.error('Erro ao carregar do Supabase:', error);
+                        // Fallback para localStorage
+                        savedDiets = JSON.parse(localStorage.getItem('savedDiets') || '[]');
+                    } else {
+                        savedDiets = data || [];
+                    }
+                } else {
+                    // Carregar apenas do localStorage se não estiver logado
+                    savedDiets = JSON.parse(localStorage.getItem('savedDiets') || '[]');
+                }
+
+                savedItems = savedDiets;
+                renderItems(savedItems);
+            } catch (error) {
+                console.error('Erro ao carregar dietas salvas:', error);
+                savedItems = [];
+                renderItems([]);
+            }
+        }
+
+        async function loadSavedCalculations() {
+            try {
+                // Carregar do localStorage como na página calculo.html
+                savedItems = JSON.parse(localStorage.getItem('savedCalculations') || '[]');
+                renderItems(savedItems);
+            } catch (error) {
+                console.error('Erro ao carregar cálculos salvos:', error);
+                savedItems = [];
+                renderItems([]);
+            }
+        }
+
+        function renderItems(items) {
+            const itemsList = document.getElementById('itemsList');
+            const itemsEmpty = document.getElementById('itemsEmpty');
+
+            if (items.length === 0) {
+                itemsList.style.display = 'none';
+                itemsEmpty.style.display = 'block';
+                return;
+            }
+
+            itemsList.style.display = 'flex';
+            itemsEmpty.style.display = 'none';
+
+            itemsList.innerHTML = items.map(item => `
+                <div class="item-card" onclick="selectItem('${item.id}')">
+                    <div class="item-card-header">
+                        <div class="item-card-title">${item.name}</div>
+                        <div class="item-card-date">${formatDate(item.date || item.created_at)}</div>
+                    </div>
+                    <div class="item-card-description">
+                        ${getItemDescription(item)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getItemDescription(item) {
+            switch (currentProtocolType) {
+                case 'workout':
+                    return 'Treino salvo com exercícios e séries';
+                case 'diet':
+                    const totals = typeof item.totals === 'string' ? JSON.parse(item.totals) : item.totals;
+                    return totals ? `${totals.kcal} kcal, ${totals.ptn}g proteína` : 'Dieta completa';
+                case 'calculation':
+                    return 'Cálculo energético personalizado';
+                case 'anamnesis':
+                    return `${item.data ? item.data.length : 0} perguntas`;
+                default:
+                    return 'Item salvo';
+            }
+        }
+
+        function filterItems(searchTerm) {
+            const filtered = savedItems.filter(item => 
+                item.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            renderItems(filtered);
+        }
+
+        async function selectItem(itemId) {
+            try {
+                const item = savedItems.find(i => i.id === itemId);
+                if (!item) {
+                    alert('Item não encontrado!');
+                    return;
+                }
+
+                // Salvar como protocolo do aluno
+                const currentUser = localStorage.getItem('currentUser');
+                if (!currentUser) {
+                    alert('Você precisa estar logado!');
+                    return;
+                }
+
+                const userData = JSON.parse(currentUser);
+                
+                // Preparar dados baseados no tipo de protocolo
+                let tableName, protocolData;
+                
+                switch (currentProtocolType) {
+                    case 'workout':
+                        tableName = 'student_workouts';
+                        protocolData = {
+                            student_email: currentStudentEmail,
+                            personal_email: userData.email,
+                            workout_name: item.name,
+                            workout_data: JSON.stringify(item),
+                            assigned_at: new Date().toISOString()
+                        };
+                        break;
+                    case 'diet':
+                        tableName = 'student_diets';
+                        protocolData = {
+                            student_email: currentStudentEmail,
+                            personal_email: userData.email,
+                            diet_name: item.name,
+                            diet_data: JSON.stringify(item),
+                            assigned_at: new Date().toISOString()
+                        };
+                        break;
+                    case 'calculation':
+                        tableName = 'student_calculations';
+                        protocolData = {
+                            student_email: currentStudentEmail,
+                            personal_email: userData.email,
+                            calculation_name: item.name,
+                            calculation_data: JSON.stringify(item),
+                            assigned_at: new Date().toISOString()
+                        };
+                        break;
+                    case 'anamnesis':
+                        tableName = 'student_anamneses';
+                        protocolData = {
+                            aluno_email: currentStudentEmail,
+                            personal_email: userData.email,
+                            anamnesis_name: item.name,
+                            anamnesis_data: JSON.stringify(item),
+                            created_at: new Date().toISOString()
+                        };
+                        break;
+                    default:
+                        alert('Tipo de protocolo inválido!');
+                        return;
+                }
+
+                // Salvar no Supabase na tabela correta
+                const { error } = await supabase
+                    .from(tableName)
+                    .insert(protocolData);
+
+                if (error) {
+                    console.error('Erro ao salvar protocolo:', error);
+                    alert('Erro ao salvar protocolo. Tente novamente.');
+                    return;
+                }
+
+                // Fechar modal e recarregar protocolos e anamneses
+                document.getElementById('itemsModalOverlay').classList.remove('active');
+                loadStudentProtocols();
+                
+                // Se for anamnese, recarregar também a lista de anamneses
+                if (currentProtocolType === 'anamnesis') {
+                    loadStudentAnamneses();
+                }
+                
+                alert(`✅ ${getProtocolTypeName()} "${item.name}" adicionado como protocolo com sucesso!`);
+
+            } catch (error) {
+                console.error('Erro ao selecionar item:', error);
+                alert('Erro ao adicionar protocolo. Tente novamente.');
+            }
+        }
+
+        function getProtocolTypeName() {
+            switch (currentProtocolType) {
+                case 'workout': return 'Treino';
+                case 'diet': return 'Dieta';
+                case 'calculation': return 'Cálculo';
+                case 'anamnesis': return 'Anamnese';
+                default: return 'Protocolo';
+            }
+        }
+
+        // Navigation active state
+        const navItems = document.querySelectorAll('.nav-item');
+        const currentPage = 'acompanhamento';
+
+        navItems.forEach(item => {
+            if (item.dataset.page === currentPage) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -6,6 +6,7 @@
     <title>Criar Treino - GurgelTrack</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="js/auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -285,6 +286,32 @@
             transform: translateY(-1px);
         }
 
+        .sidebar-personal-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: calc(100% - 2rem);
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+            margin: 0.5rem 1rem;
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+            box-sizing: border-box;
+        }
+
+        .sidebar-personal-btn:hover {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+        }
+
         /* Responsive Sidebar */
         .sidebar.active {
             transform: translateX(0);
@@ -510,7 +537,7 @@
         .anamnese-card {
             background: var(--bg-primary);
             border: 2px solid var(--border);
-            border-radius: 12px;
+            border-radius: 20px;
             padding: 1.5rem;
             transition: var(--transition);
             cursor: pointer;
@@ -537,7 +564,7 @@
         .anamnese-card {
             background: var(--bg-primary);
             border: 2px solid var(--border);
-            border-radius: 12px;
+            border-radius: 20px;
             padding: 1.5rem;
             transition: var(--transition);
             cursor: pointer;
@@ -1133,12 +1160,11 @@
             object-fit: cover;
         }
 
-        /* Anamnese Responses Styles */
+                /* Anamnese Responses Styles */
         .anamnese-responses-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 2rem;
         }
 
         .response-card {
@@ -1146,16 +1172,15 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 1.5rem;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
             cursor: pointer;
+            transition: var(--transition);
             position: relative;
         }
 
         .response-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            border-color: var(--accent-color);
+            border-color: var(--accent);
         }
 
         .response-header {
@@ -1207,7 +1232,7 @@
         }
 
         .response-respondent i {
-            color: var(--accent-color);
+            color: var(--accent);
         }
 
         .response-date {
@@ -1247,7 +1272,7 @@
         .view-response-btn {
             flex: 1;
             padding: 0.5rem;
-            background: var(--accent-color);
+            background: var(--accent);
             color: white;
             border: none;
             border-radius: 6px;
@@ -1289,8 +1314,8 @@
             background: var(--bg-secondary);
             padding: 1.5rem;
             border-radius: 8px;
-            margin-bottom: 1.5rem;
             border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
         }
 
         .response-anamnese-info h4 {
@@ -1308,10 +1333,6 @@
             display: flex;
             gap: 2rem;
             margin-bottom: 1.5rem;
-            padding: 1rem;
-            background: var(--bg-secondary);
-            border-radius: 8px;
-            border: 1px solid var(--border);
         }
 
         .respondent-details,
@@ -1322,7 +1343,7 @@
         }
 
         .respondent-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
             font-weight: 600;
         }
@@ -1348,18 +1369,12 @@
         }
 
         .answer-number {
-            background: var(--accent-color);
+            background: var(--accent);
             color: white;
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 600;
-        }
-
-        .answer-question {
-            font-weight: 600;
-            color: var(--text-primary);
-            flex: 1;
         }
 
         .answer-content {
@@ -1372,23 +1387,39 @@
         .answer-text {
             color: var(--text-primary);
             line-height: 1.4;
+            margin-top: 0.5rem;
         }
 
-        .answer-photo {
-            margin-top: 0.75rem;
-        }
-
-        .answer-photo img {
-            max-width: 300px;
-            max-height: 200px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            object-fit: cover;
+        .answer-question {
+            color: var(--accent);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
         }
 
         .answer-empty {
             color: var(--text-secondary);
             font-style: italic;
+        }
+
+        /* View Response Modal Centralizado */
+        .view-response-modal {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            backdrop-filter: blur(8px) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 9999 !important;
+        }
+
+        .view-response-modal .modal-content {
+            position: relative !important;
+            margin: 0 !important;
+            transform: none !important;
         }
 
         /* Anamnese View Styles */
@@ -1488,27 +1519,27 @@
             margin-bottom: 0.75rem;
         }
 
-.question-photo img {
-    max-width: 200px;
-    max-height: 150px;
-    border-radius: 6px;
-    margin-top: 0.5rem;
-}
+        .question-photo img {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+        }
 
-.question-options {
-    margin-top: 1rem;
-    padding: 1rem;
-    background: var(--bg-secondary);
-    border-radius: 8px;
-    border: 1px solid var(--border);
-}
+        .question-options {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
 
-.options-label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    color: var(--text-primary);
-}
+        .options-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
 
         .options-container {
             margin-bottom: 0.75rem;
@@ -1647,6 +1678,191 @@
             color: var(--text-primary);
         }
 
+        /* Question Items */
+        .question-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            align-items: stretch;
+        }
+
+        .question-input {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .question-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(220, 20, 60, 0.1);
+        }
+
+        /* Responsive adjustments for question items */
+        @media (max-width: 768px) {
+            .question-item {
+                margin-bottom: 0.5rem;
+            }
+            
+            .question-input {
+                padding: 0.4rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Question Type Styles */
+        .question-content {
+            flex: 1;
+        }
+
+        .question-type {
+            margin: 0.25rem 0;
+        }
+
+        .type-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.125rem;
+            color: var(--text-primary);
+            font-size: 0.75rem;
+        }
+
+        .type-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .type-options label {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            cursor: pointer;
+            font-size: 0.7rem;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .type-options label:hover {
+            color: var(--accent);
+        }
+
+        .type-options input[type="radio"] {
+            display: none;
+        }
+
+        .type-options input[type="radio"]:checked + span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .type-options i {
+            font-size: 0.6rem;
+            margin-right: 0.125rem;
+        }
+
+        /* Delete button adjustments */
+        .question-item .btn-danger {
+            width: auto;
+            max-width: 80px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        @media (min-width: 769px) {
+            .question-item {
+                flex-direction: row;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .question-item .btn-danger {
+                width: 60px;
+                margin-top: 0;
+                align-self: flex-start;
+            }
+        }
+
+        /* Question Options */
+        .question-options {
+            margin-top: 0.25rem;
+            padding: 0.375rem;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .options-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+            font-size: 0.7rem;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.125rem;
+            margin-bottom: 0.375rem;
+        }
+
+        .option-input {
+            padding: 0.25rem;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            font-size: 0.75rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .option-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px rgba(220, 20, 60, 0.1);
+        }
+
+        .question-options .btn-secondary {
+            padding: 0.125rem 0.25rem;
+            font-size: 0.65rem;
+            margin-top: 0.125rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .type-options {
+                gap: 0.75rem;
+            }
+            
+            .type-options label {
+                font-size: 0.65rem;
+            }
+            
+            .type-options i {
+                font-size: 0.55rem;
+            }
+            
+            .question-type {
+                margin: 0.25rem 0;
+            }
+            
+            .question-options {
+                margin-top: 0.25rem;
+                padding: 0.375rem;
+            }
+            
+            .option-input {
+                padding: 0.3rem;
+                font-size: 0.75rem;
+            }
+        }
+
         .modal-close {
             background: none;
             border: none;
@@ -1658,6 +1874,108 @@
 
         .modal-close:hover {
             color: var(--text-primary);
+        }
+
+        /* Anamnese View Modal Styles */
+        .anamnese-details {
+            padding: 1rem 0;
+        }
+
+        .anamnese-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .anamnese-header h4 {
+            margin: 0 0 0.5rem 0;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .anamnese-header p {
+            margin: 0.25rem 0;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .anamnese-date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .anamnese-questions h5 {
+            margin: 0 0 1rem 0;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .question-view {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .question-view-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .question-number {
+            background: var(--accent);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .question-text {
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .question-type-badge {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .question-options-view {
+            margin-top: 0.75rem;
+            padding-left: 2rem;
+        }
+
+        .question-options-view li {
+            margin-bottom: 0.25rem;
+            color: var(--text-secondary);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
         }
 
         /* Empty State */
@@ -2185,6 +2503,28 @@
             }
         }
 
+        @keyframes slideInRight {
+            from { 
+                transform: translateX(100px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from { 
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to { 
+                transform: translateX(100px);
+                opacity: 0;
+            }
+        }
+
         @media (max-width: 768px) {
             .help-button {
                 bottom: 15px;
@@ -2253,11 +2593,7 @@
                 
                 <!-- Gestão -->
                 <div class="nav-category">Gestão</div>
-                <a href="alunos.html" class="nav-item" data-page="alunos">
-                    <i class="fas fa-users"></i>
-                    <span>Alunos</span>
-                </a>
-                <a href="pagamentos.html" class="nav-item" data-page="pagamentos">
+                                <a href="pagamentos.html" class="nav-item" data-page="pagamentos">
                     <i class="fas fa-credit-card"></i>
                     <span>Pagamentos</span>
                 </a>
@@ -2265,14 +2601,19 @@
                     <i class="fas fa-calendar"></i>
                     <span>Agenda</span>
                 </a>
+                <a href="acompanhamento.html" class="nav-item" data-page="acompanhamento">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Acompanhamento</span>
+                </a>
                 
                 <div class="nav-divider"></div>
                 
-                <!-- Comunidade -->
-                <div class="nav-category">Comunidade</div>
-                <a href="amigos.html" class="nav-item" data-page="amigos">
-                    <i class="fas fa-user-friends"></i>
-                    <span>Amigos</span>
+                <div class="nav-divider"></div>
+                
+                <!-- Área do Aluno -->
+                <a href="homealuno.html" class="sidebar-personal-btn" data-page="homealuno">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Sou Aluno</span>
                 </a>
             </nav>
             
@@ -2326,11 +2667,7 @@
                                 <i class="fas fa-plus"></i>
                                 Nova Ficha
                             </button>
-                            <button class="btn btn-primary" onclick="openAssignStudentModal()">
-                                <i class="fas fa-user-plus"></i>
-                                Atribuir a Aluno
-                            </button>
-                        </div>
+                                                    </div>
                     </div>
                     
                     <div class="fichas-grid" id="fichasGrid">
@@ -2388,41 +2725,20 @@
                     </div>
                 </section>
 
-                <!-- Anamnese Responses -->
-                <section class="workout-section">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas fa-clipboard-check"></i>
-                            Respostas de Anamneses
-                        </h2>
-                        <button class="btn btn-secondary btn-small" onclick="refreshAnamneseResponses()">
-                            <i class="fas fa-sync-alt"></i>
-                            Atualizar
-                        </button>
-                    </div>
-                    
-                    <div class="anamnese-responses-grid" id="anamneseResponsesGrid">
-                        <!-- Respostas serão inseridas aqui dinamicamente -->
-                    </div>
-                    
-                    <div class="empty-state" id="emptyResponsesState">
-                        <i class="fas fa-clipboard-check"></i>
-                        <h3>Nenhuma resposta recebida ainda</h3>
-                        <p>As respostas das anamneses enviadas aparecerão aqui!</p>
-                    </div>
-                </section>
-
+                
+                
                 </main>
 
             <footer class="main-footer">
-                <p>© 2026 GurgelTrack - Todos os direitos reservados à Vitor Gurgel</p>
+                <p>2026 GurgelTrack - Todos os direitos reservados à Vitor Gurgel</p>
             </footer>
         </div>
     </div>
 
+    
     <!-- Anamnese Modal -->
     <div class="modal" id="anamneseModal">
-        <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Criar Nova Anamnese</h3>
                 <button class="modal-close" onclick="closeAnamneseModal()">
@@ -2432,29 +2748,75 @@
             
             <form id="anamneseForm" onsubmit="saveAnamnese(event)">
                 <div class="form-group">
-                    <label class="form-label">Título da Anamnese</label>
-                    <input type="text" class="form-input" id="anamneseTitle" required 
-                           placeholder="Ex: Anamnese Inicial, Avaliação Física, etc.">
+                    <label for="anamneseTitle">Título da Anamnese:</label>
+                    <input type="text" id="anamneseTitle" placeholder="Ex: Avaliação Inicial - Histórico de Saúde" required>
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">Descrição</label>
-                    <textarea class="form-textarea" id="anamneseDescription" rows="3" 
-                              placeholder="Descreva o objetivo desta anamnese..."></textarea>
+                    <label for="anamneseDescription">Descrição:</label>
+                    <textarea id="anamneseDescription" placeholder="Objetivos da anamnese, informações importantes, etc..."></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <div class="questions-header">
-                        <label class="form-label">Perguntas</label>
-                        <button type="button" class="btn btn-primary btn-small" onclick="addQuestion()">
-                            <i class="fas fa-plus"></i>
-                            Adicionar Pergunta
-                        </button>
+                    <label>Perguntas da Anamnese:</label>
+                    <div id="questionsContainer">
+                        <div class="question-item">
+                            <div class="question-content">
+                                <input type="text" placeholder="Digite sua pergunta..." class="question-input" required>
+                                
+                                <div class="question-type">
+                                    <label class="type-label">Tipo de Resposta:</label>
+                                    <div class="type-options">
+                                        <label>
+                                            <input type="radio" name="questionType_0" value="text" checked>
+                                            <span><i class="fas fa-font"></i> Texto</span>
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="questionType_0" value="number">
+                                            <span><i class="fas fa-hashtag"></i> Número</span>
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="questionType_0" value="date">
+                                            <span><i class="fas fa-calendar"></i> Data</span>
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="questionType_0" value="photo">
+                                            <span><i class="fas fa-camera"></i> Foto</span>
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="questionType_0" value="options">
+                                            <span><i class="fas fa-list"></i> Opções</span>
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="questionType_0" value="null">
+                                            <span><i class="fas fa-info-circle"></i> Resposta Nula</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="question-options" id="optionsContainer_0" style="display: none;">
+                                    <label class="options-label">
+                                        <i class="fas fa-list"></i> Opções de Resposta:
+                                    </label>
+                                    <div class="options-list">
+                                        <input type="text" name="option_0_0" class="option-input" placeholder="Opção 1">
+                                        <input type="text" name="option_0_1" class="option-input" placeholder="Opção 2">
+                                    </div>
+                                    <button type="button" class="btn btn-secondary btn-small" onclick="addOption(0)">
+                                        <i class="fas fa-plus"></i> Adicionar Opção
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <button type="button" class="btn btn-danger btn-small" onclick="removeQuestion(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
-                    
-                    <div id="questionsContainer" class="questions-container">
-                        <!-- Perguntas serão adicionadas aqui dinamicamente -->
-                    </div>
+                    <button type="button" class="btn btn-secondary btn-small" onclick="addQuestion()">
+                        <i class="fas fa-plus"></i>
+                        Adicionar Pergunta
+                    </button>
                 </div>
                 
                 <div class="form-actions">
@@ -2463,7 +2825,7 @@
                     </button>
                     <button type="submit" class="btn btn-success">
                         <i class="fas fa-save"></i>
-                        Salvar Anamnese
+                        Criar Anamnese
                     </button>
                 </div>
             </form>
@@ -2472,86 +2834,45 @@
 
     <!-- View Anamnese Modal -->
     <div class="modal" id="viewAnamneseModal">
-        <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-content" style="max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto;">
             <div class="modal-header">
-                <h3 class="modal-title">Visualizar Anamnese</h3>
+                <h3 class="modal-title">Detalhes da Anamnese</h3>
                 <button class="modal-close" onclick="closeViewAnamneseModal()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div class="anamnese-view-content">
-                <div class="anamnese-view-header">
-                    <h4 id="viewAnamneseTitle"></h4>
-                    <span class="anamnese-view-date" id="viewAnamneseDate"></span>
-                </div>
-                
-                <div class="anamnese-view-description">
-                    <p id="viewAnamneseDescription"></p>
-                </div>
-                
-                <div class="anamnese-view-questions">
-                    <h5 class="questions-title">Perguntas</h5>
-                    <div id="viewAnamneseQuestions" class="questions-view-container">
-                        <!-- Perguntas serão renderizadas aqui -->
+            <div class="modal-body">
+                <div class="anamnese-details">
+                    <div class="anamnese-header">
+                        <h4 id="viewAnamneseTitle"></h4>
+                        <p id="viewAnamneseDescription"></p>
+                        <p class="anamnese-date">
+                            <i class="fas fa-calendar"></i>
+                            <span id="viewAnamneseDate"></span>
+                        </p>
+                    </div>
+                    
+                    <div class="anamnese-questions">
+                        <h5>Perguntas:</h5>
+                        <div id="viewAnamneseQuestions"></div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="form-actions">
-                <button type="button" class="btn btn-primary" onclick="openSendAnamneseModal()">
-                    <i class="fas fa-paper-plane"></i>
-                    Enviar para Aluno
-                </button>
-                <button type="button" class="btn btn-danger" onclick="deleteAnamnese()">
-                    <i class="fas fa-trash"></i>
-                    Excluir
-                </button>
-                <button type="button" class="btn btn-secondary" onclick="closeViewAnamneseModal()">
-                    Fechar
-                </button>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeViewAnamneseModal()">
+                        Fechar
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="deleteAnamnese()">
+                        <i class="fas fa-trash"></i>
+                        Excluir
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Send Anamnese Modal -->
-    <div class="modal" id="sendAnamneseModal">
-        <div class="modal-content" style="max-width: 600px;">
-            <div class="modal-header">
-                <h3 class="modal-title">Enviar Anamnese para Aluno</h3>
-                <button class="modal-close" onclick="closeSendAnamneseModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div class="send-anamnese-content">
-                <div class="form-group">
-                    <label class="form-label">Selecione um Amigo</label>
-                    <select class="form-input" id="friendSelect" required>
-                        <option value="">Carregando amigos...</option>
-                    </select>
-                </div>
-                
-                <div class="anamnese-preview">
-                    <h4>Anamnese a ser enviada:</h4>
-                    <div id="sendAnamnesePreview" class="anamnese-preview-content">
-                        <!-- Preview será renderizado aqui -->
-                    </div>
-                </div>
-            </div>
-            
-            <div class="form-actions">
-                <button type="button" class="btn btn-secondary" onclick="closeSendAnamneseModal()">
-                    Cancelar
-                </button>
-                <button type="button" class="btn btn-success" onclick="sendAnamneseToFriend()">
-                    <i class="fas fa-paper-plane"></i>
-                    Enviar
-                </button>
-            </div>
-        </div>
-    </div>
-
+    
     <!-- Ficha Modal -->
     <div class="modal" id="fichaModal">
         <div class="modal-content">
@@ -2679,44 +3000,6 @@
                         <i class="fas fa-plus"></i>
                         Adicionar Exercício
                     </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal para Atribuir a Aluno -->
-    <div class="modal" id="assignStudentModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Atribuir Treino a Aluno</h3>
-                <button class="modal-close" onclick="closeAssignStudentModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <form id="assignStudentForm">
-                <div class="form-group">
-                    <label for="studentSelect">Selecione o Aluno:</label>
-                    <select id="studentSelect" required>
-                        <option value="">Carregando alunos...</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="workoutSelect">Selecione a Ficha de Treino:</label>
-                    <select id="workoutSelect" required>
-                        <option value="">Carregando fichas...</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="workoutName">Nome do Treino:</label>
-                    <input type="text" id="workoutName" required>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="button" class="btn" onclick="closeAssignStudentModal()">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Atribuir</button>
                 </div>
             </form>
         </div>
@@ -2963,6 +3246,544 @@
         }
 
         // Modal functions
+        function openAnamneseModal() {
+            document.getElementById('anamneseModal').classList.add('show');
+            
+            // Restaurar rascunho se existir
+            restoreAnamneseDraft();
+            
+            // Configurar eventos de salvamento automático
+            setTimeout(() => {
+                setupAutoSaveEvents();
+            }, 100);
+        }
+
+        function resetAnamneseForm() {
+            // Reset form
+            document.getElementById('anamneseForm').reset();
+            // Reset questions to default with type options
+            const questionsContainer = document.getElementById('questionsContainer');
+            questionsContainer.innerHTML = `
+                <div class="question-item">
+                    <div class="question-content">
+                        <input type="text" placeholder="Digite sua pergunta..." class="question-input" required>
+                        
+                        <div class="question-type">
+                            <label class="type-label">Tipo de Resposta:</label>
+                            <div class="type-options">
+                                <label>
+                                    <input type="radio" name="questionType_0" value="text" checked>
+                                    <span><i class="fas fa-font"></i> Texto</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="questionType_0" value="number">
+                                    <span><i class="fas fa-hashtag"></i> Número</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="questionType_0" value="date">
+                                    <span><i class="fas fa-calendar"></i> Data</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="questionType_0" value="photo">
+                                    <span><i class="fas fa-camera"></i> Foto</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="questionType_0" value="options">
+                                    <span><i class="fas fa-list"></i> Opções</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="questionType_0" value="null">
+                                    <span><i class="fas fa-info-circle"></i> Resposta Nula</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="question-options" id="optionsContainer_0" style="display: none;">
+                            <label class="options-label">
+                                <i class="fas fa-list"></i> Opções de Resposta:
+                            </label>
+                            <div class="options-list">
+                                <input type="text" name="option_0_0" class="option-input" placeholder="Opção 1">
+                                <input type="text" name="option_0_1" class="option-input" placeholder="Opção 2">
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-small" onclick="addOption(0)">
+                                <i class="fas fa-plus"></i> Adicionar Opção
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn btn-danger btn-small" onclick="removeQuestion(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            
+            // Adicionar evento listener para a primeira pergunta
+            setTimeout(() => {
+                const typeRadios = document.querySelectorAll('input[name="questionType_0"]');
+                typeRadios.forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        const optionsContainer = document.getElementById('optionsContainer_0');
+                        if (this.value === 'options') {
+                            optionsContainer.style.display = 'block';
+                        } else {
+                            optionsContainer.style.display = 'none';
+                        }
+                    });
+                });
+            }, 100);
+        }
+
+        function restoreAnamneseForm(draftData) {
+            // Restaurar título e descrição
+            document.getElementById('anamneseTitle').value = draftData.title || '';
+            document.getElementById('anamneseDescription').value = draftData.description || '';
+            
+            // Restaurar perguntas
+            const questionsContainer = document.getElementById('questionsContainer');
+            questionsContainer.innerHTML = '';
+            
+            if (draftData.questions && draftData.questions.length > 0) {
+                draftData.questions.forEach((question, index) => {
+                    const questionHtml = createQuestionHtml(question, index);
+                    questionsContainer.innerHTML += questionHtml;
+                });
+            } else {
+                // Se não houver perguntas, criar uma padrão
+                resetAnamneseForm();
+                return;
+            }
+            
+            // Re-adicionar event listeners para todas as perguntas
+            setTimeout(() => {
+                document.querySelectorAll('.question-item').forEach((item, index) => {
+                    const typeRadios = item.querySelectorAll(`input[name="questionType_${index}"]`);
+                    typeRadios.forEach(radio => {
+                        radio.addEventListener('change', function() {
+                            const optionsContainer = document.getElementById(`optionsContainer_${index}`);
+                            if (this.value === 'options') {
+                                optionsContainer.style.display = 'block';
+                            } else {
+                                optionsContainer.style.display = 'none';
+                            }
+                        });
+                    });
+                });
+            }, 100);
+        }
+
+        function createQuestionHtml(question, index) {
+            const questionType = question.type || 'text';
+            const questionText = question.text || '';
+            const options = question.options || [];
+            
+            let optionsHtml = '';
+            if (options.length > 0) {
+                optionsHtml = `
+                    <div class="question-options" id="optionsContainer_${index}" style="display: ${questionType === 'options' ? 'block' : 'none'};">
+                        <label class="options-label">
+                            <i class="fas fa-list"></i> Opções de Resposta:
+                        </label>
+                        <div class="options-list">
+                            ${options.map((option, optIndex) => `
+                                <input type="text" name="option_${index}_${optIndex}" class="option-input" placeholder="Opção ${optIndex + 1}" value="${option}">
+                            `).join('')}
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="addOption(${index})">
+                            <i class="fas fa-plus"></i> Adicionar Opção
+                        </button>
+                    </div>
+                `;
+            } else {
+                optionsHtml = `
+                    <div class="question-options" id="optionsContainer_${index}" style="display: none;">
+                        <label class="options-label">
+                            <i class="fas fa-list"></i> Opções de Resposta:
+                        </label>
+                        <div class="options-list">
+                            <input type="text" name="option_${index}_0" class="option-input" placeholder="Opção 1">
+                            <input type="text" name="option_${index}_1" class="option-input" placeholder="Opção 2">
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="addOption(${index})">
+                            <i class="fas fa-plus"></i> Adicionar Opção
+                        </button>
+                    </div>
+                `;
+            }
+            
+            return `
+                <div class="question-item">
+                    <div class="question-content">
+                        <input type="text" placeholder="Digite sua pergunta..." class="question-input" required value="${questionText}">
+                        
+                        <div class="question-type">
+                            <label class="type-label">Tipo de Resposta:</label>
+                            <div class="type-options">
+                                <label>
+                                    <input type="radio" name="questionType_${index}" value="text" ${questionType === 'text' ? 'checked' : ''}>
+                                    <span><i class="fas fa-font"></i> Texto</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="questionType_${index}" value="number" ${questionType === 'number' ? 'checked' : ''}>
+                                    <span><i class="fas fa-hashtag"></i> Número</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="questionType_${index}" value="date" ${questionType === 'date' ? 'checked' : ''}>
+                                    <span><i class="fas fa-calendar"></i> Data</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="questionType_${index}" value="photo" ${questionType === 'photo' ? 'checked' : ''}>
+                                    <span><i class="fas fa-camera"></i> Foto</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="questionType_${index}" value="options" ${questionType === 'options' ? 'checked' : ''}>
+                                    <span><i class="fas fa-list"></i> Opções</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="questionType_${index}" value="null" ${questionType === 'null' ? 'checked' : ''}>
+                                    <span><i class="fas fa-info-circle"></i> Resposta Nula</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        ${optionsHtml}
+                    </div>
+                    
+                    <button type="button" class="btn btn-danger btn-small" onclick="removeQuestion(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        function closeAnamneseModal(skipDraftSave = false) {
+            // Salvar dados do formulário antes de fechar (somente se não for pular)
+            if (!skipDraftSave) {
+                saveAnamneseDraft();
+            }
+            document.getElementById('anamneseModal').classList.remove('show');
+        }
+
+        // Função para salvar rascunho com debounce
+        let draftSaveTimeout;
+        let isRestoring = false; // Flag para bloquear auto-save durante restauração
+        
+        function autoSaveDraft() {
+            if (isRestoring) {
+                console.log('DEBUG: Auto-save bloqueado durante restauração');
+                return;
+            }
+            clearTimeout(draftSaveTimeout);
+            draftSaveTimeout = setTimeout(saveAnamneseDraft, 1000); // Salvar após 1 segundo de inatividade
+        }
+
+        function saveAnamneseDraft() {
+            try {
+                const title = document.getElementById('anamneseTitle').value;
+                const description = document.getElementById('anamneseDescription').value;
+                
+                // Coletar dados das perguntas
+                const questions = [];
+                const questionItems = document.querySelectorAll('.question-item');
+                
+                questionItems.forEach((item, index) => {
+                    const questionText = item.querySelector('.question-input').value.trim();
+                    
+                    // Não pular mais perguntas vazias - salvar todas
+                    
+                    // Buscar o radio button selecionado dentro deste item específico
+                    let questionType = 'text'; // valor padrão
+                    
+                    // Tentar encontrar o radio button selecionado de forma segura
+                    try {
+                        const radios = item.querySelectorAll('input[type="radio"]');
+                        if (radios && radios.length > 0) {
+                            for (let i = 0; i < radios.length; i++) {
+                                if (radios[i].checked) {
+                                    questionType = radios[i].value || 'text';
+                                    break;
+                                }
+                            }
+                        }
+                    } catch (error) {
+                        console.warn('Erro ao buscar tipo da pergunta no draft:', error);
+                        questionType = 'text';
+                    }
+                    
+                    let questionData = {
+                        text: questionText,
+                        type: questionType
+                    };
+                    
+                    // Se for tipo opções, coletar as opções
+                    if (questionType === 'options') {
+                        const optionsContainer = item.querySelector('.question-options');
+                        if (optionsContainer) {
+                            const optionInputs = optionsContainer.querySelectorAll('.option-input');
+                            const options = Array.from(optionInputs)
+                                .map(input => input.value.trim())
+                                .filter(value => value !== '');
+                            
+                            if (options.length > 0) {
+                                questionData.options = options;
+                            }
+                        }
+                    }
+                    
+                    questions.push(questionData);
+                });
+                
+                const draftData = {
+                    title: title,
+                    description: description,
+                    questions: questions,
+                    savedAt: new Date().toISOString()
+                };
+                
+                // Salvar no localStorage
+                localStorage.setItem('anamneseDraft', JSON.stringify(draftData));
+                
+            } catch (error) {
+                console.error('Erro ao salvar rascunho da anamnese:', error);
+            }
+        }
+
+        // Restaurar rascunho ao abrir o modal
+        function restoreAnamneseDraft() {
+            try {
+                // Ativar flag de restauração para bloquear auto-save
+                isRestoring = true;
+                console.log('DEBUG: Iniciando restauração - auto-save bloqueado');
+                
+                // Desativar auto-save temporariamente durante a restauração
+                if (draftSaveTimeout) {
+                    clearTimeout(draftSaveTimeout);
+                    draftSaveTimeout = null;
+                }
+                
+                const draftData = localStorage.getItem('anamneseDraft');
+                if (!draftData) {
+                    console.log('Nenhum rascunho encontrado');
+                    return;
+                }
+
+                const draft = JSON.parse(draftData);
+                console.log('Restaurando rascunho:', draft);
+
+                // Restaurar título e descrição
+                if (draft.title) {
+                    document.getElementById('anamneseTitle').value = draft.title;
+                }
+                if (draft.description) {
+                    document.getElementById('anamneseDescription').value = draft.description;
+                }
+
+                // Limpar perguntas existentes
+                const questionsContainer = document.getElementById('questionsContainer');
+                questionsContainer.innerHTML = '';
+
+                // Restaurar perguntas
+                if (draft.questions && draft.questions.length > 0) {
+                    draft.questions.forEach((questionData, index) => {
+                        // Adicionar pergunta
+                        addQuestion();
+                        
+                        // Preencher dados após um delay maior para garantir que o DOM foi atualizado
+                        setTimeout(() => {
+                            const questionItems = document.querySelectorAll('.question-item');
+                            const currentQuestion = questionItems[questionItems.length - 1];
+                            
+                            if (currentQuestion) {
+                                // Preencher texto da pergunta
+                                const questionInput = currentQuestion.querySelector('.question-input');
+                                if (questionInput) {
+                                    questionInput.value = questionData.text || '';
+                                    
+                                    // Forçar atualização visual
+                                    questionInput.dispatchEvent(new Event('input', { bubbles: true }));
+                                    
+                                } else {
+                                    console.log(`DEBUG: Input da pergunta ${index + 1} não encontrado!`);
+                                }
+
+                                // Configurar tipo da pergunta
+                                const typeRadios = currentQuestion.querySelectorAll('input[type="radio"]');
+                                typeRadios.forEach(radio => {
+                                    if (radio.value === questionData.type) {
+                                        radio.checked = true;
+                                        // Disparar evento change para mostrar/ocultar opções
+                                        radio.dispatchEvent(new Event('change'));
+                                    }
+                                });
+
+                                // Preencher opções se for tipo 'options'
+                                if (questionData.type === 'options' && questionData.options) {
+                                    setTimeout(() => {
+                                        const optionsContainer = currentQuestion.querySelector('.options-list');
+                                        if (optionsContainer) {
+                                            const optionInputs = optionsContainer.querySelectorAll('.option-input');
+                                            questionData.options.forEach((option, optIndex) => {
+                                                if (optionInputs[optIndex]) {
+                                                    optionInputs[optIndex].value = option;
+                                                }
+                                            });
+                                        }
+                                    }, 100);
+                                }
+                            }
+                        }, 50);
+                    });
+                }
+
+                // Mostrar notificação de rascunho restaurado
+                showDraftNotification(draft.savedAt);
+                
+                // Reativar auto-save após a restauração estar completa
+                setTimeout(() => {
+                    isRestoring = false;
+                    console.log('DEBUG: Auto-save reativado após restauração');
+                }, 1000);
+
+            } catch (error) {
+                console.error('Erro ao restaurar rascunho:', error);
+                // Garantir que a flag seja desativada mesmo em caso de erro
+                isRestoring = false;
+            }
+        }
+
+        // Mostrar notificação de rascunho restaurado
+        function showDraftNotification(savedAt) {
+            if (!savedAt) return;
+            
+            const savedDate = new Date(savedAt);
+            const now = new Date();
+            const diffMinutes = Math.floor((now - savedDate) / (1000 * 60));
+            
+            let timeText = '';
+            if (diffMinutes < 1) {
+                timeText = 'agora poucos segundos';
+            } else if (diffMinutes < 60) {
+                timeText = `há ${diffMinutes} minuto${diffMinutes > 1 ? 's' : ''}`;
+            } else {
+                const hours = Math.floor(diffMinutes / 60);
+                timeText = `há ${hours} hora${hours > 1 ? 's' : ''}`;
+            }
+
+            // Criar notificação
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #28a745, #20c997);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+                z-index: 10000;
+                font-size: 0.9rem;
+                max-width: 300px;
+                animation: slideInRight 0.3s ease-out;
+            `;
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                    <i class="fas fa-check-circle"></i>
+                    <strong>Rascunho restaurado</strong>
+                </div>
+                <div style="font-size: 0.8rem; opacity: 0.9;">
+                    Salvo ${timeText}
+                </div>
+            `;
+
+            document.body.appendChild(notification);
+
+            // Remover após 3 segundos
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOutRight 0.3s ease-in';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }
+            }, 3000);
+        }
+
+        // Adicionar eventos de salvamento automático
+        function setupAutoSaveEvents() {
+            // Eventos para título e descrição
+            const titleInput = document.getElementById('anamneseTitle');
+            const descriptionInput = document.getElementById('anamneseDescription');
+            
+            if (titleInput) {
+                titleInput.addEventListener('input', autoSaveDraft);
+            }
+            if (descriptionInput) {
+                descriptionInput.addEventListener('input', autoSaveDraft);
+            }
+
+            // Usar MutationObserver para detectar novas perguntas
+            const questionsContainer = document.getElementById('questionsContainer');
+            if (questionsContainer) {
+                const observer = new MutationObserver(() => {
+                    // Adicionar eventos às novas perguntas
+                    const questionItems = questionsContainer.querySelectorAll('.question-item');
+                    questionItems.forEach(item => {
+                        const questionInput = item.querySelector('.question-input');
+                        const optionInputs = item.querySelectorAll('.option-input');
+                        const typeRadios = item.querySelectorAll('input[type="radio"]');
+                        
+                        if (questionInput && !questionInput.hasAttribute('data-auto-save')) {
+                            questionInput.setAttribute('data-auto-save', 'true');
+                            questionInput.addEventListener('input', autoSaveDraft);
+                        }
+                        
+                        optionInputs.forEach(input => {
+                            if (!input.hasAttribute('data-auto-save')) {
+                                input.setAttribute('data-auto-save', 'true');
+                                input.addEventListener('input', autoSaveDraft);
+                            }
+                        });
+                        
+                        typeRadios.forEach(radio => {
+                            if (!radio.hasAttribute('data-auto-save')) {
+                                radio.setAttribute('data-auto-save', 'true');
+                                radio.addEventListener('change', autoSaveDraft);
+                            }
+                        });
+                    });
+                });
+                
+                observer.observe(questionsContainer, { childList: true, subtree: true });
+            }
+        }
+
+        // Salvar ao fechar/recarregar página
+        window.addEventListener('beforeunload', (e) => {
+            const modal = document.getElementById('anamneseModal');
+            if (modal && modal.classList.contains('show')) {
+                saveAnamneseDraft();
+            }
+        });
+
+        // Salvar ao perder foco da janela
+        window.addEventListener('blur', () => {
+            const modal = document.getElementById('anamneseModal');
+            if (modal && modal.classList.contains('show')) {
+                saveAnamneseDraft();
+            }
+        });
+
+        function removeQuestion(button) {
+            const questionsContainer = document.getElementById('questionsContainer');
+            if (questionsContainer.children.length > 1) {
+                button.parentElement.remove();
+            } else {
+                alert('É necessário ter pelo menos uma pergunta.');
+            }
+        }
+
         function openFichaModal() {
             document.getElementById('fichaModal').classList.add('show');
         }
@@ -2972,280 +3793,109 @@
             document.getElementById('fichaForm').reset();
         }
 
-        // Anamnese Modal functions
-        let questionCount = 0;
-
-        function openAnamneseModal() {
-            document.getElementById('anamneseModal').classList.add('show');
-            questionCount = 0;
-            updateQuestionsContainer();
-        }
-
-        function closeAnamneseModal() {
-            document.getElementById('anamneseModal').classList.remove('show');
-            document.getElementById('anamneseForm').reset();
-            questionCount = 0;
-            updateQuestionsContainer();
-        }
 
         function addQuestion() {
-            questionCount++;
-            updateQuestionsContainer();
-        }
-
-        function removeQuestion(index) {
-            const container = document.getElementById('questionsContainer');
-            const questionItem = container.querySelector(`[data-question-index="${index}"]`);
-            if (questionItem) {
-                questionItem.remove();
-                // Reindex remaining questions
-                const questions = container.querySelectorAll('.question-item');
-                questions.forEach((q, i) => {
-                    q.setAttribute('data-question-index', i);
-                    q.querySelector('.question-number').textContent = `Pergunta ${i + 1}`;
-                    q.querySelector('.remove-question').setAttribute('onclick', `removeQuestion(${i})`);
-                });
-                questionCount--;
-            }
-        }
-
-        function updateQuestionsContainer() {
-            const container = document.getElementById('questionsContainer');
-            
-            // Salvar valores existentes antes de limpar
-            const existingQuestions = [];
-            const questionItems = container.querySelectorAll('.question-item');
-            
-            questionItems.forEach((item, index) => {
-                const questionText = item.querySelector('.question-input').value;
-                const questionType = item.querySelector('input[name="questionType_' + index + '"]:checked')?.value || 'text';
-                const photoPreview = item.querySelector('.photo-preview img');
-                const photoSrc = photoPreview ? photoPreview.src : null;
-                
-                existingQuestions.push({
-                    text: questionText,
-                    type: questionType,
-                    photo: photoSrc
-                });
-            });
-            
-            container.innerHTML = '';
-            
-            for (let i = 0; i < questionCount; i++) {
-                const questionHtml = createQuestionHtml(i);
-                container.innerHTML += questionHtml;
-            }
-            
-            // Restaurar valores salvos
-            const newQuestionItems = container.querySelectorAll('.question-item');
-            existingQuestions.forEach((question, index) => {
-                if (index < newQuestionItems.length) {
-                    const item = newQuestionItems[index];
-                    item.querySelector('.question-input').value = question.text;
-                    const typeRadio = item.querySelector(`input[name="questionType_${index}"][value="${question.type}"]`);
-                    if (typeRadio) typeRadio.checked = true;
+            const questionsContainer = document.getElementById('questionsContainer');
+            const existingQuestions = questionsContainer.querySelectorAll('.question-item');
+            const questionIndex = existingQuestions.length;
+            const questionItem = document.createElement('div');
+            questionItem.className = 'question-item';
+            questionItem.innerHTML = `
+                <div class="question-content">
+                    <input type="text" placeholder="Digite sua pergunta..." class="question-input" required>
                     
-                    // Mostrar/ocultar opções baseado no tipo
-                    const isOptionType = question.type === 'option';
-                    toggleQuestionOptions(index, isOptionType);
+                    <div class="question-type">
+                        <label class="type-label">Tipo de Resposta:</label>
+                        <div class="type-options">
+                            <label>
+                                <input type="radio" name="questionType_${questionIndex}" value="text" checked>
+                                <span><i class="fas fa-font"></i> Texto</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="questionType_${questionIndex}" value="number">
+                                <span><i class="fas fa-hashtag"></i> Número</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="questionType_${questionIndex}" value="date">
+                                <span><i class="fas fa-calendar"></i> Data</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="questionType_${questionIndex}" value="photo">
+                                <span><i class="fas fa-camera"></i> Foto</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="questionType_${questionIndex}" value="options">
+                                <span><i class="fas fa-list"></i> Opções</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="questionType_${questionIndex}" value="null">
+                                <span><i class="fas fa-info-circle"></i> Resposta Nula</span>
+                            </label>
+                        </div>
+                    </div>
                     
-                    // Restaurar opções se existirem
-                    if (question.type === 'option' && question.options && question.options.length > 0) {
-                        const optionsContainer = document.getElementById(`optionsContainer_${index}`);
-                        optionsContainer.innerHTML = '';
-                        
-                        question.options.forEach((optionText, optionIndex) => {
-                            const optionItem = document.createElement('div');
-                            optionItem.className = 'option-item';
-                            optionItem.innerHTML = `
-                                <input type="text" class="option-input" placeholder="Opção ${optionIndex + 1}" value="${optionText}">
-                                <button type="button" class="remove-option-btn" onclick="removeOption(${index}, ${optionIndex})">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            `;
-                            optionsContainer.appendChild(optionItem);
-                        });
-                    }
-                    
-                    if (question.photo) {
-                        const previewContainer = item.querySelector('.photo-preview');
-                        previewContainer.innerHTML = `<img src="${question.photo}" class="photo-preview" alt="Preview">`;
-                    }
-                }
-            });
-            
-            // Add photo event listeners
-            container.querySelectorAll('.question-photo input').forEach(input => {
-                input.addEventListener('change', handlePhotoUpload);
-            });
-            
-            // Mobile menu toggle
-            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-            const sidebar = document.getElementById('sidebar');
-            
-            if (mobileMenuToggle) {
-                mobileMenuToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('active');
-                });
-            }
-
-            // Close sidebar when clicking outside on mobile
-            document.addEventListener('click', function(event) {
-                if (window.innerWidth <= 768) {
-                    if (!sidebar.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
-                        sidebar.classList.remove('active');
-                    }
-                }
-            });
-
-            // Active navigation state
-        const currentPath = window.location.pathname;
-        const navItems = document.querySelectorAll('.nav-item');
-        
-        navItems.forEach(item => {
-            const itemPath = item.getAttribute('href');
-            if (currentPath.includes(itemPath) || (currentPath === '/' && itemPath === 'index.html')) {
-                navItems.forEach(nav => nav.classList.remove('active'));
-                item.classList.add('active');
-            }
-        });
-
-        // Active navigation state change listeners
-            container.querySelectorAll('.question-type input[type="radio"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    const questionIndex = this.name.split('_')[1];
-                    const isOptionType = this.value === 'option';
-                    toggleQuestionOptions(parseInt(questionIndex), isOptionType);
-                });
-            });
-        }
-
-        function createQuestionHtml(index) {
-            return `
-                <div class="question-item" data-question-index="${index}">
-                    <div class="question-header">
-                        <span class="question-number">Pergunta ${index + 1}</span>
-                        <button type="button" class="remove-question" onclick="removeQuestion(${index})">
-                            <i class="fas fa-times"></i>
+                    <div class="question-options" id="optionsContainer_${questionIndex}" style="display: none;">
+                        <label class="options-label">
+                            <i class="fas fa-list"></i> Opções de Resposta:
+                        </label>
+                        <div class="options-list">
+                            <input type="text" name="option_${questionIndex}_0" class="option-input" placeholder="Opção 1">
+                            <input type="text" name="option_${questionIndex}_1" class="option-input" placeholder="Opção 2">
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="addOption(${questionIndex})">
+                            <i class="fas fa-plus"></i> Adicionar Opção
                         </button>
                     </div>
-                    <div class="question-content">
-                        <input type="text" class="question-input" placeholder="Digite sua pergunta..." required>
-                        
-                        <div class="question-type">
-                            <label>
-                                <input type="radio" name="questionType_${index}" value="text" checked>
-                                <i class="fas fa-font"></i> Texto
-                            </label>
-                            <label>
-                                <input type="radio" name="questionType_${index}" value="date">
-                                <i class="fas fa-calendar"></i> Data
-                            </label>
-                            <label>
-                                <input type="radio" name="questionType_${index}" value="number">
-                                <i class="fas fa-hashtag"></i> Número
-                            </label>
-                            <label>
-                                <input type="radio" name="questionType_${index}" value="option">
-                                <i class="fas fa-list"></i> Opção
-                            </label>
-                            <label>
-                                <input type="radio" name="questionType_${index}" value="photo">
-                                <i class="fas fa-camera"></i> Foto
-                            </label>
-                        </div>
-                        
-                        <div class="question-options" id="questionOptions_${index}" style="display: none;">
-                            <label class="options-label">
-                                <i class="fas fa-list"></i> Opções de Resposta:
-                            </label>
-                            <div class="options-container" id="optionsContainer_${index}">
-                                <div class="option-item">
-                                    <input type="text" class="option-input" placeholder="Opção 1" value="">
-                                    <button type="button" class="remove-option-btn" onclick="removeOption(${index}, 0)">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                                <div class="option-item">
-                                    <input type="text" class="option-input" placeholder="Opção 2" value="">
-                                    <button type="button" class="remove-option-btn" onclick="removeOption(${index}, 1)">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <button type="button" class="add-option-btn" onclick="addOption(${index})">
-                                <i class="fas fa-plus"></i> Adicionar Opção
-                            </button>
-                        </div>
-                        
-                        <div class="question-photo">
-                            <label class="question-photo-label">
-                                <i class="fas fa-upload"></i> Adicionar Foto (opcional)
-                                <input type="file" class="question-photo-input" accept="image/*" onchange="handlePhotoUpload(event, ${index})">
-                            </label>
-                            <div id="photoPreview_${index}" class="photo-preview-container"></div>
-                        </div>
-                    </div>
                 </div>
+                
+                <button type="button" class="btn btn-danger btn-small" onclick="removeQuestion(this)">
+                    <i class="fas fa-trash"></i>
+                </button>
             `;
+            questionsContainer.appendChild(questionItem);
+            
+            // Adicionar evento para mostrar/ocultar opções
+            const typeRadios = questionItem.querySelectorAll(`input[name="questionType_${questionIndex}"]`);
+            typeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const optionsContainer = document.getElementById(`optionsContainer_${questionIndex}`);
+                    if (this.value === 'options') {
+                        optionsContainer.style.display = 'block';
+                    } else {
+                        optionsContainer.style.display = 'none';
+                    }
+                });
+            });
         }
 
-        function handlePhotoUpload(event, questionIndex) {
-            const file = event.target.files[0];
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const previewContainer = document.getElementById(`photoPreview_${questionIndex}`);
-                    previewContainer.innerHTML = `<img src="${e.target.result}" class="photo-preview" alt="Preview">`;
-                };
-                reader.readAsDataURL(file);
+        function removeQuestion(button) {
+            const questionsContainer = document.getElementById('questionsContainer');
+            if (questionsContainer.children.length > 1) {
+                button.parentElement.remove();
+            } else {
+                alert('É necessário ter pelo menos uma pergunta.');
             }
         }
 
         function addOption(questionIndex) {
-            const container = document.getElementById(`optionsContainer_${questionIndex}`);
-            const optionCount = container.children.length;
-            const newOptionIndex = optionCount;
+            const optionsContainer = document.getElementById(`optionsContainer_${questionIndex}`);
+            const optionsList = optionsContainer.querySelector('.options-list');
+            const optionCount = optionsList.children.length;
             
-            const optionItem = document.createElement('div');
-            optionItem.className = 'option-item';
-            optionItem.innerHTML = `
-                <input type="text" class="option-input" placeholder="Opção ${newOptionIndex + 1}" value="">
-                <button type="button" class="remove-option-btn" onclick="removeOption(${questionIndex}, ${newOptionIndex})">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
+            const newOption = document.createElement('input');
+            newOption.type = 'text';
+            newOption.className = 'option-input';
+            newOption.name = `option_${questionIndex}_${optionCount}`;
+            newOption.placeholder = `Opção ${optionCount + 1}`;
             
-            container.appendChild(optionItem);
+            optionsList.appendChild(newOption);
         }
 
-        function removeOption(questionIndex, optionIndex) {
-            const container = document.getElementById(`optionsContainer_${questionIndex}`);
-            const optionItems = container.children;
-            
-            if (optionItems.length > 2 && optionIndex < optionItems.length) {
-                container.removeChild(optionItems[optionIndex]);
-                
-                // Reindexar as opções restantes
-                Array.from(container.children).forEach((item, index) => {
-                    const input = item.querySelector('.option-input');
-                    const button = item.querySelector('.remove-option-btn');
-                    
-                    input.placeholder = `Opção ${index + 1}`;
-                    button.setAttribute('onclick', `removeOption(${questionIndex}, ${index})`);
-                });
-            }
-        }
-
-        function toggleQuestionOptions(questionIndex, show) {
-            const optionsContainer = document.getElementById(`questionOptions_${questionIndex}`);
-            if (optionsContainer) {
-                optionsContainer.style.display = show ? 'block' : 'none';
-            }
-        }
-
+        
         async function saveAnamnese(event) {
             event.preventDefault();
+            
+            console.log('🔥 saveAnamnese INICIADA 🔥');
             
             // Verificar autenticação
             if (!auth.isAuthenticated()) {
@@ -3258,26 +3908,52 @@
             const questionItems = document.querySelectorAll('.question-item');
             
             questionItems.forEach((item, index) => {
-                const questionText = item.querySelector('.question-input').value;
-                const questionType = item.querySelector(`input[name="questionType_${index}"]:checked`).value;
-                const photoInput = item.querySelector('.question-photo-input');
-                const photoPreview = item.querySelector('.photo-preview');
+                const questionText = item.querySelector('.question-input').value.trim();
+                
+                if (!questionText) {
+                    return; // Pular perguntas vazias
+                }
+                
+                // Buscar o radio button selecionado dentro deste item específico
+                let questionType = 'text'; // valor padrão
+                
+                // Tentar encontrar o radio button selecionado de forma segura
+                try {
+                    const radios = item.querySelectorAll('input[type="radio"]');
+                    if (radios && radios.length > 0) {
+                        for (let i = 0; i < radios.length; i++) {
+                            if (radios[i].checked) {
+                                questionType = radios[i].value || 'text';
+                                break;
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.warn('Erro ao buscar tipo da pergunta:', error);
+                    questionType = 'text';
+                }
                 
                 let questionData = {
                     text: questionText,
-                    type: questionType,
-                    photo: photoPreview ? photoPreview.src : null
+                    type: questionType
                 };
                 
-                // Se for tipo opção, coletar as opções
-                if (questionType === 'option') {
-                    const optionsContainer = document.getElementById(`optionsContainer_${index}`);
-                    const optionInputs = optionsContainer.querySelectorAll('.option-input');
-                    const options = Array.from(optionInputs)
-                        .map(input => input.value.trim())
-                        .filter(value => value !== '');
-                    
-                    questionData.options = options;
+                // Se for tipo opções, coletar as opções
+                if (questionType === 'options') {
+                    const optionsContainer = item.querySelector('.question-options');
+                    if (optionsContainer) {
+                        const optionInputs = optionsContainer.querySelectorAll('.option-input');
+                        const options = Array.from(optionInputs)
+                            .map(input => input.value.trim())
+                            .filter(value => value !== '');
+                        
+                        if (options.length >= 2) {
+                            questionData.options = options;
+                        } else {
+                            alert(`A pergunta "${questionText}" do tipo "Opções" precisa ter pelo menos 2 opções.`);
+                            return;
+                        }
+                    }
                 }
                 
                 questions.push(questionData);
@@ -3289,6 +3965,16 @@
                 questions: questions
             };
             
+            // Validar se há tipos variados (não apenas "text")
+            const hasNonTextQuestions = questions.some(q => q.type !== 'text');
+            if (!hasNonTextQuestions && questions.length > 0) {
+                alert('⚠️ Por favor, selecione diferentes tipos de resposta para as perguntas. Não é permitido criar anamnese apenas com perguntas do tipo "Texto".');
+                return;
+            }
+            
+            console.log('✅ Anamnese validada com tipos variados:', questions.map(q => ({ text: q.text, type: q.type })));
+            console.log('📤 Enviando anamnese para o servidor...');
+            
             try {
                 const response = await authenticatedFetch('/api/anamneses', {
                     method: 'POST',
@@ -3299,7 +3985,12 @@
                     const savedAnamnese = await response.json();
                     await loadAnamneses();
                     renderAnamneses();
-                    closeAnamneseModal();
+                    
+                    // Limpar rascunho após salvar com sucesso
+                    localStorage.removeItem('anamneseDraft');
+                    console.log('Rascunho da anamnese removido após salvar');
+                    
+                    closeAnamneseModal(true); // Pular salvamento do rascunho
                     alert('Anamnese criada com sucesso!');
                 } else {
                     throw new Error('Erro ao salvar anamnese');
@@ -3398,37 +4089,74 @@
         }
 
         function createQuestionView(question, number) {
+            // Debug para verificar estrutura dos dados
+            console.log('Dados da pergunta:', question);
+            
             const typeIcons = {
                 'text': 'fa-font',
                 'date': 'fa-calendar',
                 'number': 'fa-hashtag',
-                'photo': 'fa-camera'
+                'photo': 'fa-camera',
+                'options': 'fa-list',
+                'null': 'fa-info-circle'
             };
             
             const typeLabels = {
                 'text': 'Texto',
                 'date': 'Data',
                 'number': 'Número',
-                'photo': 'Foto'
+                'photo': 'Foto',
+                'options': 'Opções',
+                'null': 'Resposta Nula'
             };
             
-            return `
+            // Verificar se question é string ou objeto
+            let questionText, questionType, questionOptions;
+            
+            if (typeof question === 'string') {
+                // Se for string, usar a string como texto e tipo padrão
+                questionText = question;
+                questionType = 'text';
+                questionOptions = null;
+            } else {
+                // Se for objeto, extrair os campos
+                questionText = question.text || 
+                                    question.question || 
+                                    question.pergunta || 
+                                    question.title || 
+                                    question.name ||
+                                    question.description ||
+                                    'Pergunta sem texto';
+                questionType = question.type || 'text';
+                questionOptions = question.options || null;
+            }
+            
+            // Debug dos valores encontrados
+            console.log('Texto encontrado:', questionText);
+            console.log('Tipo:', questionType);
+            
+            const html = `
                 <div class="question-view-item">
                     <div class="question-view-header">
                         <span class="question-view-number">Pergunta ${number}</span>
                         <span class="question-view-type">
-                            <i class="fas ${typeIcons[question.type] || 'fa-question'}"></i>
-                            ${typeLabels[question.type] || question.type}
+                            <i class="fas ${typeIcons[questionType] || 'fa-question'}"></i>
+                            ${typeLabels[questionType] || questionType || 'Não definido'}
                         </span>
                     </div>
-                    <div class="question-view-text">${question.text}</div>
-                    ${question.photo ? `
-                        <div class="question-view-photo">
-                            <img src="${question.photo}" alt="Foto da pergunta" class="question-photo-img">
+                    <div class="question-view-text">${questionText}</div>
+                    ${questionOptions && questionOptions.length > 0 ? `
+                        <div class="question-view-options">
+                            <ul>
+                                ${questionOptions.map(option => `<li>${option}</li>`).join('')}
+                            </ul>
                         </div>
                     ` : ''}
                 </div>
             `;
+            
+            console.log('HTML gerado:', html);
+            return html;
         }
 
         function closeViewAnamneseModal() {
@@ -3678,6 +4406,7 @@
             }
         });
 
+        
         document.getElementById('exerciseForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -3792,108 +4521,13 @@
             });
         });
 
-        // Funções para atribuir a aluno
-        function openAssignStudentModal() {
-            loadStudents();
-            loadFichas();
-            document.getElementById('assignStudentModal').classList.add('show');
-        }
-
-        function closeAssignStudentModal() {
-            document.getElementById('assignStudentModal').classList.remove('show');
-            document.getElementById('assignStudentForm').reset();
-        }
-
-        async function loadStudents() {
-            try {
-                const response = await authenticatedFetch('/api/alunos');
-                const students = await response.json();
-                const studentSelect = document.getElementById('studentSelect');
-                
-                studentSelect.innerHTML = '<option value="">Selecione um aluno...</option>';
-                students.forEach(student => {
-                    const option = document.createElement('option');
-                    option.value = student.id;
-                    option.textContent = student.nome;
-                    studentSelect.appendChild(option);
-                });
-            } catch (error) {
-                console.error('Erro ao carregar alunos:', error);
-            }
-        }
-
-        async function loadFichas() {
-            try {
-                const response = await authenticatedFetch('/api/treinos');
-                const workoutFichas = await response.json();
-                const workoutSelect = document.getElementById('workoutSelect');
-                
-                workoutSelect.innerHTML = '<option value="">Selecione uma ficha...</option>';
-                workoutFichas.forEach(ficha => {
-                    const option = document.createElement('option');
-                    option.value = ficha.id;
-                    option.textContent = ficha.nome;
-                    workoutSelect.appendChild(option);
-                });
-            } catch (error) {
-                console.error('Erro ao carregar fichas:', error);
-            }
-        }
-
-        // Form submission for assigning workout
-        document.getElementById('assignStudentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            assignWorkoutToStudent();
-        });
-
-        async function assignWorkoutToStudent() {
-            const studentId = document.getElementById('studentSelect').value;
-            const workoutId = document.getElementById('workoutSelect').value;
-            const workoutName = document.getElementById('workoutName').value;
-            
-            if (!studentId) {
-                alert('Selecione um aluno!');
-                return;
-            }
-            
-            if (!workoutId) {
-                alert('Selecione uma ficha de treino!');
-                return;
-            }
-            
-            if (!workoutName.trim()) {
-                alert('Digite um nome para o treino!');
-                return;
-            }
-
-            try {
-                // Atribuir treino ao aluno usando API
-                const response = await authenticatedFetch(`/api/treinos/${workoutId}`, {
-                    method: 'PUT',
-                    body: JSON.stringify({
-                        aluno_id: studentId,
-                        nome: workoutName
-                    })
-                });
-                
-                if (response.ok) {
-                    alert(`Treino "${workoutName}" atribuído com sucesso ao aluno!`);
-                    closeAssignStudentModal();
-                } else {
-                    throw new Error('Erro ao atribuir treino');
-                }
-            } catch (error) {
-                console.error('Erro ao atribuir treino:', error);
-                alert('Erro ao atribuir treino. Tente novamente.');
-            }
-        }
-
+        
+        
         // Initialize app
         document.addEventListener('DOMContentLoaded', async function() {
             await loadData();
             renderFichas();
             renderAnamneses();
-            await loadAnamneseResponses();
             initThemeToggle();
         });
 
@@ -4035,7 +4669,7 @@
                 <div class="help-section-content">
                     <div class="help-step">
                         <div class="help-step-number">1</div>
-                        <div class="help-step-text">Clique em "Atribuir a Aluno" após finalizar o treino</div>
+                        <div class="help-step-text">Salve seu treino para acesso futuro</div>
                     </div>
                     <div class="help-step">
                         <div class="help-step-number">2</div>
@@ -4088,37 +4722,7 @@
                 </div>
             </div>
 
-            <div class="help-section">
-                <h4 class="help-section-title">
-                    <i class="fas fa-clipboard-check"></i>
-                    Respostas de Anamneses
-                </h4>
-                <div class="help-section-content">
-                    <p>Acompanhe e analise as respostas dos alunos:</p>
-                    <div class="help-step">
-                        <div class="help-step-number">1</div>
-                        <div class="help-step-text">Visualize todas as respostas na seção "Respostas de Anamneses"</div>
-                    </div>
-                    <div class="help-step">
-                        <div class="help-step-number">2</div>
-                        <div class="help-step-text">Clique em uma resposta para ver detalhes completos</div>
-                    </div>
-                    <div class="help-step">
-                        <div class="help-step-number">3</div>
-                        <div class="help-step-text">Use as informações para ajustar treinos e dietas</div>
-                    </div>
-                    <div class="help-step">
-                        <div class="help-step-number">4</div>
-                        <div class="help-step-text">Atualize a lista para ver novas respostas</div>
-                    </div>
-                    
-                    <div class="help-tip">
-                        <div class="help-tip-title">📊 Análise</div>
-                        <div>Compare respostas ao longo do tempo para acompanhar a evolução do aluno</div>
-                    </div>
-                </div>
-            </div>
-
+            
             <div class="help-section">
                 <h4 class="help-section-title">
                     <i class="fas fa-print"></i>
@@ -4185,193 +4789,11 @@
             }
         }
 
-        // Anamnese Responses Functions
-        let currentResponses = [];
-
-        async function loadAnamneseResponses() {
-            try {
-                const response = await authenticatedFetch('/api/anamnese-responses');
-                if (response.ok) {
-                    currentResponses = await response.json();
-                    renderAnamneseResponses();
-                }
-            } catch (error) {
-                console.error('Erro ao carregar respostas:', error);
-            }
-        }
-
-        function renderAnamneseResponses() {
-            const grid = document.getElementById('anamneseResponsesGrid');
-            const emptyState = document.getElementById('emptyResponsesState');
-            
-            if (currentResponses.length === 0) {
-                grid.style.display = 'none';
-                emptyState.style.display = 'block';
-            } else {
-                grid.style.display = 'grid';
-                emptyState.style.display = 'none';
-                
-                grid.innerHTML = currentResponses.map(response => `
-                    <div class="response-card" onclick="viewResponseDetails('${response.id}')">
-                        <div class="response-header">
-                            <h3 class="response-anamnese-title">Resposta: ${response.anamnese_title || 'Anamnese'}</h3>
-                            <span class="response-status ${response.status}">
-                                ${response.status === 'answered' ? 'Respondida' : 'Pendente'}
-                            </span>
-                        </div>
-                        
-                        <div class="response-info">
-                            <div class="response-respondent">
-                                <i class="fas fa-user"></i>
-                                ${response.respondent_name || 'Usuário'}
-                            </div>
-                            <div class="response-date">
-                                <i class="fas fa-calendar"></i>
-                                ${new Date(response.answered_at || response.sent_at).toLocaleDateString('pt-BR')}
-                            </div>
-                        </div>
-                        
-                        <div class="response-preview">
-                            <div class="response-preview-title">Preview da Resposta</div>
-                            <div class="response-preview-content">
-                                ${getResponsePreview(response.responses)}
-                            </div>
-                        </div>
-                        
-                        <div class="response-actions">
-                            <button class="view-response-btn" onclick="event.stopPropagation(); viewResponseDetails('${response.id}')">
-                                <i class="fas fa-eye"></i> Ver Detalhes
-                            </button>
-                            <button class="delete-response-btn" onclick="event.stopPropagation(); deleteAnamneseResponse('${response.id}')">
-                                <i class="fas fa-trash"></i> Excluir
-                            </button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function getResponsePreview(responses) {
-            if (!responses || Object.keys(responses).length === 0) {
-                return 'Nenhuma resposta fornecida';
-            }
-            
-            const responseCount = Object.keys(responses).length;
-            const answeredCount = Object.values(responses).filter(r => r && r !== '').length;
-            
-            return `${answeredCount} de ${responseCount} perguntas respondidas`;
-        }
-
-        async function viewResponseDetails(responseId) {
-            try {
-                const response = currentResponses.find(r => r.id === responseId);
-                if (!response) return;
-                
-                // Buscar detalhes completos da anamnese
-                const anamneseResponse = await fetch(`/api/public/anamneses/${response.anamnese_id}`);
-                let anamnese = null;
-                
-                if (anamneseResponse.ok) {
-                    anamnese = await anamneseResponse.json();
-                }
-                
-                showViewResponseModal(response, anamnese);
-            } catch (error) {
-                console.error('Erro ao carregar detalhes da resposta:', error);
-            }
-        }
-
-        function showViewResponseModal(response, anamnese) {
-            const modal = document.getElementById('viewResponseModal');
-            const title = document.getElementById('viewResponseAnamneseTitle');
-            const description = document.getElementById('viewResponseAnamneseDescription');
-            const respondentName = document.getElementById('viewResponseRespondentName');
-            const responseDate = document.getElementById('viewResponseDate');
-            const answersContainer = document.getElementById('responseAnswersContainer');
-            
-            title.textContent = anamnese ? anamnese.title : 'Anamnese';
-            description.textContent = anamnese ? (anamnese.description || 'Sem descrição') : 'Detalhes não disponíveis';
-            respondentName.textContent = response.respondent_name || 'Usuário';
-            responseDate.textContent = new Date(response.answered_at || response.sent_at).toLocaleString('pt-BR');
-            
-            // Renderizar respostas
-            answersContainer.innerHTML = '';
-            if (anamnese && anamnese.questions) {
-                anamnese.questions.forEach((question, index) => {
-                    const answer = response.responses ? response.responses[index] : null;
-                    const answerHtml = createAnswerDisplay(question, index, answer);
-                    answersContainer.innerHTML += answerHtml;
-                });
-            } else {
-                answersContainer.innerHTML = '<p style="text-align: center; color: #666;">Detalhes das perguntas não disponíveis</p>';
-            }
-            
-            modal.classList.add('show');
-        }
-
-        function createAnswerDisplay(question, index, answer) {
-            const answerText = answer && answer !== '' ? answer : 'Não respondido';
-            
-            return `
-                <div class="answer-item">
-                    <div class="answer-header">
-                        <span class="answer-number">Pergunta ${index + 1}</span>
-                        <div class="answer-question">${question.text}</div>
-                    </div>
-                    <div class="answer-content">
-                        ${question.type === 'photo' ? `
-                            <div class="answer-photo">
-                                ${answer && answer !== '' ? 
-                                    `<img src="${answer}" alt="Resposta fotográfica">` : 
-                                    '<div class="answer-empty">Nenhuma foto enviada</div>'
-                                }
-                            </div>
-                        ` : `
-                            <div class="answer-text ${answer === 'Não respondido' ? 'answer-empty' : ''}">
-                                ${answerText}
-                            </div>
-                        `}
-                    </div>
-                </div>
-            `;
-        }
-
-        function closeViewResponseModal() {
-            document.getElementById('viewResponseModal').classList.remove('show');
-        }
-
-        async function deleteAnamneseResponse(responseId) {
-            if (!confirm('Tem certeza que deseja excluir esta resposta? Esta ação não pode ser desfeita.')) {
-                return;
-            }
-            
-            try {
-                const response = await authenticatedFetch(`/api/anamnese-responses/${responseId}`, {
-                    method: 'DELETE'
-                });
-                
-                if (response.ok) {
-                    await loadAnamneseResponses();
-                    alert('Resposta excluída com sucesso!');
-                } else {
-                    const error = await response.json();
-                    alert(error.error || 'Erro ao excluir resposta');
-                }
-            } catch (error) {
-                console.error('Erro ao excluir resposta:', error);
-                alert('Erro ao excluir resposta. Tente novamente.');
-            }
-        }
-
-        function refreshAnamneseResponses() {
-            loadAnamneseResponses();
-        }
-
+        
         // Fechar modal com ESC
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 closeHelpModal();
-                closeViewResponseModal();
             }
         });
 
@@ -4443,44 +4865,33 @@
             }
         });
 
+        // Supabase será inicializado no script global
+
+        // Format date helper
+        function formatDate(dateString) {
+            if (!dateString) return 'Data não disponível';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
         // Update auth state on page load
         document.addEventListener('DOMContentLoaded', function() {
             updateSidebarAuth();
+            // Inicializar Supabase primeiro
+            if (!window.supabaseClient) {
+                const supabaseUrl = 'https://erhhavvueccaqenzgspp.supabase.co';
+                const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGhhdnZ1ZWNjYXFlbnpnc3BwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzE1NjAzNywiZXhwIjoyMDkyNzMyMDM3fQ.h9BwrTDXDQUHYBClC8raJiN4UqQuz9vaX1t0GM4kMcw';
+                window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+            }
         });
     </script>
-<!-- View Response Modal -->
-    <div class="modal" id="viewResponseModal">
-        <div class="modal-content" style="max-width: 900px;">
-            <div class="modal-header">
-                <h3 class="modal-title">Resposta da Anamnese</h3>
-                <button class="modal-close" onclick="closeViewResponseModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div class="view-response-content">
-                <div class="response-anamnese-info">
-                    <h4 id="viewResponseAnamneseTitle"></h4>
-                    <p id="viewResponseAnamneseDescription"></p>
-                </div>
-                
-                <div class="response-respondent-info">
-                    <div class="respondent-details">
-                        <span class="respondent-label">Respondido por:</span>
-                        <span id="viewResponseRespondentName"></span>
-                    </div>
-                    <div class="response-date-info">
-                        <span class="respondent-label">Data:</span>
-                        <span id="viewResponseDate"></span>
-                    </div>
-                </div>
-                
-                <div class="response-answers-container" id="responseAnswersContainer">
-                    <!-- Respostas serão renderizadas aqui -->
-                </div>
-            </div>
-        </div>
-    </div>
 
+    
 </body>
 </html>

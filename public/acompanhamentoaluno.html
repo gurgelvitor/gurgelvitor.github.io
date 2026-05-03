@@ -1,0 +1,3549 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acompanhamento - GurgelTrack</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
+    <style>
+        :root {
+            /* Cores do Tema Claro - Vermelho */
+            --bg-primary: #ffffff;
+            --bg-secondary: #ffffff;
+            --accent: #dc143c;
+            --accent-hover: #b91c1c;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border: #ffcccc;
+            --shadow: 0 4px 12px rgba(220, 20, 60, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --danger-color: #dc143c;
+        }
+
+        body.dark-mode {
+            /* Cores do Tema Escuro - Melhoradas */
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1e1e1e;
+            --accent: #e91e63;
+            --accent-hover: #f06292;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b8b8b8;
+            --border: #333333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --danger-color: #e91e63;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 999;
+            font-size: 20px;
+            color: var(--accent);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(0, 0, 0, 0.8);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+        }
+
+        body.dark-mode .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: var(--transition);
+            border-right: 1px solid var(--border);
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .sidebar-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            vertical-align: middle;
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0.25rem 0 0 0;
+        }
+
+        .nav-menu {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            gap: 0.75rem;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-primary);
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+
+        .nav-item.active {
+            background: var(--bg-primary);
+            color: var(--accent);
+            border-left-color: var(--accent);
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Menu Category Separators */
+        .nav-category {
+            padding: 0.5rem 1.5rem;
+            margin: 0.5rem 0 0.25rem 0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-category:first-child {
+            margin-top: 0;
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0.5rem 1.5rem;
+            opacity: 0.3;
+        }
+
+        /* Sidebar Login/Logout Area */
+        .sidebar-auth {
+            padding: 1rem;
+            margin: 1rem;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .sidebar-login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-login-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .sidebar-user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .sidebar-user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .sidebar-user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-user-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar-user-email {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-logout-btn {
+            padding: 0.5rem;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-logout-btn:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+        }
+
+        .sidebar-personal-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: calc(100% - 2rem);
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+            margin: 0.5rem 1rem;
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+            box-sizing: border-box;
+        }
+
+        .sidebar-personal-btn:hover {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+        }
+
+        /* Friendship Requests Styles */
+        .friendship-requests-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .my-personal-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .my-personal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .my-personal-header h2 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .personal-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .personal-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .personal-details h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .personal-details p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .personal-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: 1rem;
+        }
+
+        .empty-personal {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-personal i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-personal h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .empty-personal p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .friendship-requests-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .friendship-requests-header h2 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .friendship-requests-header h2 i {
+            color: var(--accent);
+        }
+
+        .requests-badge {
+            background: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .requests-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .request-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .request-item:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow);
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .request-info {
+            flex: 1;
+        }
+
+        .request-from {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .request-date {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .request-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .btn-accept {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-accept:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-reject:hover {
+            background: #c82333;
+            transform: translateY(-1px);
+        }
+
+        .empty-requests {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-requests i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            flex: 1;
+            margin-left: 280px;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-header {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-title i {
+            color: var(--accent);
+        }
+
+        .header-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .main-header {
+                padding: 1rem;
+            }
+
+            .header-title {
+                font-size: 1.5rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+        }
+
+        /* Protocolos e Anamneses Styles */
+        .protocols-section, .anamneses-section {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .protocols-container, .anamneses-container {
+            margin-top: 1rem;
+        }
+
+        .empty-protocols, .empty-anamneses {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-protocols i, .empty-anamneses i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-protocols h3, .empty-anamneses h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .empty-protocols p, .empty-anamneses p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .protocols-list, .anamneses-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .protocol-item, .anamnese-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .protocol-item:hover, .anamnese-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 20, 60, 0.15);
+            border-color: var(--accent);
+        }
+
+        .item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-title {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .item-date {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .item-action-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .item-action-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .item-action-btn.view-only {
+            background: var(--accent);
+        }
+
+        .item-action-btn.view-only:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Student Dashboard Styles */
+        .student-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .welcome-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .welcome-card h2 {
+            color: var(--accent);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-card p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .feature-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.2);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
+    <div class="layout-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="logo-gurgel.png" alt="GurgelTrack Logo" class="sidebar-logo">
+                <div class="sidebar-title">GurgelTrack</div>
+                <div class="sidebar-subtitle">Sua plataforma fitness</div>
+            </div>
+            
+            <nav class="nav-menu">
+                <!-- Área do Aluno -->
+                <div class="nav-category">Área do Aluno</div>
+                <a href="homealuno.html" class="nav-item" data-page="homealuno">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Início Aluno</span>
+                </a>
+                <a href="acompanhamentoaluno.html" class="nav-item active" data-page="acompanhamentoaluno">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Acompanhamento</span>
+                </a>
+                <a href="cargaaluno.html" class="nav-item" data-page="cargas">
+                    <i class="fas fa-weight"></i>
+                    <span>Cargas</span>
+                </a>
+            </nav>
+            
+            <!-- Sou Personal Button -->
+            <a href="index.html" class="sidebar-personal-btn">
+                <i class="fas fa-user-tie"></i>
+                <span>Sou Personal</span>
+            </a>
+            
+            <!-- Sidebar Login/Logout Area -->
+            <div class="sidebar-auth">
+                <!-- Login button (shown when not logged in) -->
+                <a href="login.html" class="sidebar-login-btn" id="sidebarLoginBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Entrar</span>
+                </a>
+                
+                <!-- User info (shown when logged in) -->
+                <div class="sidebar-user-info" id="sidebarUserInfo" style="display: none;">
+                    <div class="sidebar-user-profile">
+                        <div class="sidebar-user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="sidebar-user-details">
+                            <div class="sidebar-user-email" id="sidebarUserEmail">user@example.com</div>
+                        </div>
+                    </div>
+                    <button class="sidebar-logout-btn" id="sidebarLogoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <header class="main-header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1 class="header-title">
+                            <i class="fas fa-chart-line"></i>
+                            Acompanhamento
+                        </h1>
+                        <p class="header-subtitle">Acompanhe seu progresso e evolução</p>
+                    </div>
+                </div>
+            </header>
+
+            <main class="main-content">
+                <!-- Friendship Requests Section -->
+                <section class="friendship-requests-section">
+                    <div class="friendship-requests-header">
+                        <h2>
+                            <i class="fas fa-user-friends"></i>
+                            Pedidos de Amizade
+                        </h2>
+                        <span class="requests-badge" id="requestsCount">0</span>
+                    </div>
+                    
+                    <div class="requests-list" id="requestsList">
+                        <!-- Pedidos serão inseridos aqui dinamicamente -->
+                    </div>
+                    
+                    <div class="empty-requests" id="emptyRequests">
+                        <i class="fas fa-user-friends"></i>
+                        <h3>Nenhum pedido de amizade</h3>
+                        <p>Você não tem pedidos de amizade pendentes no momento.</p>
+                    </div>
+                </section>
+
+                <!-- My Personal Section -->
+                <section class="my-personal-section" id="myPersonalSection" style="display: none;">
+                    <div class="my-personal-header">
+                        <h2>
+                            <i class="fas fa-user-tie"></i>
+                            Meu Personal
+                        </h2>
+                    </div>
+                    
+                    <div class="personal-info" id="personalInfo">
+                        <!-- Informações do personal serão inseridas aqui dinamicamente -->
+                    </div>
+                    
+                    <div class="empty-personal" id="emptyPersonal" style="display: none;">
+                        <i class="fas fa-user-tie"></i>
+                        <h3>Você ainda não tem um personal</h3>
+                        <p>Quando você aceitar um pedido de amizade de um personal trainer, ele aparecerá aqui.</p>
+                    </div>
+                </section>
+
+                <!-- Protocolos Section -->
+                <section class="protocols-section" id="protocolsSection" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-clipboard-list"></i>
+                            Meus Protocolos
+                        </h2>
+                    </div>
+                    
+                    <div class="protocols-container">
+                        <div class="empty-protocols" id="emptyProtocols">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h3>Nenhum protocolo atribuído</h3>
+                            <p>Seu personal ainda não atribuiu nenhum protocolo para você.</p>
+                        </div>
+                        <div class="protocols-list" id="protocolsList" style="display: none;">
+                            <!-- Protocolos serão inseridos aqui dinamicamente -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Anamneses Section -->
+                <section class="anamneses-section" id="anamnesesSection" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-clipboard-check"></i>
+                            Minhas Anamneses
+                        </h2>
+                    </div>
+                    
+                    <div class="anamneses-container">
+                        <div class="empty-anamneses" id="emptyAnamneses">
+                            <i class="fas fa-clipboard-check"></i>
+                            <h3>Nenhuma anamnese atribuída</h3>
+                            <p>Seu personal ainda não atribuiu nenhuma anamnese para você.</p>
+                        </div>
+                        <div class="anamneses-list" id="anamnesesList" style="display: none;">
+                            <!-- Anamneses serão inseridas aqui dinamicamente -->
+                        </div>
+                    </div>
+                </section>
+
+                <div class="student-dashboard" id="studentDashboard" style="display: none;">
+                    <div class="welcome-card">
+                        <h2>Seu Progresso</h2>
+                        <p>Aqui você poderá acompanhar sua evolução, ver seus resultados e manter-se motivado!</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="feature-title">Estatísticas</h3>
+                        <p class="feature-description">Visualize gráficos e estatísticas do seu desempenho.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3 class="feature-title">Conquistas</h3>
+                        <p class="feature-description">Veja suas metas alcançadas e conquistas desbloqueadas.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <h3 class="feature-title">Histórico</h3>
+                        <p class="feature-description">Acesse o histórico completo dos seus treinos e evolução.</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeIcon.className = 'fas fa-sun';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            const isDark = body.classList.contains('dark-mode');
+            themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+
+        // Sidebar Login/Logout functionality
+        function updateSidebarAuth() {
+            // Verificar usando o sistema de autenticação existente
+            const currentUser = localStorage.getItem('currentUser');
+            const isLoggedIn = !!currentUser;
+            
+            let userEmail = 'user@example.com';
+            if (isLoggedIn) {
+                try {
+                    const userData = JSON.parse(currentUser);
+                    userEmail = userData.email || userEmail;
+                } catch (error) {
+                    console.error('Erro ao parsear dados do usuário:', error);
+                }
+            }
+            
+            const loginBtn = document.getElementById('sidebarLoginBtn');
+            const userInfo = document.getElementById('sidebarUserInfo');
+            const userEmailElement = document.getElementById('sidebarUserEmail');
+            
+            if (isLoggedIn && loginBtn && userInfo && userEmailElement) {
+                loginBtn.style.display = 'none';
+                userInfo.style.display = 'flex';
+                userEmailElement.textContent = userEmail;
+            } else if (loginBtn && userInfo) {
+                loginBtn.style.display = 'flex';
+                userInfo.style.display = 'none';
+            }
+        }
+
+        // Sidebar logout functionality
+        document.getElementById('sidebarLogoutBtn').addEventListener('click', function() {
+            // Usar o sistema de autenticação existente
+            if (window.auth && window.auth.logout) {
+                window.auth.logout();
+            } else {
+                // Fallback manual
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('token');
+                updateSidebarAuth();
+                
+                // Redirect to login page
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Configuração do Supabase
+        var supabaseUrl = 'https://erhhavvueccaqenzgspp.supabase.co';
+        var supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGhhdnZ1ZWNjYXFlbnpnc3BwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzE1NjAzNywiZXhwIjoyMDkyNzMyMDM3fQ.h9BwrTDXDQUHYBClC8raJiN4UqQuz9vaX1t0GM4kMcw'; // Service Role Key
+        
+        // Verificar se o cliente Supabase já existe
+        var supabase;
+        if (window.supabaseClient) {
+            supabase = window.supabaseClient;
+        } else {
+            supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+            window.supabaseClient = supabase;
+        }
+
+        // Initialize auth UI
+        // Load Protocols functionality
+        async function loadStudentProtocols() {
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                if (!currentUser) {
+                    console.log('Usuário não logado');
+                    return;
+                }
+
+                const userData = JSON.parse(currentUser);
+                const studentEmail = userData.email;
+                
+                console.log('Carregando protocolos para o aluno:', studentEmail);
+                
+                // Carregar protocolos das três tabelas
+                const [workoutsResult, dietsResult, calculationsResult] = await Promise.all([
+                    supabase
+                        .from('student_workouts')
+                        .select('*')
+                        .eq('student_email', studentEmail)
+                        .order('assigned_at', { ascending: false }),
+                    
+                    supabase
+                        .from('student_diets')
+                        .select('*')
+                        .eq('student_email', studentEmail)
+                        .order('assigned_at', { ascending: false }),
+                    
+                    supabase
+                        .from('student_calculations')
+                        .select('*')
+                        .eq('student_email', studentEmail)
+                        .order('assigned_at', { ascending: false })
+                ]);
+
+                // Combinar todos os protocolos
+                const allProtocols = [
+                    ...(workoutsResult.data || []).map(item => ({
+                        id: item.id,
+                        protocol_name: item.workout_name,
+                        protocol_type: 'workout',
+                        protocol_data: JSON.parse(item.workout_data || '{}'),
+                        created_at: item.assigned_at,
+                        type: 'workout'
+                    })),
+                    ...(dietsResult.data || []).map(item => ({
+                        id: item.id,
+                        protocol_name: item.diet_name,
+                        protocol_type: 'diet',
+                        protocol_data: JSON.parse(item.diet_data || '{}'),
+                        created_at: item.assigned_at,
+                        type: 'diet'
+                    })),
+                    ...(calculationsResult.data || []).map(item => ({
+                        id: item.id,
+                        protocol_name: item.calculation_name,
+                        protocol_type: 'calculation',
+                        protocol_data: JSON.parse(item.calculation_data || '{}'),
+                        created_at: item.assigned_at,
+                        type: 'calculation'
+                    }))
+                ];
+
+                // Ordenar por data
+                allProtocols.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+                renderStudentProtocols(allProtocols);
+                
+            } catch (error) {
+                console.error('Erro ao carregar protocolos:', error);
+            }
+        }
+
+        function renderStudentProtocols(protocols) {
+            const protocolsList = document.getElementById('protocolsList');
+            const emptyProtocols = document.getElementById('emptyProtocols');
+            
+            if (protocols.length === 0) {
+                protocolsList.style.display = 'none';
+                emptyProtocols.style.display = 'block';
+                return;
+            }
+            
+            protocolsList.style.display = 'grid';
+            emptyProtocols.style.display = 'none';
+            
+            protocolsList.innerHTML = protocols.map(protocol => {
+                const typeIcon = getProtocolTypeIcon(protocol.type);
+                const typeName = getProtocolTypeName(protocol.type);
+                
+                return `
+                    <div class="protocol-item" onclick="viewProtocol('${protocol.id}', '${protocol.type}')">
+                        <div class="item-header">
+                            <div class="item-title">
+                                <i class="${typeIcon}"></i>
+                                ${protocol.protocol_name}
+                                <span class="protocol-type-badge">${typeName}</span>
+                            </div>
+                            <div class="item-date">${formatDate(protocol.created_at)}</div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="item-action-btn view-only" onclick="event.stopPropagation(); viewProtocol('${protocol.id}', '${protocol.type}')">
+                                <i class="fas fa-eye"></i> Ver
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Load Anamneses functionality
+        async function loadStudentAnamneses() {
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                if (!currentUser) {
+                    console.log('Usuário não logado');
+                    return;
+                }
+
+                const userData = JSON.parse(currentUser);
+                const studentEmail = userData.email;
+                
+                console.log('Carregando anamneses para o aluno:', studentEmail);
+                
+                const { data, error } = await supabase
+                    .from('student_anamneses')
+                    .select('*')
+                    .eq('aluno_email', studentEmail)
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error('Erro ao carregar anamneses:', error);
+                    return;
+                }
+
+                renderStudentAnamneses(data || []);
+                
+            } catch (error) {
+                console.error('Erro ao carregar anamneses:', error);
+            }
+        }
+
+        function renderStudentAnamneses(anamneses) {
+            const anamnesesList = document.getElementById('anamnesesList');
+            const emptyAnamneses = document.getElementById('emptyAnamneses');
+            
+            if (anamneses.length === 0) {
+                anamnesesList.style.display = 'none';
+                emptyAnamneses.style.display = 'block';
+                return;
+            }
+            
+            anamnesesList.style.display = 'grid';
+            emptyAnamneses.style.display = 'none';
+            
+            anamnesesList.innerHTML = anamneses.map(anamnese => `
+                <div class="anamnese-item">
+                    <div class="item-header">
+                        <div class="item-title">
+                            <i class="fas fa-clipboard-check"></i>
+                            ${anamnese.anamnese_name || 'Anamnese'}
+                        </div>
+                        <div class="item-date">${formatDate(anamnese.created_at)}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="item-action-btn" onclick="answerAnamnese('${anamnese.id}')">
+                            <i class="fas fa-edit"></i> Responder
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getProtocolTypeIcon(type) {
+            switch (type) {
+                case 'workout': return 'fas fa-dumbbell';
+                case 'diet': return 'fas fa-utensils';
+                case 'calculation': return 'fas fa-calculator';
+                default: return 'fas fa-file';
+            }
+        }
+
+        function getProtocolTypeName(type) {
+            switch (type) {
+                case 'workout': return 'Treino';
+                case 'diet': return 'Dieta';
+                case 'calculation': return 'Cálculo';
+                default: return 'Protocolo';
+            }
+        }
+
+        // View Protocol functionality (apenas visualização)
+        async function viewProtocol(protocolId, type) {
+            try {
+                let tableName, dataField;
+                
+                switch (type) {
+                    case 'workout':
+                        tableName = 'student_workouts';
+                        dataField = 'workout_data';
+                        break;
+                    case 'diet':
+                        tableName = 'student_diets';
+                        dataField = 'diet_data';
+                        break;
+                    case 'calculation':
+                        tableName = 'student_calculations';
+                        dataField = 'calculation_data';
+                        break;
+                    default:
+                        alert('Tipo de protocolo inválido!');
+                        return;
+                }
+
+                // Buscar protocolo do Supabase
+                const { data, error } = await supabase
+                    .from(tableName)
+                    .select('*')
+                    .eq('id', protocolId)
+                    .single();
+
+                if (error || !data) {
+                    console.error('Erro ao buscar protocolo:', error);
+                    alert('Protocolo não encontrado!');
+                    return;
+                }
+
+                // Exibir protocolo em um modal (apenas visualização)
+                showProtocolModal(data, type);
+
+            } catch (error) {
+                console.error('Erro ao visualizar protocolo:', error);
+                alert('Erro ao visualizar protocolo. Tente novamente.');
+            }
+        }
+
+        // View Anamnese functionality (apenas visualização)
+        async function viewAnamnese(anamneseId) {
+            try {
+                const { data, error } = await supabase
+                    .from('student_anamneses')
+                    .select('*')
+                    .eq('id', anamneseId)
+                    .single();
+
+                if (error || !data) {
+                    console.error('Erro ao buscar anamnese:', error);
+                    alert('Anamnese não encontrada!');
+                    return;
+                }
+
+                // Exibir anamnese em um modal (apenas visualização)
+                showAnamneseModal(data);
+
+            } catch (error) {
+                console.error('Erro ao visualizar anamnese:', error);
+                alert('Erro ao visualizar anamnese. Tente novamente.');
+            }
+        }
+
+        // Answer Anamnese functionality
+        async function answerAnamnese(anamneseId) {
+            try {
+                const { data, error } = await supabase
+                    .from('student_anamneses')
+                    .select('*')
+                    .eq('id', anamneseId)
+                    .single();
+
+                if (error || !data) {
+                    console.error('Erro ao buscar anamnese:', error);
+                    alert('Anamnese não encontrada!');
+                    return;
+                }
+
+                // Removida verificação de resposta existente - tabela não criada ainda
+
+                // Abrir modal para responder
+                showAnswerAnamneseModal(data);
+
+            } catch (error) {
+                console.error('Erro ao preparar resposta da anamnese:', error);
+                alert('Erro ao preparar resposta. Tente novamente.');
+            }
+        }
+
+        function showAnswerAnamneseModal(anamneseData) {
+            // Parse dos dados da anamnese
+            let anamnesisContent;
+            try {
+                anamnesisContent = typeof anamneseData.anamnesis_data === 'string' 
+                    ? JSON.parse(anamneseData.anamnesis_data) 
+                    : anamneseData.anamnesis_data;
+            } catch (error) {
+                console.error('Erro ao parsear dados da anamnese:', error);
+                anamnesisContent = { data: [] };
+            }
+
+            // Criar modal para responder a anamnese
+            const modalHtml = `
+                <div class="modal-overlay active" id="answerAnamneseModal" style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    backdrop-filter: blur(8px);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 9999;
+                ">
+                    <div class="anamnese-modal" style="
+                        background: var(--bg-primary);
+                        border-radius: 20px;
+                        max-width: 800px;
+                        width: 90%;
+                        max-height: 85vh;
+                        overflow-y: auto;
+                        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                        border: 1px solid var(--border);
+                        animation: modalSlideIn 0.3s ease-out;
+                        position: relative;
+                    ">
+                        <!-- Header -->
+                        <div class="anamnese-modal-header" style="
+                            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+                            color: white;
+                            padding: 2rem;
+                            border-radius: 20px 20px 0 0;
+                            position: relative;
+                        ">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h2 style="margin: 0; font-size: 1.8rem; font-weight: 700; display: flex; align-items: center; gap: 1rem;">
+                                        <i class="fas fa-edit" style="font-size: 1.5rem;"></i>
+                                        Responder Anamnese
+                                    </h2>
+                                    <p style="margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 0.95rem;">
+                                        ${anamneseData.anamnese_name}
+                                    </p>
+                                </div>
+                                <button class="modal-close-btn" onclick="closeAnswerAnamneseModal()" style="
+                                    background: rgba(255, 255, 255, 0.2);
+                                    border: none;
+                                    color: white;
+                                    width: 40px;
+                                    height: 40px;
+                                    border-radius: 50%;
+                                    cursor: pointer;
+                                    font-size: 1.2rem;
+                                    transition: all 0.3s ease;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                " onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="anamnese-modal-content" style="padding: 2rem;">
+                            <!-- Info Cards -->
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                                <div style="
+                                    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+                                    border: 1px solid var(--border);
+                                    border-radius: 12px;
+                                    padding: 1.5rem;
+                                    text-align: center;
+                                ">
+                                    <div style="color: var(--accent); font-size: 2rem; margin-bottom: 0.5rem;">
+                                        <i class="fas fa-user-tie"></i>
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Personal</div>
+                                    <div style="font-weight: 600; color: var(--text-primary); word-break: break-all;">
+                                        ${anamneseData.personal_email}
+                                    </div>
+                                </div>
+                                
+                                <div style="
+                                    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+                                    border: 1px solid var(--border);
+                                    border-radius: 12px;
+                                    padding: 1.5rem;
+                                    text-align: center;
+                                ">
+                                    <div style="color: var(--accent); font-size: 2rem; margin-bottom: 0.5rem;">
+                                        <i class="fas fa-calendar"></i>
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Data</div>
+                                    <div style="font-weight: 600; color: var(--text-primary);">
+                                        ${formatDate(anamneseData.created_at)}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Questions Form -->
+                            <div style="
+                                background: var(--bg-secondary);
+                                border-radius: 16px;
+                                padding: 2rem;
+                                border: 1px solid var(--border);
+                            ">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                                    <div style="
+                                        background: var(--accent);
+                                        color: white;
+                                        width: 40px;
+                                        height: 40px;
+                                        border-radius: 50%;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        font-weight: 700;
+                                        font-size: 1.2rem;
+                                    ">
+                                        ${anamnesisContent.data ? anamnesisContent.data.length : 0}
+                                    </div>
+                                    <div>
+                                        <h3 style="margin: 0; color: var(--text-primary); font-size: 1.5rem; font-weight: 600;">
+                                            Perguntas para Responder
+                                        </h3>
+                                        <p style="margin: 0.25rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">
+                                            Preencha todas as perguntas abaixo
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <form id="anamneseAnswerForm" onsubmit="submitAnamneseAnswer(event, '${anamneseData.id}', '${anamneseData.anamnese_name}', '${anamneseData.personal_email}', '${anamneseData.aluno_email}')">
+                                    ${renderAnswerQuestions(anamnesisContent.data || [], anamneseData.id)}
+                                    
+                                    <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: flex-end;">
+                                        <button type="button" onclick="closeAnswerAnamneseModal()" style="
+                                            background: var(--text-secondary);
+                                            color: white;
+                                            border: none;
+                                            padding: 0.75rem 2rem;
+                                            border-radius: 8px;
+                                            font-weight: 600;
+                                            cursor: pointer;
+                                            transition: all 0.3s ease;
+                                        " onmouseover="this.style.background='#6c757d'" onmouseout="this.style.background='var(--text-secondary)'">
+                                            Cancelar
+                                        </button>
+                                        <button type="submit" style="
+                                            background: var(--accent);
+                                            color: white;
+                                            border: none;
+                                            padding: 0.75rem 2rem;
+                                            border-radius: 8px;
+                                            font-weight: 600;
+                                            cursor: pointer;
+                                            transition: all 0.3s ease;
+                                            display: flex;
+                                            align-items: center;
+                                            gap: 0.5rem;
+                                        " onmouseover="this.style.background='var(--accent-hover)'" onmouseout="this.style.background='var(--accent)'">
+                                            <i class="fas fa-check"></i>
+                                            Enviar Respostas
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Adicionar modal ao body
+            const modalContainer = document.createElement('div');
+            modalContainer.innerHTML = modalHtml;
+            document.body.appendChild(modalContainer);
+        }
+
+        function renderAnswerQuestions(questions, anamneseId) {
+            if (!questions || questions.length === 0) {
+                return `
+                    <div style="text-align: center; padding: 3rem 2rem; color: var(--text-secondary);">
+                        <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Nenhuma pergunta encontrada</h4>
+                        <p>Esta anamnese não possui perguntas para responder.</p>
+                    </div>
+                `;
+            }
+
+            return questions.map((question, index) => {
+                // Verificar se question é string ou objeto
+                let questionText, questionType;
+                
+                if (typeof question === 'string') {
+                    questionText = question;
+                    questionType = 'texto';
+                } else {
+                    questionText = question.question || question.text || question.pergunta || question.title || question.name || question.description || 'Sem pergunta definida';
+                    questionType = question.type || 'texto';
+                }
+                
+                const questionId = `question_${anamneseId}_${index}`;
+                
+                let inputField = '';
+                
+                switch (questionType) {
+                    case 'texto':
+                    case 'text':
+                        inputField = `
+                            <textarea 
+                                id="${questionId}" 
+                                name="${questionId}" 
+                                required
+                                style="
+                                    width: 100%;
+                                    padding: 0.75rem;
+                                    border: 2px solid var(--border);
+                                    border-radius: 8px;
+                                    background: var(--bg-primary);
+                                    color: var(--text-primary);
+                                    font-size: 1rem;
+                                    resize: vertical;
+                                    min-height: 80px;
+                                    transition: all 0.3s ease;
+                                "
+                                onfocus="this.style.borderColor='var(--accent)'"
+                                onblur="this.style.borderColor='var(--border)'"
+                                placeholder="Digite sua resposta aqui..."
+                            ></textarea>
+                        `;
+                        break;
+                    case 'null':
+                        inputField = `
+                            <div style="
+                                background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+                                color: white;
+                                padding: 1.5rem;
+                                border-radius: 12px;
+                                text-align: center;
+                                border: 2px solid var(--accent);
+                            ">
+                                <div style="
+                                    font-size: 2rem;
+                                    margin-bottom: 1rem;
+                                    opacity: 0.9;
+                                ">
+                                    <i class="fas fa-info-circle"></i>
+                                </div>
+                                <div style="
+                                    font-size: 1.1rem;
+                                    font-weight: 600;
+                                    margin-bottom: 0.5rem;
+                                ">
+                                    Informação do Personal
+                                </div>
+                                <div style="
+                                    font-size: 0.95rem;
+                                    opacity: 0.9;
+                                    line-height: 1.5;
+                                ">
+                                    Esta é uma mensagem informativa do seu personal. Não é necessário responder.
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 'select':
+                    case 'radio':
+                        if (question.options && Array.isArray(question.options)) {
+                            inputField = `
+                                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                    ${question.options.map((option, optIndex) => `
+                                        <label style="
+                                            display: flex;
+                                            align-items: center;
+                                            gap: 0.75rem;
+                                            padding: 0.75rem;
+                                            background: var(--bg-primary);
+                                            border: 2px solid var(--border);
+                                            border-radius: 8px;
+                                            cursor: pointer;
+                                            transition: all 0.3s ease;
+                                        " onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+                                            <input 
+                                                type="radio" 
+                                                name="${questionId}" 
+                                                value="${option}"
+                                                required
+                                                style="
+                                                    width: 18px;
+                                                    height: 18px;
+                                                    accent-color: var(--accent);
+                                                "
+                                            >
+                                            <span style="font-weight: 500; color: var(--text-primary);">
+                                                ${String.fromCharCode(65 + optIndex)}. ${option}
+                                            </span>
+                                        </label>
+                                    `).join('')}
+                                </div>
+                            `;
+                        }
+                        break;
+                    case 'number':
+                        inputField = `
+                            <input 
+                                type="number" 
+                                id="${questionId}" 
+                                name="${questionId}" 
+                                required
+                                style="
+                                    width: 100%;
+                                    padding: 0.75rem;
+                                    border: 2px solid var(--border);
+                                    border-radius: 8px;
+                                    background: var(--bg-primary);
+                                    color: var(--text-primary);
+                                    font-size: 1rem;
+                                    transition: all 0.3s ease;
+                                "
+                                onfocus="this.style.borderColor='var(--accent)'"
+                                onblur="this.style.borderColor='var(--border)'"
+                                placeholder="Digite um número..."
+                            >
+                        `;
+                        break;
+                    case 'date':
+                        inputField = `
+                            <input 
+                                type="date" 
+                                id="${questionId}" 
+                                name="${questionId}" 
+                                required
+                                style="
+                                    width: 100%;
+                                    padding: 0.75rem;
+                                    border: 2px solid var(--border);
+                                    border-radius: 8px;
+                                    background: var(--bg-primary);
+                                    color: var(--text-primary);
+                                    font-size: 1rem;
+                                    transition: all 0.3s ease;
+                                "
+                                onfocus="this.style.borderColor='var(--accent)'"
+                                onblur="this.style.borderColor='var(--border)'"
+                            >
+                        `;
+                        break;
+                    case 'options':
+                        if (question.options && Array.isArray(question.options)) {
+                            inputField = `
+                                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                    ${question.options.map((option, optIndex) => `
+                                        <label style="
+                                            display: flex;
+                                            align-items: center;
+                                            gap: 0.75rem;
+                                            padding: 0.75rem;
+                                            background: var(--bg-primary);
+                                            border: 2px solid var(--border);
+                                            border-radius: 8px;
+                                            cursor: pointer;
+                                            transition: all 0.3s ease;
+                                        " onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+                                            <input 
+                                                type="radio" 
+                                                name="${questionId}" 
+                                                value="${option}"
+                                                required
+                                                style="
+                                                    width: 18px;
+                                                    height: 18px;
+                                                    accent-color: var(--accent);
+                                                "
+                                            >
+                                            <span style="font-weight: 500; color: var(--text-primary);">
+                                                ${String.fromCharCode(65 + optIndex)}. ${option}
+                                            </span>
+                                        </label>
+                                    `).join('')}
+                                </div>
+                            `;
+                        }
+                        break;
+                    case 'photo':
+                        inputField = `
+                            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                <div style="
+                                    border: 2px dashed var(--accent);
+                                    border-radius: 12px;
+                                    padding: 2rem;
+                                    text-align: center;
+                                    background: var(--bg-primary);
+                                    transition: all 0.3s ease;
+                                    cursor: pointer;
+                                " onmouseover="this.style.background='var(--accent)'" onmouseout="this.style.background='var(--bg-primary)'">
+                                    <input 
+                                        type="file" 
+                                        id="${questionId}" 
+                                        name="${questionId}" 
+                                        accept="image/*"
+                                        required
+                                        style="display: none;"
+                                        onchange="handlePhotoUpload(this, '${questionId}')"
+                                    >
+                                    <div onclick="document.getElementById('${questionId}').click()" style="cursor: pointer;">
+                                        <div style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;">
+                                            <i class="fas fa-camera"></i>
+                                        </div>
+                                        <div style="color: var(--text-primary); font-weight: 600; margin-bottom: 0.5rem;">
+                                            Clique para adicionar uma foto
+                                        </div>
+                                        <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                                            Formatos aceitos: JPG, PNG, GIF (máx. 10MB)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="${questionId}_preview" style="display: none;">
+                                    <div style="
+                                        position: relative;
+                                        border-radius: 12px;
+                                        overflow: hidden;
+                                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                                    ">
+                                        <img id="${questionId}_img" style="width: 100%; height: auto; display: block;">
+                                        <button 
+                                            type="button"
+                                            onclick="removePhoto('${questionId}')"
+                                            style="
+                                                position: absolute;
+                                                top: 10px;
+                                                right: 10px;
+                                                background: rgba(220, 20, 60, 0.9);
+                                                color: white;
+                                                border: none;
+                                                border-radius: 50%;
+                                                width: 32px;
+                                                height: 32px;
+                                                cursor: pointer;
+                                                font-size: 1rem;
+                                                transition: all 0.3s ease;
+                                            " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"
+                                        >
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    default:
+                        inputField = `
+                            <input 
+                                type="text" 
+                                id="${questionId}" 
+                                name="${questionId}" 
+                                required
+                                style="
+                                    width: 100%;
+                                    padding: 0.75rem;
+                                    border: 2px solid var(--border);
+                                    border-radius: 8px;
+                                    background: var(--bg-primary);
+                                    color: var(--text-primary);
+                                    font-size: 1rem;
+                                    transition: all 0.3s ease;
+                                "
+                                onfocus="this.style.borderColor='var(--accent)'"
+                                onblur="this.style.borderColor='var(--border)'"
+                                placeholder="Digite sua resposta..."
+                            >
+                        `;
+                }
+                
+                return `
+                    <div class="question-card" style="
+                        background: var(--bg-primary);
+                        border: 2px solid var(--border);
+                        border-radius: 16px;
+                        padding: 1.5rem;
+                        margin-bottom: 1.5rem;
+                        position: relative;
+                        transition: all 0.3s ease;
+                    ">
+                        <!-- Question Header -->
+                        <div style="
+                            display: flex;
+                            align-items: center;
+                            gap: 1rem;
+                            margin-bottom: 1.5rem;
+                            padding-bottom: 1rem;
+                            border-bottom: 2px solid var(--border);
+                        ">
+                            <!-- Question Number Badge -->
+                            <div style="
+                                background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+                                color: white;
+                                padding: 0.6rem 1.2rem;
+                                border-radius: 50px;
+                                font-weight: 700;
+                                font-size: 0.9rem;
+                                box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                            ">
+                                <i class="fas fa-hashtag" style="font-size: 0.8rem;"></i>
+                                Pergunta ${index + 1}
+                            </div>
+                            
+                            <!-- Question Type Badge -->
+                            <div style="
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                                background: var(--bg-secondary);
+                                border: 1px solid var(--border);
+                                border-radius: 20px;
+                                padding: 0.4rem 1rem;
+                                font-size: 0.85rem;
+                                color: var(--text-secondary);
+                            ">
+                                <i class="fas ${getQuestionTypeIcon(questionType)}" style="color: var(--accent);"></i>
+                                <span style="font-weight: 600; text-transform: capitalize;">${questionType}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Question Text -->
+                        <div style="
+                            font-size: 1.1rem;
+                            font-weight: 600;
+                            color: var(--text-primary);
+                            line-height: 1.6;
+                            margin-bottom: 1.5rem;
+                            padding: 1.2rem;
+                            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+                            border-radius: 12px;
+                            border-left: 4px solid var(--accent);
+                        " data-question-index="${index}">
+                            ${questionText}
+                        </div>
+                        
+                        <!-- Answer Input -->
+                        <div>
+                            ${inputField}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getQuestionTypeIcon(type) {
+            const icons = {
+                'texto': 'fa-align-left',
+                'text': 'fa-align-left',
+                'select': 'fa-list',
+                'radio': 'fa-dot-circle',
+                'checkbox': 'fa-check-square',
+                'number': 'fa-hashtag',
+                'date': 'fa-calendar',
+                'email': 'fa-envelope',
+                'phone': 'fa-phone'
+            };
+            return icons[type] || 'fa-question';
+        }
+
+        // Funções para upload de fotos
+        function handlePhotoUpload(input, questionId) {
+            const file = input.files[0];
+            
+            // Validar arquivo
+            if (!file) return;
+            
+            // Validar tipo
+            if (!file.type.startsWith('image/')) {
+                alert('Por favor, selecione apenas arquivos de imagem (JPG, PNG, GIF).');
+                input.value = '';
+                return;
+            }
+            
+            // Validar tamanho (10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                alert('A imagem não pode ser maior que 10MB.');
+                input.value = '';
+                return;
+            }
+            
+            // Mostrar preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById(`${questionId}_preview`);
+                const img = document.getElementById(`${questionId}_img`);
+                
+                img.src = e.target.result;
+                preview.style.display = 'block';
+                
+                // Esconder o botão de upload
+                input.parentElement.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function removePhoto(questionId) {
+            const input = document.getElementById(questionId);
+            const preview = document.getElementById(`${questionId}_preview`);
+            
+            // Limpar input
+            input.value = '';
+            
+            // Esconder preview
+            preview.style.display = 'none';
+            
+            // Mostrar botão de upload
+            input.parentElement.style.display = 'block';
+        }
+
+        async function submitAnamneseAnswer(event, anamneseId, anamneseName, personalEmail, studentEmail) {
+            event.preventDefault();
+            
+            try {
+                // Coletar respostas do formulário
+                const form = event.target;
+                const formData = new FormData(form);
+                const answers = [];
+                
+                // Processar cada resposta
+                for (let [key, value] of formData.entries()) {
+                    if (key.startsWith('question_')) {
+                        const index = key.split('_')[2];
+                        
+                        // Buscar o texto da pergunta no formulário
+                        const questionElement = form.querySelector(`[data-question-index="${index}"]`);
+                        const questionText = questionElement ? questionElement.textContent : `Pergunta ${index}`;
+                        
+                        // Verificar se é um arquivo de imagem
+                        const input = document.getElementById(key);
+                        if (input && input.type === 'file' && input.files && input.files[0]) {
+                            // Converter imagem para base64
+                            const file = input.files[0];
+                            
+                            try {
+                                // Ler arquivo como base64
+                                const base64 = await new Promise((resolve, reject) => {
+                                    const reader = new FileReader();
+                                    reader.onload = () => resolve(reader.result);
+                                    reader.onerror = reject;
+                                    reader.readAsDataURL(file);
+                                });
+                                
+                                answers.push({
+                                    questionIndex: parseInt(index),
+                                    question: questionText,
+                                    answer: base64,
+                                    isImage: true,
+                                    fileName: file.name
+                                });
+                                
+                            } catch (error) {
+                                console.error('Erro ao converter imagem para base64:', error);
+                                alert('Erro ao processar a imagem. Tente novamente.');
+                                return;
+                            }
+                        } else {
+                            answers.push({
+                                questionIndex: parseInt(index),
+                                question: questionText,
+                                answer: value
+                            });
+                        }
+                    }
+                }
+                
+                // Ordenar respostas por índice
+                answers.sort((a, b) => a.questionIndex - b.questionIndex);
+                
+                // Salvar respostas no Supabase
+                const responseData = {
+                    anamnese_id: anamneseId,
+                    anamnese_name: anamneseName,
+                    personal_email: personalEmail,
+                    student_email: studentEmail,
+                    answers: answers,
+                    created_at: new Date().toISOString()
+                };
+
+                console.log('Dados da resposta a serem salvos no Supabase:', responseData);
+                console.log('Verificando cliente Supabase:', window.supabaseClient);
+
+                // Salvar no Supabase
+                const supabase = window.supabaseClient;
+                if (!supabase) {
+                    console.error('Cliente Supabase não disponível');
+                    throw new Error('Cliente Supabase não inicializado');
+                }
+                
+                console.log('Tentando salvar no Supabase...');
+                console.log('Estrutura completa da resposta:', JSON.stringify(responseData, null, 2));
+                
+                const result = await supabase
+                    .from('anamnese_responses')
+                    .insert(responseData);
+                
+                console.log('Resultado completo do Supabase:', result);
+                console.log('Resposta do Supabase - Data:', result.data);
+                console.log('Resposta do Supabase - Error:', result.error);
+
+                if (result.error) {
+                    console.error('Erro ao salvar respostas no Supabase:', result.error);
+                    throw result.error;
+                }
+
+                // Sucesso - mesmo que não retorne dados, o insert funcionou
+                console.log('Resposta salva com sucesso no Supabase!', result.data || 'Dados inseridos');
+
+                // Alternativa: Remover a anamnese respondida da tabela student_anamneses
+                // Isso fará com que ela não apareça mais em nenhuma lista
+                const deleteResult = await supabase
+                    .from('student_anamneses')
+                    .delete()
+                    .eq('id', anamneseId);
+
+                if (deleteResult.error) {
+                    console.error('Erro ao remover anamnese respondida:', deleteResult.error);
+                } else {
+                    console.log('Anamnese respondida removida com sucesso!');
+                }
+
+                // Fechar modal e mostrar sucesso
+                closeAnswerAnamneseModal();
+                alert('✅ Anamnese respondida com sucesso! Suas respostas foram enviadas ao seu personal.');
+
+                // Recarregar a lista de anamneses para remover a respondida
+                setTimeout(() => {
+                    loadStudentAnamneses();
+                }, 500);
+
+            } catch (error) {
+                console.error('Erro ao enviar respostas:', error);
+                alert('Erro ao enviar respostas. Tente novamente.');
+            }
+        }
+
+        function closeAnswerAnamneseModal() {
+            const modal = document.getElementById('answerAnamneseModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function showProtocolModal(protocolData, type) {
+            // Usar a mesma formatação da página acompanhamento.html
+            let dataField;
+            switch (type) {
+                case 'workout': dataField = 'workout_data'; break;
+                case 'diet': dataField = 'diet_data'; break;
+                case 'calculation': dataField = 'calculation_data'; break;
+                default: return '<p>Dados não disponíveis</p>';
+            }
+
+            const data = typeof protocolData[dataField] === 'string' 
+                ? JSON.parse(protocolData[dataField] || '{}')
+                : protocolData[dataField] || {};
+
+            let contentHTML = `
+                <div class="protocol-details">
+                    <div class="protocol-info">
+                        <p><strong>Data de atribuição:</strong> ${formatDate(protocolData.assigned_at)}</p>
+                        <p><strong>Email do aluno:</strong> ${protocolData.student_email}</p>
+                        <p><strong>Email do personal:</strong> ${protocolData.personal_email}</p>
+                    </div>
+                    <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+            `;
+
+            switch (type) {
+                case 'diet':
+                    contentHTML += formatDietContent(data);
+                    break;
+                case 'workout':
+                    contentHTML += formatWorkoutContent(data);
+                    break;
+                case 'calculation':
+                    contentHTML += formatCalculationContent(data);
+                    break;
+                default:
+                    contentHTML += `<h4>Dados Completos:</h4><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            }
+
+            contentHTML += `</div>`;
+
+            // Criar modal para exibir o protocolo completo
+            const modalHtml = `
+                <div class="modal-overlay active" id="protocolViewModal">
+                    <div class="protocol-view-modal">
+                        <div class="protocol-view-header">
+                            <h3>
+                                <i class="${getProtocolTypeIcon(type)}"></i>
+                                ${getProtocolTypeName(type)}: ${protocolData.protocol_name || protocolData.workout_name || protocolData.diet_name || protocolData.calculation_name || 'Protocolo'}
+                            </h3>
+                            <button class="modal-close-btn" onclick="closeProtocolViewModal()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="protocol-view-content">
+                            ${contentHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Adicionar modal ao body
+            const modalContainer = document.createElement('div');
+            modalContainer.innerHTML = modalHtml;
+            document.body.appendChild(modalContainer);
+
+            // Adicionar estilos se não existirem
+            if (!document.getElementById('protocol-view-styles')) {
+                const styles = document.createElement('style');
+                styles.id = 'protocol-view-styles';
+                styles.textContent = `
+                    .modal-overlay {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0, 0, 0, 0.5);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 9999;
+                    }
+                    .protocol-view-modal {
+                        background: var(--bg-primary);
+                        border-radius: 16px;
+                        padding: 2rem;
+                        max-width: 800px;
+                        width: 90%;
+                        max-height: 80vh;
+                        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                        border: 1px solid var(--border);
+                        animation: modalSlideIn 0.3s ease-out;
+                        overflow-y: auto;
+                    }
+                    .protocol-view-header {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        margin-bottom: 1.5rem;
+                        padding-bottom: 1rem;
+                        border-bottom: 1px solid var(--border);
+                    }
+                    .protocol-view-header h3 {
+                        color: var(--text-primary);
+                        font-size: 1.5rem;
+                        font-weight: 600;
+                        margin: 0;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                    }
+                    .modal-close-btn {
+                        background: none;
+                        border: none;
+                        color: var(--text-secondary);
+                        font-size: 1.5rem;
+                        cursor: pointer;
+                        padding: 0.5rem;
+                        border-radius: 8px;
+                        transition: var(--transition);
+                    }
+                    .modal-close-btn:hover {
+                        background: var(--bg-secondary);
+                        color: var(--accent);
+                    }
+                    .protocol-view-content {
+                        color: var(--text-primary);
+                    }
+                    
+                    /* Estilos para conteúdo de protocolos */
+                    .protocol-info {
+                        background: var(--bg-secondary);
+                        padding: 1rem;
+                        border-radius: 8px;
+                        margin-bottom: 1rem;
+                    }
+                    
+                    .diet-content, .workout-content, .calculation-content {
+                        color: var(--text-primary);
+                    }
+                    
+                    .diet-content h5, .workout-content h5, .calculation-content h5 {
+                        color: var(--accent);
+                        margin-top: 1.5rem;
+                        margin-bottom: 1rem;
+                        border-bottom: 1px solid var(--border);
+                        padding-bottom: 0.5rem;
+                    }
+                    
+                    .diet-content h6, .workout-content h6 {
+                        color: var(--text-primary);
+                        margin-top: 1rem;
+                        margin-bottom: 0.5rem;
+                    }
+                    
+                    /* Estilos para dietas */
+                    .personal-data ul, .calc-personal-data ul {
+                        list-style: none;
+                        padding: 0;
+                        margin: 0.5rem 0;
+                    }
+                    
+                    .personal-data li, .calc-personal-data li {
+                        padding: 0.25rem 0;
+                        border-bottom: 1px solid var(--border);
+                    }
+                    
+                    .totals-grid, .macros-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                        gap: 1rem;
+                        margin: 1rem 0;
+                    }
+                    
+                    .total-item, .macro-item {
+                        background: var(--bg-secondary);
+                        padding: 1rem;
+                        border-radius: 8px;
+                        text-align: center;
+                        border: 1px solid var(--border);
+                    }
+                    
+                    .total-value, .macro-value {
+                        display: block;
+                        font-size: 1.5rem;
+                        font-weight: 700;
+                        color: var(--accent);
+                        margin-bottom: 0.25rem;
+                    }
+                    
+                    .total-label, .macro-label {
+                        font-size: 0.8rem;
+                        color: var(--text-secondary);
+                        text-transform: uppercase;
+                    }
+                    
+                    .meal-card {
+                        background: var(--bg-secondary);
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+                    
+                    .foods-list {
+                        margin-top: 0.5rem;
+                    }
+                    
+                    .food-item {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 0.5rem 0;
+                        border-bottom: 1px solid var(--border);
+                    }
+                    
+                    .food-item:last-child {
+                        border-bottom: none;
+                    }
+                    
+                    .food-name {
+                        font-weight: 600;
+                        color: var(--text-primary);
+                    }
+                    
+                    .food-details {
+                        font-size: 0.8rem;
+                        color: var(--text-secondary);
+                    }
+                    
+                    /* Estilos para treinos */
+                    .day-card {
+                        background: var(--bg-secondary);
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+                    
+                    .exercise-item {
+                        background: var(--bg-primary);
+                        border: 1px solid var(--border);
+                        border-radius: 6px;
+                        padding: 0.75rem;
+                        margin: 0.5rem 0;
+                    }
+                    
+                    .exercise-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 0.5rem;
+                    }
+                    
+                    .exercise-name {
+                        font-weight: 600;
+                        color: var(--text-primary);
+                    }
+                    
+                    .exercise-sets {
+                        background: var(--accent);
+                        color: white;
+                        padding: 0.2rem 0.5rem;
+                        border-radius: 12px;
+                        font-size: 0.7rem;
+                        font-weight: 600;
+                    }
+                    
+                    .exercise-details {
+                        display: flex;
+                        gap: 1rem;
+                        font-size: 0.8rem;
+                        color: var(--text-secondary);
+                        flex-wrap: wrap;
+                    }
+                    
+                    .exercise-reps, .exercise-load, .exercise-rest {
+                        background: var(--bg-secondary);
+                        padding: 0.2rem 0.5rem;
+                        border-radius: 4px;
+                    }
+                    
+                    .exercise-notes {
+                        margin-top: 0.5rem;
+                        font-style: italic;
+                        color: var(--text-secondary);
+                        font-size: 0.8rem;
+                    }
+                    
+                    /* Estilos para cálculos */
+                    .calc-results {
+                        margin: 1rem 0;
+                    }
+                    
+                    .calc-results p {
+                        margin: 0.5rem 0;
+                        padding: 0.5rem;
+                        background: var(--bg-secondary);
+                        border-radius: 6px;
+                        border-left: 4px solid var(--accent);
+                    }
+                    
+                    .macro-targets {
+                        margin-top: 1rem;
+                    }
+                    
+                    .no-foods, .no-exercises {
+                        text-align: center;
+                        color: var(--text-secondary);
+                        font-style: italic;
+                        padding: 1rem;
+                    }
+                    
+                    /* Estilos para tabelas de protocolos (idênticos à acompanhamento.html) */
+                    .exercise-table-container, .foods-table-container {
+                        overflow-x: auto;
+                        margin: 1rem 0;
+                    }
+                    
+                    .exercise-table, .foods-table, .personal-data-table, .totals-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        background: var(--bg-primary);
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    }
+                    
+                    .exercise-table th, .foods-table th, .totals-table th {
+                        background: var(--accent);
+                        color: white;
+                        padding: 0.75rem;
+                        text-align: left;
+                        font-weight: 600;
+                        font-size: 0.9rem;
+                        border-bottom: 2px solid var(--accent);
+                    }
+                    
+                    .exercise-table td, .foods-table td, .totals-table td, 
+                    .personal-data-table td {
+                        padding: 0.75rem;
+                        border-bottom: 1px solid var(--border);
+                        color: var(--text-primary);
+                        font-size: 0.9rem;
+                    }
+                    
+                    .exercise-table tr:last-child td, 
+                    .foods-table tr:last-child td, 
+                    .totals-table tr:last-child td,
+                    .personal-data-table tr:last-child td {
+                        border-bottom: none;
+                    }
+                    
+                    /* Remover hover completamente das tabelas de alimentos */
+                    .foods-table tr:hover {
+                        background: transparent !important;
+                    }
+                    
+                    /* Fazer totais ficarem iguais às outras células */
+                    .total-cell,
+                    .meal-total-cell {
+                        font-weight: 600;
+                        color: var(--text-primary) !important;
+                        background: transparent !important;
+                    }
+                    
+                    .foods-table .meal-totals-row {
+                        background: transparent !important;
+                    }
+                    
+                    .foods-table .meal-totals-row td {
+                        background: transparent !important;
+                        color: var(--text-primary) !important;
+                    }
+                    
+                    .personal-data-table {
+                        margin: 1rem 0;
+                    }
+                    
+                    .personal-data-table td:first-child {
+                        font-weight: 600;
+                        color: var(--text-secondary);
+                        width: 150px;
+                    }
+                    
+                    .personal-data-table td:last-child {
+                        color: var(--text-primary);
+                    }
+                    
+                    .totals-table th, .totals-table td {
+                        text-align: center;
+                    }
+                    
+                    .total-cell {
+                        font-weight: 700;
+                        color: var(--accent);
+                        font-size: 1rem;
+                    }
+                    
+                    .exercise-name-cell, .food-name-cell {
+                        font-weight: 600;
+                        color: var(--text-primary);
+                        min-width: 200px;
+                    }
+                    
+                    .center-cell {
+                        text-align: center;
+                        color: var(--text-secondary);
+                    }
+                    
+                    .notes-cell {
+                        color: var(--text-secondary);
+                        font-style: italic;
+                        font-size: 0.8rem;
+                        max-width: 200px;
+                        word-wrap: break-word;
+                    }
+                    
+                    .no-data-cell {
+                        text-align: center;
+                        color: var(--text-secondary);
+                        font-style: italic;
+                        padding: 1.5rem;
+                        background: var(--bg-secondary);
+                    }
+                    
+                    /* Estilos específicos para dietas */
+                    .diet-totals {
+                        margin: 1rem 0;
+                    }
+                    
+                    .meals-section {
+                        margin-top: 1rem;
+                    }
+                    
+                    .meal-card {
+                        background: var(--bg-secondary);
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+                    
+                    .foods-list {
+                        margin-top: 0.5rem;
+                    }
+                    
+                    /* Estilos específicos para treinos */
+                    .day-card {
+                        background: var(--bg-secondary);
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+                    
+                    .exercise-item {
+                        background: var(--bg-primary);
+                        border: 1px solid var(--border);
+                        border-radius: 6px;
+                        padding: 0.75rem;
+                        margin: 0.5rem 0;
+                    }
+                    
+                    .exercise-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 0.5rem;
+                    }
+                    
+                    .exercise-name {
+                        font-weight: 600;
+                        color: var(--text-primary);
+                    }
+                    
+                    .exercise-sets {
+                        background: var(--accent);
+                        color: white;
+                        padding: 0.2rem 0.5rem;
+                        border-radius: 12px;
+                        font-size: 0.7rem;
+                        font-weight: 600;
+                    }
+                    
+                    .exercise-details {
+                        display: flex;
+                        gap: 1rem;
+                        font-size: 0.8rem;
+                        color: var(--text-secondary);
+                        flex-wrap: wrap;
+                    }
+                    
+                    .exercise-reps, .exercise-load, .exercise-rest {
+                        background: var(--bg-secondary);
+                        padding: 0.2rem 0.5rem;
+                        border-radius: 4px;
+                    }
+                    
+                    .exercise-notes {
+                        margin-top: 0.5rem;
+                        font-style: italic;
+                        color: var(--text-secondary);
+                        font-size: 0.8rem;
+                    }
+                    
+                    /* Estilos específicos para cálculos */
+                    .calc-personal-data {
+                        margin: 1rem 0;
+                    }
+                    
+                    .calc-results {
+                        margin: 1rem 0;
+                    }
+                    
+                    .calc-results p {
+                        margin: 0.5rem 0;
+                        padding: 0.5rem;
+                        background: var(--bg-secondary);
+                        border-radius: 6px;
+                        border-left: 4px solid var(--accent);
+                    }
+                    
+                    .macro-targets {
+                        margin-top: 1rem;
+                    }
+                    
+                    .macros-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                        gap: 1rem;
+                        margin: 1rem 0;
+                    }
+                    
+                    .macro-item {
+                        background: var(--bg-secondary);
+                        padding: 1rem;
+                        border-radius: 8px;
+                        text-align: center;
+                        border: 1px solid var(--border);
+                    }
+                    
+                    .no-foods {
+                        text-align: center;
+                        color: var(--text-secondary);
+                        font-style: italic;
+                        padding: 1rem;
+                    }
+                    
+                    /* Estilos para linha de totais da refeição */
+                    .meal-totals-row {
+                        background: var(--bg-secondary);
+                        border-top: 2px solid var(--border);
+                        font-weight: 700;
+                    }
+                    
+                    .meal-totals-row td {
+                        color: var(--text-primary) !important;
+                        border-bottom: none;
+                        padding: 1rem 0.75rem;
+                    }
+                    
+                    .meal-totals-label {
+                        text-align: left !important;
+                        font-size: 0.9rem;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    }
+                    
+                    .meal-total-cell {
+                        font-size: 1rem;
+                        font-weight: 800;
+                        color: var(--accent);
+                    }
+                    
+                    /* Responsive tables */
+                    @media (max-width: 768px) {
+                        .exercise-table-container, .foods-table-container {
+                            overflow-x: auto;
+                        }
+                        
+                        .exercise-table, .foods-table {
+                            min-width: 600px;
+                        }
+                        
+                        .exercise-table th, .foods-table th, .totals-table th {
+                            padding: 0.5rem;
+                            font-size: 0.8rem;
+                        }
+                        
+                        .exercise-table td, .foods-table td, .totals-table td,
+                        .personal-data-table td {
+                            padding: 0.5rem;
+                            font-size: 0.8rem;
+                        }
+                        
+                        .exercise-name-cell, .food-name-cell {
+                            min-width: 150px;
+                        }
+                        
+                        .notes-cell {
+                            max-width: 100px;
+                        }
+                    }
+                `;
+                document.head.appendChild(styles);
+            }
+        }
+
+        function showAnamneseModal(anamneseData) {
+            // Criar modal para exibir a anamnese completa
+            const modalHtml = `
+                <div class="modal-overlay active" id="anamneseViewModal">
+                    <div class="protocol-view-modal">
+                        <div class="protocol-view-header">
+                            <h3>
+                                <i class="fas fa-clipboard-check"></i>
+                                Anamnese: ${anamneseData.anamnese_name || 'Anamnese'}
+                            </h3>
+                            <button class="modal-close-btn" onclick="closeAnamneseViewModal()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="protocol-view-content">
+                            <p><strong>Data de atribuição:</strong> ${formatDate(anamneseData.assigned_at)}</p>
+                            <p><strong>Email do personal:</strong> ${anamneseData.personal_email}</p>
+                            <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+                            <h4>Respostas:</h4>
+                            <pre>${JSON.stringify(anamneseData.responses || {}, null, 2)}</pre>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Adicionar modal ao body
+            const modalContainer = document.createElement('div');
+            modalContainer.innerHTML = modalHtml;
+            document.body.appendChild(modalContainer);
+        }
+
+        function closeProtocolViewModal() {
+            const modal = document.getElementById('protocolViewModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function closeAnamneseViewModal() {
+            const modal = document.getElementById('anamneseViewModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Funções de formatação de protocolos (mesmas da página acompanhamento.html)
+        function formatDietContent(data) {
+            let html = '<div class="diet-content"><h4>🍽️ Detalhes da Dieta</h4>';
+            
+            // Dados pessoais
+            if (data.personal_data) {
+                const personalData = typeof data.personal_data === 'string' 
+                    ? JSON.parse(data.personal_data || '{}')
+                    : data.personal_data || {};
+                
+                html += '<div class="personal-data"><h5>Dados Pessoais:</h5>';
+                html += `
+                    <table class="personal-data-table">
+                        <tbody>
+                            ${personalData.weight ? `<tr><td><strong>Peso:</strong></td><td>${personalData.weight} kg</td></tr>` : ''}
+                            ${personalData.height ? `<tr><td><strong>Altura:</strong></td><td>${personalData.height} cm</td></tr>` : ''}
+                            ${personalData.age ? `<tr><td><strong>Idade:</strong></td><td>${personalData.age} anos</td></tr>` : ''}
+                            ${personalData.gender ? `<tr><td><strong>Gênero:</strong></td><td>${personalData.gender === 'male' ? 'Masculino' : 'Feminino'}</td></tr>` : ''}
+                            ${personalData.activity_level ? `<tr><td><strong>Nível de Atividade:</strong></td><td>${personalData.activity_level}</td></tr>` : ''}
+                            ${personalData.goal ? `<tr><td><strong>Objetivo:</strong></td><td>${personalData.goal}</td></tr>` : ''}
+                        </tbody>
+                    </table>
+                </div>`;
+            }
+
+            // Totais
+            if (data.totals) {
+                const totals = typeof data.totals === 'string' 
+                    ? JSON.parse(data.totals || '{}')
+                    : data.totals || {};
+                
+                html += '<div class="diet-totals"><h5>Totais Diários:</h5>';
+                html += `
+                    <table class="totals-table">
+                        <thead>
+                            <tr>
+                                <th>kcal</th>
+                                <th>Proteína</th>
+                                <th>Carboidratos</th>
+                                <th>Gorduras</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="total-cell">${totals.kcal || '0'}</td>
+                                <td class="total-cell">${totals.ptn || '0'}g</td>
+                                <td class="total-cell">${totals.cho || '0'}g</td>
+                                <td class="total-cell">${totals.lip || '0'}g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>`;
+            }
+
+            // Refeições
+            if (data.meals_data) {
+                const meals = typeof data.meals_data === 'string' 
+                    ? JSON.parse(data.meals_data || '[]')
+                    : data.meals_data || [];
+                
+                html += '<div class="meals-section"><h5>Refeições:</h5>';
+                meals.forEach((meal, index) => {
+                    html += `
+                        <div class="meal-card">
+                            <h6>🍴 Refeição ${meal.id || index + 1}: ${meal.name || 'Sem nome'}</h6>
+                            <div class="foods-table-container">
+                                <table class="foods-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Alimento</th>
+                                            <th>Quantidade</th>
+                                            <th>kcal</th>
+                                            <th>Proteína</th>
+                                            <th>Carboidratos</th>
+                                            <th>Gorduras</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                    `;
+                    
+                    if (meal.foods && meal.foods.length > 0) {
+                        // Calcular totais da refeição
+                        let mealTotals = {
+                            kcal: 0,
+                            ptn: 0,
+                            cho: 0,
+                            lip: 0
+                        };
+                        
+                        meal.foods.forEach(food => {
+                            // Extrair quantidade e unidade
+                            const quantityStr = food.quantity || food.unit || '100g';
+                            const quantity = parseFloat(quantityStr) || 100;
+                            
+                            // Valores nutricionais por 100g
+                            const kcalPer100g = parseFloat(food.kcal) || 0;
+                            const ptnPer100g = parseFloat(food.ptn) || 0;
+                            const choPer100g = parseFloat(food.cho) || 0;
+                            const lipPer100g = parseFloat(food.lip) || 0;
+                            
+                            // Calcular valores proporcionais
+                            const factor = quantity / 100;
+                            const kcal = (kcalPer100g * factor).toFixed(2);
+                            const ptn = (ptnPer100g * factor).toFixed(1);
+                            const cho = (choPer100g * factor).toFixed(1);
+                            const lip = (lipPer100g * factor).toFixed(1);
+                            
+                            // Adicionar aos totais
+                            mealTotals.kcal += parseFloat(kcal);
+                            mealTotals.ptn += parseFloat(ptn);
+                            mealTotals.cho += parseFloat(cho);
+                            mealTotals.lip += parseFloat(lip);
+                            
+                            html += `
+                                <tr>
+                                    <td class="food-name-cell">${food.name || 'N/A'}</td>
+                                    <td class="center-cell">${quantityStr}</td>
+                                    <td class="center-cell">${kcal}</td>
+                                    <td class="center-cell">${ptn}g</td>
+                                    <td class="center-cell">${cho}g</td>
+                                    <td class="center-cell">${lip}g</td>
+                                </tr>
+                            `;
+                        });
+                        
+                        // Adicionar linha de totais da refeição
+                        html += `
+                            <tr class="meal-totals-row">
+                                <td class="meal-totals-label"><strong>TOTAL DA REFEIÇÃO</strong></td>
+                                <td class="center-cell">-</td>
+                                <td class="center-cell meal-total-cell">${mealTotals.kcal.toFixed(2)}</td>
+                                <td class="center-cell meal-total-cell">${mealTotals.ptn.toFixed(1)}g</td>
+                                <td class="center-cell meal-total-cell">${mealTotals.cho.toFixed(1)}g</td>
+                                <td class="center-cell meal-total-cell">${mealTotals.lip.toFixed(1)}g</td>
+                            </tr>
+                        `;
+                    } else {
+                        html += `
+                            <tr>
+                                <td colspan="6" class="no-data-cell">Nenhum alimento cadastrado</td>
+                            </tr>
+                        `;
+                    }
+                    
+                    html += `
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        function formatWorkoutContent(data) {
+            let html = '<div class="workout-content"><h4>🏋️ Detalhes do Treino</h4>';
+            
+            if (data.description) {
+                html += `<p><strong>Descrição:</strong> ${data.description}</p>`;
+            }
+            
+            if (data.data && Array.isArray(data.data)) {
+                data.data.forEach((day, index) => {
+                    html += `
+                        <div class="day-card">
+                            <h5>📅 Dia: ${day.name || 'Sem nome'}</h5>
+                            <div class="exercise-table-container">
+                                <table class="exercise-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Exercício</th>
+                                            <th>Séries</th>
+                                            <th>Reps</th>
+                                            <th>Carga</th>
+                                            <th>Descanso</th>
+                                            <th>Observações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                    `;
+                    
+                    if (day.exercises && day.exercises.length > 0) {
+                        day.exercises.forEach((exercise, exIndex) => {
+                            html += `
+                                <tr>
+                                    <td class="exercise-name-cell">${exIndex + 1}. ${exercise.name || 'N/A'}</td>
+                                    <td class="center-cell">${exercise.sets || 0}</td>
+                                    <td class="center-cell">${exercise.reps || 'N/A'}</td>
+                                    <td class="center-cell">${exercise.load || '-'}</td>
+                                    <td class="center-cell">${exercise.rest || '-'}</td>
+                                    <td class="notes-cell">${exercise.notes || '-'}</td>
+                                </tr>
+                            `;
+                        });
+                    } else {
+                        html += `
+                            <tr>
+                                <td colspan="6" class="no-data-cell">Nenhum exercício cadastrado</td>
+                            </tr>
+                        `;
+                    }
+                    
+                    html += `
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                html += '<p>Nenhum dia de treino cadastrado</p>';
+            }
+            
+            html += '</div>';
+            return html;
+        }
+
+        function formatCalculationContent(data) {
+            let html = '<div class="calculation-content"><h4>🧮 Detalhes do Cálculo</h4>';
+            
+            // Dados pessoais
+            html += '<div class="calc-personal-data"><h5>Dados Pessoais:</h5>';
+            html += `
+                <table class="personal-data-table">
+                    <tbody>
+                        ${data.gender ? `<tr><td><strong>Gênero:</strong></td><td>${data.gender === 'male' ? 'Masculino' : 'Feminino'}</td></tr>` : ''}
+                        ${data.age ? `<tr><td><strong>Idade:</strong></td><td>${data.age} anos</td></tr>` : ''}
+                        ${data.weight ? `<tr><td><strong>Peso:</strong></td><td>${data.weight} kg</td></tr>` : ''}
+                        ${data.height ? `<tr><td><strong>Altura:</strong></td><td>${data.height} cm</td></tr>` : ''}
+                        ${data.activity_level ? `<tr><td><strong>Nível de Atividade:</strong></td><td>${data.activity_level}</td></tr>` : ''}
+                        ${data.goal ? `<tr><td><strong>Objetivo:</strong></td><td>${data.goal}</td></tr>` : ''}
+                    </tbody>
+                </table>
+            </div>`;
+            
+            // Resultados
+            if (data.results) {
+                html += '<div class="calc-results"><h5>Resultados:</h5>';
+                if (data.results.tmb) {
+                    html += `<p><strong>TMB:</strong> ${data.results.tmb} kcal/dia</p>`;
+                }
+                if (data.results.get) {
+                    html += `<p><strong>GET:</strong> ${data.results.get} kcal/dia</p>`;
+                }
+                if (data.results.total_calories) {
+                    html += `<p><strong>Calorias Totais:</strong> ${data.results.total_calories} kcal/dia</p>`;
+                }
+                html += '</div>';
+                
+                // Targets de macronutrientes
+                if (data.results.macros) {
+                    html += '<div class="macro-targets"><h5>Targets de Macronutrientes:</h5>';
+                    html += `
+                        <div class="macros-grid">
+                            <div class="macro-item">
+                                <span class="macro-value">${data.results.macros.protein || '0'}g</span>
+                                <span class="macro-label">Proteínas</span>
+                            </div>
+                            <div class="macro-item">
+                                <span class="macro-value">${data.results.macros.carbs || '0'}g</span>
+                                <span class="macro-label">Carboidratos</span>
+                            </div>
+                            <div class="macro-item">
+                                <span class="macro-value">${data.results.macros.fats || '0'}g</span>
+                                <span class="macro-label">Gorduras</span>
+                            </div>
+                        </div>
+                    `;
+                    html += '</div>';
+                }
+            }
+            
+            html += '</div>';
+            return html;
+        }
+
+        // Atualizar função renderMyPersonal para mostrar protocolos quando houver personal
+        function updatePersonalSection() {
+            const myPersonalSection = document.getElementById('myPersonalSection');
+            const protocolsSection = document.getElementById('protocolsSection');
+            const anamnesesSection = document.getElementById('anamnesesSection');
+            const studentDashboard = document.getElementById('studentDashboard');
+            
+            if (myPersonalSection && myPersonalSection.style.display !== 'none') {
+                // Se tem personal, mostrar seções de protocolos e anamneses
+                if (protocolsSection) protocolsSection.style.display = 'block';
+                if (anamnesesSection) anamnesesSection.style.display = 'block';
+                if (studentDashboard) studentDashboard.style.display = 'none';
+                
+                // Carregar protocolos e anamneses
+                loadStudentProtocols();
+                loadStudentAnamneses();
+            } else {
+                // Se não tem personal, esconder seções de protocolos e anamneses
+                if (protocolsSection) protocolsSection.style.display = 'none';
+                if (anamnesesSection) anamnesesSection.style.display = 'none';
+                if (studentDashboard) studentDashboard.style.display = 'block';
+            }
+        }
+
+        // Função para mostrar protocolos e anamneses quando clicar no personal
+        function showProtocolsAndAnamneses() {
+            const protocolsSection = document.getElementById('protocolsSection');
+            const anamnesesSection = document.getElementById('anamnesesSection');
+            const studentDashboard = document.getElementById('studentDashboard');
+            
+            // Mostrar seções de protocolos e anamneses
+            if (protocolsSection) protocolsSection.style.display = 'block';
+            if (anamnesesSection) anamnesesSection.style.display = 'block';
+            if (studentDashboard) studentDashboard.style.display = 'none';
+            
+            // Carregar protocolos e anamneses
+            loadStudentProtocols();
+            loadStudentAnamneses();
+            
+            // Rolar para a seção de protocolos
+            if (protocolsSection) {
+                protocolsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSidebarAuth();
+            loadFriendshipRequests();
+            loadMyPersonal();
+        });
+
+        // Friendship Requests functionality
+        async function loadFriendshipRequests() {
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                if (!currentUser) {
+                    return;
+                }
+                
+                const userData = JSON.parse(currentUser);
+                const userEmail = userData.email;
+                
+                console.log('Carregando pedidos para:', userEmail);
+                
+                // Buscar solicitações do Supabase
+                const { data, error } = await supabase
+                    .from('friendship_requests')
+                    .select('*')
+                    .eq('to_email', userEmail)
+                    .eq('status', 'pending')
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Erro ao carregar solicitações:', error);
+                    return;
+                }
+                
+                console.log('Pedidos encontrados:', data);
+                renderFriendshipRequests(data || []);
+                
+            } catch (error) {
+                console.error('Erro ao carregar solicitações de amizade:', error);
+            }
+        }
+
+        // Load My Personal functionality
+        async function loadMyPersonal() {
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                if (!currentUser) {
+                    return;
+                }
+                
+                const userData = JSON.parse(currentUser);
+                const userEmail = userData.email;
+                
+                console.log('Carregando informações do personal para:', userEmail);
+                
+                // Buscar amizades ativas onde o usuário é o aluno
+                const { data, error } = await supabase
+                    .from('friendships')
+                    .select('*')
+                    .eq('aluno_email', userEmail)
+                    .eq('status', 'active');
+                
+                if (error) {
+                    console.error('Erro ao carregar informações do personal:', error);
+                    return;
+                }
+                
+                console.log('Amizades encontradas:', data);
+                renderMyPersonal(data || []);
+                
+            } catch (error) {
+                console.error('Erro ao carregar informações do personal:', error);
+            }
+        }
+
+        function renderMyPersonal(friendships) {
+            const personalInfo = document.getElementById('personalInfo');
+            const emptyPersonal = document.getElementById('emptyPersonal');
+            const myPersonalSection = document.getElementById('myPersonalSection');
+            
+            if (friendships.length === 0) {
+                personalInfo.style.display = 'none';
+                emptyPersonal.style.display = 'block';
+                myPersonalSection.style.display = 'none';
+                return;
+            }
+            
+            myPersonalSection.style.display = 'block';
+            personalInfo.style.display = 'flex';
+            emptyPersonal.style.display = 'none';
+            
+            // Pegar o primeiro personal (só deve ter um)
+            const friendship = friendships[0];
+            const personalEmail = friendship.personal_email;
+            
+            // Buscar informações completas do personal na tabela pessoas
+            supabase
+                .from('pessoas')
+                .select('*')
+                .eq('email', personalEmail)
+                .maybeSingle()
+                .then(({ data: personalData, error }) => {
+                    if (error) {
+                        console.error('Erro ao buscar dados do personal:', error);
+                        return;
+                    }
+                    
+                    console.log('Dados do personal:', personalData);
+                    
+                    // Extrair primeira letra do nome para o avatar
+                    const firstName = personalData?.nome_pessoa || personalData?.name || 'Personal';
+                    const firstLetter = firstName.charAt(0).toUpperCase();
+                    
+                    personalInfo.innerHTML = `
+                        <div class="personal-avatar" onclick="toggleProtocolsAndAnamneses()" style="cursor: pointer;">
+                            ${firstLetter}
+                        </div>
+                        <div class="personal-details" onclick="toggleProtocolsAndAnamneses()" style="cursor: pointer;">
+                            <h3>${firstName}</h3>
+                            <p>${personalEmail}</p>
+                            <p>Personal Trainer</p>
+                            <p style="color: var(--accent); font-size: 0.8rem; margin-top: 0.5rem;">
+                                <i class="fas fa-hand-pointer"></i> Clique para ver/ocultar protocolos e anamneses
+                            </p>
+                        </div>
+                        <div class="personal-actions">
+                            <button class="btn btn-danger btn-small" onclick="event.stopPropagation(); deleteFriendship('${friendship.id}')" title="Excluir Amizade">
+                                <i class="fas fa-user-times"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+        }
+
+        // Função para alternar entre abrir e fechar as abas de protocolo e anamnese
+        function toggleProtocolsAndAnamneses() {
+            const protocolsSection = document.getElementById('protocolsSection');
+            const anamnesesSection = document.getElementById('anamnesesSection');
+            
+            // Verificar se as abas estão visíveis
+            const areVisible = protocolsSection.style.display !== 'none' || anamnesesSection.style.display !== 'none';
+            
+            if (areVisible) {
+                // Fechar as abas
+                protocolsSection.style.display = 'none';
+                anamnesesSection.style.display = 'none';
+                console.log('Abas de protocolo e anamnese fechadas');
+            } else {
+                // Abrir as abas
+                showProtocolsAndAnamneses();
+            }
+        }
+
+        // Delete friendship functionality
+        async function deleteFriendship(friendshipId) {
+            if (!confirm('Tem certeza que deseja excluir esta amizade? Esta ação não pode ser desfeita.')) {
+                return;
+            }
+            
+            try {
+                console.log('Excluindo amizade:', friendshipId);
+                
+                // Excluir amizade do Supabase
+                const { error } = await supabase
+                    .from('friendships')
+                    .delete()
+                    .eq('id', friendshipId);
+
+                if (error) {
+                    console.error('Erro ao excluir amizade:', error);
+                    alert('Erro ao excluir amizade. Tente novamente.');
+                    return;
+                }
+                
+                console.log('Amizade excluída com sucesso');
+                alert('Amizade excluída com sucesso!');
+                
+                // Recarregar página para atualizar a interface
+                window.location.reload();
+                
+            } catch (error) {
+                console.error('Erro ao excluir amizade:', error);
+                alert('Ocorreu um erro. Tente novamente.');
+            }
+        }
+
+        function renderFriendshipRequests(requests) {
+            const requestsList = document.getElementById('requestsList');
+            const emptyRequests = document.getElementById('emptyRequests');
+            const requestsCount = document.getElementById('requestsCount');
+            
+            // Atualizar contador
+            requestsCount.textContent = requests.length;
+            
+            if (requests.length === 0) {
+                requestsList.style.display = 'none';
+                emptyRequests.style.display = 'block';
+                return;
+            }
+            
+            requestsList.style.display = 'block';
+            emptyRequests.style.display = 'none';
+            
+            requestsList.innerHTML = requests.map(request => `
+                <div class="request-item" data-request-id="${request.id}">
+                    <div class="request-header">
+                        <div class="request-info">
+                            <div class="request-from">${request.from_email}</div>
+                            <div class="request-date">${formatDate(request.created_at)}</div>
+                        </div>
+                    </div>
+                    <div class="request-actions">
+                        <button class="btn-accept" onclick="acceptFriendshipRequest('${request.id}')">
+                            <i class="fas fa-check"></i>
+                            Aceitar
+                        </button>
+                        <button class="btn-reject" onclick="rejectFriendshipRequest('${request.id}')">
+                            <i class="fas fa-times"></i>
+                            Recusar
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function acceptFriendshipRequest(requestId) {
+            try {
+                console.log('Aceitando solicitação:', requestId);
+                
+                // Primeiro, buscar os detalhes da solicitação
+                const { data: requestData, error: fetchError } = await supabase
+                    .from('friendship_requests')
+                    .select('*')
+                    .eq('id', requestId)
+                    .single();
+                
+                if (fetchError) {
+                    console.error('Erro ao buscar solicitação:', fetchError);
+                    alert('Erro ao aceitar solicitação. Tente novamente.');
+                    return;
+                }
+                
+                // Atualizar status da solicitação
+                const { data: updatedRequest, error: updateError } = await supabase
+                    .from('friendship_requests')
+                    .update({ 
+                        status: 'accepted',
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', requestId)
+                    .select();
+                
+                if (updateError) {
+                    console.error('Erro ao aceitar solicitação:', updateError);
+                    alert('Erro ao aceitar solicitação. Tente novamente.');
+                    return;
+                }
+                
+                // Criar registro na tabela friendships
+                const { data: friendshipData, error: friendshipError } = await supabase
+                    .from('friendships')
+                    .insert([
+                        {
+                            personal_email: requestData.from_email, // Quem enviou é o personal
+                            aluno_email: requestData.to_email,      // Quem recebeu é o aluno
+                            status: 'active'
+                        }
+                    ])
+                    .select();
+                
+                if (friendshipError) {
+                    console.error('Erro ao criar amizade:', friendshipError);
+                    alert('Erro ao criar amizade. Tente novamente.');
+                    return;
+                }
+                
+                console.log('Amizade criada:', friendshipData);
+                console.log('Solicitação aceita:', updatedRequest);
+                
+                // Recarregar solicitações
+                await loadFriendshipRequests();
+                
+                // Recarregar lista de personal
+                await loadMyPersonal();
+                
+                // Mostrar mensagem de sucesso
+                showNotification('Amizade aceita com sucesso!', 'success');
+                
+            } catch (error) {
+                console.error('Erro ao aceitar solicitação:', error);
+                alert('Erro ao aceitar solicitação. Tente novamente.');
+            }
+        }
+
+        async function rejectFriendshipRequest(requestId) {
+            try {
+                console.log('Recusando solicitação:', requestId);
+                
+                // Atualizar status no Supabase
+                const { data, error } = await supabase
+                    .from('friendship_requests')
+                    .update({ 
+                        status: 'rejected',
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', requestId)
+                    .select();
+                
+                if (error) {
+                    console.error('Erro ao recusar solicitação:', error);
+                    alert('Erro ao recusar solicitação. Tente novamente.');
+                    return;
+                }
+                
+                console.log('Solicitação recusada:', data);
+                
+                // Recarregar solicitações
+                await loadFriendshipRequests();
+                
+                // Mostrar mensagem de sucesso
+                showNotification('Solicitação recusada.', 'info');
+                
+            } catch (error) {
+                console.error('Erro ao recusar solicitação:', error);
+                alert('Erro ao recusar solicitação. Tente novamente.');
+            }
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 0) {
+                return 'Hoje';
+            } else if (diffDays === 1) {
+                return 'Ontem';
+            } else if (diffDays < 7) {
+                return `Há ${diffDays} dias`;
+            } else {
+                return date.toLocaleDateString('pt-BR');
+            }
+        }
+
+        function showNotification(message, type) {
+            // Criar elemento de notificação
+            const notification = document.createElement('div');
+            notification.className = `friendship-status ${type}`;
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '9999';
+            notification.style.display = 'block';
+            
+            document.body.appendChild(notification);
+            
+            // Remover após 3 segundos
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Atualizar solicitações a cada 30 segundos (para verificar novas solicitações)
+        setInterval(loadFriendshipRequests, 30000);
+
+        // Navigation active state
+        const navItems = document.querySelectorAll('.nav-item');
+        const currentPage = 'acompanhamentoaluno';
+
+        navItems.forEach(item => {
+            if (item.dataset.page === currentPage) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

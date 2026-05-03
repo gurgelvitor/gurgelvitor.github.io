@@ -301,6 +301,32 @@
             transform: translateY(-1px);
         }
 
+        .sidebar-personal-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: calc(100% - 2rem);
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+            margin: 0.5rem 1rem;
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+            box-sizing: border-box;
+        }
+
+        .sidebar-personal-btn:hover {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+        }
+
         /* Responsive Sidebar */
         .sidebar.active {
             transform: translateX(0);
@@ -1686,11 +1712,7 @@
                 
                 <!-- Gestão -->
                 <div class="nav-category">Gestão</div>
-                <a href="alunos.html" class="nav-item" data-page="alunos">
-                    <i class="fas fa-users"></i>
-                    <span>Alunos</span>
-                </a>
-                <a href="pagamentos.html" class="nav-item" data-page="pagamentos">
+                                <a href="pagamentos.html" class="nav-item" data-page="pagamentos">
                     <i class="fas fa-credit-card"></i>
                     <span>Pagamentos</span>
                 </a>
@@ -1706,6 +1728,14 @@
                 <a href="amigos.html" class="nav-item active" data-page="amigos">
                     <i class="fas fa-user-friends"></i>
                     <span>Amigos</span>
+                </a>
+                
+                <div class="nav-divider"></div>
+                
+                <!-- Área do Aluno -->
+                <a href="homealuno.html" class="sidebar-personal-btn" data-page="homealuno">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Sou Aluno</span>
                 </a>
             </nav>
             

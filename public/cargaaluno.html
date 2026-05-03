@@ -1,0 +1,2055 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargas - GurgelTrack</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="js/auth.js"></script>
+    <style>
+        :root {
+            /* Cores do Tema Claro - Vermelho */
+            --bg-primary: #ffffff;
+            --bg-secondary: #ffffff;
+            --accent: #dc143c;
+            --accent-hover: #b91c1c;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border: #ffcccc;
+            --shadow: 0 4px 12px rgba(220, 20, 60, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --danger-color: #dc143c;
+        }
+
+        body.dark-mode {
+            /* Cores do Tema Escuro - Melhoradas */
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1e1e1e;
+            --accent: #e91e63;
+            --accent-hover: #f06292;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b8b8b8;
+            --border: #333333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --danger-color: #e91e63;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 999;
+            font-size: 20px;
+            color: var(--accent);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(0, 0, 0, 0.8);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+        }
+
+        body.dark-mode .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: var(--transition);
+            border-right: 1px solid var(--border);
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .sidebar-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            vertical-align: middle;
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0.25rem 0 0 0;
+        }
+
+        .nav-menu {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            gap: 0.75rem;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-primary);
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+
+        .nav-item.active {
+            background: var(--bg-primary);
+            color: var(--accent);
+            border-left-color: var(--accent);
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Menu Category Separators */
+        .nav-category {
+            padding: 0.5rem 1.5rem;
+            margin: 0.5rem 0 0.25rem 0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-category:first-child {
+            margin-top: 0;
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0.5rem 1.5rem;
+            opacity: 0.3;
+        }
+
+        /* Sidebar Login/Logout Area */
+        .sidebar-auth {
+            padding: 1rem;
+            margin: 1rem;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .sidebar-login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-login-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .sidebar-user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .sidebar-user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .sidebar-user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-user-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar-user-email {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-logout-btn {
+            padding: 0.5rem;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-logout-btn:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+        }
+        
+        .sidebar-personal-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: calc(100% - 2rem);
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+            margin: 0.5rem 1rem;
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+            box-sizing: border-box;
+        }
+
+        .sidebar-personal-btn:hover {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+        }
+
+        
+        /* Main Content */
+        .main-wrapper {
+            flex: 1;
+            margin-left: 280px;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        /* Modal de Pré-visualização */
+        #previewModalOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        #previewModalOverlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .preview-modal {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            z-index: 1002;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        #previewModalOverlay.active .preview-modal {
+            transform: scale(1);
+        }
+
+        .preview-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
+        }
+
+        .preview-modal-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .preview-modal-content {
+            padding: 1.5rem;
+            max-height: calc(90vh - 80px);
+            overflow-y: auto;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            justify-content: flex-end;
+        }
+
+        .preview-iframe-container {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--bg-secondary);
+        }
+
+        .preview-iframe-container iframe {
+            border: none;
+            display: block;
+        }
+
+        .main-header {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-title i {
+            color: var(--accent);
+        }
+
+        .header-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Workout Selector Styles */
+        .workout-selector {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .selector-header {
+            margin-bottom: 1rem;
+        }
+
+        .selector-title {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Search Section */
+        .search-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Load Tracking Sections */
+        .load-section {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.35rem 0.75rem;
+            font-size: 0.75rem;
+        }
+
+        .btn-secondary {
+            background: var(--text-secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--text-primary);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        /* Day Tabs */
+        .day-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .day-tab {
+            padding: 0.5rem 1rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px 6px 0 0;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .day-tab.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .day-tab:hover:not(.active) {
+            background: var(--bg-secondary);
+        }
+
+        /* Exercise Items */
+        .exercise-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+
+        .exercise-item:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow);
+        }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .exercise-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .exercise-config {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .exercise-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .weeks-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .week-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            transition: var(--transition);
+        }
+
+        .week-item:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow);
+        }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .week-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .week-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .btn-icon:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .btn-icon.delete {
+            color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+
+        .btn-icon.delete:hover {
+            background: var(--danger-color);
+            color: white;
+            border-color: var(--danger-color);
+        }
+
+        .btn-icon.delete.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            color: var(--text-secondary);
+            border-color: var(--border);
+        }
+
+        .btn-icon.delete.disabled:hover {
+            background: transparent;
+            color: var(--text-secondary);
+            border-color: var(--border);
+            transform: none;
+        }
+
+        /* Series Items */
+        .series-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .serie-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+        }
+
+        .serie-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            min-width: 30px;
+        }
+
+        .serie-input {
+            padding: 0.35rem;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            width: 80px;
+            text-align: center;
+            transition: var(--transition);
+            box-sizing: border-box;
+        }
+
+        .serie-input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .serie-input::placeholder {
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 3px;
+            transition: var(--transition);
+            font-size: 0.7rem;
+        }
+
+        .btn-icon:hover {
+            color: var(--danger-color);
+            background: rgba(220, 20, 60, 0.1);
+        }
+
+        .btn-icon.delete {
+            color: var(--danger-color);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .empty-state p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .main-header {
+                padding: 1rem;
+            }
+
+            .header-title {
+                font-size: 1.5rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .day-tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+            
+            .serie-item {
+                flex-wrap: wrap;
+                gap: 0.25rem;
+            }
+            
+            .serie-input {
+                width: 70px;
+                padding: 0.6rem;
+                font-size: 0.9rem;
+                border-radius: 6px;
+            }
+        }
+
+        
+            </style>
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
+    <div class="layout-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="logo-gurgel.png" alt="GurgelTrack Logo" class="sidebar-logo">
+                <div class="sidebar-title">GurgelTrack</div>
+                <div class="sidebar-subtitle">Sua plataforma fitness</div>
+            </div>
+            
+            <nav class="nav-menu">
+                <!-- Área do Aluno -->
+                <div class="nav-category">Área do Aluno</div>
+                <a href="homealuno.html" class="nav-item" data-page="homealuno">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Início Aluno</span>
+                </a>
+                <a href="acompanhamentoaluno.html" class="nav-item" data-page="acompanhamentoaluno">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Acompanhamento</span>
+                </a>
+                <a href="cargaaluno.html" class="nav-item active" data-page="cargas">
+                    <i class="fas fa-weight"></i>
+                    <span>Cargas</span>
+                </a>
+            </nav>
+            
+            <!-- Sou Personal Button -->
+            <a href="index.html" class="sidebar-personal-btn">
+                <i class="fas fa-user-tie"></i>
+                <span>Sou Personal</span>
+            </a>
+            
+            <!-- Sidebar Login/Logout Area -->
+            <div class="sidebar-auth">
+                <!-- Login button (shown when not logged in) -->
+                <a href="login.html" class="sidebar-login-btn" id="sidebarLoginBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Entrar</span>
+                </a>
+                
+                <!-- User info (shown when logged in) -->
+                <div class="sidebar-user-info" id="sidebarUserInfo" style="display: none;">
+                    <div class="sidebar-user-profile">
+                        <div class="sidebar-user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="sidebar-user-details">
+                            <div class="sidebar-user-email" id="sidebarUserEmail">user@example.com</div>
+                        </div>
+                    </div>
+                    <button class="sidebar-logout-btn" id="sidebarLogoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="main-wrapper">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="main-header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1 class="header-title">
+                            <i class="fas fa-weight"></i>
+                            Cargas
+                        </h1>
+                        <p class="header-subtitle">Gerencie suas cargas de treinamento</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <!-- Workout Selector -->
+                <section class="workout-selector">
+                    <div class="selector-header">
+                        <h2 class="selector-title">
+                            <i class="fas fa-clipboard-list"></i>
+                            Selecionar Treino
+                        </h2>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="workoutSelect">Escolha o Treino:</label>
+                        <select id="workoutSelect" onchange="loadWorkout()">
+                            <option value="">Selecione um treino...</option>
+                        </select>
+                    </div>
+                </section>
+
+                <!-- Busca de Exercícios -->
+                <section class="search-section" id="searchSection" style="display: none;">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar exercício..." onkeyup="filterExercises()">
+                </section>
+
+                <!-- Load Tracking Section -->
+                <section class="load-section" id="loadSection" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-chart-line"></i>
+                            <span id="workoutTitle">Progressão de Cargas</span>
+                        </h2>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-secondary btn-small" onclick="generateReport()">
+                                <i class="fas fa-file-alt"></i>
+                                Relatório
+                            </button>
+                            <button class="btn btn-success btn-small" onclick="saveAllLoads()">
+                                Salvar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Abas dos Dias de Treino -->
+                    <div class="day-tabs" id="dayTabs">
+                        <!-- Abas serão inseridas dinamicamente -->
+                    </div>
+                    
+                    <!-- Conteúdo dos Dias -->
+                    <div id="loadContainer">
+                        <!-- Conteúdo dinâmico será inserido aqui -->
+                    </div>
+                </section>
+
+                <div class="empty-state" id="emptyState">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>Nenhum treino selecionado</h3>
+                    <p>Selecione um treino acima para começar a registrar suas cargas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Pré-visualização do Relatório -->
+    <div class="modal-overlay" id="previewModalOverlay">
+        <div class="preview-modal">
+            <div class="preview-modal-header">
+                <h3>Pré-visualização do Relatório</h3>
+                <button class="modal-close-btn" id="closePreviewModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="preview-modal-content">
+                <div class="preview-actions">
+                    <button class="btn btn-secondary" id="cancelPreview">
+                        <i class="fas fa-arrow-left"></i>
+                        Voltar
+                    </button>
+                    <button class="btn btn-success" id="confirmPreview">
+                        <i class="fas fa-download"></i>
+                        Baixar PDF
+                    </button>
+                </div>
+                
+                <div class="preview-iframe-container">
+                    <iframe id="pdfPreview" src="" width="100%" height="600px"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Configuração do Supabase
+        var supabaseUrl = 'https://erhhavvueccaqenzgspp.supabase.co';
+        var supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGhhdnZ1ZWNjYXFlbnpnc3BwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzE1NjAzNywiZXhwIjoyMDkyNzMyMDM3fQ.h9BwrTDXDQUHYBClC8raJiN4UqQuz9vaX1t0GM4kMcw'; // Service Role Key
+        
+        // Verificar se o cliente Supabase já existe
+        var supabase;
+        if (window.supabaseClient) {
+            supabase = window.supabaseClient;
+        } else {
+            supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+            window.supabaseClient = supabase;
+        }
+
+        // Update auth state on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticação antes de carregar qualquer coisa
+            if (!auth.isAuthenticated()) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            updateSidebarAuth();
+            initThemeToggle();
+            loadWorkouts();
+        });
+
+        // Função para atualizar estado de autenticação na sidebar
+        function updateSidebarAuth() {
+            const loginBtn = document.getElementById('sidebarLoginBtn');
+            const userInfo = document.getElementById('sidebarUserInfo');
+            const userEmailElement = document.getElementById('sidebarUserEmail');
+            
+            if (auth.isAuthenticated() && auth.currentUser) {
+                const userEmail = auth.currentUser.email;
+                if (loginBtn && userInfo) {
+                    loginBtn.style.display = 'none';
+                    userInfo.style.display = 'flex';
+                    userEmailElement.textContent = userEmail;
+                }
+            } else if (loginBtn && userInfo) {
+                loginBtn.style.display = 'flex';
+                userInfo.style.display = 'none';
+            }
+        }
+
+        // Sidebar logout functionality
+        document.getElementById('sidebarLogoutBtn').addEventListener('click', function() {
+            // Usar o sistema de autenticação existente
+            if (window.auth && window.auth.logout) {
+                window.auth.logout();
+            } else {
+                auth.logout();
+            }
+        });
+
+        // Theme Toggle Functionality
+        function initThemeToggle() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const body = document.body;
+            
+            // Load saved theme or default to light
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeIcon.className = 'fas fa-sun';
+            }
+            
+            themeToggle.addEventListener('click', function() {
+                body.classList.toggle('dark-mode');
+                
+                if (body.classList.contains('dark-mode')) {
+                    themeIcon.className = 'fas fa-sun';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    themeIcon.className = 'fas fa-moon';
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        }
+
+        // Variáveis globais
+        let selectedWorkout = null;
+        let workoutLoads = {};
+        let currentDayIndex = 0;
+
+        // Carregar treinos do aluno
+        async function loadWorkouts() {
+            try {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (!currentUser) {
+                    console.error('Usuário não encontrado');
+                    return;
+                }
+
+                // Carregar treinos da tabela student_workouts do Supabase (como na acompanhamentoaluno.html)
+                const { data: workouts, error } = await supabase
+                    .from('student_workouts')
+                    .select('*')
+                    .eq('student_email', currentUser.email)
+                    .order('assigned_at', { ascending: false });
+
+                if (error) {
+                    console.error('Erro ao carregar treinos do Supabase:', error);
+                    return;
+                }
+
+                console.log('Treinos encontrados:', workouts);
+
+                const workoutSelect = document.getElementById('workoutSelect');
+                workoutSelect.innerHTML = '<option value="">Selecione um treino...</option>';
+                
+                if (workouts && workouts.length > 0) {
+                    workouts.forEach(workout => {
+                        const option = document.createElement('option');
+                        option.value = workout.id;
+                        
+                        // Extrair nome do treino
+                        let workoutName = workout.workout_name || `Treino ${workout.id}`;
+                        if (workout.name) {
+                            workoutName = workout.name;
+                        } else if (workout.title) {
+                            workoutName = workout.title;
+                        }
+                        
+                        option.textContent = workoutName;
+                        workoutSelect.appendChild(option);
+                    });
+                } else {
+                    const option = document.createElement('option');
+                    option.value = "";
+                    option.textContent = "Nenhum treino encontrado";
+                    option.disabled = true;
+                    workoutSelect.appendChild(option);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar treinos:', error);
+            }
+        }
+
+        // Carregar treino selecionado
+        async function loadWorkout() {
+            const workoutSelect = document.getElementById('workoutSelect');
+            const workoutId = workoutSelect.value;
+            
+            if (!workoutId) {
+                resetInterface();
+                return;
+            }
+
+            try {
+                // Buscar dados do treino do Supabase
+                const { data: workout, error } = await supabase
+                    .from('student_workouts')
+                    .select('*')
+                    .eq('id', workoutId)
+                    .single();
+
+                if (error) {
+                    console.error('Erro ao carregar treino do Supabase:', error);
+                    return;
+                }
+
+                console.log('Treino carregado:', workout);
+                selectedWorkout = workout;
+                renderWorkoutInterface();
+                loadSavedLoads();
+            } catch (error) {
+                console.error('Erro ao carregar treino:', error);
+            }
+        }
+
+        // Renderizar interface do treino
+        function renderWorkoutInterface() {
+            if (!selectedWorkout) return;
+
+            // Extrair nome do treino
+            let workoutName = selectedWorkout.workout_name || `Treino ${selectedWorkout.id}`;
+            if (selectedWorkout.name) {
+                workoutName = selectedWorkout.name;
+            } else if (selectedWorkout.title) {
+                workoutName = selectedWorkout.title;
+            }
+
+            document.getElementById('workoutTitle').textContent = `Progressão de Cargas - ${workoutName}`;
+            document.getElementById('loadSection').style.display = 'block';
+            document.getElementById('searchSection').style.display = 'block';
+            document.getElementById('emptyState').style.display = 'none';
+
+            renderDayTabs();
+            renderCurrentDay();
+        }
+
+        // Renderizar abas dos dias
+        function renderDayTabs() {
+            const dayTabs = document.getElementById('dayTabs');
+            
+            // Tentar extrair dados do treino do campo workout_data ou content
+            let workoutData = {};
+            try {
+                if (selectedWorkout.workout_data) {
+                    workoutData = JSON.parse(selectedWorkout.workout_data);
+                } else if (selectedWorkout.content) {
+                    workoutData = JSON.parse(selectedWorkout.content);
+                } else if (selectedWorkout.conteudo) {
+                    workoutData = JSON.parse(selectedWorkout.conteudo);
+                }
+            } catch (e) {
+                console.error('Erro ao parsear dados do treino:', e);
+            }
+            
+            // Usar o campo data que contém os dias do treino
+            const days = workoutData.data || [];
+            console.log('Dias encontrados para abas:', days);
+            
+            dayTabs.innerHTML = days.map((day, index) => `
+                <div class="day-tab ${index === currentDayIndex ? 'active' : ''}" 
+                     onclick="switchDay(${index})">
+                    ${day.name || `Dia ${index + 1}`}
+                </div>
+            `).join('');
+        }
+
+        // Alternar entre dias
+        function switchDay(dayIndex) {
+            currentDayIndex = dayIndex;
+            renderDayTabs();
+            renderCurrentDay();
+        }
+
+        // Renderizar dia atual
+        function renderCurrentDay() {
+            const loadContainer = document.getElementById('loadContainer');
+            
+            // Tentar extrair dados do treino do campo workout_data ou content
+            let workoutData = {};
+            try {
+                if (selectedWorkout.workout_data) {
+                    workoutData = JSON.parse(selectedWorkout.workout_data);
+                } else if (selectedWorkout.content) {
+                    workoutData = JSON.parse(selectedWorkout.content);
+                } else if (selectedWorkout.conteudo) {
+                    workoutData = JSON.parse(selectedWorkout.conteudo);
+                }
+            } catch (e) {
+                console.error('Erro ao parsear dados do treino:', e);
+            }
+            
+            // Usar o campo data que contém os dias do treino
+            const days = workoutData.data || [];
+            console.log('Dias encontrados:', days);
+            console.log('Índice do dia atual:', currentDayIndex);
+            
+            const currentDay = days[currentDayIndex];
+            console.log('Dia atual:', currentDay);
+            
+            // Extrair exercícios do campo exercises do dia
+            const exercises = currentDay ? currentDay.exercises || [] : [];
+            console.log('Exercícios encontrados:', exercises);
+            
+            if (!exercises || exercises.length === 0) {
+                loadContainer.innerHTML = '<p>Nenhum exercício para este dia.</p>';
+                return;
+            }
+
+            loadContainer.innerHTML = exercises.map(exercise => `
+                <div class="exercise-item" data-exercise-id="${exercise.id}">
+                    <div class="exercise-header">
+                        <div>
+                            <div class="exercise-name">${exercise.name}</div>
+                            <div class="exercise-config">
+                                ${exercise.sets} séries × ${exercise.reps} reps${exercise.rest ? ` | ${exercise.rest}s desc` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-actions">
+                        <button class="btn btn-success btn-small" onclick="event.stopPropagation(); addWeek('${exercise.id}')">
+                            <i class="fas fa-plus"></i>
+                            Semana
+                        </button>
+                    </div>
+                    
+                    <div class="weeks-container" id="weeks-${exercise.id}">
+                        <!-- Semanas serão adicionadas dinamicamente -->
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Renderizar séries
+        function renderSeries(exerciseId, dayIndex, series) {
+            if (!series || series.length === 0) {
+                series = [{ load: '', reps: '' }];
+            }
+            
+            return series.map((serie, serieIndex) => `
+                <div class="serie-item">
+                    <div class="serie-label">S${serieIndex + 1}:</div>
+                    <input type="text" 
+                           class="serie-input" 
+                           placeholder="Carga"
+                           value="${serie.load || ''}"
+                           onchange="updateSerieData('${exerciseId}', ${dayIndex}, ${serieIndex}, 'load', this.value)">
+                    <input type="text" 
+                           class="serie-input" 
+                           placeholder="Reps"
+                           value="${serie.reps || ''}"
+                           onchange="updateSerieData('${exerciseId}', ${dayIndex}, ${serieIndex}, 'reps', this.value)">
+                    ${series.length > 1 ? `
+                        <button class="btn-icon delete" onclick="event.stopPropagation(); removeSerie('${exerciseId}', ${dayIndex}, ${serieIndex})" title="Remover">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Atualizar dados da série
+        function updateSerieData(exerciseId, dayIndex, serieIndex, field, value) {
+            if (!workoutLoads[selectedWorkout.id]) {
+                workoutLoads[selectedWorkout.id] = {};
+            }
+            if (!workoutLoads[selectedWorkout.id][dayIndex]) {
+                workoutLoads[selectedWorkout.id][dayIndex] = {};
+            }
+            if (!workoutLoads[selectedWorkout.id][dayIndex][exerciseId]) {
+                workoutLoads[selectedWorkout.id][dayIndex][exerciseId] = [];
+            }
+            if (!workoutLoads[selectedWorkout.id][dayIndex][exerciseId][serieIndex]) {
+                workoutLoads[selectedWorkout.id][dayIndex][exerciseId][serieIndex] = {};
+            }
+
+            workoutLoads[selectedWorkout.id][dayIndex][exerciseId][serieIndex][field] = value;
+        }
+
+        // Remover série
+        function removeSerie(exerciseId, dayIndex, serieIndex) {
+            if (workoutLoads[selectedWorkout.id] && 
+                workoutLoads[selectedWorkout.id][dayIndex] && 
+                workoutLoads[selectedWorkout.id][dayIndex][exerciseId]) {
+                
+                workoutLoads[selectedWorkout.id][dayIndex][exerciseId].splice(serieIndex, 1);
+                renderCurrentDay();
+            }
+        }
+
+        // Carregar cargas salvas
+        async function loadSavedLoads() {
+            try {
+                // Primeiro tentar carregar da API para sincronização
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                const response = await fetch('/api/cargas', {
+                    headers: auth.getAuthHeaders()
+                });
+
+                if (response.ok) {
+                    const cargas = await response.json();
+                    
+                    // Procurar carga deste treino específico
+                    const cargaDoTreino = cargas.find(carga => {
+                        try {
+                            const cargaData = JSON.parse(carga.conteudo || '{}');
+                            return cargaData.workoutId === selectedWorkout.id && 
+                                   cargaData.alunoEmail === currentUser.email;
+                        } catch (e) {
+                            return false;
+                        }
+                    });
+
+                    if (cargaDoTreino) {
+                        const cargaData = JSON.parse(cargaDoTreino.conteudo || '{}');
+                        workoutLoads[selectedWorkout.id] = cargaData.loads || {};
+                        
+                        // Também salvar no localStorage como backup
+                        localStorage.setItem(`workoutLoads_${selectedWorkout.id}`, JSON.stringify(workoutLoads[selectedWorkout.id]));
+                        
+                        console.log('Cargas carregadas da API e sincronizadas');
+                        renderCurrentDay();
+                        renderWeeksForAllExercises();
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao carregar cargas da API:', error);
+            }
+
+            // Fallback: carregar do localStorage
+            const savedLoads = localStorage.getItem(`workoutLoads_${selectedWorkout.id}`);
+            if (savedLoads) {
+                workoutLoads[selectedWorkout.id] = JSON.parse(savedLoads);
+                console.log('Cargas carregadas do localStorage (backup)');
+                renderCurrentDay();
+                renderWeeksForAllExercises();
+            }
+        }
+
+        // Renderizar semanas para todos os exercícios
+        function renderWeeksForAllExercises() {
+            if (!workoutLoads[selectedWorkout.id] || !workoutLoads[selectedWorkout.id][currentDayIndex]) {
+                return;
+            }
+
+            const dayLoads = workoutLoads[selectedWorkout.id][currentDayIndex];
+            Object.keys(dayLoads).forEach(exerciseId => {
+                renderWeeks(exerciseId);
+            });
+        }
+
+        // Salvar todas as cargas
+        async function saveAllLoads() {
+            try {
+                if (!workoutLoads[selectedWorkout.id]) {
+                    alert('Nenhuma carga para salvar. Adicione cargas aos exercícios primeiro.');
+                    return;
+                }
+
+                // Salvar no localStorage
+                localStorage.setItem(`workoutLoads_${selectedWorkout.id}`, JSON.stringify(workoutLoads[selectedWorkout.id]));
+
+                // Salvar na API para sincronização entre dispositivos
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                const cargaData = {
+                    titulo: `Cargas - Treino ${selectedWorkout.id}`,
+                    conteudo: JSON.stringify({
+                        workoutId: selectedWorkout.id,
+                        loads: workoutLoads[selectedWorkout.id],
+                        alunoEmail: currentUser.email,
+                        updatedAt: new Date().toISOString()
+                    }),
+                    categoria: 'carga'
+                };
+
+                const response = await fetch('/api/cargas', {
+                    method: 'POST',
+                    headers: auth.getAuthHeaders(),
+                    body: JSON.stringify(cargaData)
+                });
+
+                if (response.ok) {
+                    alert('Cargas salvas com sucesso e sincronizadas entre dispositivos!');
+                } else {
+                    console.error('Erro na resposta da API:', response.status, response.statusText);
+                    alert('Cargas salvas localmente. Erro ao sincronizar com servidor.');
+                }
+            } catch (error) {
+                console.error('Erro ao salvar cargas:', error);
+                alert('Cargas salvas localmente. Erro ao sincronizar com servidor.');
+            }
+        }
+
+        // Filtrar exercícios
+        function filterExercises() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const exerciseItems = document.querySelectorAll('.exercise-item');
+            
+            exerciseItems.forEach(item => {
+                const exerciseName = item.querySelector('.exercise-name').textContent.toLowerCase();
+                if (exerciseName.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Gerar relatório completo de treinos em PDF com pré-visualização
+        function generateReport() {
+            console.log('generateReport chamada');
+            console.log('selectedWorkout:', selectedWorkout);
+            
+            if (!selectedWorkout) {
+                alert('Por favor, selecione um treino primeiro!');
+                return;
+            }
+
+            console.log('Iniciando geração do relatório...');
+            
+            // Verificar se as bibliotecas estão carregadas
+            if (!window.jspdf) {
+                console.error('Biblioteca jsPDF não encontrada');
+                alert('Erro: Biblioteca jsPDF não carregada. Recarregue a página e tente novamente.');
+                return;
+            }
+            
+            if (!window.jspdf.jsPDF) {
+                console.error('jsPDF não disponível em window.jspdf.jsPDF');
+                alert('Erro: jsPDF não disponível. Recarregue a página e tente novamente.');
+                return;
+            }
+            
+            try {
+                // Inicializar jsPDF
+                const { jsPDF } = window.jspdf;
+                console.log('jsPDF inicializado:', jsPDF);
+                const doc = new jsPDF('portrait', 'mm', 'a4');
+                console.log('Documento criado:', doc);
+                
+                // Configurações de página
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+                let yPosition = 20;
+                const lineHeight = 7;
+                const margin = 15;
+
+                // Função para adicionar nova página se necessário
+                function checkPageBreak(requiredHeight = 20) {
+                    if (yPosition + requiredHeight > pageHeight - margin) {
+                        doc.addPage();
+                        yPosition = 20;
+                        return true;
+                    }
+                    return false;
+                }
+
+                // Função para adicionar texto com quebra de linha automática
+                function addText(text, fontSize = 12, fontStyle = 'normal') {
+                    doc.setFontSize(fontSize);
+                    doc.setFont('helvetica', fontStyle);
+                    const lines = doc.splitTextToSize(text, pageWidth - 2 * margin);
+                    
+                    lines.forEach(line => {
+                        checkPageBreak();
+                        doc.text(line, margin, yPosition);
+                        yPosition += lineHeight;
+                    });
+                    return yPosition;
+                }
+
+                // Cabeçalho do relatório
+                doc.setFillColor(220, 20, 60);
+                doc.rect(0, 0, pageWidth, 30, 'F');
+                
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(20);
+                doc.setFont('helvetica', 'bold');
+                doc.text('RELATORIO DE CARGAS', pageWidth / 2, 15, { align: 'center' });
+                
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'normal');
+                const workoutName = selectedWorkout.workout_name || selectedWorkout.name || `Treino ${selectedWorkout.id}`;
+                doc.text(workoutName.toUpperCase(), pageWidth / 2, 22, { align: 'center' });
+
+                // Resetar cor para preto
+                doc.setTextColor(0, 0, 0);
+                yPosition = 40;
+
+                // Informações gerais
+                addText('Dados do Relatório', 14, 'bold');
+                yPosition += 8;
+                
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                
+                // Criar tabela para informações gerais
+                const infoData = [
+                    ['Aluno:', currentUser ? currentUser.email : 'Não identificado'],
+                    ['Treino:', workoutName],
+                    ['Personal:', selectedWorkout.personal_email || 'Não informado'],
+                    ['Data do Relatório:', new Date().toLocaleDateString('pt-BR')],
+                    ['Data do Treino:', selectedWorkout.assigned_at ? new Date(selectedWorkout.assigned_at).toLocaleDateString('pt-BR') : 'Não informada']
+                ];
+
+                // Adicionar tabela de informações usando autoTable
+                doc.autoTable({
+                    body: infoData,
+                    startY: yPosition,
+                    theme: 'plain',
+                    styles: {
+                        fontSize: 9,
+                        cellPadding: 2,
+                        textColor: [0, 0, 0],
+                        fillColor: [255, 255, 255],
+                        lineColor: [200, 200, 200]
+                    },
+                    columnStyles: {
+                        0: {
+                            fontStyle: 'bold',
+                            cellWidth: 30,
+                            textColor: [220, 20, 60]
+                        },
+                        1: {
+                            cellWidth: 'auto',
+                            fontStyle: 'normal'
+                        }
+                    },
+                    tableWidth: 'wrap',
+                    margin: { left: margin, right: margin }
+                });
+
+                yPosition = doc.lastAutoTable.finalY + 15;
+
+                // Extrair dados do treino
+                let workoutData = {};
+                try {
+                    if (selectedWorkout.workout_data) {
+                        workoutData = JSON.parse(selectedWorkout.workout_data);
+                    } else if (selectedWorkout.content) {
+                        workoutData = JSON.parse(selectedWorkout.content);
+                    } else if (selectedWorkout.conteudo) {
+                        workoutData = JSON.parse(selectedWorkout.conteudo);
+                    }
+                } catch (e) {
+                    console.error('Erro ao parsear dados do treino:', e);
+                }
+
+                const days = workoutData.data || [];
+
+                // Verificar se há dias de treino
+                if (days.length === 0) {
+                    addText('Nenhum dia de treino encontrado', 12, 'italic');
+                } else {
+                    // Iterar sobre os dias de treino
+                    days.forEach((day, dayIndex) => {
+                        checkPageBreak(30);
+                        
+                        // Título do dia
+                        doc.setFillColor(255, 200, 200);
+                        doc.rect(margin - 5, yPosition - 5, pageWidth - 2 * margin + 10, 12, 'F');
+                        addText(`${day.name || `Dia ${dayIndex + 1}`}`, 13, 'bold');
+                        yPosition += 5;
+
+                        if (!day.exercises || day.exercises.length === 0) {
+                            addText('Nenhum exercício configurado para este dia.', 10, 'italic');
+                            yPosition += 5;
+                        } else {
+                            // Iterar sobre os exercícios
+                            day.exercises.forEach((exercise, exerciseIndex) => {
+                                checkPageBreak(40);
+                                
+                                // Nome do exercício
+                                doc.setFont('helvetica', 'bold');
+                                doc.text(`${exerciseIndex + 1}. ${exercise.name}`, margin, yPosition);
+                                yPosition += lineHeight;
+                                
+                                // Configuração original
+                                doc.setFont('helvetica', 'normal');
+                                doc.setFontSize(10);
+                                doc.text(`Config: ${exercise.sets} séries × ${exercise.reps} reps${exercise.rest ? ` | ${exercise.rest}s desc` : ''}`, margin, yPosition);
+                                yPosition += lineHeight + 3;
+
+                                // Verificar se há cargas registradas
+                                const loads = workoutLoads[selectedWorkout.id] && 
+                                             workoutLoads[selectedWorkout.id][dayIndex] && 
+                                             workoutLoads[selectedWorkout.id][dayIndex][exercise.id];
+
+                                if (loads && loads.weeks && loads.weeks.length > 0) {
+                                    // Preparar dados para a tabela
+                                    const tableData = [];
+                                    const headers = ['Semana', 'Série', 'Carga (kg)', 'Reps', 'Volume (kg)'];
+
+                                    loads.weeks.forEach((week, weekIndex) => {
+                                        if (week.series && week.series.length > 0) {
+                                            let weekVolume = 0;
+                                            
+                                            week.series.forEach((serie, serieIndex) => {
+                                                const load = parseFloat(serie.load) || 0;
+                                                const reps = parseFloat(serie.reps) || 0;
+                                                const volume = load * reps;
+                                                weekVolume += volume;
+
+                                                tableData.push([
+                                                    `Semana ${weekIndex + 1}`,
+                                                    `S${serieIndex + 1}`,
+                                                    serie.load || '-',
+                                                    serie.reps || '-',
+                                                    volume > 0 ? volume.toFixed(1) : '-'
+                                                ]);
+                                            });
+
+                                            // Adicionar total da semana
+                                            if (week.series.length > 1) {
+                                                tableData.push([
+                                                    '',
+                                                    { content: 'TOTAL', styles: { fontStyle: 'bold' } },
+                                                    '',
+                                                    '',
+                                                    { content: weekVolume.toFixed(1), styles: { fontStyle: 'bold' } }
+                                                ]);
+                                            }
+                                        }
+                                    });
+
+                                    if (tableData.length > 0) {
+                                        // Adicionar tabela de cargas
+                                        doc.autoTable({
+                                            head: [headers],
+                                            body: tableData,
+                                            startY: yPosition,
+                                            theme: 'grid',
+                                            styles: {
+                                                fontSize: 7,
+                                                cellPadding: 1,
+                                                textColor: [0, 0, 0],
+                                                fillColor: [255, 255, 255],
+                                                lineColor: [200, 200, 200]
+                                            },
+                                            headStyles: {
+                                                fillColor: [220, 20, 60],
+                                                textColor: [255, 255, 255],
+                                                fontStyle: 'bold',
+                                                fontSize: 7
+                                            },
+                                            columnStyles: {
+                                                0: { cellWidth: 18 },
+                                                1: { cellWidth: 12 },
+                                                2: { cellWidth: 20 },
+                                                3: { cellWidth: 15 },
+                                                4: { cellWidth: 20 }
+                                            },
+                                            tableWidth: 'wrap',
+                                            margin: { left: margin, right: margin }
+                                        });
+
+                                        yPosition = doc.lastAutoTable.finalY + 10;
+                                    } else {
+                                        addText('Nenhuma carga registrada para este exercício.', 10, 'italic');
+                                        yPosition += 5;
+                                    }
+                                } else {
+                                    addText('Nenhuma carga registrada para este exercício.', 10, 'italic');
+                                    yPosition += 5;
+                                }
+
+                                yPosition += 8;
+                            });
+                        }
+                    });
+                }
+
+                // Rodapé
+                const totalPages = doc.internal.getNumberOfPages();
+                for (let i = 1; i <= totalPages; i++) {
+                    doc.setPage(i);
+                    doc.setFontSize(8);
+                    doc.setFont('helvetica', 'italic');
+                    doc.text(`Página ${i} de ${totalPages}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+                }
+
+                // Gerar blob do PDF e mostrar na pré-visualização
+                const pdfBlob = doc.output('blob');
+                const pdfUrl = URL.createObjectURL(pdfBlob);
+                
+                // Armazenar o PDF para download posterior
+                window.currentPdfBlob = pdfBlob;
+                window.currentPdfFileName = `relatorio_cargas_${workoutName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${new Date().toISOString().split('T')[0]}.pdf`;
+                
+                // Mostrar pré-visualização
+                showPdfPreview(pdfUrl);
+
+            } catch (error) {
+                console.error('Erro ao gerar relatório:', error);
+                alert('Erro ao gerar relatório. Tente novamente.');
+            }
+        }
+
+        // Mostrar pré-visualização do PDF
+        function showPdfPreview(pdfUrl) {
+            const modal = document.getElementById('previewModalOverlay');
+            const iframe = document.getElementById('pdfPreview');
+            
+            iframe.src = pdfUrl;
+            modal.classList.add('active');
+        }
+
+        // Baixar PDF após pré-visualização
+        function downloadPdf() {
+            if (window.currentPdfBlob && window.currentPdfFileName) {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(window.currentPdfBlob);
+                link.download = window.currentPdfFileName;
+                link.click();
+                
+                // Limpar URLs temporárias
+                URL.revokeObjectURL(link.href);
+                URL.revokeObjectURL(document.getElementById('pdfPreview').src);
+                
+                // Fechar modal
+                closePdfPreview();
+                
+                alert('Relatório baixado com sucesso!');
+            }
+        }
+
+        // Fechar pré-visualização
+        function closePdfPreview() {
+            const modal = document.getElementById('previewModalOverlay');
+            const iframe = document.getElementById('pdfPreview');
+            
+            modal.classList.remove('active');
+            iframe.src = '';
+            
+            // Limpar dados temporários
+            if (window.currentPdfBlob) {
+                URL.revokeObjectURL(URL.createObjectURL(window.currentPdfBlob));
+                window.currentPdfBlob = null;
+                window.currentPdfFileName = null;
+            }
+        }
+
+        // Add week to exercise
+        function addWeek(exerciseId) {
+            if (!workoutLoads[selectedWorkout.id]) {
+                workoutLoads[selectedWorkout.id] = {};
+            }
+            if (!workoutLoads[selectedWorkout.id][currentDayIndex]) {
+                workoutLoads[selectedWorkout.id][currentDayIndex] = {};
+            }
+            if (!workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId]) {
+                workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId] = { weeks: [] };
+            }
+
+            const weeks = workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId].weeks;
+            const newWeekIndex = weeks.length;
+            
+            weeks.push({
+                series: [{ load: '', reps: '' }]
+            });
+
+            renderWeeks(exerciseId);
+        }
+
+        // Remove week from exercise
+        function removeWeek(exerciseId, weekIndex) {
+            if (workoutLoads[selectedWorkout.id] && 
+                workoutLoads[selectedWorkout.id][currentDayIndex] && 
+                workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId]) {
+                
+                workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId].weeks.splice(weekIndex, 1);
+                renderWeeks(exerciseId);
+            }
+        }
+
+        // Add serie to week
+        function addSerie(exerciseId, weekIndex) {
+            if (!workoutLoads[selectedWorkout.id]) {
+                workoutLoads[selectedWorkout.id] = {};
+            }
+            if (!workoutLoads[selectedWorkout.id][currentDayIndex]) {
+                workoutLoads[selectedWorkout.id][currentDayIndex] = {};
+            }
+            if (!workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId]) {
+                workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId] = { weeks: [] };
+            }
+
+            const weeks = workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId].weeks;
+            if (!weeks[weekIndex]) {
+                weeks[weekIndex] = { series: [] };
+            }
+
+            weeks[weekIndex].series.push({ load: '', reps: '' });
+            renderWeeks(exerciseId);
+        }
+
+        // Remove serie from week
+        function removeSerie(exerciseId, weekIndex, serieIndex) {
+            if (workoutLoads[selectedWorkout.id] && 
+                workoutLoads[selectedWorkout.id][currentDayIndex] && 
+                workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId] &&
+                workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId].weeks[weekIndex]) {
+                
+                workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId].weeks[weekIndex].series.splice(serieIndex, 1);
+                renderWeeks(exerciseId);
+            }
+        }
+
+        // Render weeks for exercise
+        function renderWeeks(exerciseId) {
+            const weeksContainer = document.getElementById(`weeks-${exerciseId}`);
+            
+            if (!workoutLoads[selectedWorkout.id] || 
+                !workoutLoads[selectedWorkout.id][currentDayIndex] || 
+                !workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId]) {
+                weeksContainer.innerHTML = '';
+                return;
+            }
+
+            const weeks = workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId].weeks || [];
+            
+            weeksContainer.innerHTML = weeks.map((week, weekIndex) => `
+                <div class="week-item">
+                    <div class="week-header">
+                        <div class="week-title">Semana ${weekIndex + 1}</div>
+                        <div class="week-actions">
+                            <button class="btn btn-success btn-small" onclick="event.stopPropagation(); addSerie('${exerciseId}', ${weekIndex})">
+                                <i class="fas fa-plus"></i>
+                                Série
+                            </button>
+                            <button class="btn-icon delete ${weeks.length <= 1 ? 'disabled' : ''}" 
+                                onclick="event.stopPropagation(); ${weeks.length > 1 ? `removeWeek('${exerciseId}', ${weekIndex})` : 'alert(\'Não é possível excluir a única semana existente. Adicione outra semana primeiro.\')'}"
+                                ${weeks.length <= 1 ? 'disabled title="Adicione outra semana para poder excluir esta"' : 'title="Excluir Semana"'}'>
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="series-container">
+                        ${renderSeriesForWeek(exerciseId, weekIndex, week.series || [])}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render series for specific week
+        function renderSeriesForWeek(exerciseId, weekIndex, series) {
+            if (!series || series.length === 0) {
+                series = [{ load: '', reps: '' }];
+            }
+            
+            return series.map((serie, serieIndex) => `
+                <div class="serie-item">
+                    <div class="serie-label">S${serieIndex + 1}:</div>
+                    <input type="text" 
+                           class="serie-input" 
+                           placeholder="Carga"
+                           value="${serie.load || ''}"
+                           onchange="updateSerieDataForWeek('${exerciseId}', ${weekIndex}, ${serieIndex}, 'load', this.value)">
+                    <input type="text" 
+                           class="serie-input" 
+                           placeholder="Reps"
+                           value="${serie.reps || ''}"
+                           onchange="updateSerieDataForWeek('${exerciseId}', ${weekIndex}, ${serieIndex}, 'reps', this.value)">
+                    ${series.length > 1 ? `
+                        <button class="btn-icon delete" onclick="event.stopPropagation(); removeSerie('${exerciseId}', ${weekIndex}, ${serieIndex})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Update serie data for specific week
+        function updateSerieDataForWeek(exerciseId, weekIndex, serieIndex, field, value) {
+            if (!workoutLoads[selectedWorkout.id]) {
+                workoutLoads[selectedWorkout.id] = {};
+            }
+            if (!workoutLoads[selectedWorkout.id][currentDayIndex]) {
+                workoutLoads[selectedWorkout.id][currentDayIndex] = {};
+            }
+            if (!workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId]) {
+                workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId] = { weeks: [] };
+            }
+            if (!workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId].weeks[weekIndex]) {
+                workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId].weeks[weekIndex] = { series: [] };
+            }
+            if (!workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId].weeks[weekIndex].series[serieIndex]) {
+                workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId].weeks[weekIndex].series[serieIndex] = {};
+            }
+
+            workoutLoads[selectedWorkout.id][currentDayIndex][exerciseId].weeks[weekIndex].series[serieIndex][field] = value;
+        }
+
+        // Resetar interface
+        function resetInterface() {
+            document.getElementById('loadSection').style.display = 'none';
+            document.getElementById('searchSection').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'block';
+            selectedWorkout = null;
+            currentDayIndex = 0;
+        }
+
+        // Mobile menu toggle
+        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+
+        // Event listeners do modal de pré-visualização
+        document.getElementById('closePreviewModal').addEventListener('click', closePdfPreview);
+        document.getElementById('cancelPreview').addEventListener('click', closePdfPreview);
+        document.getElementById('confirmPreview').addEventListener('click', downloadPdf);
+
+        // Fechar modal ao clicar no overlay
+        document.getElementById('previewModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePdfPreview();
+            }
+        });
+
+            </script>
+</body>
+</html>
