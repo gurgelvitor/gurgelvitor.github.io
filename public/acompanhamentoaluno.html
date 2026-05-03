@@ -662,6 +662,26 @@
                 padding: 1rem;
                 overflow-x: hidden;
             }
+            
+            /* Otimizações para tablets */
+            .section, .card, .container {
+                border-radius: 6px !important;
+                padding: 1rem !important;
+                margin: 0.75rem 0 !important;
+            }
+            
+            /* Reduzir padding de tabelas */
+            .exercise-table th, .foods-table th, .totals-table th,
+            .exercise-table td, .foods-table td, .totals-table td,
+            .personal-data-table td {
+                padding: 0.5rem !important;
+            }
+            
+            /* Reduzir margens de botões */
+            .btn, button {
+                margin: 0.5rem !important;
+                padding: 0.75rem 1rem !important;
+            }
 
             .sidebar.active {
                 transform: translateX(0);
@@ -2868,8 +2888,37 @@
                         }
                         
                         .main-content {
-                            padding: 0.75rem;
+                            padding: 0.5rem;
                             overflow-x: hidden !important;
+                        }
+                        
+                        /* Reduzir bordas e padding em todos os elementos */
+                        .section, .card, .container {
+                            border: none !important;
+                            border-radius: 4px !important;
+                            padding: 0.75rem !important;
+                            margin: 0.5rem 0 !important;
+                        }
+                        
+                        /* Reduzir bordas das tabelas */
+                        .exercise-table, .foods-table, .personal-data-table, .totals-table {
+                            border: 1px solid var(--border) !important;
+                            border-radius: 4px !important;
+                        }
+                        
+                        .exercise-table th, .foods-table th, .totals-table th,
+                        .exercise-table td, .foods-table td, .totals-table td,
+                        .personal-data-table td {
+                            padding: 0.25rem 0.5rem !important;
+                            border: 1px solid var(--border) !important;
+                        }
+                        
+                        /* Reduzir bordas de botões */
+                        .btn, button {
+                            border: 1px solid var(--accent) !important;
+                            border-radius: 4px !important;
+                            padding: 0.5rem 0.75rem !important;
+                            margin: 0.25rem !important;
                         }
                         
                         /* Prevenir overflow em todos os containers */
@@ -2892,12 +2941,48 @@
                             overflow-x: auto;
                             max-width: 100%;
                             -webkit-overflow-scrolling: touch;
+                            margin: 0.5rem 0 !important;
                         }
                         
                         .exercise-table, .foods-table {
                             width: 100%;
                             max-width: 100%;
                             min-width: auto !important;
+                        }
+                        
+                        /* Reduzir fontes em telas pequenas */
+                        h1, h2, h3, h4, h5, h6 {
+                            font-size: 0.9rem !important;
+                            margin: 0.5rem 0 !important;
+                        }
+                        
+                        p, span, div {
+                            font-size: 0.8rem !important;
+                            line-height: 1.2 !important;
+                        }
+                        
+                        .exercise-table th, .foods-table th, .totals-table th {
+                            font-size: 0.7rem !important;
+                            padding: 0.2rem 0.4rem !important;
+                        }
+                        
+                        .exercise-table td, .foods-table td, .totals-table td,
+                        .personal-data-table td {
+                            font-size: 0.75rem !important;
+                            padding: 0.2rem 0.4rem !important;
+                        }
+                        
+                        /* Reduzir margens entre seções */
+                        .section, .card {
+                            margin: 0.25rem 0 !important;
+                        }
+                        
+                        /* Otimizar modais para mobile */
+                        .anamnese-modal, .protocol-view-modal {
+                            width: 95% !important;
+                            max-width: 95% !important;
+                            padding: 1rem !important;
+                            margin: 0.5rem !important;
                         }
                     }
                 `;
