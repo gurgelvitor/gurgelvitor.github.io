@@ -439,18 +439,19 @@
                 min-width: auto !important;
             }
             
-            /* Remover borda média do modal em telas pequenas */
+            /* Remover completamente a borda do meio do modal */
             .anamnese-modal-content > div[style*="background: var(--bg-secondary)"][style*="border-radius: 16px"] {
                 background: transparent !important;
                 border: none !important;
                 border-radius: 0 !important;
                 padding: 0 !important;
                 margin: 0 !important;
+                display: none !important;
             }
             
-            /* Fazer perguntas aparecerem no content principal em mobile */
+            /* Fazer perguntas aparecerem no content principal com mais espaço */
             .anamnese-modal-content {
-                padding: 1rem !important;
+                padding: 2rem !important;
             }
             
             .anamnese-modal-content > div[style*="background: var(--bg-secondary)"] > div {
@@ -458,10 +459,12 @@
             }
             
             .anamnese-modal-content > div[style*="background: var(--bg-secondary)"] > form {
-                padding: 1rem !important;
+                padding: 2rem !important;
                 background: var(--bg-secondary) !important;
                 border-radius: 12px !important;
                 border: 1px solid var(--border) !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
             }
         }
 
