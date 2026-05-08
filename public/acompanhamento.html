@@ -1906,24 +1906,54 @@
                 font-size: 0.9rem;
             }
 
-            /* Prevenir overflow de texto */
+            /* Prevenir overflow de texto e elementos */
             * {
                 word-wrap: break-word;
                 overflow-wrap: break-word;
                 -webkit-hyphens: auto;
                 -ms-hyphens: auto;
                 hyphens: auto;
+                box-sizing: border-box;
             }
             
             .page-title,
             .page-subtitle,
             .form-group label,
-            .form-input {
+            .form-input,
+            .friendship-form,
+            .friendship-section,
+            .student-details-section,
+            .protocol-section,
+            .anamnesis-section,
+            .anamnese-responses-section {
                 max-width: 100%;
                 word-break: break-word;
                 white-space: normal;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                box-sizing: border-box;
+            }
+
+            .friendship-section,
+            .student-details-section {
+                margin: 0.5rem;
+                padding: 0.75rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .header-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
+                width: 100%;
+            }
+
+            .header-buttons button {
+                width: 100%;
+                max-width: 100%;
             }
         }
 
@@ -1960,29 +1990,75 @@
                 font-size: 0.85rem;
             }
 
+            .back-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.85rem;
+            }
+
+            .back-btn span {
+                display: none;
+            }
+
+            .back-btn::after {
+                content: 'Voltar';
+                margin-left: 0.5rem;
+            }
+
             .btn-friendship {
                 padding: 0.5rem 0.75rem;
                 font-size: 0.85rem;
             }
 
-            /* Prevenir overflow de texto */
+            /* Prevenir overflow de texto e elementos */
             * {
                 word-wrap: break-word;
                 overflow-wrap: break-word;
                 -webkit-hyphens: auto;
                 -ms-hyphens: auto;
                 hyphens: auto;
+                box-sizing: border-box;
             }
             
             .page-title,
             .page-subtitle,
             .form-group label,
-            .form-input {
+            .form-input,
+            .friendship-form,
+            .friendship-section,
+            .student-details-section,
+            .protocol-section,
+            .anamnesis-section,
+            .anamnese-responses-section {
                 max-width: 100%;
                 word-break: break-word;
                 white-space: normal;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                box-sizing: border-box;
+            }
+
+            .friendship-section,
+            .student-details-section {
+                margin: 0.25rem;
+                padding: 0.5rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .header-buttons {
+                flex-direction: column;
+                gap: 0.25rem;
+                width: 100%;
+            }
+
+            .header-buttons button {
+                width: 100%;
+                max-width: 100%;
+                font-size: 0.8rem;
+                padding: 0.5rem;
             }
         }
 
