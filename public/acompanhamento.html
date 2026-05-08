@@ -2056,6 +2056,24 @@
                 font-size: 0.85rem;
             }
 
+            /* Ajustes para telas ultra-pequenas */
+            @media (max-width: 360px) {
+                .back-btn {
+                    padding: 0.75rem;
+                    min-width: 48px;
+                    width: 48px;
+                    height: 48px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 50%;
+                }
+                
+                .back-btn i {
+                    font-size: 1.3rem;
+                }
+            }
+
             .back-btn span {
                 display: inline;
             }
@@ -2072,13 +2090,19 @@
                 }
                 
                 .back-btn {
-                    padding: 0.5rem;
-                    min-width: auto;
-                    width: auto;
+                    padding: 0.75rem;
+                    min-width: 44px;
+                    width: 44px;
+                    height: 44px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 50%;
                 }
                 
                 .back-btn i {
                     margin-right: 0;
+                    font-size: 1.2rem;
                 }
             }
 
