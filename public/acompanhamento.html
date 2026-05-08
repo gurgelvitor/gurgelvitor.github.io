@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acompanhamento - GurgelTrack</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="logo-gurgel.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="logo-gurgel.png">
+    <link rel="shortcut icon" href="logo-gurgel.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,19 +25,40 @@
             --shadow: 0 4px 12px rgba(220, 20, 60, 0.15);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --danger-color: #dc143c;
+            
+            /* Sistema de Ícones - Tamanhos Padronizados */
+            --icon-xs: 12px;
+            --icon-sm: 16px;
+            --icon-md: 20px;
+            --icon-lg: 24px;
+            --icon-xl: 32px;
+            
+            /* Cores de Ícones - Modo Claro */
+            --icon-primary: var(--text-primary);
+            --icon-secondary: var(--text-secondary);
+            --icon-accent: var(--accent);
+            --icon-white: #ffffff;
+            --icon-light: #f8f9fa;
         }
 
         body.dark-mode {
-            /* Cores do Tema Escuro - Melhoradas */
+            /* Cores do Tema Escuro - Mesmas do modo claro */
             --bg-primary: #0f0f0f;
             --bg-secondary: #1e1e1e;
-            --accent: #e91e63;
-            --accent-hover: #f06292;
+            --accent: #dc143c;
+            --accent-hover: #b91c1c;
             --text-primary: #f5f5f5;
             --text-secondary: #b8b8b8;
             --border: #333333;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-            --danger-color: #e91e63;
+            --danger-color: #dc143c;
+            
+            /* Cores de Ícones - Modo Escuro */
+            --icon-primary: var(--text-primary);
+            --icon-secondary: var(--text-secondary);
+            --icon-accent: var(--accent);
+            --icon-white: #ffffff;
+            --icon-light: #f8f9fa;
         }
 
         /* Theme Toggle Button */
@@ -42,19 +66,19 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            width: 50px;
-            height: 50px;
             background: rgba(255, 255, 255, 0.9);
             border: 2px solid var(--accent);
             border-radius: 50%;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 999;
-            font-size: 20px;
+            font-size: 1.2rem;
             color: var(--accent);
+            transition: var(--transition);
+            z-index: 1000;
             box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
         }
 
@@ -95,6 +119,218 @@
         .layout-container {
             display: flex;
             min-height: 100vh;
+        }
+
+        /* Tipografia Aprimorada - Hierarquia Visual */
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+        }
+
+        h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+        }
+
+        h4 {
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+            margin-bottom: 0.875rem;
+        }
+
+        h5 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+
+        h6 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin-bottom: 0.625rem;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Textos longos com melhor legibilidade */
+        .long-text, .description-text, .content-text {
+            line-height: 1.6;
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .subtitle-text {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Componentes de texto */
+        .text-large {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .text-small {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-normal);
+        }
+
+        .text-xs {
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-normal);
+        }
+
+        .text-semibold {
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .text-bold {
+            font-weight: var(--font-weight-bold);
+        }
+
+        /* Sistema de Espaçamento Consistente */
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .subsection {
+            margin-bottom: 40px;
+        }
+
+        .element {
+            margin-bottom: 24px;
+        }
+
+        .element-small {
+            margin-bottom: 16px;
+        }
+
+        .group-spacing {
+            margin-bottom: 16px;
+        }
+
+        /* Sistema de Grid - 12 Colunas */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .grid-container-sm {
+            gap: 20px;
+        }
+
+        .grid-container-lg {
+            gap: 30px;
+        }
+
+        /* Classes de Colunas (1-12) */
+        .col-1 { grid-column: span 1; }
+        .col-2 { grid-column: span 2; }
+        .col-3 { grid-column: span 3; }
+        .col-4 { grid-column: span 4; }
+        .col-5 { grid-column: span 5; }
+        .col-6 { grid-column: span 6; }
+        .col-7 { grid-column: span 7; }
+        .col-8 { grid-column: span 8; }
+        .col-9 { grid-column: span 9; }
+        .col-10 { grid-column: span 10; }
+        .col-11 { grid-column: span 11; }
+        .col-12 { grid-column: span 12; }
+
+        /* Classes de Offset */
+        .offset-1 { margin-left: calc(1 * 8.333333% + 12px); }
+        .offset-2 { margin-left: calc(2 * 8.333333% + 24px); }
+        .offset-3 { margin-left: calc(3 * 8.333333% + 36px); }
+        .offset-4 { margin-left: calc(4 * 8.333333% + 48px); }
+        .offset-5 { margin-left: calc(5 * 8.333333% + 60px); }
+        .offset-6 { margin-left: calc(6 * 8.333333% + 72px); }
+
+        /* Alinhamento Visual Consistente */
+        .grid-center {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            align-items: center;
+            justify-items: center;
+        }
+
+        .grid-start {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            align-items: start;
+            justify-items: start;
+        }
+
+        .grid-end {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            align-items: end;
+            justify-items: end;
+        }
+
+        /* Grid Responsivo */
+        @media (max-width: 768px) {
+            .grid-container,
+            .grid-center,
+            .grid-start,
+            .grid-end {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .col-1, .col-2, .col-3, .col-4, .col-5, .col-6,
+            .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
+                grid-column: span 1;
+            }
+
+            .offset-1, .offset-2, .offset-3, .offset-4, .offset-5, .offset-6 {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid-container,
+            .grid-center,
+            .grid-start,
+            .grid-end {
+                gap: 16px;
+            }
         }
 
         /* Sidebar Styles */
@@ -292,7 +528,7 @@
             gap: 0.5rem;
             width: calc(100% - 2rem);
             padding: 0.75rem;
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
             color: white;
             border: none;
             border-radius: 6px;
@@ -301,14 +537,15 @@
             transition: var(--transition);
             cursor: pointer;
             margin: 0.5rem 1rem;
-            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+            box-shadow: 0 2px 8px rgba(220, 20, 60, 0.3);
             box-sizing: border-box;
         }
 
         .sidebar-personal-btn:hover {
-            background: linear-gradient(135deg, #27ae60, #229954);
+            background: linear-gradient(135deg, var(--accent-hover), #8b0000);
+            color: white !important;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.4);
         }
 
         /* Friendship Request Styles */
@@ -347,36 +584,439 @@
             gap: 1rem;
         }
 
+        /* Sistema de Formulários Moderno */
         .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
             font-weight: 600;
             color: var(--text-primary);
             font-size: 0.9rem;
         }
 
+        .form-control,
         .form-input {
-            padding: 0.75rem;
-            border: 1px solid var(--border);
+            width: 100%;
+            height: 48px;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
             border-radius: 8px;
+            font-size: 0.9rem;
             background: var(--bg-primary);
             color: var(--text-primary);
-            font-size: 0.9rem;
-            transition: var(--transition);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-sizing: border-box;
         }
 
+        .form-control:focus,
         .form-input:focus {
             outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
         }
 
+        .form-control::placeholder,
         .form-input::placeholder {
             color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        textarea.form-control,
+        textarea.form-input {
+            height: auto;
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        select.form-control,
+        select.form-input {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-error {
+            color: #e74c3c;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .form-control.error,
+        .form-input.error {
+            border-color: #e74c3c;
+        }
+
+        .form-control.error + .form-error,
+        .form-input.error + .form-error {
+            display: block;
+        }
+
+        /* Sistema de Tabelas Moderno */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* Cabeçalho da Tabela */
+        thead {
+            background: var(--bg-secondary);
+            border-bottom: 2px solid var(--border);
+        }
+
+        th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        /* Corpo da Tabela */
+        tbody tr {
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        /* Linhas Alternadas (Striped) - Modo Claro */
+        body:not(.dark-mode) tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        body:not(.dark-mode) tbody tr:nth-child(odd) {
+            background: var(--bg-primary);
+        }
+
+        /* Linhas Alternadas (Striped) - Modo Escuro */
+        body.dark-mode tbody tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        body.dark-mode tbody tr:nth-child(odd) {
+            background: var(--bg-primary);
+        }
+
+        /* Hover - Modo Claro */
+        body:not(.dark-mode) tbody tr:hover {
+            background: #e9ecef;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hover - Modo Escuro */
+        body.dark-mode tbody tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Células */
+        td {
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Bordas Horizontais Apenas */
+        table {
+            border: none;
+        }
+
+        thead th {
+            border-bottom: 2px solid var(--border);
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        tbody td {
+            border-bottom: 1px solid var(--border);
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Tabelas Específicas */
+        .personal-data-table,
+        .totals-table,
+        .foods-table,
+        .exercise-table {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Tabela de Dados Pessoais */
+        .personal-data-table td:first-child {
+            font-weight: 600;
+            color: var(--text-secondary);
+            width: 120px;
+        }
+
+        /* Tabela de Totais */
+        .totals-table th {
+            text-align: center;
+            color: var(--accent);
+        }
+
+        .totals-table td {
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Tabela de Alimentos */
+        .foods-table td:nth-child(1) {
+            font-weight: 500;
+        }
+
+        .foods-table td:nth-child(2),
+        .foods-table td:nth-child(3),
+        .foods-table td:nth-child(4) {
+            text-align: center;
+        }
+
+        /* Tabela de Exercícios */
+        .exercise-table td:nth-child(1) {
+            font-weight: 500;
+        }
+
+        .exercise-table td:nth-child(2),
+        .exercise-table td:nth-child(3),
+        .exercise-table td:nth-child(4) {
+            text-align: center;
+        }
+
+        /* Tabela de Cálculo de Macronutrientes */
+        .calc-macros-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .calc-macros-table th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border);
+            background: var(--bg-secondary);
+        }
+
+        .calc-macros-table td {
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .calc-macros-table .macro-cell {
+            font-weight: 500;
+        }
+
+        .calc-macros-table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .calc-macros-table tbody tr:nth-child(odd) {
+            background: var(--bg-primary);
+        }
+
+        body.dark-mode .calc-macros-table tbody tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        body.dark-mode .calc-macros-table tbody tr:nth-child(odd) {
+            background: var(--bg-primary);
+        }
+
+        .calc-macros-table tbody tr:hover {
+            background: #e9ecef;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .calc-macros-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .calc-macros-table tbody tr:last-child {
+            background: var(--bg-secondary);
+            font-weight: bold;
+        }
+
+        .calc-macros-table tbody tr:last-child:hover {
+            background: var(--bg-secondary);
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Seção de Resultados Metabólicos - Contraste Corrigido */
+        .calc-results {
+            margin: 1rem 0;
+        }
+
+        .calc-results h5 {
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .calc-results p {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .calc-results strong {
+            font-weight: 600;
+        }
+
+        /* Forçar texto preto no modo escuro para resultados */
+        body.dark-mode .calc-results p {
+            color: #000000 !important;
+        }
+
+        body.dark-mode .calc-results h5 {
+            color: #000000 !important;
+        }
+
+        body.dark-mode .calc-results strong {
+            color: #000000 !important;
+        }
+
+        /* Seção de Dados Pessoais - Mesmo tratamento */
+        .calc-personal-data {
+            margin: 1rem 0;
+        }
+
+        .calc-personal-data h5 {
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .calc-personal-data ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .calc-personal-data li {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .calc-personal-data strong {
+            font-weight: 600;
+        }
+
+        /* Forçar texto preto no modo escuro para dados pessoais */
+        body.dark-mode .calc-personal-data li {
+            color: #000000 !important;
+        }
+
+        body.dark-mode .calc-personal-data h5 {
+            color: #000000 !important;
+        }
+
+        body.dark-mode .calc-personal-data strong {
+            color: #000000 !important;
+        }
+
+        /* Seção de Macronutrientes - Mesmo tratamento */
+        .calc-macros h5 {
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Forçar texto preto no modo escuro para macronutrientes */
+        body.dark-mode .calc-macros h5 {
+            color: #000000 !important;
+        }
+
+        /* Seção de Informações Adicionais - Mesmo tratamento */
+        .calc-additional {
+            margin: 1rem 0;
+        }
+
+        .calc-additional h5 {
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .calc-additional p {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .calc-additional strong {
+            font-weight: 600;
+        }
+
+        /* Forçar texto preto no modo escuro para informações adicionais */
+        body.dark-mode .calc-additional p {
+            color: #000000 !important;
+        }
+
+        body.dark-mode .calc-additional h5 {
+            color: #000000 !important;
+        }
+
+        body.dark-mode .calc-additional strong {
+            color: #000000 !important;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .table-responsive {
+                border-radius: 0;
+            }
+
+            th, td {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+
+            .personal-data-table td:first-child {
+                width: 100px;
+            }
         }
 
         .btn-friendship {
@@ -684,6 +1324,79 @@
             transform: translateY(-1px);
         }
 
+        .print-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .print-btn:hover {
+            background: linear-gradient(135deg, #218838, #1e7e34);
+            transform: translateY(-1px);
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        @media (min-width: 768px) {
+            .section-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: nowrap;
+            }
+            
+            .section-header h3 {
+                margin: 0;
+                flex: 1;
+            }
+            
+            .header-buttons {
+                flex-shrink: 0;
+                flex-direction: row;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .section-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            
+            .section-header h3 {
+                margin: 0;
+                text-align: center;
+            }
+            
+            .header-buttons {
+                flex-direction: column;
+                width: 100%;
+                gap: 8px;
+            }
+            
+            .print-btn,
+            .add-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+
         .protocol-list, .anamnesis-list, .workout-list, .calculation-list, .diet-list {
             display: flex;
             flex-direction: column;
@@ -982,13 +1695,16 @@
         .item-card {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
+            border-radius: 12px;
+            padding: 24px;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .item-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
             border-color: var(--accent);
             background: var(--accent);
             color: white;
@@ -1097,15 +1813,7 @@
             color: var(--accent);
         }
 
-        .main-footer {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-            padding: 1.5rem 2rem;
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
+        
         .header-subtitle {
             color: var(--text-secondary);
             font-size: 1.1rem;
@@ -1149,6 +1857,125 @@
             .main-content {
                 padding: 1rem;
             }
+        }
+
+        /* Sistema de Botões Moderno */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 20, 60, 0.3);
+            background: linear-gradient(135deg, #e74c3c, #c0392b, #a93226);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 20, 60, 0.2);
+        }
+
+        /* Tamanhos de Botões */
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            height: 32px;
+        }
+
+        .btn-medium {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            height: 40px;
+        }
+
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            height: 48px;
+        }
+
+        /* Combinações de Tamanho e Tipo */
+        .btn-primary.btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            height: 32px;
+        }
+
+        .btn-primary.btn-medium {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            height: 40px;
+        }
+
+        .btn-primary.btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            height: 48px;
+        }
+
+        .btn-secondary.btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            height: 32px;
+        }
+
+        .btn-secondary.btn-medium {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            height: 40px;
+        }
+
+        .btn-secondary.btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            height: 48px;
         }
 
         /* Anamnese Responses Styles */
@@ -1315,6 +2142,835 @@
             color: var(--text-primary);
             line-height: 1.5;
         }
+
+        /* Header Padronizado */
+        .standard-header {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+            border-bottom: 2px solid var(--border);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.1);
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .standard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), #e74c3c, #c0392b);
+            animation: headerGradient 3s ease-in-out infinite;
+        }
+
+        @keyframes headerGradient {
+            0%, 100% { background: linear-gradient(90deg, var(--accent), #e74c3c, #c0392b); }
+            50% { background: linear-gradient(90deg, #c0392b, var(--accent), #e74c3c); }
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-title-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .header-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin: 0;
+            line-height: 1.2;
+            letter-spacing: -0.025em;
+        }
+
+        .page-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin: 0;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        /* Responsive Header */
+        @media (max-width: 768px) {
+            .standard-header {
+                padding: 1rem 0;
+                margin-bottom: 1rem;
+            }
+
+            .header-container {
+                padding: 0 1rem;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .header-title-section {
+                gap: 1rem;
+            }
+
+            .header-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.25rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .page-subtitle {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-container {
+                padding: 0 0.75rem;
+            }
+
+            .header-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Sistema de Micro-Interações Modernas */
+        
+        /* Hover States para Cards */
+        .card,
+        .workout-section,
+        .content-section,
+        .help-section {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover,
+        .workout-section:hover,
+        .content-section:hover,
+        .help-section:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Hover States para Navegação */
+        .nav-item {
+            position: relative;
+            transform: translateX(0);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-item:hover {
+            transform: translateX(4px);
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        /* Hover States para Links */
+        a {
+            position: relative;
+            color: var(--accent);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        a:hover {
+            color: #2980b9;
+        }
+
+        a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        a:hover::after {
+            width: 100%;
+        }
+
+        /* Loading Spinners */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(52, 152, 219, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        .spinner-large {
+            width: 40px;
+            height: 40px;
+            border-width: 4px;
+        }
+
+        .spinner-small {
+            width: 16px;
+            height: 16px;
+            border-width: 2px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Loading States para Botões */
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn.loading .btn-text {
+            opacity: 0;
+        }
+
+        .btn.loading .spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 1;
+        }
+
+        .btn .spinner {
+            opacity: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Pulse Animation para elementos importantes */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(52, 152, 219, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Slide In Animation */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* Bounce Animation */
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40%, 43% {
+                transform: translateY(-10px);
+            }
+            70% {
+                transform: translateY(-5px);
+            }
+            90% {
+                transform: translateY(-2px);
+            }
+        }
+
+        .bounce {
+            animation: bounce 1s ease-in-out;
+        }
+
+        /* Hover States para Imagens */
+        img {
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        img:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        /* Hover States para Ícones */
+        .fas,
+        .fab,
+        .far {
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .fas:hover,
+        .fab:hover,
+        .far:hover {
+            transform: scale(1.2) rotate(5deg);
+            color: var(--accent);
+        }
+
+        /* Animações Principais - Fade In, Slide Up, Scale */
+        
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        /* Slide Up Animation */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        /* Scale Animation */
+        @keyframes scale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .scale {
+            animation: scale 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        /* Animações combinadas para elementos específicos */
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-slide-up {
+            animation: fadeInSlideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .fade-in-scale {
+            animation: fadeInScale 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        /* Aplicar animações a elementos principais */
+        .card,
+        .workout-section,
+        .content-section,
+        .help-section {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInSlideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        
+        .btn-primary,
+        .btn-secondary,
+        .btn-success {
+            opacity: 0;
+            transform: scale(0.95);
+            animation: fadeInScale 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        
+        .btn-primary { animation-delay: 0.3s; }
+        .btn-secondary { animation-delay: 0.4s; }
+        .btn-success { animation-delay: 0.5s; }
+        
+        /* Animações para formulários */
+        .form-group {
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInSlideUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        
+        /* Animações para tabelas */
+        .table {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInSlideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        
+        /* Animações para navegação */
+        .nav-item {
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: slideIn 0.6s ease-in-out forwards;
+        }
+        
+        .nav-item:nth-child(1) { animation-delay: 0.1s; }
+        .nav-item:nth-child(2) { animation-delay: 0.2s; }
+        .nav-item:nth-child(3) { animation-delay: 0.3s; }
+        .nav-item:nth-child(4) { animation-delay: 0.4s; }
+        .nav-item:nth-child(5) { animation-delay: 0.5s; }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Animações para headers e títulos */
+        h1, h2, h3, .section-title {
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInSlideUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        
+        h1 { animation-delay: 0.1s; }
+        h2 { animation-delay: 0.2s; }
+        h3 { animation-delay: 0.3s; }
+        .section-title { animation-delay: 0.2s; }
+
+        /* Sistema de Ícones com Contraste Adequado */
+        
+        /* Classes Base para Ícones */
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        /* Tamanhos Padronizados de Ícones */
+        .icon-xs {
+            font-size: var(--icon-xs);
+            width: var(--icon-xs);
+            height: var(--icon-xs);
+        }
+        
+        .icon-sm {
+            font-size: var(--icon-sm);
+            width: var(--icon-sm);
+            height: var(--icon-sm);
+        }
+        
+        .icon-md {
+            font-size: var(--icon-md);
+            width: var(--icon-md);
+            height: var(--icon-md);
+        }
+        
+        .icon-lg {
+            font-size: var(--icon-lg);
+            width: var(--icon-lg);
+            height: var(--icon-lg);
+        }
+        
+        .icon-xl {
+            font-size: var(--icon-xl);
+            width: var(--icon-xl);
+            height: var(--icon-xl);
+        }
+        
+        /* Cores de Ícones - Herdam do Texto */
+        .icon-primary {
+            color: var(--icon-primary);
+        }
+        
+        .icon-secondary {
+            color: var(--icon-secondary);
+        }
+        
+        .icon-accent {
+            color: var(--icon-accent);
+        }
+        
+        .icon-white {
+            color: var(--icon-white);
+        }
+        
+        .icon-light {
+            color: var(--icon-light);
+        }
+        
+        /* Ícones em Botões com Fundo Colorido */
+        .btn .icon,
+        .sidebar-personal-btn .icon,
+        .theme-toggle .icon,
+        .help-button .icon {
+            color: var(--icon-white);
+        }
+        
+        /* Ícones em Navegação Sidebar */
+        .nav-item .icon {
+            color: var(--icon-primary);
+            transition: var(--transition);
+        }
+        
+        .nav-item:hover .icon {
+            color: var(--icon-accent);
+        }
+        
+        .nav-item.active .icon {
+            color: var(--icon-accent);
+        }
+        
+        /* Ícones em Cabeçalhos e Títulos */
+        .selector-title .icon,
+        .section-title .icon,
+        .header-icon .icon {
+            color: var(--icon-accent);
+        }
+        
+        /* Ícones em Cards e Seções */
+        .card .icon,
+        .workout-section .icon,
+        .content-section .icon,
+        .load-section .icon {
+            color: var(--icon-primary);
+        }
+        
+        .card:hover .icon,
+        .workout-section:hover .icon,
+        .content-section:hover .icon,
+        .load-section:hover .icon {
+            color: var(--icon-accent);
+        }
+        
+        /* Ícones em Formulários */
+        .form-group .icon {
+            color: var(--icon-secondary);
+        }
+        
+        .form-group:focus-within .icon {
+            color: var(--icon-accent);
+        }
+        
+        /* Ícones em Tabelas */
+        .table .icon {
+            color: var(--icon-primary);
+        }
+        
+        .table th .icon {
+            color: var(--icon-accent);
+        }
+        
+        /* Ícones em Abas */
+        .day-tab .icon {
+            color: var(--icon-primary);
+            transition: var(--transition);
+        }
+        
+        .day-tab:hover .icon,
+        .day-tab.active .icon {
+            color: var(--icon-white);
+        }
+        
+        /* Ícones em Accordion */
+        .week-header .icon {
+            color: var(--icon-primary);
+            transition: var(--transition);
+        }
+        
+        .week-header:hover .icon {
+            color: var(--icon-accent);
+        }
+        
+        /* Ícones em Ações */
+        .exercise-actions .icon,
+        .week-actions .icon {
+            color: var(--icon-white);
+        }
+        
+        /* Ícones em Botões de Ação Específicos */
+        .btn-success .icon {
+            color: var(--icon-white);
+        }
+        
+        .btn-edit .icon {
+            color: var(--icon-white);
+        }
+        
+        .btn-delete .icon {
+            color: var(--icon-white);
+        }
+        
+        .btn-icon.delete .icon {
+            color: var(--icon-white);
+        }
+        
+        /* Ícones em Modal de Ajuda */
+        .help-modal-title .icon {
+            color: var(--icon-accent);
+        }
+        
+        .help-section-title .icon {
+            color: var(--icon-accent);
+        }
+        
+        .help-step-number {
+            background: var(--icon-accent);
+            color: var(--icon-white);
+        }
+        
+        /* Ícones em Estados Especiais */
+        .empty-state .icon {
+            color: var(--icon-secondary);
+            font-size: var(--icon-xl);
+        }
+        
+        /* Ícones em Loading States */
+        .spinner .icon {
+            color: var(--icon-accent);
+        }
+        
+        /* Ícones em Tooltips */
+        .tooltip .icon {
+            color: var(--icon-secondary);
+        }
+        
+        .tooltip:hover .icon {
+            color: var(--icon-accent);
+        }
+        
+        /* Ícones Responsivos */
+        @media (max-width: 768px) {
+            .icon-xl {
+                font-size: var(--icon-lg);
+                width: var(--icon-lg);
+                height: var(--icon-lg);
+            }
+            
+            .icon-lg {
+                font-size: var(--icon-md);
+                width: var(--icon-md);
+                height: var(--icon-md);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .icon-xl,
+            .icon-lg {
+                font-size: var(--icon-sm);
+                width: var(--icon-sm);
+                height: var(--icon-sm);
+            }
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-overlay .spinner-large {
+            border-color: rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+        }
+
+        /* Progress Bar Animation */
+        @keyframes progress {
+            from {
+                width: 0%;
+            }
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+            animation: progress 2s ease-out;
+        }
+
+        /* Tooltip Animation */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: 115%;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            border: 5px solid transparent;
+            border-top-color: #333;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .tooltip:hover::before,
+        .tooltip:hover::after {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+        }
+
     </style>
 </head>
 <body>
@@ -1416,14 +3072,17 @@
 
         <!-- Main Content -->
         <div class="main-wrapper">
-            <header class="main-header">
-                <div class="header-content">
-                    <div class="header-left">
-                        <h1 class="header-title">
+            <!-- Header Padronizado -->
+            <header class="standard-header">
+                <div class="header-container">
+                    <div class="header-title-section">
+                        <div class="header-icon">
                             <i class="fas fa-chart-line"></i>
-                            Acompanhamento
-                        </h1>
-                        <p class="header-subtitle">Gerencie o acompanhamento dos seus alunos</p>
+                        </div>
+                        <div class="header-text">
+                            <h1 class="page-title">Acompanhamento</h1>
+                            <p class="page-subtitle">Acompanhe o progresso dos seus alunos</p>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -1506,10 +3165,16 @@
                                     <i class="fas fa-dumbbell"></i>
                                     Protocolo
                                 </h3>
-                                <button class="add-btn" id="addProtocolBtn">
-                                    <i class="fas fa-plus"></i>
-                                    Adicionar Protocolo
-                                </button>
+                                <div class="header-buttons">
+                                    <button class="print-btn" id="printProtocolsBtn" onclick="printStudentProtocols()" title="Imprimir Protocolos do Aluno">
+                                        <i class="fas fa-print"></i>
+                                        Imprimir
+                                    </button>
+                                    <button class="add-btn" id="addProtocolBtn">
+                                        <i class="fas fa-plus"></i>
+                                        Adicionar Protocolo
+                                    </button>
+                                </div>
                             </div>
                             
                             <div class="protocol-list" id="protocolList">
@@ -1570,10 +3235,7 @@
                 </section>
             </main>
 
-            <footer class="main-footer">
-                <p>2026 GurgelTrack - Todos os direitos reservados à Vitor Gurgel</p>
-            </footer>
-        </div>
+                    </div>
     </div>
 
     <!-- Modal para Adicionar Protocolo -->
@@ -2026,7 +3688,14 @@
                 
                 studentsList.innerHTML = validStudents.map(student => {
                     const alunoData = student.alunoData;
-                    const firstName = alunoData?.nome_pessoa || alunoData?.name || 'Aluno';
+                    console.log('Dados do aluno encontrados:', alunoData);
+                    
+                    // A tabela pessoas só tem email, então usar email como identificação
+                    // Extrair parte antes do @ como nome
+                    const email = alunoData?.email || '';
+                    const firstName = email ? email.split('@')[0] : 'Aluno';
+                    
+                    console.log('Nome do aluno extraído:', firstName);
                     const firstLetter = firstName.charAt(0).toUpperCase();
                     const userEmail = student.aluno_email;
                     
@@ -2129,6 +3798,8 @@
 
         async function loadStudentProtocols() {
             try {
+                console.log('Carregando protocolos para o aluno:', currentStudentEmail);
+                
                 // Carregar protocolos das três tabelas separadas
                 const [workoutsResult, dietsResult, calculationsResult] = await Promise.all([
                     supabase
@@ -2149,6 +3820,10 @@
                         .eq('student_email', currentStudentEmail)
                         .order('assigned_at', { ascending: false })
                 ]);
+
+                console.log('Workouts encontrados:', workoutsResult.data);
+                console.log('Diets encontradas:', dietsResult.data);
+                console.log('Calculations encontrados:', calculationsResult.data);
 
                 // Combinar todos os protocolos em um formato unificado
                 const allProtocols = [
@@ -2177,6 +3852,8 @@
                         type: 'calculation'
                     }))
                 ];
+
+                console.log('Todos os protocolos combinados:', allProtocols);
 
                 // Ordenar por data
                 allProtocols.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
@@ -2555,15 +4232,20 @@
         }
 
         function renderProtocols(protocols) {
+            console.log('Renderizando protocolos:', protocols);
             const protocolList = document.getElementById('protocolList');
             const emptyProtocol = document.getElementById('emptyProtocol');
             
+            console.log('Elementos DOM encontrados:', { protocolList, emptyProtocol });
+            
             if (protocols.length === 0) {
+                console.log('Nenhum protocolo encontrado, mostrando mensagem vazia');
                 protocolList.style.display = 'none';
                 emptyProtocol.style.display = 'block';
                 return;
             }
             
+            console.log('Protocolos encontrados, renderizando lista');
             protocolList.style.display = 'flex';
             emptyProtocol.style.display = 'none';
             
@@ -3322,19 +5004,22 @@
                         margin: 0.5rem 0;
                         padding: 0.5rem;
                         background: var(--bg-secondary);
-                        border-radius: 6px;
+                        border-radius: 4px;
                         border-left: 4px solid var(--accent);
+                        font-size: 14px;
                     }
                     
-                    .macro-targets {
-                        margin-top: 1rem;
+                    .calc-personal-data li {
+                        font-size: 16px;
+                        color: var(--text-primary);
+                        font-style: normal;
+                        padding: 0.75rem 0;
+                        font-weight: 500;
                     }
                     
-                    .no-foods, .no-exercises {
-                        text-align: center;
-                        color: var(--text-secondary);
-                        font-style: italic;
-                        padding: 1rem;
+                    .calc-personal-data li strong {
+                        color: var(--accent);
+                        font-weight: 600;
                     }
                     
                     /* Estilos para tabelas de protocolos */
@@ -3789,43 +5474,142 @@
         }
 
         function formatCalculationContent(data) {
+            console.log('=== DEBUG formatCalculationContent ===');
+            console.log('Dados recebidos:', data);
+            console.log('Tipo dos dados recebidos:', typeof data);
+            console.log('Chaves disponíveis:', Object.keys(data));
+            
+            // Se for string, fazer parse
+            let calcData = data;
+            if (typeof data === 'string') {
+                try {
+                    calcData = JSON.parse(data);
+                    console.log('Dados após parse JSON:', calcData);
+                    console.log('Chaves após parse:', Object.keys(calcData));
+                } catch (e) {
+                    console.error('Erro ao fazer parse dos dados:', e);
+                    calcData = {};
+                }
+            }
+            
             let html = '<div class="calculation-content"><h4>🧮 Detalhes do Cálculo</h4>';
             
-            // Dados pessoais
+            // Dados pessoais - formato igual à página calculo.html
             html += '<div class="calc-personal-data"><h5>Dados Pessoais:</h5><ul>';
-            if (data.gender) html += `<li><strong>Gênero:</strong> ${data.gender === 'male' ? 'Masculino' : 'Feminino'}</li>`;
-            if (data.age) html += `<li><strong>Idade:</strong> ${data.age} anos</li>`;
-            if (data.weight) html += `<li><strong>Peso:</strong> ${data.weight} kg</li>`;
-            if (data.height) html += `<li><strong>Altura:</strong> ${data.height} cm</li>`;
-            if (data.activity_level) html += `<li><strong>Nível de Atividade:</strong> ${data.activity_level}</li>`;
-            if (data.goal) html += `<li><strong>Objetivo:</strong> ${data.goal}</li>`;
+            if (calcData.gender) html += `<li><strong>Gênero:</strong> ${calcData.gender === 'male' ? 'Masculino' : 'Feminino'}</li>`;
+            if (calcData.age) html += `<li><strong>Idade:</strong> ${calcData.age} anos</li>`;
+            if (calcData.weight) html += `<li><strong>Peso:</strong> ${calcData.weight} kg</li>`;
+            if (calcData.height) html += `<li><strong>Altura:</strong> ${calcData.height} cm</li>`;
+            if (calcData.activity) html += `<li><strong>Fator de Atividade:</strong> ${calcData.activity}</li>`;
+            if (calcData.activityText) html += `<li><strong>Nível de Atividade:</strong> ${calcData.activityText}</li>`;
+            if (calcData.goal) html += `<li><strong>Objetivo:</strong> ${calcData.goal}</li>`;
+            if (calcData.goalText) html += `<li><strong>Objetivo Detalhado:</strong> ${calcData.goalText}</li>`;
+            if (calcData.goalAdjustment) html += `<li><strong>Ajuste Calórico:</strong> ${calcData.goalAdjustment}</li>`;
             html += '</ul></div>';
 
-            // Resultados
-            html += '<div class="calc-results"><h5>Resultados:</h5>';
-            if (data.tmb) html += `<p><strong>TMB (Taxa Metabólica Basal):</strong> ${data.tmb} kcal/dia</p>`;
-            if (data.get) html += `<p><strong>GET (Gasto Energético Total):</strong> ${data.get} kcal/dia</p>`;
-            if (data.total_calories) html += `<p><strong>Calorias Totais:</strong> ${data.total_calories} kcal/dia</p>`;
+            // Resultados metabólicos
+            html += '<div class="calc-results"><h5>Resultados Metabólicos:</h5>';
+            if (calcData.tmb) html += `<p><strong>TMB (Taxa Metabólica Basal):</strong> ${calcData.tmb} kcal/dia</p>`;
+            if (calcData.get) html += `<p><strong>GET (Gasto Energético Total):</strong> ${calcData.get} kcal/dia</p>`;
+            if (calcData.targetCalories) html += `<p><strong>Calorias Alvo:</strong> ${calcData.targetCalories} kcal/dia</p>`;
+            html += '</div>';
             
-            // Macronutrientes
-            html += '<div class="macro-targets"><h6>Targets de Macronutrientes:</h6>';
+            // Macronutrientes - exibir com todos os detalhes como na calculo.html
+            html += '<div class="calc-macros"><h5>Distribuição de Macronutrientes:</h5>';
+            
+            // Debug completo dos campos de macronutrientes
+            console.log('=== DEBUG MACRONUTRIENTES ===');
+            console.log('calcData.proteinGrams:', calcData.proteinGrams);
+            console.log('calcData.carbsGrams:', calcData.carbsGrams);
+            console.log('calcData.fatsGrams:', calcData.fatsGrams);
+            console.log('calcData.proteinas:', calcData.proteinas);
+            console.log('calcData.carboidratos:', calcData.carboidratos);
+            console.log('calcData.lipidios:', calcData.lipidios);
+            console.log('calcData.protein:', calcData.protein);
+            console.log('calcData.carbs:', calcData.carbs);
+            console.log('calcData.fats:', calcData.fats);
+            console.log('calcData.ptn:', calcData.ptn);
+            console.log('calcData.cho:', calcData.cho);
+            console.log('calcData.lip:', calcData.lip);
+            
+            // Valores diretos dos campos (como são salvos na calculo.html)
+            const proteinGrams = calcData.proteinGrams || calcData.proteinas || calcData.protein || calcData.ptn || 0;
+            const carbsGrams = calcData.carbsGrams || calcData.carboidratos || calcData.carbs || calcData.cho || 0;
+            const fatsGrams = calcData.fatsGrams || calcData.lipidios || calcData.fats || calcData.lip || 0;
+            
+            console.log('Valores de macronutrientes (campos diretos):');
+            console.log('- proteinGrams:', proteinGrams);
+            console.log('- carbsGrams:', carbsGrams);
+            console.log('- fatsGrams:', fatsGrams);
+            
+            // Calcular calorias dos macronutrientes
+            const proteinCalories = Math.round(proteinGrams * 4);
+            const carbsCalories = Math.round(carbsGrams * 4);
+            const fatsCalories = Math.round(fatsGrams * 9);
+            const totalMacroCalories = proteinCalories + carbsCalories + fatsCalories;
+            
+            // Calcular percentuais (se houver calorias alvo)
+            let proteinPercent = 0, carbsPercent = 0, fatsPercent = 0;
+            if (calcData.targetCalories && calcData.targetCalories !== '0 kcal') {
+                const targetCalories = parseInt(calcData.targetCalories) || 0;
+                if (targetCalories > 0) {
+                    proteinPercent = Math.round((proteinCalories / targetCalories) * 100);
+                    carbsPercent = Math.round((carbsCalories / targetCalories) * 100);
+                    fatsPercent = Math.round((fatsCalories / targetCalories) * 100);
+                }
+            }
+            
+            // Exibir tabela de macronutrientes igual à da calculo.html
             html += `
-                <div class="macros-grid">
-                    <div class="macro-item">
-                        <span class="macro-value">${data.proteins || '0'}g</span>
-                        <span class="macro-label">Proteínas</span>
-                    </div>
-                    <div class="macro-item">
-                        <span class="macro-value">${data.carbs || '0'}g</span>
-                        <span class="macro-label">Carboidratos</span>
-                    </div>
-                    <div class="macro-item">
-                        <span class="macro-value">${data.fats || '0'}g</span>
-                        <span class="macro-label">Gorduras</span>
-                    </div>
-                </div>
-            </div>`;
+                <table class="calc-macros-table">
+                    <thead>
+                        <tr>
+                            <th>Macronutriente</th>
+                            <th>Gramas/dia</th>
+                            <th>% Calorias</th>
+                            <th>Função</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="macro-cell"><strong>Proteínas</strong></td>
+                            <td class="macro-cell">${proteinGrams}g</td>
+                            <td class="macro-cell">${proteinPercent}%</td>
+                            <td class="macro-cell">Construção muscular</td>
+                        </tr>
+                        <tr>
+                            <td class="macro-cell"><strong>Carboidratos</strong></td>
+                            <td class="macro-cell">${carbsGrams}g</td>
+                            <td class="macro-cell">${carbsPercent}%</td>
+                            <td class="macro-cell">Energia principal</td>
+                        </tr>
+                        <tr>
+                            <td class="macro-cell"><strong>Lipídios</strong></td>
+                            <td class="macro-cell">${fatsGrams}g</td>
+                            <td class="macro-cell">${fatsPercent}%</td>
+                            <td class="macro-cell">Hormônios e vitaminas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TOTAL</strong></td>
+                            <td>${proteinGrams + carbsGrams + fatsGrams}g</td>
+                            <td>${proteinPercent + carbsPercent + fatsPercent}%</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            html += '</div>';
             
+            // Informações adicionais
+            html += '<div class="calc-additional"><h5>Informações Adicionais:</h5>';
+            if (calcData.waterRecommendation) html += `<p><strong>Recomendação de Água:</strong> ${calcData.waterRecommendation}ml</p>`;
+            if (calcData.date) html += `<p><strong>Data do Cálculo:</strong> ${new Date(calcData.date).toLocaleDateString('pt-BR')}</p>`;
+            if (calcData.name) html += `<p><strong>Nome do Cálculo:</strong> ${calcData.name}</p>`;
+            html += '</div>';
+            
+            console.log('HTML final gerado:');
+            console.log(html);
+                        
             html += '</div></div>';
             return html;
         }
@@ -4177,8 +5961,11 @@
 
         async function loadSavedCalculations() {
             try {
+                console.log('=== Carregando cálculos salvos ===');
                 // Carregar do localStorage como na página calculo.html
-                savedItems = JSON.parse(localStorage.getItem('savedCalculations') || '[]');
+                const loadedItems = JSON.parse(localStorage.getItem('savedCalculations') || '[]');
+                console.log('Itens carregados do localStorage:', loadedItems);
+                savedItems = loadedItems;
                 renderItems(savedItems);
             } catch (error) {
                 console.error('Erro ao carregar cálculos salvos:', error);
@@ -4238,7 +6025,41 @@
 
         async function selectItem(itemId) {
             try {
-                const item = savedItems.find(i => i.id === itemId);
+                console.log('=== DEPURAGEM selectItem ===');
+                console.log('itemId solicitado:', itemId, '(tipo:', typeof itemId, ')');
+                console.log('savedItems disponíveis:', savedItems);
+                console.log('currentProtocolType:', currentProtocolType);
+                
+                // Verificar estrutura dos savedItems
+                if (savedItems && savedItems.length > 0) {
+                    console.log('Estrutura dos savedItems:');
+                    savedItems.forEach((item, index) => {
+                        console.log(`Item ${index}:`, {
+                            id: item.id,
+                            tipo: typeof item.id,
+                            nome: item.name
+                        });
+                    });
+                }
+                
+                // Tentar encontrar sem converter primeiro
+                let item = savedItems.find(i => i.id === itemId);
+                console.log('Item encontrado (sem conversão):', item);
+                
+                // Se não encontrar, tentar com conversão
+                if (!item) {
+                    console.log('Tentando com parseInt...');
+                    item = savedItems.find(i => i.id === parseInt(itemId));
+                    console.log('Item encontrado (com parseInt):', item);
+                }
+                
+                // Se ainda não encontrar, tentar com string
+                if (!item) {
+                    console.log('Tentando comparação direta...');
+                    item = savedItems.find(i => String(i.id) === String(itemId));
+                    console.log('Item encontrado (com string):', item);
+                }
+                
                 if (!item) {
                     alert('Item não encontrado!');
                     return;
@@ -4279,11 +6100,21 @@
                         break;
                     case 'calculation':
                         tableName = 'student_calculations';
+                        
+                        // Garantir que o item tenha todos os campos necessários
+                        const calculationItem = {
+                            ...item,
+                            // Adicionar campos de macronutrientes se não existirem
+                            proteinGrams: item.proteinGrams || item.proteinas || 0,
+                            carbsGrams: item.carbsGrams || item.carboidratos || 0,
+                            fatsGrams: item.fatsGrams || item.lipidios || 0
+                        };
+                        
                         protocolData = {
                             student_email: currentStudentEmail,
                             personal_email: userData.email,
                             calculation_name: item.name,
-                            calculation_data: JSON.stringify(item),
+                            calculation_data: JSON.stringify(calculationItem),
                             assigned_at: new Date().toISOString()
                         };
                         break;
@@ -4337,6 +6168,799 @@
                 case 'calculation': return 'Cálculo';
                 case 'anamnesis': return 'Anamnese';
                 default: return 'Protocolo';
+            }
+        }
+
+        // Função para imprimir protocolos do aluno
+        async function printStudentProtocols() {
+            try {
+                if (!currentStudentEmail) {
+                    alert('Nenhum aluno selecionado para impressão.');
+                    return;
+                }
+
+                // Mostrar loading no botão
+                const printBtn = document.getElementById('printProtocolsBtn');
+                const originalText = printBtn.innerHTML;
+                printBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Carregando...';
+                printBtn.disabled = true;
+
+                // Buscar todos os protocolos do aluno
+                const [workouts, diets, calculations, anamneses] = await Promise.all([
+                    getStudentWorkouts(currentStudentEmail),
+                    getStudentDiets(currentStudentEmail),
+                    getStudentCalculations(currentStudentEmail),
+                    getStudentAnamneses(currentStudentEmail)
+                ]);
+
+                // Criar conteúdo HTML para impressão
+                const printContent = createPrintContent(currentStudentEmail, workouts, diets, calculations, anamneses);
+                
+                // Abrir janela de impressão
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(printContent);
+                printWindow.document.close();
+                
+                // Aguardar o conteúdo carregar e imprimir
+                printWindow.onload = function() {
+                    setTimeout(() => {
+                        printWindow.print();
+                        printWindow.close();
+                    }, 500);
+                };
+                
+            } catch (error) {
+                console.error('Erro ao preparar impressão:', error);
+                alert('Erro ao preparar impressão. Tente novamente.');
+            } finally {
+                // Restaurar botão
+                const printBtn = document.getElementById('printProtocolsBtn');
+                if (printBtn) {
+                    printBtn.innerHTML = '<i class="fas fa-print"></i> Imprimir';
+                    printBtn.disabled = false;
+                }
+            }
+        }
+
+        // Função para criar o conteúdo HTML da impressão
+        function createPrintContent(studentEmail, workouts, diets, calculations, anamneses) {
+            const currentDate = new Date().toLocaleDateString('pt-BR');
+            
+            return `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Protocolos do Aluno</title>
+                    <style>
+                        body {
+                            font-family: 'Arial', sans-serif;
+                            margin: 0;
+                            padding: 20px;
+                            color: #333;
+                            line-height: 1.6;
+                            font-size: 12px;
+                        }
+                        .header {
+                            text-align: center;
+                            border-bottom: 2px solid #dc143c;
+                            padding-bottom: 20px;
+                            margin-bottom: 30px;
+                        }
+                        .header h1 {
+                            color: #dc143c;
+                            margin: 0;
+                            font-size: 24px;
+                        }
+                        .header p {
+                            margin: 5px 0;
+                            color: #666;
+                            font-size: 14px;
+                        }
+                        .section {
+                            margin-bottom: 30px;
+                            page-break-inside: avoid;
+                        }
+                        .section-title {
+                            background: #dc143c;
+                            color: white;
+                            padding: 10px 15px;
+                            border-radius: 5px;
+                            font-size: 16px;
+                            font-weight: 600;
+                            margin-bottom: 15px;
+                        }
+                        .protocol-item {
+                            background: #f9f9f9;
+                            border: 1px solid #ddd;
+                            border-radius: 8px;
+                            padding: 15px;
+                            margin-bottom: 15px;
+                        }
+                        .protocol-header {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin-bottom: 10px;
+                            border-bottom: 1px solid #eee;
+                            padding-bottom: 8px;
+                        }
+                        .protocol-title {
+                            font-weight: 600;
+                            color: #333;
+                            font-size: 14px;
+                        }
+                        .protocol-date {
+                            color: #666;
+                            font-size: 11px;
+                        }
+                        .protocol-details {
+                            background: #f5f5f5;
+                            border: 1px solid #e0e0e0;
+                            border-radius: 6px;
+                            padding: 12px;
+                            margin-top: 10px;
+                            font-size: 11px;
+                            line-height: 1.4;
+                        }
+                        .empty-section {
+                            text-align: center;
+                            padding: 20px;
+                            color: #666;
+                            font-style: italic;
+                            background: #f9f9f9;
+                            border: 1px solid #ddd;
+                            border-radius: 8px;
+                        }
+                        @media print {
+                            * {
+                                box-sizing: border-box !important;
+                            }
+                            body { 
+                                padding: 8px !important; 
+                                margin: 0 !important;
+                                font-size: 12px !important;
+                                line-height: 1.4 !important;
+                                -webkit-print-color-adjust: exact !important;
+                                print-color-adjust: exact !important;
+                            }
+                            html {
+                                padding: 0 !important;
+                                margin: 0 !important;
+                            }
+                            .header { 
+                                margin-bottom: 5px !important;
+                                padding-bottom: 5px !important;
+                                page-break-after: avoid !important;
+                            }
+                            .header h1 { 
+                                font-size: 18px !important;
+                                margin: 0 0 3px 0 !important;
+                            }
+                            .header p { 
+                                font-size: 10px !important;
+                                margin: 1px 0 !important;
+                            }
+                            .section { 
+                                margin-bottom: 20px !important;
+                                page-break-inside: avoid;
+                                page-break-after: avoid;
+                                clear: both !important;
+                            }
+                            .section-title { 
+                                padding: 8px 12px !important;
+                                font-size: 15px !important;
+                                margin-bottom: 10px !important;
+                                page-break-after: avoid;
+                            }
+                            .protocol-item { 
+                                padding: 12px !important;
+                                margin-bottom: 12px !important;
+                                page-break-inside: avoid;
+                                page-break-after: avoid;
+                            }
+                            .protocol-header {
+                                margin-bottom: 10px !important;
+                                padding-bottom: 8px !important;
+                            }
+                            .protocol-title {
+                                font-size: 14px !important;
+                            }
+                            .protocol-date {
+                                font-size: 10px !important;
+                            }
+                            .protocol-details {
+                                padding: 10px !important;
+                                font-size: 11px !important;
+                            }
+                            table {
+                                font-size: 10px !important;
+                                page-break-inside: avoid;
+                            }
+                            th, td {
+                                padding: 4px !important;
+                                font-size: 10px !important;
+                                border-collapse: collapse !important;
+                            }
+                            .empty-section {
+                                padding: 12px !important;
+                                font-size: 11px !important;
+                            }
+                            .calc-content h5,
+                            .calc-content h6 {
+                                margin: 6px 0 !important;
+                                font-size: 12px !important;
+                            }
+                            .calc-content p {
+                                margin: 4px 0 !important;
+                                padding: 6px !important;
+                                font-size: 11px !important;
+                            }
+                            @page {
+                                margin: 8mm !important;
+                                size: A4 !important;
+                            }
+                            .no-print {
+                                display: none !important;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                            <img src="logo-gurgel.png" alt="GurgelTrack Logo" style="height: 60px; margin-right: 20px;">
+                            <h1 style="margin: 0; font-size: 24px;">Protocolos do Aluno</h1>
+                        </div>
+                        <p style="font-size: 16px; margin: 5px 0;"><strong>Aluno:</strong> ${studentEmail}</p>
+                        <p style="font-size: 16px; margin: 5px 0;"><strong>Data de Impressão:</strong> ${currentDate}</p>
+                    </div>
+
+                    ${workouts.length > 0 ? `
+                    <div class="section">
+                        <div class="section-title">
+                            🏋️ Treinos
+                        </div>
+                        ${workouts.map(workout => `
+                            <div class="protocol-item">
+                                <div class="protocol-header">
+                                    <div class="protocol-title">${workout.workout_name || 'Treino sem nome'}</div>
+                                    <div class="protocol-date">${formatDate(workout.assigned_at)}</div>
+                                </div>
+                                <div class="protocol-details">
+                                    ${renderWorkoutDetails(workout.workout_data)}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ` : `
+                    <div class="section">
+                        <div class="section-title">
+                            🏋️ Treinos
+                        </div>
+                        <div class="empty-section">Nenhum treino encontrado.</div>
+                    </div>
+                    `}
+
+                    ${diets.length > 0 ? `
+                    <div class="section">
+                        <div class="section-title">
+                            🍽️ Dietas
+                        </div>
+                        ${diets.map(diet => `
+                            <div class="protocol-item">
+                                <div class="protocol-header">
+                                    <div class="protocol-title">${diet.diet_name || 'Dieta sem nome'}</div>
+                                    <div class="protocol-date">${formatDate(diet.assigned_at)}</div>
+                                </div>
+                                <div class="protocol-details">
+                                    ${renderDietDetails(diet.diet_data)}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ` : `
+                    <div class="section">
+                        <div class="section-title">
+                            🍽️ Dietas
+                        </div>
+                        <div class="empty-section">Nenhuma dieta encontrada.</div>
+                    </div>
+                    `}
+
+                    ${calculations.length > 0 ? `
+                    <div class="section">
+                        <div class="section-title">
+                            🧮 Cálculos
+                        </div>
+                        ${calculations.map(calculation => `
+                            <div class="protocol-item">
+                                <div class="protocol-header">
+                                    <div class="protocol-title">${calculation.calculation_name || 'Cálculo sem nome'}</div>
+                                    <div class="protocol-date">${formatDate(calculation.assigned_at)}</div>
+                                </div>
+                                <div class="protocol-details">
+                                    ${formatCalculationContent(calculation.calculation_data)}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ` : `
+                    <div class="section">
+                        <div class="section-title">
+                            🧮 Cálculos
+                        </div>
+                        <div class="empty-section">Nenhum cálculo encontrado.</div>
+                    </div>
+                    `}
+                </body>
+            </html>
+            `;
+        }
+
+        function renderWorkoutDetails(workoutData) {
+            try {
+                const data = typeof workoutData === 'string' ? JSON.parse(workoutData) : workoutData;
+                
+                if (!data) {
+                    return '<div>Dados do treino não disponíveis.</div>';
+                }
+                
+                let detailsHtml = '';
+                
+                // Verificar diferentes estruturas possíveis
+                if (data.data && Array.isArray(data.data)) {
+                    // Estrutura: data[].days[].exercises[]
+                    data.data.forEach((day, dayIndex) => {
+                        if (day && day.exercises && day.exercises.length > 0) {
+                            detailsHtml += `<div style="margin-bottom: 15px;">
+                                <strong style="color: #dc143c; font-size: 13px;">${day.name || `Dia ${dayIndex + 1}`}:</strong><br>`;
+                            
+                            // Criar tabela de exercícios
+                            detailsHtml += `
+                                <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 10px; table-layout: fixed;">
+                                    <thead>
+                                        <tr style="background: #f8f8f8;">
+                                            <th style="padding: 6px; text-align: left; border: 1px solid #ddd; font-size: 9px; width: 45%;">Exercício</th>
+                                            <th style="padding: 6px; text-align: center; border: 1px solid #ddd; font-size: 9px; width: 15%;">Séries</th>
+                                            <th style="padding: 6px; text-align: center; border: 1px solid #ddd; font-size: 9px; width: 15%;">Repetições</th>
+                                            <th style="padding: 6px; text-align: center; border: 1px solid #ddd; font-size: 9px; width: 25%;">Descanso</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                            `;
+                            
+                            day.exercises.forEach(exercise => {
+                                const rest = exercise.rest || exercise.descanso || '-';
+                                detailsHtml += `
+                                    <tr style="border-bottom: 1px solid #eee;">
+                                        <td style="padding: 6px; border: 1px solid #ddd; font-weight: 500; font-size: 10px; width: 45%; word-wrap: break-word;">
+                                            ${exercise.name || exercise.exercise_name || 'Exercício sem nome'}
+                                        </td>
+                                        <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-size: 10px; width: 15%;">
+                                            ${exercise.sets || exercise.series || 0}
+                                        </td>
+                                        <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-size: 10px; width: 15%;">
+                                            ${exercise.reps || exercise.repeticoes || 0}
+                                        </td>
+                                        <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-size: 10px; width: 25%;">
+                                            ${rest}
+                                        </td>
+                                    </tr>
+                                `;
+                            });
+                            
+                            detailsHtml += `
+                                    </tbody>
+                                </table>
+                            `;
+                            
+                            detailsHtml += '</div>';
+                        }
+                    });
+                } else if (data.days && Array.isArray(data.days)) {
+                    // Estrutura direta com dias
+                    data.days.forEach((day, dayIndex) => {
+                        if (day && day.exercises && day.exercises.length > 0) {
+                            detailsHtml += `<div style="margin-bottom: 15px;">
+                                <strong style="color: #dc143c; font-size: 13px;">${day.name || `Dia ${dayIndex + 1}`}:</strong><br>`;
+                            
+                            // Criar tabela de exercícios
+                            detailsHtml += `
+                                <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 10px; table-layout: fixed;">
+                                    <thead>
+                                        <tr style="background: #f8f8f8;">
+                                            <th style="padding: 6px; text-align: left; border: 1px solid #ddd; font-size: 9px; width: 45%;">Exercício</th>
+                                            <th style="padding: 6px; text-align: center; border: 1px solid #ddd; font-size: 9px; width: 15%;">Séries</th>
+                                            <th style="padding: 6px; text-align: center; border: 1px solid #ddd; font-size: 9px; width: 15%;">Repetições</th>
+                                            <th style="padding: 6px; text-align: center; border: 1px solid #ddd; font-size: 9px; width: 25%;">Descanso</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                            `;
+                            
+                            day.exercises.forEach(exercise => {
+                                const rest = exercise.rest || exercise.descanso || '-';
+                                detailsHtml += `
+                                    <tr style="border-bottom: 1px solid #eee;">
+                                        <td style="padding: 6px; border: 1px solid #ddd; font-weight: 500; font-size: 10px; width: 45%; word-wrap: break-word;">
+                                            ${exercise.name || exercise.exercise_name || 'Exercício sem nome'}
+                                        </td>
+                                        <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-size: 10px; width: 15%;">
+                                            ${exercise.sets || exercise.series || 0}
+                                        </td>
+                                        <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-size: 10px; width: 15%;">
+                                            ${exercise.reps || exercise.repeticoes || 0}
+                                        </td>
+                                        <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-size: 10px; width: 25%;">
+                                            ${rest}
+                                        </td>
+                                    </tr>
+                                `;
+                            });
+                            
+                            detailsHtml += `
+                                    </tbody>
+                                </table>
+                            `;
+                            
+                            detailsHtml += '</div>';
+                        }
+                    });
+                } else if (data.exercises && Array.isArray(data.exercises)) {
+                    // Estrutura simples com apenas exercícios
+                    detailsHtml += '<div style="margin-bottom: 15px;">';
+                    
+                    // Criar tabela de exercícios
+                    detailsHtml += `
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 10px; table-layout: fixed;">
+                            <thead>
+                                <tr style="background: #f8f8f8;">
+                                    <th style="padding: 6px; text-align: left; border: 1px solid #ddd; font-size: 9px; width: 45%;">Exercício</th>
+                                    <th style="padding: 6px; text-align: center; border: 1px solid #ddd; font-size: 9px; width: 15%;">Séries</th>
+                                    <th style="padding: 6px; text-align: center; border: 1px solid #ddd; font-size: 9px; width: 15%;">Repetições</th>
+                                    <th style="padding: 6px; text-align: center; border: 1px solid #ddd; font-size: 9px; width: 25%;">Descanso</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    
+                    data.exercises.forEach(exercise => {
+                        const rest = exercise.rest || exercise.descanso || '-';
+                        detailsHtml += `
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 6px; border: 1px solid #ddd; font-weight: 500; font-size: 10px; width: 45%; word-wrap: break-word;">
+                                    ${exercise.name || exercise.exercise_name || 'Exercício sem nome'}
+                                </td>
+                                <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-size: 10px; width: 15%;">
+                                    ${exercise.sets || exercise.series || 0}
+                                </td>
+                                <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-size: 10px; width: 15%;">
+                                    ${exercise.reps || exercise.repeticoes || 0}
+                                </td>
+                                <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-size: 10px; width: 25%;">
+                                    ${rest}
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    
+                    detailsHtml += `
+                            </tbody>
+                        </table>
+                    `;
+                    
+                    detailsHtml += '</div>';
+                } else {
+                    // Estrutura desconhecida, mostrar como JSON formatado
+                    detailsHtml += `<div style="margin-left: 10px; margin-bottom: 10px;">
+                        <pre style="background: #f5f5f5; padding: 8px; border-radius: 4px; font-size: 9px; overflow-x: auto;">
+${JSON.stringify(data, null, 2)}
+                        </pre>
+                    </div>`;
+                }
+                
+                return detailsHtml || '<div>Nenhum exercício encontrado.</div>';
+                
+            } catch (error) {
+                console.error('Erro ao renderizar detalhes do treino:', error);
+                return '<div>Erro ao processar dados do treino.</div>';
+            }
+        }
+
+        function renderDietDetails(dietData) {
+            try {
+                const data = typeof dietData === 'string' ? JSON.parse(dietData) : dietData;
+                
+                if (!data) {
+                    return '<div>Dados da dieta não disponíveis.</div>';
+                }
+                
+                let detailsHtml = '';
+                
+                // Calcular totais gerais da dieta
+                let totalKcal = 0;
+                let totalPtn = 0;
+                let totalCho = 0;
+                let totalLip = 0;
+                
+                // Verificar diferentes estruturas possíveis
+                let meals = [];
+                
+                if (Array.isArray(data)) {
+                    meals = data;
+                } else if (data.meals && Array.isArray(data.meals)) {
+                    meals = data.meals;
+                } else if (data.data && Array.isArray(data.data)) {
+                    meals = data.data;
+                } else if (data.foods && Array.isArray(data.foods)) {
+                    meals = [data];
+                } else if (data.meals_data && typeof data.meals_data === 'string') {
+                    try {
+                        const parsedMeals = JSON.parse(data.meals_data);
+                        if (Array.isArray(parsedMeals)) {
+                            meals = parsedMeals;
+                        }
+                    } catch (parseError) {
+                        console.error('Erro ao fazer parse de meals_data:', parseError);
+                    }
+                }
+                
+                if (meals.length === 0) {
+                    return '<div>Nenhuma refeição encontrada.</div>';
+                }
+                
+                // Processar refeições e calcular totais
+                meals.forEach(meal => {
+                    if (meal && meal.foods && meal.foods.length > 0) {
+                        let mealKcal = 0;
+                        let mealPtn = 0;
+                        let mealCho = 0;
+                        let mealLip = 0;
+                        
+                        detailsHtml += `<div style="margin-bottom: 15px;">
+                            <strong style="color: #dc143c; font-size: 12px;">${meal.name || 'Refeição sem nome'}</strong><br>`;
+                        
+                        // Criar tabela de alimentos
+                        detailsHtml += `
+                            <table style="width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 9px; table-layout: fixed;">
+                                <thead>
+                                    <tr style="background: #f8f8f8;">
+                                        <th style="padding: 4px; text-align: left; border: 1px solid #ddd; font-size: 8px; width: 40%;">Alimento</th>
+                                        <th style="padding: 4px; text-align: center; border: 1px solid #ddd; font-size: 8px; width: 15%;">Quantidade</th>
+                                        <th style="padding: 4px; text-align: center; border: 1px solid #ddd; font-size: 8px; width: 15%;">Kcal</th>
+                                        <th style="padding: 4px; text-align: center; border: 1px solid #ddd; font-size: 8px; width: 10%;">PTN</th>
+                                        <th style="padding: 4px; text-align: center; border: 1px solid #ddd; font-size: 8px; width: 10%;">CHO</th>
+                                        <th style="padding: 4px; text-align: center; border: 1px solid #ddd; font-size: 8px; width: 10%;">LIP</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+                        
+                        meal.foods.forEach(food => {
+                            // Extrair quantidade e unidade - EXATAMENTE a mesma lógica do formatDietContent
+                            const quantityStr = food.quantity || food.unit || '100g';
+                            const quantity = parseFloat(quantityStr) || 100;
+                            
+                            // Calcular macros baseado na quantidade
+                            const multiplier = quantity / 100;
+                            const foodKcal = Math.round((food.kcal || 0) * multiplier);
+                            const foodPtn = Math.round((food.ptn || 0) * multiplier * 10) / 10;
+                            const foodCho = Math.round((food.cho || 0) * multiplier * 10) / 10;
+                            const foodLip = Math.round((food.lip || 0) * multiplier * 10) / 10;
+                            
+                            mealKcal += foodKcal;
+                            mealPtn += foodPtn;
+                            mealCho += foodCho;
+                            mealLip += foodLip;
+                            
+                            detailsHtml += `
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 4px; border: 1px solid #ddd; font-weight: 500; font-size: 9px; word-wrap: break-word;">
+                                        ${food.name || 'Alimento sem nome'}
+                                    </td>
+                                    <td style="padding: 4px; border: 1px solid #ddd; text-align: center; font-size: 9px;">
+                                        ${quantityStr}
+                                    </td>
+                                    <td style="padding: 4px; border: 1px solid #ddd; text-align: center; font-size: 9px;">
+                                        ${foodKcal}
+                                    </td>
+                                    <td style="padding: 4px; border: 1px solid #ddd; text-align: center; font-size: 9px;">
+                                        ${foodPtn}g
+                                    </td>
+                                    <td style="padding: 4px; border: 1px solid #ddd; text-align: center; font-size: 9px;">
+                                        ${foodCho}g
+                                    </td>
+                                    <td style="padding: 4px; border: 1px solid #ddd; text-align: center; font-size: 9px;">
+                                        ${foodLip}g
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        
+                        detailsHtml += `
+                                </tbody>
+                                <tfoot>
+                                    <tr style="background: #f5f5f5; font-weight: bold;">
+                                        <td style="padding: 4px; border: 1px solid #ddd; text-align: right; font-size: 9px;" colspan="2">
+                                            TOTAL:
+                                        </td>
+                                        <td style="padding: 4px; border: 1px solid #ddd; text-align: center; font-size: 9px; color: #f39c12;">
+                                            ${Math.round(mealKcal)}
+                                        </td>
+                                        <td style="padding: 4px; border: 1px solid #ddd; text-align: center; font-size: 9px; color: #dc143c;">
+                                            ${Math.round(mealPtn * 10) / 10}g
+                                        </td>
+                                        <td style="padding: 4px; border: 1px solid #ddd; text-align: center; font-size: 9px; color: #3498db;">
+                                            ${Math.round(mealCho * 10) / 10}g
+                                        </td>
+                                        <td style="padding: 4px; border: 1px solid #ddd; text-align: center; font-size: 9px; color: #8b0000;">
+                                            ${Math.round(mealLip * 10) / 10}g
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        `;
+                        
+                        detailsHtml += '</div>';
+                        
+                        // Acumular totais gerais
+                        totalKcal += mealKcal;
+                        totalPtn += mealPtn;
+                        totalCho += mealCho;
+                        totalLip += mealLip;
+                    }
+                });
+                
+                // Adicionar resumo geral da dieta
+                detailsHtml += `
+                    <div style="margin-top: 15px; padding: 10px; background: #f9f9f9; border: 1px solid #dc143c; border-radius: 6px;">
+                        <strong style="color: #dc143c; font-size: 11px;">RESUMO GERAL DA DIETA</strong><br>
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 9px;">
+                            <tr>
+                                <td style="padding: 4px; text-align: center; border: 1px solid #ddd; background: #fff5f5; font-size: 9px;">
+                                    <strong style="color: #f39c12; font-size: 10px;">${Math.round(totalKcal)}</strong><br>
+                                    <span style="font-size: 8px; color: #666;">KCAL</span>
+                                </td>
+                                <td style="padding: 4px; text-align: center; border: 1px solid #ddd; background: #fff5f5; font-size: 9px;">
+                                    <strong style="color: #dc143c; font-size: 10px;">${Math.round(totalPtn * 10) / 10}g</strong><br>
+                                    <span style="font-size: 8px; color: #666;">PROTEÍNAS</span>
+                                </td>
+                                <td style="padding: 4px; text-align: center; border: 1px solid #ddd; background: #fff5f5; font-size: 9px;">
+                                    <strong style="color: #3498db; font-size: 10px;">${Math.round(totalCho * 10) / 10}g</strong><br>
+                                    <span style="font-size: 8px; color: #666;">CARBOIDRATOS</span>
+                                </td>
+                                <td style="padding: 4px; text-align: center; border: 1px solid #ddd; background: #fff5f5; font-size: 9px;">
+                                    <strong style="color: #8b0000; font-size: 10px;">${Math.round(totalLip * 10) / 10}g</strong><br>
+                                    <span style="font-size: 8px; color: #666;">GORDURAS</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                `;
+                
+                return detailsHtml || '<div>Nenhuma informação da dieta encontrada.</div>';
+                
+            } catch (error) {
+                console.error('Erro ao renderizar detalhes da dieta:', error);
+                return '<div>Erro ao processar dados da dieta.</div>';
+            }
+        }
+
+        function formatCalculationContent(calculationData) {
+            try {
+                const data = typeof calculationData === 'string' ? JSON.parse(calculationData) : calculationData;
+                
+                if (!data) {
+                    return '<div>Dados do cálculo não disponíveis.</div>';
+                }
+                
+                let html = '<div class="calc-content"><h5>🧮 Detalhes do Cálculo</h5>';
+                
+                // Dados pessoais
+                html += '<div class="personal-data" style="margin-bottom: 15px;"><h6>Dados Pessoais:</h6>';
+                html += `
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 10px;">
+                        <tbody>
+                            ${data.weight ? `<tr><td><strong>Peso:</strong></td><td>${data.weight} kg</td></tr>` : ''}
+                            ${data.height ? `<tr><td><strong>Altura:</strong></td><td>${data.height} cm</td></tr>` : ''}
+                            ${data.age ? `<tr><td><strong>Idade:</strong></td><td>${data.age} anos</td></tr>` : ''}
+                            ${data.gender ? `<tr><td><strong>Gênero:</strong></td><td>${data.gender === 'male' ? 'Masculino' : 'Feminino'}</td></tr>` : ''}
+                            ${data.activity_level ? `<tr><td><strong>Nível de Atividade:</strong></td><td>${data.activity_level}</td></tr>` : ''}
+                            ${data.goal ? `<tr><td><strong>Objetivo:</strong></td><td>${data.goal}</td></tr>` : ''}
+                        </tbody>
+                    </table>
+                </div>`;
+
+                // Resultados
+                html += '<div class="calc-results"><h6>Resultados:</h6>';
+                if (data.tmb) html += `<p style="margin: 5px 0; padding: 5px; background: #f5f5f5; border-radius: 4px; border-left: 4px solid #dc143c;"><strong>TMB (Taxa Metabólica Basal):</strong> ${data.tmb} kcal/dia</p>`;
+                if (data.get) html += `<p style="margin: 5px 0; padding: 5px; background: #f5f5f5; border-radius: 4px; border-left: 4px solid #dc143c;"><strong>GET (Gasto Energético Total):</strong> ${data.get} kcal/dia</p>`;
+                if (data.total_calories) html += `<p style="margin: 5px 0; padding: 5px; background: #f5f5f5; border-radius: 4px; border-left: 4px solid #dc143c;"><strong>Calorias Totais:</strong> ${data.total_calories} kcal/dia</p>`;
+                html += '</div>';
+                
+                html += '</div>';
+                return html;
+                
+            } catch (error) {
+                console.error('Erro ao formatar cálculo:', error);
+                return '<div>Erro ao processar dados do cálculo.</div>';
+            }
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'Data não disponível';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
+
+        // Funções auxiliares para buscar dados
+        async function getStudentWorkouts(studentEmail) {
+            try {
+                const { data, error } = await supabase
+                    .from('student_workouts')
+                    .select('*')
+                    .eq('student_email', studentEmail)
+                    .order('assigned_at', { ascending: false });
+                
+                return data || [];
+            } catch (error) {
+                console.error('Erro ao buscar treinos:', error);
+                return [];
+            }
+        }
+
+        async function getStudentDiets(studentEmail) {
+            try {
+                const { data, error } = await supabase
+                    .from('student_diets')
+                    .select('*')
+                    .eq('student_email', studentEmail)
+                    .order('assigned_at', { ascending: false });
+                
+                return data || [];
+            } catch (error) {
+                console.error('Erro ao buscar dietas:', error);
+                return [];
+            }
+        }
+
+        async function getStudentCalculations(studentEmail) {
+            try {
+                const { data, error } = await supabase
+                    .from('student_calculations')
+                    .select('*')
+                    .eq('student_email', studentEmail)
+                    .order('assigned_at', { ascending: false });
+                
+                return data || [];
+            } catch (error) {
+                console.error('Erro ao buscar cálculos:', error);
+                return [];
+            }
+        }
+
+        async function getStudentAnamneses(studentEmail) {
+            try {
+                const { data, error } = await supabase
+                    .from('student_anamneses')
+                    .select('*')
+                    .eq('aluno_email', studentEmail)
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.log('Tabela student_anamneses não encontrada ou erro:', error);
+                    return [];
+                }
+                
+                return data || [];
+            } catch (error) {
+                console.error('Erro ao buscar anamneses:', error);
+                return [];
             }
         }
 

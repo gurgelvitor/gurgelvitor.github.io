@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cargas - GurgelTrack</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="logo-gurgel.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="logo-gurgel.png">
+    <link rel="shortcut icon" href="logo-gurgel.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -24,19 +27,40 @@
             --shadow: 0 4px 12px rgba(220, 20, 60, 0.15);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --danger-color: #dc143c;
+            
+            /* Sistema de Ícones - Tamanhos Padronizados */
+            --icon-xs: 12px;
+            --icon-sm: 16px;
+            --icon-md: 20px;
+            --icon-lg: 24px;
+            --icon-xl: 32px;
+            
+            /* Cores de Ícones - Modo Claro */
+            --icon-primary: var(--text-primary);
+            --icon-secondary: var(--text-secondary);
+            --icon-accent: var(--accent);
+            --icon-white: #ffffff;
+            --icon-light: #f8f9fa;
         }
 
         body.dark-mode {
-            /* Cores do Tema Escuro - Melhoradas */
+            /* Cores do Tema Escuro - Mesmas do modo claro */
             --bg-primary: #0f0f0f;
             --bg-secondary: #1e1e1e;
-            --accent: #e91e63;
-            --accent-hover: #f06292;
+            --accent: #dc143c;
+            --accent-hover: #b91c1c;
             --text-primary: #f5f5f5;
             --text-secondary: #b8b8b8;
             --border: #333333;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-            --danger-color: #e91e63;
+            --danger-color: #dc143c;
+            
+            /* Cores de Ícones - Modo Escuro */
+            --icon-primary: var(--text-primary);
+            --icon-secondary: var(--text-secondary);
+            --icon-accent: var(--accent);
+            --icon-white: #ffffff;
+            --icon-light: #f8f9fa;
         }
 
         /* Theme Toggle Button */
@@ -44,19 +68,19 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            width: 50px;
-            height: 50px;
             background: rgba(255, 255, 255, 0.9);
             border: 2px solid var(--accent);
             border-radius: 50%;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 999;
-            font-size: 20px;
+            font-size: 1.2rem;
             color: var(--accent);
+            transition: var(--transition);
+            z-index: 1000;
             box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
         }
 
@@ -294,7 +318,7 @@
             gap: 0.5rem;
             width: calc(100% - 2rem);
             padding: 0.75rem;
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
             color: white;
             border: none;
             border-radius: 6px;
@@ -303,14 +327,15 @@
             transition: var(--transition);
             cursor: pointer;
             margin: 0.5rem 1rem;
-            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+            box-shadow: 0 2px 8px rgba(220, 20, 60, 0.3);
             box-sizing: border-box;
         }
 
         .sidebar-personal-btn:hover {
-            background: linear-gradient(135deg, #27ae60, #229954);
+            background: linear-gradient(135deg, var(--accent-hover), #8b0000);
+            color: white !important;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.4);
         }
 
         
@@ -484,30 +509,85 @@
             gap: 0.5rem;
         }
 
+        /* Sistema de Formulários Moderno */
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
+        .form-label,
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .form-group select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: var(--bg-primary);
+            font-weight: 600;
             color: var(--text-primary);
             font-size: 0.9rem;
         }
 
+        .form-control,
+        .form-group select {
+            width: 100%;
+            height: 48px;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-sizing: border-box;
+        }
+
+        .form-control:focus,
         .form-group select:focus {
             outline: none;
-            border-color: var(--accent);
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .form-control::placeholder,
+        .form-group select::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        textarea.form-control {
+            height: auto;
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        select.form-control,
+        .form-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-error {
+            color: #e74c3c;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .form-control.error,
+        .form-group select.error {
+            border-color: #e74c3c;
+        }
+
+        .form-control.error + .form-error,
+        .form-group select.error + .form-error {
+            display: block;
         }
 
         /* Search Section */
@@ -578,13 +658,123 @@
             font-size: 0.75rem;
         }
 
-        .btn-secondary {
-            background: var(--text-secondary);
+        /* Sistema de Botões Moderno */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #e74c3c, #c0392b);
             color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 20, 60, 0.3);
+            background: linear-gradient(135deg, #e74c3c, #c0392b, #a93226);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            text-decoration: none;
         }
 
         .btn-secondary:hover {
-            background: var(--text-primary);
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 20, 60, 0.2);
+        }
+
+        /* Tamanhos de Botões */
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            height: 32px;
+        }
+
+        .btn-medium {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            height: 40px;
+        }
+
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            height: 48px;
+        }
+
+        /* Combinações de Tamanho e Tipo */
+        .btn-primary.btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            height: 32px;
+        }
+
+        .btn-primary.btn-medium {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            height: 40px;
+        }
+
+        .btn-primary.btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            height: 48px;
+        }
+
+        .btn-secondary.btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            height: 32px;
+        }
+
+        .btn-secondary.btn-medium {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            height: 40px;
+        }
+
+        .btn-secondary.btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            height: 48px;
         }
 
         .btn-success {
@@ -897,8 +1087,928 @@
             }
         }
 
+        /* Tipografia Aprimorada - Hierarquia Visual */
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+        }
+
+        h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+        }
+
+        h4 {
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+            margin-bottom: 0.875rem;
+        }
+
+        h5 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+
+        h6 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin-bottom: 0.625rem;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Textos longos com melhor legibilidade */
+        .long-text, .description-text, .content-text {
+            line-height: 1.6;
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .subtitle-text {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Contraste para elementos importantes */
+        .text-primary {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .text-secondary {
+            color: var(--text-secondary);
+        }
+
+        .text-accent {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Sistema de Espaçamento Consistente */
+        .section-spacing {
+            margin-bottom: 60px;
+        }
+
+        .element-spacing {
+            margin-bottom: 24px;
+        }
+
+        .group-spacing {
+            margin-bottom: 16px;
+        }
+
+        .small-spacing {
+            margin-bottom: 12px;
+        }
+
+        /* Cards com hierarquia visual */
+        .card-primary {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .card-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Sistema de Grid - 12 Colunas */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .grid-container-sm {
+            gap: 20px;
+        }
+
+        .grid-container-lg {
+            gap: 30px;
+        }
+
+        /* Classes de Colunas (1-12) */
+        .col-1 { grid-column: span 1; }
+        .col-2 { grid-column: span 2; }
+        .col-3 { grid-column: span 3; }
+        .col-4 { grid-column: span 4; }
+        .col-5 { grid-column: span 5; }
+        .col-6 { grid-column: span 6; }
+        .col-7 { grid-column: span 7; }
+        .col-8 { grid-column: span 8; }
+        .col-9 { grid-column: span 9; }
+        .col-10 { grid-column: span 10; }
+        .col-11 { grid-column: span 11; }
+        .col-12 { grid-column: span 12; }
+
+        /* Classes de Offset */
+        .offset-1 { margin-left: calc(1 * 8.333333% + 12px); }
+        .offset-2 { margin-left: calc(2 * 8.333333% + 24px); }
+        .offset-3 { margin-left: calc(3 * 8.333333% + 36px); }
+        .offset-4 { margin-left: calc(4 * 8.333333% + 48px); }
+        .offset-5 { margin-left: calc(5 * 8.333333% + 60px); }
+        .offset-6 { margin-left: calc(6 * 8.333333% + 72px); }
+
+        /* Alinhamento Visual Consistente */
+        .grid-center {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            align-items: center;
+            justify-items: center;
+        }
+
+        .grid-start {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            align-items: start;
+            justify-items: start;
+        }
+
+        .grid-end {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            align-items: end;
+            justify-items: end;
+        }
+
+        /* Grid Responsivo */
+        @media (max-width: 768px) {
+            .grid-container,
+            .grid-center,
+            .grid-start,
+            .grid-end {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .col-1, .col-2, .col-3, .col-4, .col-5, .col-6,
+            .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
+                grid-column: span 1;
+            }
+
+            .offset-1, .offset-2, .offset-3, .offset-4, .offset-5, .offset-6 {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid-container,
+            .grid-center,
+            .grid-start,
+            .grid-end {
+                gap: 16px;
+            }
+        }
+
+        /* Sistema de Micro-Interações Modernas */
         
-            </style>
+        /* Hover States para Cards */
+        .card,
+        .workout-section,
+        .content-section,
+        .help-section {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover,
+        .workout-section:hover,
+        .content-section:hover,
+        .help-section:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Hover States para Navegação */
+        .nav-item {
+            position: relative;
+            transform: translateX(0);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-item:hover {
+            transform: translateX(4px);
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        /* Hover States para Links */
+        a {
+            position: relative;
+            color: var(--accent);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        a:hover {
+            color: #2980b9;
+        }
+
+        a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        a:hover::after {
+            width: 100%;
+        }
+
+        /* Loading Spinners */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(52, 152, 219, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        .spinner-large {
+            width: 40px;
+            height: 40px;
+            border-width: 4px;
+        }
+
+        .spinner-small {
+            width: 16px;
+            height: 16px;
+            border-width: 2px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Loading States para Botões */
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn.loading .btn-text {
+            opacity: 0;
+        }
+
+        .btn.loading .spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 1;
+        }
+
+        .btn .spinner {
+            opacity: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Pulse Animation para elementos importantes */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(52, 152, 219, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Slide In Animation */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* Bounce Animation */
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40%, 43% {
+                transform: translateY(-10px);
+            }
+            70% {
+                transform: translateY(-5px);
+            }
+            90% {
+                transform: translateY(-2px);
+            }
+        }
+
+        .bounce {
+            animation: bounce 1s ease-in-out;
+        }
+
+        /* Hover States para Imagens */
+        img {
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        img:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        /* Hover States para Ícones */
+        .fas,
+        .fab,
+        .far {
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .fas:hover,
+        .fab:hover,
+        .far:hover {
+            transform: scale(1.2) rotate(5deg);
+            color: var(--accent);
+        }
+
+        /* Sistema de Ícones com Contraste Adequado */
+        
+        /* Classes Base para Ícones */
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        /* Tamanhos Padronizados de Ícones */
+        .icon-xs {
+            font-size: var(--icon-xs);
+            width: var(--icon-xs);
+            height: var(--icon-xs);
+        }
+        
+        .icon-sm {
+            font-size: var(--icon-sm);
+            width: var(--icon-sm);
+            height: var(--icon-sm);
+        }
+        
+        .icon-md {
+            font-size: var(--icon-md);
+            width: var(--icon-md);
+            height: var(--icon-md);
+        }
+        
+        .icon-lg {
+            font-size: var(--icon-lg);
+            width: var(--icon-lg);
+            height: var(--icon-lg);
+        }
+        
+        .icon-xl {
+            font-size: var(--icon-xl);
+            width: var(--icon-xl);
+            height: var(--icon-xl);
+        }
+        
+        /* Cores de Ícones - Herdam do Texto */
+        .icon-primary {
+            color: var(--icon-primary);
+        }
+        
+        .icon-secondary {
+            color: var(--icon-secondary);
+        }
+        
+        .icon-accent {
+            color: var(--icon-accent);
+        }
+        
+        .icon-white {
+            color: var(--icon-white);
+        }
+        
+        .icon-light {
+            color: var(--icon-light);
+        }
+        
+        /* Ícones em Botões com Fundo Colorido */
+        .btn .icon,
+        .sidebar-personal-btn .icon,
+        .theme-toggle .icon,
+        .help-button .icon {
+            color: var(--icon-white);
+        }
+        
+        /* Ícones em Navegação Sidebar */
+        .nav-item .icon {
+            color: var(--icon-primary);
+            transition: var(--transition);
+        }
+        
+        .nav-item:hover .icon {
+            color: var(--icon-accent);
+        }
+        
+        .nav-item.active .icon {
+            color: var(--icon-accent);
+        }
+        
+        /* Ícones em Cabeçalhos e Títulos */
+        .selector-title .icon,
+        .section-title .icon,
+        .header-icon .icon {
+            color: var(--icon-accent);
+        }
+        
+        /* Ícones em Cards e Seções */
+        .card .icon,
+        .workout-section .icon,
+        .content-section .icon,
+        .load-section .icon {
+            color: var(--icon-primary);
+        }
+        
+        .card:hover .icon,
+        .workout-section:hover .icon,
+        .content-section:hover .icon,
+        .load-section:hover .icon {
+            color: var(--icon-accent);
+        }
+        
+        /* Ícones em Formulários */
+        .form-group .icon {
+            color: var(--icon-secondary);
+        }
+        
+        .form-group:focus-within .icon {
+            color: var(--icon-accent);
+        }
+        
+        /* Ícones em Tabelas */
+        .table .icon {
+            color: var(--icon-primary);
+        }
+        
+        .table th .icon {
+            color: var(--icon-accent);
+        }
+        
+        /* Ícones em Abas */
+        .day-tab .icon {
+            color: var(--icon-primary);
+            transition: var(--transition);
+        }
+        
+        .day-tab:hover .icon,
+        .day-tab.active .icon {
+            color: var(--icon-white);
+        }
+        
+        /* Ícones em Accordion */
+        .week-header .icon {
+            color: var(--icon-primary);
+            transition: var(--transition);
+        }
+        
+        .week-header:hover .icon {
+            color: var(--icon-accent);
+        }
+        
+        /* Ícones em Ações */
+        .exercise-actions .icon,
+        .week-actions .icon {
+            color: var(--icon-white);
+        }
+        
+        /* Ícones em Botões de Ação Específicos */
+        .btn-success .icon {
+            color: var(--icon-white);
+        }
+        
+        .btn-edit .icon {
+            color: var(--icon-white);
+        }
+        
+        .btn-delete .icon {
+            color: var(--icon-white);
+        }
+        
+        .btn-icon.delete .icon {
+            color: var(--icon-white);
+        }
+        
+        /* Ícones em Modal de Ajuda */
+        .help-modal-title .icon {
+            color: var(--icon-accent);
+        }
+        
+        .help-section-title .icon {
+            color: var(--icon-accent);
+        }
+        
+        .help-step-number {
+            background: var(--icon-accent);
+            color: var(--icon-white);
+        }
+        
+        /* Ícones em Estados Especiais */
+        .empty-state .icon {
+            color: var(--icon-secondary);
+            font-size: var(--icon-xl);
+        }
+        
+        /* Ícones em Loading States */
+        .spinner .icon {
+            color: var(--icon-accent);
+        }
+        
+        /* Ícones em Tooltips */
+        .tooltip .icon {
+            color: var(--icon-secondary);
+        }
+        
+        .tooltip:hover .icon {
+            color: var(--icon-accent);
+        }
+        
+        /* Ícones Responsivos */
+        @media (max-width: 768px) {
+            .icon-xl {
+                font-size: var(--icon-lg);
+                width: var(--icon-lg);
+                height: var(--icon-lg);
+            }
+            
+            .icon-lg {
+                font-size: var(--icon-md);
+                width: var(--icon-md);
+                height: var(--icon-md);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .icon-xl,
+            .icon-lg {
+                font-size: var(--icon-sm);
+                width: var(--icon-sm);
+                height: var(--icon-sm);
+            }
+        }
+
+        /* Animações Principais - Fade In, Slide Up, Scale */
+        
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        /* Slide Up Animation */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        /* Scale Animation */
+        @keyframes scale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .scale {
+            animation: scale 0.4s ease-out;
+        }
+        
+        /* Animações combinadas para elementos específicos */
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-slide-up {
+            animation: fadeInSlideUp 0.8s ease-out;
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .fade-in-scale {
+            animation: fadeInScale 0.5s ease-out;
+        }
+        
+        /* Aplicar animações a elementos principais */
+        .card,
+        .workout-section,
+        .content-section,
+        .help-section {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInSlideUp 0.8s ease-out forwards;
+        }
+        
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        
+        .btn-primary,
+        .btn-secondary,
+        .btn-success {
+            opacity: 0;
+            transform: scale(0.95);
+            animation: fadeInScale 0.5s ease-out forwards;
+        }
+        
+        .btn-primary { animation-delay: 0.3s; }
+        .btn-secondary { animation-delay: 0.4s; }
+        .btn-success { animation-delay: 0.5s; }
+        
+        /* Animações para formulários */
+        .form-group {
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInSlideUp 0.6s ease-out forwards;
+        }
+        
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        
+        /* Animações para tabelas */
+        .table {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInSlideUp 0.8s ease-out forwards;
+        }
+        
+        /* Animações para navegação */
+        .nav-item {
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: slideIn 0.6s ease-out forwards;
+        }
+        
+        .nav-item:nth-child(1) { animation-delay: 0.1s; }
+        .nav-item:nth-child(2) { animation-delay: 0.2s; }
+        .nav-item:nth-child(3) { animation-delay: 0.3s; }
+        .nav-item:nth-child(4) { animation-delay: 0.4s; }
+        .nav-item:nth-child(5) { animation-delay: 0.5s; }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Animações para headers e títulos */
+        h1, h2, h3, .section-title {
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInSlideUp 0.6s ease-out forwards;
+        }
+        
+        h1 { animation-delay: 0.1s; }
+        h2 { animation-delay: 0.2s; }
+        h3 { animation-delay: 0.3s; }
+        .section-title { animation-delay: 0.2s; }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-overlay .spinner-large {
+            border-color: rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+        }
+
+        /* Progress Bar Animation */
+        @keyframes progress {
+            from {
+                width: 0%;
+            }
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+            animation: progress 2s ease-out;
+        }
+
+        /* Tooltip Animation */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: 115%;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            border: 5px solid transparent;
+            border-top-color: #333;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .tooltip:hover::before,
+        .tooltip:hover::after {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+        }
+
+        </style>
 </head>
 <body>
     <!-- Theme Toggle Button -->

@@ -4,45 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pagamentos - GurgelTrack</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="logo-gurgel.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="logo-gurgel.png">
+    <link rel="shortcut icon" href="logo-gurgel.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #8b0000;
-            --secondary-color: #a52a2a;
-            --accent-color: #dc143c;
-            --accent-hover: #b91c1c;
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
-            --danger-color: #dc143c;
-            --light-color: #fff5f5;
-            --dark-color: #333333;
-            --text-primary: #333333;
-            --text-secondary: #666666;
+            /* Cores do Tema Claro - Vermelho */
             --bg-primary: #ffffff;
             --bg-secondary: #ffffff;
+            --accent: #dc143c;
+            --accent-hover: #b91c1c;
+            --text-primary: #333333;
+            --text-secondary: #666666;
             --border: #ffcccc;
             --shadow: 0 4px 12px rgba(220, 20, 60, 0.15);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --danger-color: #dc143c;
         }
 
         body.dark-mode {
-            --primary-color: #1a1a2e;
-            --secondary-color: #25253d;
-            --accent-color: #e91e63;
-            --accent-hover: #f06292;
-            --success-color: #4caf50;
-            --warning-color: #ff9800;
-            --danger-color: #e91e63;
-            --light-color: #0f0f0f;
-            --dark-color: #f5f5f5;
+            /* Cores do Tema Escuro - Mesmas do modo claro */
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1e1e1e;
+            --accent: #dc143c;
+            --accent-hover: #b91c1c;
             --text-primary: #f5f5f5;
             --text-secondary: #b8b8b8;
-            --bg-primary: #1e1e1e;
-            --bg-secondary: #0f0f0f;
             --border: #333333;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --danger-color: #dc143c;
         }
 
         /* Theme Toggle Button */
@@ -50,24 +43,24 @@
             position: fixed;
             top: 20px;
             right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
             width: 50px;
             height: 50px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 2px solid var(--accent-color);
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 999;
-            font-size: 20px;
-            color: var(--accent-color);
+            font-size: 1.2rem;
+            color: var(--accent);
+            transition: var(--transition);
+            z-index: 1000;
             box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
         }
 
         .theme-toggle:hover {
-            background: var(--accent-color);
+            background: var(--accent);
             color: white;
             transform: scale(1.1);
             box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
@@ -75,13 +68,13 @@
 
         body.dark-mode .theme-toggle {
             background: rgba(0, 0, 0, 0.8);
-            border-color: var(--accent-color);
-            color: var(--accent-color);
+            border-color: var(--accent);
+            color: var(--accent);
             box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
         }
 
         body.dark-mode .theme-toggle:hover {
-            background: var(--accent-color);
+            background: var(--accent);
             color: white;
             box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
         }
@@ -93,12 +86,11 @@
         }
 
         body {
-            background-color: var(--bg-primary) !important;
-            color: var(--text-primary) !important;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             font-family: 'Roboto', sans-serif;
             min-height: 100vh;
             line-height: 1.6;
-            margin: 0;
         }
 
         .layout-container {
@@ -302,7 +294,7 @@
             gap: 0.5rem;
             width: calc(100% - 2rem);
             padding: 0.75rem;
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
             color: white;
             border: none;
             border-radius: 6px;
@@ -311,14 +303,15 @@
             transition: var(--transition);
             cursor: pointer;
             margin: 0.5rem 1rem;
-            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+            box-shadow: 0 2px 8px rgba(220, 20, 60, 0.3);
             box-sizing: border-box;
         }
 
         .sidebar-personal-btn:hover {
-            background: linear-gradient(135deg, #27ae60, #229954);
+            background: linear-gradient(135deg, var(--accent-hover), #8b0000);
+            color: white !important;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.4);
         }
 
         /* Responsive Sidebar */
@@ -478,34 +471,234 @@
             margin-bottom: 2rem;
         }
 
+        /* Sistema de Formulários Moderno */
         .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            margin-bottom: 1.5rem;
         }
 
+        .form-label,
         .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
             font-weight: 600;
             color: var(--text-primary);
             font-size: 0.9rem;
         }
 
+        .form-control,
         .form-group input,
         .form-group select {
-            padding: 0.75rem;
-            border: 1px solid var(--border);
+            width: 100%;
+            height: 48px;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
             border-radius: 8px;
-            background: var(--bg-secondary);
+            font-size: 0.9rem;
+            background: var(--bg-primary);
             color: var(--text-primary);
-            font-size: 1rem;
-            transition: var(--transition);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-sizing: border-box;
         }
 
+        .form-control:focus,
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .form-control::placeholder,
+        .form-group input::placeholder,
+        .form-group select::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        textarea.form-control {
+            height: auto;
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        select.form-control,
+        .form-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-error {
+            color: #e74c3c;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .form-control.error,
+        .form-group input.error,
+        .form-group select.error {
+            border-color: #e74c3c;
+        }
+
+        .form-control.error + .form-error,
+        .form-group input.error + .form-error,
+        .form-group select.error + .form-error {
+            display: block;
+        }
+
+        /* Sistema de Tabelas Moderno */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* Cabeçalho da Tabela */
+        thead {
+            background: var(--bg-secondary);
+            border-bottom: 2px solid var(--border);
+        }
+
+        th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        /* Corpo da Tabela */
+        tbody tr {
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        /* Linhas Alternadas (Striped) - Modo Claro */
+        body:not(.dark-mode) tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        body:not(.dark-mode) tbody tr:nth-child(odd) {
+            background: var(--bg-primary);
+        }
+
+        /* Linhas Alternadas (Striped) - Modo Escuro */
+        body.dark-mode tbody tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        body.dark-mode tbody tr:nth-child(odd) {
+            background: var(--bg-primary);
+        }
+
+        /* Hover - Modo Claro */
+        body:not(.dark-mode) tbody tr:hover {
+            background: #e9ecef;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hover - Modo Escuro */
+        body.dark-mode tbody tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Células */
+        td {
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Bordas Horizontais Apenas */
+        table {
+            border: none;
+        }
+
+        thead th {
+            border-bottom: 2px solid var(--border);
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        tbody td {
+            border-bottom: 1px solid var(--border);
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Tabelas Específicas */
+        .payment-table {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Tabela de Pagamentos */
+        .payment-table th:nth-child(1),
+        .payment-table td:nth-child(1) {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* Status de Pagamento */
+        .payment-table .status-pago {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .payment-table .status-pendente {
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        .payment-table .status-atrasado {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .table-responsive {
+                border-radius: 0;
+            }
+
+            th, td {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
         }
 
         /* Buttons - Melhorados */
@@ -594,6 +787,125 @@
 
         .btn-danger:active {
             box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+        }
+
+        /* Sistema de Botões Moderno */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-color), #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 20, 60, 0.3);
+            background: linear-gradient(135deg, #e74c3c, #c0392b, #a93226);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 20, 60, 0.2);
+        }
+
+        /* Tamanhos de Botões */
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            height: 32px;
+        }
+
+        .btn-medium {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            height: 40px;
+        }
+
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            height: 48px;
+        }
+
+        /* Combinações de Tamanho e Tipo */
+        .btn-primary.btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            height: 32px;
+        }
+
+        .btn-primary.btn-medium {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            height: 40px;
+        }
+
+        .btn-primary.btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            height: 48px;
+        }
+
+        .btn-secondary.btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            height: 32px;
+        }
+
+        .btn-secondary.btn-medium {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            height: 40px;
+        }
+
+        .btn-secondary.btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            height: 48px;
         }
 
         /* Payment Table */
@@ -975,6 +1287,677 @@
                 font-size: 1.3rem;
             }
         }
+
+        /* Header Padronizado */
+        .standard-header {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+            border-bottom: 2px solid var(--border);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.1);
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .standard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), #e74c3c, #c0392b);
+            animation: headerGradient 3s ease-in-out infinite;
+        }
+
+        @keyframes headerGradient {
+            0%, 100% { background: linear-gradient(90deg, var(--accent), #e74c3c, #c0392b); }
+            50% { background: linear-gradient(90deg, #c0392b, var(--accent), #e74c3c); }
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-title-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .header-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin: 0;
+            line-height: 1.2;
+            letter-spacing: -0.025em;
+        }
+
+        .page-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin: 0;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        /* Responsive Header */
+        @media (max-width: 768px) {
+            .standard-header {
+                padding: 1rem 0;
+                margin-bottom: 1rem;
+            }
+
+            .header-container {
+                padding: 0 1rem;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .header-title-section {
+                gap: 1rem;
+            }
+
+            .header-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.25rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .page-subtitle {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-container {
+                padding: 0 0.75rem;
+            }
+
+            .header-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Tipografia Aprimorada - Hierarquia Visual */
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+        }
+
+        h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+        }
+
+        h4 {
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+            margin-bottom: 0.875rem;
+        }
+
+        h5 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+
+        h6 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin-bottom: 0.625rem;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Textos longos com melhor legibilidade */
+        .long-text, .description-text, .content-text {
+            line-height: 1.6;
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .subtitle-text {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Contraste para elementos importantes */
+        .text-primary {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .text-secondary {
+            color: var(--text-secondary);
+        }
+
+        .text-accent {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Sistema de Espaçamento Consistente */
+        .section-spacing {
+            margin-bottom: 60px;
+        }
+
+        .element-spacing {
+            margin-bottom: 24px;
+        }
+
+        .group-spacing {
+            margin-bottom: 16px;
+        }
+
+        .small-spacing {
+            margin-bottom: 12px;
+        }
+
+        /* Cards com hierarquia visual */
+        .card-primary {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .card-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Sistema de Grid - 12 Colunas */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .grid-container-sm {
+            gap: 20px;
+        }
+
+        .grid-container-lg {
+            gap: 30px;
+        }
+
+        /* Classes de Colunas (1-12) */
+        .col-1 { grid-column: span 1; }
+        .col-2 { grid-column: span 2; }
+        .col-3 { grid-column: span 3; }
+        .col-4 { grid-column: span 4; }
+        .col-5 { grid-column: span 5; }
+        .col-6 { grid-column: span 6; }
+        .col-7 { grid-column: span 7; }
+        .col-8 { grid-column: span 8; }
+        .col-9 { grid-column: span 9; }
+        .col-10 { grid-column: span 10; }
+        .col-11 { grid-column: span 11; }
+        .col-12 { grid-column: span 12; }
+
+        /* Classes de Offset */
+        .offset-1 { margin-left: calc(1 * 8.333333% + 12px); }
+        .offset-2 { margin-left: calc(2 * 8.333333% + 24px); }
+        .offset-3 { margin-left: calc(3 * 8.333333% + 36px); }
+        .offset-4 { margin-left: calc(4 * 8.333333% + 48px); }
+        .offset-5 { margin-left: calc(5 * 8.333333% + 60px); }
+        .offset-6 { margin-left: calc(6 * 8.333333% + 72px); }
+
+        /* Alinhamento Visual Consistente */
+        .grid-center {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            align-items: center;
+            justify-items: center;
+        }
+
+        .grid-start {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            align-items: start;
+            justify-items: start;
+        }
+
+        .grid-end {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            align-items: end;
+            justify-items: end;
+        }
+
+        /* Grid Responsivo */
+        @media (max-width: 768px) {
+            .grid-container,
+            .grid-center,
+            .grid-start,
+            .grid-end {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .col-1, .col-2, .col-3, .col-4, .col-5, .col-6,
+            .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
+                grid-column: span 1;
+            }
+
+            .offset-1, .offset-2, .offset-3, .offset-4, .offset-5, .offset-6 {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid-container,
+            .grid-center,
+            .grid-start,
+            .grid-end {
+                gap: 16px;
+            }
+        }
+
+        /* Sistema de Micro-Interações Modernas */
+        
+        /* Hover States para Cards */
+        .card,
+        .workout-section,
+        .content-section,
+        .payment-section,
+        .help-section {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover,
+        .workout-section:hover,
+        .content-section:hover,
+        .payment-section:hover,
+        .help-section:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Hover States para Navegação */
+        .nav-item {
+            position: relative;
+            transform: translateX(0);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-item:hover {
+            transform: translateX(4px);
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        /* Hover States para Links */
+        a {
+            position: relative;
+            color: var(--accent);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        a:hover {
+            color: #2980b9;
+        }
+
+        a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        a:hover::after {
+            width: 100%;
+        }
+
+        /* Loading Spinners */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(52, 152, 219, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        .spinner-large {
+            width: 40px;
+            height: 40px;
+            border-width: 4px;
+        }
+
+        .spinner-small {
+            width: 16px;
+            height: 16px;
+            border-width: 2px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Loading States para Botões */
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn.loading .btn-text {
+            opacity: 0;
+        }
+
+        .btn.loading .spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 1;
+        }
+
+        .btn .spinner {
+            opacity: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Pulse Animation para elementos importantes */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(52, 152, 219, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Slide In Animation */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* Bounce Animation */
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40%, 43% {
+                transform: translateY(-10px);
+            }
+            70% {
+                transform: translateY(-5px);
+            }
+            90% {
+                transform: translateY(-2px);
+            }
+        }
+
+        .bounce {
+            animation: bounce 1s ease-in-out;
+        }
+
+        /* Hover States para Imagens */
+        img {
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        img:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        /* Hover States para Ícones */
+        .fas,
+        .fab,
+        .far {
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .fas:hover,
+        .fab:hover,
+        .far:hover {
+            transform: scale(1.2) rotate(5deg);
+            color: var(--accent);
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-overlay .spinner-large {
+            border-color: rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+        }
+
+        /* Progress Bar Animation */
+        @keyframes progress {
+            from {
+                width: 0%;
+            }
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+            animation: progress 2s ease-out;
+        }
+
+        /* Tooltip Animation */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: 115%;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            border: 5px solid transparent;
+            border-top-color: #333;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .tooltip:hover::before,
+        .tooltip:hover::after {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+        }
+
     </style>
 </head>
 <body>
@@ -1076,17 +2059,26 @@
 
         <!-- Main Content -->
         <div class="main-wrapper">
+            <!-- Header Padronizado -->
+            <header class="standard-header">
+                <div class="header-container">
+                    <div class="header-title-section">
+                        <div class="header-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="header-text">
+                            <h1 class="page-title">Pagamentos</h1>
+                            <p class="page-subtitle">Gerencie pagamentos e receitas</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
             <main class="main-content">
                 <!-- Mobile Menu Toggle -->
                 <button class="mobile-menu-toggle" id="mobileMenuToggle">
                     <i class="fas fa-bars"></i>
                 </button>
-
-                <!-- Header -->
-                <header class="main-header">
-                    <h1><i class="fas fa-credit-card"></i> Controle de Pagamentos</h1>
-                    <p>Gerencie mensalidades e pagamentos dos alunos</p>
-                </header>
 
                 <!-- Stats Cards -->
                 <div class="stats-container">
@@ -1289,8 +2281,22 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/auth.js"></script>
     <script>
+        // Configuração do Supabase (declarado no início para evitar conflitos)
+        var supabaseUrl = 'https://erhhavvueccaqenzgspp.supabase.co';
+        var supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGhhdnZ1ZWNjYXFlbnpnc3BwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzE1NjAzNywiZXhwIjoyMDkyNzMyMDM3fQ.h9BwrTDXDQUHYBClC8raJiN4UqQuz9vaX1t0GM4kMcw'; // Service Role Key
+        
+        // Verificar se o cliente Supabase já existe
+        var supabase;
+        if (window.supabaseClient) {
+            supabase = window.supabaseClient;
+        } else {
+            supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+            window.supabaseClient = supabase;
+        }
+
         // Data state
         let pagamentos = [];
         let alunos = [];
@@ -1303,28 +2309,85 @@
         };
 
         // Load data from API
-        // Load data from API
+        // Load data from Supabase (same as acompanhamento.html)
         async function loadData() {
             try {
-                // Carregar alunos da API
-                const response = await authenticatedFetch('/api/alunos');
-                if (response.ok) {
-                    alunos = await response.json();
-                    // Adicionar campos de compatibilidade
-                    alunos = alunos.map(aluno => ({
-                        ...aluno,
-                        name: aluno.nome,
-                        phone: aluno.telefone
-                    }));
-                    populateAlunoSelect();
-                    populateFiltroAlunos();
-                    console.log(`${alunos.length} alunos carregados da API`);
-                } else {
-                    console.error('Erro ao carregar alunos:', response.statusText);
+                // Carregar alunos das amizades ativas no Supabase (igual ao acompanhamento.html)
+                const currentUser = localStorage.getItem('currentUser');
+                if (!currentUser) {
+                    console.error('Usuário não autenticado');
                     alunos = [];
+                    return;
+                }
+
+                const userData = JSON.parse(currentUser);
+                const userEmail = userData.email;
+                
+                // Buscar amizades ativas onde o usuário é o personal
+                const { data, error } = await supabase
+                    .from('friendships')
+                    .select('*')
+                    .eq('personal_email', userEmail)
+                    .eq('status', 'active');
+                
+                if (error) {
+                    console.error('Erro ao carregar informações dos alunos:', error);
+                    alunos = [];
+                    return;
                 }
                 
-                // Carregar pagamentos da API
+                console.log('Amizades encontradas:', data);
+                
+                // Buscar informações completas de cada aluno
+                const studentPromises = data.map(async (friendship) => {
+                    try {
+                        console.log('Processando friendship:', friendship);
+                        const studentEmail = friendship.student_email || friendship.aluno_email;
+                        console.log('Email do aluno encontrado:', studentEmail);
+                        
+                        if (!studentEmail) {
+                            console.error('Email do aluno não encontrado na friendship:', friendship);
+                            return null;
+                        }
+                        
+                        const { data: alunoData, error: alunoError } = await supabase
+                            .from('pessoas')
+                            .select('*')
+                            .eq('email', studentEmail)
+                            .maybeSingle(); // Usar maybeSingle em vez de single para evitar erro
+                        
+                        if (alunoError) {
+                            console.error('Erro ao buscar dados do aluno:', alunoError);
+                            return null;
+                        }
+                        
+                        return {
+                            id: alunoData.id,
+                            name: alunoData.nome_pessoa || alunoData.name || 'Aluno',
+                            email: alunoData.email,
+                            phone: alunoData.telefone,
+                            ...alunoData
+                        };
+                    } catch (error) {
+                        console.error('Erro ao processar aluno:', error);
+                        return null;
+                    }
+                });
+                
+                const students = await Promise.all(studentPromises);
+                alunos = students.filter(s => s !== null);
+                
+                populateAlunoSelect();
+                populateFiltroAlunos();
+                console.log(`${alunos.length} alunos carregados das amizades ativas`);
+                
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                alunos = [];
+            }
+            
+            // Carregar pagamentos da API
+            try {
                 const pagamentosResponse = await authenticatedFetch('/api/pagamentos');
                 if (pagamentosResponse.ok) {
                     pagamentos = await pagamentosResponse.json();
@@ -1334,8 +2397,7 @@
                     pagamentos = [];
                 }
             } catch (error) {
-                console.error('Erro ao carregar dados:', error);
-                alunos = [];
+                console.error('Erro ao carregar pagamentos:', error);
                 pagamentos = [];
             }
             
@@ -1362,7 +2424,7 @@
             alunos.forEach(aluno => {
                 const option = document.createElement('option');
                 option.value = aluno.id;
-                option.textContent = aluno.name || aluno.nome; // Tenta ambos os formatos
+                option.textContent = aluno.email; // Mostrar email em vez do nome
                 select.appendChild(option);
             });
             
@@ -1381,7 +2443,7 @@
             alunos.forEach(aluno => {
                 const option = document.createElement('option');
                 option.value = aluno.id;
-                option.textContent = aluno.name || aluno.nome;
+                option.textContent = aluno.email; // Mostrar email em vez do nome
                 select.appendChild(option);
             });
         }
