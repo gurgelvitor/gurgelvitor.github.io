@@ -3370,6 +3370,8 @@
             margin-top: 4rem;
             position: relative;
             overflow: hidden;
+            margin-left: 280px; /* Espaço para sidebar */
+            transition: margin-left 0.3s ease;
         }
 
         .standard-footer::before {
@@ -3532,6 +3534,7 @@
             .standard-footer {
                 padding: 2rem 0 1rem;
                 margin-top: 2rem;
+                margin-left: 0; /* Remover margem quando sidebar está hidden */
             }
 
             .footer-container {

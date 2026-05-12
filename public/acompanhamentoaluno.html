@@ -1104,7 +1104,7 @@
         }
         
         /* Prevenir overflow em todos os elementos */
-        div, section, article, main, aside, header, footer, nav {
+        div, section, article, main, aside, header, nav {
             overflow-x: hidden !important;
             max-width: 100% !important;
         }
@@ -3153,7 +3153,7 @@
                                     </div>
                                 </div>
                                 
-                                <form id="anamneseAnswerForm" onsubmit="submitAnamneseAnswer(event, '${anamneseData.id}', '${anamneseData.anamnese_name}', '${anamneseData.personal_email}', '${anamneseData.aluno_email}')">
+                                <form id="anamneseAnswerForm" data-anamnese-id="${anamneseData.id}" onsubmit="submitAnamneseAnswer(event, '${anamneseData.id}', '${anamneseData.anamnese_name}', '${anamneseData.personal_email}', '${anamneseData.aluno_email}')">
                                     ${renderAnswerQuestions(anamnesisContent.data || [], anamneseData.id)}
                                     
                                     <div class="modal-buttons" style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: flex-end; flex-wrap: wrap;">
@@ -3202,6 +3202,11 @@
             const modalContainer = document.createElement('div');
             modalContainer.innerHTML = modalHtml;
             document.body.appendChild(modalContainer);
+            
+            // Restaurar respostas salvas após um pequeno delay
+            setTimeout(() => {
+                restoreAnamneseAnswers(anamneseData.id);
+            }, 100);
         }
 
         function renderAnswerQuestions(questions, anamneseId) {
@@ -3769,6 +3774,7 @@
                 }
 
                 // Fechar modal e mostrar sucesso
+                clearAnamneseAnswers(anamneseId);
                 closeAnswerAnamneseModal();
                 alert('✅ Anamnese respondida com sucesso! Suas respostas foram enviadas ao seu personal.');
 
@@ -3839,10 +3845,78 @@
         }
 
         function closeAnswerAnamneseModal() {
+            // Salvar respostas antes de fechar
+            saveAnamneseAnswers();
+            
             const modal = document.getElementById('answerAnamneseModal');
             if (modal) {
                 modal.remove();
             }
+        }
+        
+        // Salvar respostas da anamnese no localStorage
+        function saveAnamneseAnswers() {
+            const form = document.getElementById('anamneseAnswerForm');
+            if (!form) return;
+            
+            const formData = new FormData(form);
+            const answers = {};
+            
+            // Coletar todos os inputs, textareas e selects
+            const inputs = form.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => {
+                if (input.name) {
+                    if (input.type === 'radio' || input.type === 'checkbox') {
+                        if (input.checked) {
+                            answers[input.name] = input.value;
+                        }
+                    } else {
+                        answers[input.name] = input.value;
+                    }
+                }
+            });
+            
+            // Obter ID da anamnese atual
+            const anamneseId = form.getAttribute('data-anamnese-id');
+            if (anamneseId) {
+                // Salvar no localStorage
+                const savedAnswers = JSON.parse(localStorage.getItem('anamneseAnswers') || '{}');
+                savedAnswers[anamneseId] = answers;
+                localStorage.setItem('anamneseAnswers', JSON.stringify(savedAnswers));
+            }
+        }
+        
+        // Restaurar respostas da anamnese do localStorage
+        function restoreAnamneseAnswers(anamneseId) {
+            const savedAnswers = JSON.parse(localStorage.getItem('anamneseAnswers') || '{}');
+            const answers = savedAnswers[anamneseId];
+            
+            if (!answers) return;
+            
+            const form = document.getElementById('anamneseAnswerForm');
+            if (!form) return;
+            
+            // Restaurar valores dos inputs
+            Object.keys(answers).forEach(name => {
+                const input = form.querySelector(`[name="${name}"]`);
+                if (input) {
+                    if (input.type === 'radio' || input.type === 'checkbox') {
+                        // Para radio/checkbox, verificar se o valor corresponde
+                        if (input.value === answers[name]) {
+                            input.checked = true;
+                        }
+                    } else {
+                        input.value = answers[name];
+                    }
+                }
+            });
+        }
+        
+        // Limpar respostas salvas após envio bem-sucedido
+        function clearAnamneseAnswers(anamneseId) {
+            const savedAnswers = JSON.parse(localStorage.getItem('anamneseAnswers') || '{}');
+            delete savedAnswers[anamneseId];
+            localStorage.setItem('anamneseAnswers', JSON.stringify(savedAnswers));
         }
 
         function showProtocolModal(protocolData, type) {
@@ -5288,9 +5362,9 @@
                             <h3 class="footer-heading">Links Rápidos</h3>
                             <div class="footer-links">
                                 <a href="index.html" class="footer-link">Início</a>
-                                <a href="homealuno.html" class="footer-link">Início Aluno</a>
-                                <a href="acompanhamentoaluno.html" class="footer-link">Acompanhamento</a>
-                                <a href="cargaaluno.html" class="footer-link">Cargas</a>
+                                <a href="acompanhamento.html" class="footer-link">Acompanhamento</a>
+                                <a href="agenda.html" class="footer-link">Agenda</a>
+                                <a href="login.html" class="footer-link">Login</a>
                             </div>
                         </div>
                     </div>
@@ -5324,6 +5398,7 @@
             margin-top: 4rem;
             position: relative;
             overflow: hidden;
+            transition: margin-left 0.3s ease;
         }
 
         .standard-footer::before {
@@ -5486,6 +5561,7 @@
             .standard-footer {
                 padding: 2rem 0 1rem;
                 margin-top: 2rem;
+                margin-left: 0; /* Remover margem quando sidebar está hidden */
             }
 
             .footer-container {
@@ -5509,6 +5585,10 @@
                 padding: 0 0.75rem;
             }
 
+            .footer-content {
+                gap: 1rem;
+            }
+
             .footer-logo-img {
                 width: 32px;
                 height: 32px;
@@ -5518,11 +5598,76 @@
                 font-size: 1.1rem;
             }
 
+            .footer-subtitle {
+                font-size: 0.8rem;
+            }
+
+            .footer-heading {
+                font-size: 0.9rem;
+            }
+
+            .footer-link {
+                font-size: 0.85rem;
+            }
+
+            .contact-item {
+                font-size: 0.85rem;
+            }
+
+            .footer-copyright p {
+                font-size: 0.75rem;
+            }
+
             .social-link {
                 width: 32px;
                 height: 32px;
             }
         }
+
+        @media (max-width: 360px) {
+            .footer-container {
+                padding: 0 0.5rem;
+            }
+
+            .footer-content {
+                gap: 0.75rem;
+            }
+
+            .footer-logo-img {
+                width: 28px;
+                height: 28px;
+            }
+
+            .footer-title {
+                font-size: 1rem;
+            }
+
+            .footer-subtitle {
+                font-size: 0.75rem;
+            }
+
+            .footer-heading {
+                font-size: 0.85rem;
+            }
+
+            .footer-link {
+                font-size: 0.8rem;
+            }
+
+            .contact-item {
+                font-size: 0.8rem;
+            }
+
+            .footer-copyright p {
+                font-size: 0.7rem;
+            }
+
+            .social-link {
+                width: 28px;
+                height: 28px;
+            }
+        }
     </style>
-</body>
+
+    </body>
 </html>

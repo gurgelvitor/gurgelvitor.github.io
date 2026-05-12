@@ -4788,6 +4788,8 @@
             margin-top: 4rem;
             position: relative;
             overflow: hidden;
+            margin-left: 280px; /* Espaço para sidebar */
+            transition: margin-left 0.3s ease;
         }
 
         .standard-footer::before {
@@ -4950,6 +4952,7 @@
             .standard-footer {
                 padding: 2rem 0 1rem;
                 margin-top: 2rem;
+                margin-left: 0; /* Remover margem quando sidebar está hidden */
             }
 
             .footer-container {
@@ -4973,6 +4976,10 @@
                 padding: 0 0.75rem;
             }
 
+            .footer-content {
+                gap: 1rem;
+            }
+
             .footer-logo-img {
                 width: 32px;
                 height: 32px;
@@ -4982,9 +4989,73 @@
                 font-size: 1.1rem;
             }
 
+            .footer-subtitle {
+                font-size: 0.8rem;
+            }
+
+            .footer-heading {
+                font-size: 0.9rem;
+            }
+
+            .footer-link {
+                font-size: 0.85rem;
+            }
+
+            .contact-item {
+                font-size: 0.85rem;
+            }
+
+            .footer-copyright p {
+                font-size: 0.75rem;
+            }
+
             .social-link {
                 width: 32px;
                 height: 32px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .footer-container {
+                padding: 0 0.5rem;
+            }
+
+            .footer-content {
+                gap: 0.75rem;
+            }
+
+            .footer-logo-img {
+                width: 28px;
+                height: 28px;
+            }
+
+            .footer-title {
+                font-size: 1rem;
+            }
+
+            .footer-subtitle {
+                font-size: 0.75rem;
+            }
+
+            .footer-heading {
+                font-size: 0.85rem;
+            }
+
+            .footer-link {
+                font-size: 0.8rem;
+            }
+
+            .contact-item {
+                font-size: 0.8rem;
+            }
+
+            .footer-copyright p {
+                font-size: 0.7rem;
+            }
+
+            .social-link {
+                width: 28px;
+                height: 28px;
             }
         }
     </style>

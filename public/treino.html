@@ -588,7 +588,6 @@
         .anamnese-card {
             background: var(--bg-primary);
             border: 2px solid var(--border);
-            border-radius: 20px;
             padding: 1.5rem;
             transition: var(--transition);
             cursor: pointer;
@@ -982,93 +981,7 @@
             display: inline-block;
         }
         
-        /* Charts Section CSS */
-        .charts-section {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid var(--border);
-        }
         
-        .charts-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        
-        .charts-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-                
-        .chart-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 2rem 0;
-            position: relative;
-        }
-        
-        .chart-container canvas {
-            max-width: 100%;
-            height: auto;
-        }
-        
-        .chart-legend {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem;
-            background: var(--bg-primary);
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-        
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            flex-shrink: 0;
-        }
-        
-        .legend-info {
-            flex: 1;
-        }
-        
-        .legend-group {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.25rem;
-        }
-        
-        .legend-stats {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-        
-        @media (max-width: 768px) {
-            .chart-legend {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .exercise-actions {
             display: flex;
             gap: 0.25rem;
@@ -3993,47 +3906,6 @@
                     </div>
                 </section>
 
-                <!-- Selected Ficha Details -->
-                <section class="workout-section" id="selectedFichaSection" style="display: none;">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas fa-calendar-day"></i>
-                            <span id="selectedFichaTitle">Detalhes da Ficha</span>
-                        </h2>
-                        <button class="btn btn-success btn-small" onclick="openDayModal()">
-                            <i class="fas fa-plus"></i>
-                            Novo Dia
-                        </button>
-                    </div>
-                    
-                    
-                    <!-- Seção de Gráficos de Séries -->
-                    <div class="charts-section" id="chartsSection" style="display: none;">
-                        <div class="charts-header">
-                            <h3 class="charts-title">
-                                <i class="fas fa-chart-radar"></i>
-                                Distribuição de Séries por Grupo Muscular
-                            </h3>
-                            <button class="btn btn-primary" id="toggleChartBtn" onclick="toggleChart()">
-                                <i class="fas fa-eye"></i>
-                                Ver Gráfico
-                            </button>
-                        </div>
-                        
-                        <!-- Gráfico de Polígono -->
-                        <div class="chart-container" id="polygonChart" style="display: none;">
-                            <canvas id="polygonCanvas" width="600" height="600"></canvas>
-                        </div>
-                        
-                        <!-- Legenda Comum -->
-                        <div class="chart-legend" id="chartsLegend" style="display: none;"></div>
-                    </div>
-                    
-                    <div class="days-container" id="daysContainer">
-                        <!-- Dias de treino serão inseridos aqui -->
-                    </div>
-                </section>
-
                 <!-- Anamnese Section -->
                 <section class="workout-section">
                     <div class="section-header">
@@ -4556,12 +4428,7 @@
             section.style.display = 'block';
             title.textContent = selectedFicha.name;
             
-            // Mostrar seção de gráficos (mas não renderizar automaticamente)
-            const chartsSection = document.getElementById('chartsSection');
-            if (chartsSection) {
-                chartsSection.style.display = 'block';
-            }
-            
+                        
             
             if (!selectedFicha.days || selectedFicha.days.length === 0) {
                 container.innerHTML = `
@@ -6034,11 +5901,7 @@
                     localStorage.setItem('theme', 'light');
                 }
                 
-                // Redesenhar gráfico para atualizar cores
-                if (selectedFicha && selectedFicha.days) {
-                    renderCharts('polygon');
-                }
-            });
+                            });
         }
     </script>
 
@@ -6312,201 +6175,9 @@
             }
         }
         
-        // Função principal para renderizar o gráfico de polígono
-        function renderCharts(chartType = 'polygon') {
-            if (!selectedFicha || !selectedFicha.days) {
-                return;
-            }
-            
-            // Contar séries por grupo muscular
-            const seriesByGroup = {};
-            let totalSeries = 0;
-            
-            selectedFicha.days.forEach(day => {
-                if (day.exercises) {
-                    day.exercises.forEach(exercise => {
-                        let group = exercise.muscleGroup;
-                        if (!group) {
-                            group = getMuscleGroup(exercise.name);
-                        }
-                        
-                        if (!group) {
-                            return;
-                        }
-                        
-                        if (!seriesByGroup[group]) {
-                            seriesByGroup[group] = 0;
-                        }
-                        seriesByGroup[group] += exercise.sets || 1;
-                        totalSeries += exercise.sets || 1;
-                    });
-                }
-            });
-            
-            // Preparar dados para o gráfico
-            const chartData = Object.entries(seriesByGroup).map(([group, series]) => ({
-                group,
-                series,
-                percentage: ((series / totalSeries) * 100).toFixed(1)
-            })).sort((a, b) => b.series - a.series);
-            
-            // Renderizar apenas o polígono
-            renderPolygonChart(chartData);
-            
-            // Atualizar legenda
-            renderChartsLegend(chartData);
-        }
-        
-        // Gráfico de Polígono
-        function renderPolygonChart(data) {
-            const canvas = document.getElementById('polygonCanvas');
-            const ctx = canvas.getContext('2d');
-            
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const radius = Math.min(centerX, centerY) - 80;
-            
-            // Verificar se está em modo escuro
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            
-            // Cores para o polígono
-            const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c', '#e67e22', '#34495e', '#16a085', '#27ae60'];
-            
-            // Cores baseadas no tema
-            const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(200, 200, 200, 0.3)';
-            const textColor = isDarkMode ? '#ffffff' : '#333333';
-            const secondaryTextColor = isDarkMode ? '#cccccc' : '#666666';
-            const polygonFillColor = isDarkMode ? 'rgba(220, 20, 60, 0.3)' : 'rgba(220, 20, 60, 0.2)';
-            const polygonStrokeColor = isDarkMode ? 'rgba(220, 20, 60, 0.9)' : 'rgba(220, 20, 60, 0.8)';
-            
-            // Limpar canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            if (data.length === 0) return;
-            
-            // Calcular ângulos dinâmicos baseados no número de grupos
-            const angleStep = (2 * Math.PI) / data.length;
-            const maxSeries = Math.max(...data.map(d => d.series));
-            
-            // Desenhar grade do polígono
-            ctx.strokeStyle = gridColor;
-            ctx.lineWidth = 1;
-            
-            // Desenhar círculos concêntricos
-            for (let i = 1; i <= 5; i++) {
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, (radius * i) / 5, 0, 2 * Math.PI);
-                ctx.stroke();
-            }
-            
-            // Desenhar linhas radiais
-            data.forEach((item, index) => {
-                const angle = index * angleStep - Math.PI / 2;
-                const x = centerX + Math.cos(angle) * radius;
-                const y = centerY + Math.sin(angle) * radius;
                 
-                ctx.beginPath();
-                ctx.moveTo(centerX, centerY);
-                ctx.lineTo(x, y);
-                ctx.stroke();
-            });
-            
-            // Desenhar polígono de dados
-            ctx.fillStyle = polygonFillColor;
-            ctx.strokeStyle = polygonStrokeColor;
-            ctx.lineWidth = 2;
-            
-            ctx.beginPath();
-            data.forEach((item, index) => {
-                const angle = index * angleStep - Math.PI / 2;
-                const value = (item.series / maxSeries) * radius;
-                const x = centerX + Math.cos(angle) * value;
-                const y = centerY + Math.sin(angle) * value;
                 
-                if (index === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
-                }
-            });
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
-            
-            // Desenhar pontos e labels
-            data.forEach((item, index) => {
-                const angle = index * angleStep - Math.PI / 2;
-                const value = (item.series / maxSeries) * radius;
-                const x = centerX + Math.cos(angle) * value;
-                const y = centerY + Math.sin(angle) * value;
                 
-                // Ponto
-                ctx.fillStyle = colors[index % colors.length];
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(x, y, 8, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.stroke();
-                
-                // Label
-                const labelX = centerX + Math.cos(angle) * (radius + 30);
-                const labelY = centerY + Math.sin(angle) * (radius + 30);
-                
-                ctx.fillStyle = textColor;
-                ctx.font = 'bold 12px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText(item.group, labelX, labelY);
-                
-                // Valores
-                ctx.font = '10px Arial';
-                ctx.fillStyle = secondaryTextColor;
-                ctx.fillText(`${item.series} (${item.percentage}%)`, labelX, labelY + 15);
-            });
-        }
-        
-        // Função para alternar visibilidade do gráfico
-        function toggleChart() {
-            const chartContainer = document.getElementById('polygonChart');
-            const legendContainer = document.getElementById('chartsLegend');
-            const toggleBtn = document.getElementById('toggleChartBtn');
-            
-            if (chartContainer.style.display === 'none') {
-                // Mostrar gráfico
-                chartContainer.style.display = 'block';
-                legendContainer.style.display = 'grid';
-                toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Ocultar Gráfico';
-                
-                // Renderizar gráfico se ainda não foi renderizado
-                if (selectedFicha && selectedFicha.days) {
-                    renderCharts('polygon');
-                }
-            } else {
-                // Ocultar gráfico
-                chartContainer.style.display = 'none';
-                legendContainer.style.display = 'none';
-                toggleBtn.innerHTML = '<i class="fas fa-eye"></i> Ver Gráfico';
-            }
-        }
-        
-        // Legenda comum para todos os gráficos
-        function renderChartsLegend(data) {
-            const legendContainer = document.getElementById('chartsLegend');
-            const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c', '#e67e22', '#34495e', '#16a085', '#27ae60'];
-            
-            const legendHTML = data.map((item, index) => `
-                <div class="legend-item">
-                    <div class="legend-color" style="background: ${colors[index % colors.length]}"></div>
-                    <div class="legend-info">
-                        <div class="legend-group">${item.group}</div>
-                        <div class="legend-stats">${item.series} séries • ${item.percentage}% do total</div>
-                    </div>
-                </div>
-            `).join('');
-            
-            legendContainer.innerHTML = legendHTML;
-        }
-        
         
         // Função para determinar grupo muscular baseado no banco de dados exercisesDatabase
         function getMuscleGroup(exerciseName) {
@@ -7420,6 +7091,8 @@
             margin-top: 4rem;
             position: relative;
             overflow: hidden;
+            margin-left: 280px; /* Espaço para sidebar */
+            transition: margin-left 0.3s ease;
         }
 
         .standard-footer::before {
@@ -7582,6 +7255,7 @@
             .standard-footer {
                 padding: 2rem 0 1rem;
                 margin-top: 2rem;
+                margin-left: 0; /* Remover margem quando sidebar está hidden */
             }
 
             .footer-container {
@@ -7605,6 +7279,10 @@
                 padding: 0 0.75rem;
             }
 
+            .footer-content {
+                gap: 1rem;
+            }
+
             .footer-logo-img {
                 width: 32px;
                 height: 32px;
@@ -7614,9 +7292,73 @@
                 font-size: 1.1rem;
             }
 
+            .footer-subtitle {
+                font-size: 0.8rem;
+            }
+
+            .footer-heading {
+                font-size: 0.9rem;
+            }
+
+            .footer-link {
+                font-size: 0.85rem;
+            }
+
+            .contact-item {
+                font-size: 0.85rem;
+            }
+
+            .footer-copyright p {
+                font-size: 0.75rem;
+            }
+
             .social-link {
                 width: 32px;
                 height: 32px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .footer-container {
+                padding: 0 0.5rem;
+            }
+
+            .footer-content {
+                gap: 0.75rem;
+            }
+
+            .footer-logo-img {
+                width: 28px;
+                height: 28px;
+            }
+
+            .footer-title {
+                font-size: 1rem;
+            }
+
+            .footer-subtitle {
+                font-size: 0.75rem;
+            }
+
+            .footer-heading {
+                font-size: 0.85rem;
+            }
+
+            .footer-link {
+                font-size: 0.8rem;
+            }
+
+            .contact-item {
+                font-size: 0.8rem;
+            }
+
+            .footer-copyright p {
+                font-size: 0.7rem;
+            }
+
+            .social-link {
+                width: 28px;
+                height: 28px;
             }
         }
     </style>

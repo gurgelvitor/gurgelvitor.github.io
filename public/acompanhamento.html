@@ -1221,24 +1221,28 @@
             border-bottom: 1px solid var(--border);
         }
 
-        .back-btn {
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
+        .back-btn-simple {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            padding: 0.5rem;
+            border-radius: 50%;
             cursor: pointer;
-            transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
         }
 
-        .back-btn:hover {
+        .back-btn-simple:hover {
             background: var(--accent);
             color: white;
             border-color: var(--accent);
+            transform: translateX(-2px);
+            box-shadow: 0 2px 8px rgba(220, 20, 60, 0.3);
         }
 
         .student-details-header h2 {
@@ -2049,61 +2053,6 @@
             .form-input {
                 padding: 0.5rem;
                 font-size: 0.85rem;
-            }
-
-            .back-btn {
-                padding: 0.5rem 0.75rem;
-                font-size: 0.85rem;
-            }
-
-            /* Ajustes para telas ultra-pequenas */
-            @media (max-width: 360px) {
-                .back-btn {
-                    padding: 0.5rem;
-                    min-width: auto;
-                    width: auto;
-                    height: auto;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border-radius: 8px;
-                }
-                
-                .back-btn i {
-                    font-size: 1.3rem;
-                }
-            }
-
-            .back-btn span {
-                display: inline;
-            }
-
-            .back-btn::after {
-                content: '';
-                margin-left: 0;
-            }
-
-            /* Em telas pequenas, mostrar apenas a seta */
-            @media (max-width: 480px) {
-                .back-btn span {
-                    display: none !important;
-                }
-                
-                .back-btn {
-                    padding: 0.5rem;
-                    min-width: auto;
-                    width: auto;
-                    height: auto;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border-radius: 8px;
-                }
-                
-                .back-btn i {
-                    margin-right: 0;
-                    font-size: 1.2rem;
-                }
             }
 
             .btn-friendship {
@@ -3628,9 +3577,8 @@
                 <!-- Student Details Section -->
                 <section class="student-details-section" id="studentDetailsSection" style="display: none;">
                     <div class="student-details-header">
-                        <button class="back-btn" id="backToStudentsBtn">
+                        <button class="back-btn-simple" id="backToStudentsBtn">
                             <i class="fas fa-arrow-left"></i>
-                            <span>Voltar</span>
                         </button>
                         <h2>
                             <i class="fas fa-user"></i>
@@ -7528,6 +7476,8 @@ ${JSON.stringify(data, null, 2)}
             margin-top: 4rem;
             position: relative;
             overflow: hidden;
+            margin-left: 280px; /* Espaço para sidebar */
+            transition: margin-left 0.3s ease;
         }
 
         .standard-footer::before {
@@ -7690,6 +7640,7 @@ ${JSON.stringify(data, null, 2)}
             .standard-footer {
                 padding: 2rem 0 1rem;
                 margin-top: 2rem;
+                margin-left: 0; /* Remover margem quando sidebar está hidden */
             }
 
             .footer-container {
@@ -7713,6 +7664,10 @@ ${JSON.stringify(data, null, 2)}
                 padding: 0 0.75rem;
             }
 
+            .footer-content {
+                gap: 1rem;
+            }
+
             .footer-logo-img {
                 width: 32px;
                 height: 32px;
@@ -7722,9 +7677,73 @@ ${JSON.stringify(data, null, 2)}
                 font-size: 1.1rem;
             }
 
+            .footer-subtitle {
+                font-size: 0.8rem;
+            }
+
+            .footer-heading {
+                font-size: 0.9rem;
+            }
+
+            .footer-link {
+                font-size: 0.85rem;
+            }
+
+            .contact-item {
+                font-size: 0.85rem;
+            }
+
+            .footer-copyright p {
+                font-size: 0.75rem;
+            }
+
             .social-link {
                 width: 32px;
                 height: 32px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .footer-container {
+                padding: 0 0.5rem;
+            }
+
+            .footer-content {
+                gap: 0.75rem;
+            }
+
+            .footer-logo-img {
+                width: 28px;
+                height: 28px;
+            }
+
+            .footer-title {
+                font-size: 1rem;
+            }
+
+            .footer-subtitle {
+                font-size: 0.75rem;
+            }
+
+            .footer-heading {
+                font-size: 0.85rem;
+            }
+
+            .footer-link {
+                font-size: 0.8rem;
+            }
+
+            .contact-item {
+                font-size: 0.8rem;
+            }
+
+            .footer-copyright p {
+                font-size: 0.7rem;
+            }
+
+            .social-link {
+                width: 28px;
+                height: 28px;
             }
         }
     </style>
