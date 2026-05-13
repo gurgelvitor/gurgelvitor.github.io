@@ -443,6 +443,57 @@
                 font-size: 0.9rem;
                 white-space: nowrap;
             }
+            
+            /* Fazer modal de anamnese ocupar tela completa em tablets */
+            .anamnese-modal {
+                width: 100% !important;
+                height: 100vh !important;
+                max-height: 100vh !important;
+                max-width: 100% !important;
+                border-radius: 0 !important;
+                animation: modalSlideUp 0.3s ease-out !important;
+            }
+            
+            .anamnese-modal-header {
+                padding: 1.5rem !important;
+                border-radius: 0 !important;
+            }
+            
+            .anamnese-modal-header h2 {
+                font-size: 1.5rem !important;
+            }
+            
+            .anamnese-modal-content {
+                padding: 1.5rem !important;
+                overflow-y: auto !important;
+            }
+            
+            /* Aumentar legibilidade do texto */
+            .anamnese-modal-content p,
+            .anamnese-modal-content label {
+                font-size: 1rem !important;
+                line-height: 1.6 !important;
+            }
+            
+            /* Melhorar spacing das perguntas */
+            .anamnese-modal-content textarea,
+            .anamnese-modal-content select {
+                font-size: 1rem !important;
+                padding: 0.75rem !important;
+                line-height: 1.6 !important;
+            }
+            
+            /* Adicionar keyframe para animação de slide up */
+            @keyframes modalSlideUp {
+                from {
+                    transform: translateY(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
         }
         
         @media (max-width: 480px) {
@@ -458,10 +509,76 @@
                 padding: 0.75rem;
             }
             
-            /* Correções para botões do modal em telas pequenas */
+            /* Modal em tela cheia para dispositivos muito pequenos */
+            .anamnese-modal {
+                width: 100% !important;
+                height: 100vh !important;
+                max-height: 100vh !important;
+                max-width: 100% !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                animation: modalSlideUp 0.3s ease-out !important;
+            }
+            
+            .anamnese-modal-header {
+                padding: 1rem !important;
+                border-radius: 0 !important;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            
+            .anamnese-modal-header h2 {
+                font-size: 1.3rem !important;
+                gap: 0.5rem !important;
+            }
+            
+            .anamnese-modal-header .fas {
+                font-size: 1.2rem !important;
+            }
+            
+            .anamnese-modal-header p {
+                font-size: 0.85rem !important;
+            }
+            
+            .anamnese-modal-content {
+                padding: 1rem !important;
+                overflow-y: auto !important;
+                max-height: calc(100vh - 120px) !important;
+            }
+            
+            /* Grid para info cards em coluna única */
+            .anamnese-modal-content > div[style*="display: grid"] {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            /* Aumentar legibilidade */
+            .anamnese-modal-content h3 {
+                font-size: 1.2rem !important;
+            }
+            
+            .anamnese-modal-content p,
+            .anamnese-modal-content label {
+                font-size: 0.95rem !important;
+                line-height: 1.5 !important;
+            }
+            
+            /* Melhorar inputs */
+            .anamnese-modal-content textarea,
+            .anamnese-modal-content select,
+            .anamnese-modal-content input {
+                font-size: 1rem !important;
+                padding: 0.75rem !important;
+                line-height: 1.6 !important;
+                min-height: 2.5rem !important;
+            }
+            
+            /* Botões em coluna e full-width */
             .modal-buttons {
                 flex-direction: column !important;
                 gap: 0.75rem !important;
+                margin-top: 1.5rem !important;
             }
             
             .btn-cancel, .btn-submit {
@@ -469,6 +586,7 @@
                 padding: 1rem !important;
                 font-size: 1rem !important;
                 min-width: auto !important;
+                flex: none !important;
             }
             
             /* Animação para mensagem de envio */
@@ -480,31 +598,6 @@
             
             #submittingMessage {
                 animation: pulse 1.5s infinite;
-            }
-            
-            /* Remover borda média do modal em telas pequenas */
-            .anamnese-modal-content > div[style*="background: var(--bg-secondary)"][style*="border-radius: 16px"] {
-                background: transparent !important;
-                border: none !important;
-                border-radius: 0 !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-            
-            /* Fazer perguntas aparecerem no content principal em mobile */
-            .anamnese-modal-content {
-                padding: 1rem !important;
-            }
-            
-            .anamnese-modal-content > div[style*="background: var(--bg-secondary)"] > div {
-                margin-bottom: 1rem !important;
-            }
-            
-            .anamnese-modal-content > div[style*="background: var(--bg-secondary)"] > form {
-                padding: 1rem !important;
-                background: var(--bg-secondary) !important;
-                border-radius: 12px !important;
-                border: 1px solid var(--border) !important;
             }
         }
 

@@ -3906,6 +3906,30 @@
                     </div>
                 </section>
 
+                <!-- Selected Ficha Section -->
+                <section class="workout-section" id="selectedFichaSection" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="section-title" id="selectedFichaTitle">
+                            <i class="fas fa-calendar-alt"></i>
+                            Ficha Selecionada
+                        </h2>
+                        <div class="section-buttons">
+                            <button class="btn btn-primary" onclick="openDayModal()">
+                                <i class="fas fa-plus"></i>
+                                Novo Dia
+                            </button>
+                            <button class="btn btn-secondary" onclick="editFicha(selectedFicha.id)">
+                                <i class="fas fa-edit"></i>
+                                Editar Ficha
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="daysContainer">
+                        <!-- Dias da ficha serão inseridos aqui dinamicamente -->
+                    </div>
+                </section>
+
                 <!-- Anamnese Section -->
                 <section class="workout-section">
                     <div class="section-header">
@@ -4384,6 +4408,8 @@
                 card.classList.add('active');
             }
             
+            card.onclick = () => selectFicha(ficha.id);
+            
             card.innerHTML = `
                 <div class="ficha-header">
                     <div>
@@ -4391,10 +4417,10 @@
                         <div class="ficha-info">${ficha.days ? ficha.days.length : 0} dias criados</div>
                     </div>
                     <div class="ficha-actions">
-                        <button class="btn-icon" onclick="selectFicha('${ficha.id}')" title="Abrir">
+                        <button class="btn-icon" onclick="event.stopPropagation(); selectFicha('${ficha.id}')" title="Abrir">
                             <i class="fas fa-folder-open"></i>
                         </button>
-                        <button class="btn-icon delete" onclick="deleteFicha('${ficha.id}')" title="Excluir">
+                        <button class="btn-icon delete" onclick="event.stopPropagation(); deleteFicha('${ficha.id}')" title="Excluir">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>

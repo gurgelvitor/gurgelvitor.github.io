@@ -324,6 +324,55 @@
             .offset-1, .offset-2, .offset-3, .offset-4, .offset-5, .offset-6 {
                 margin-left: 0;
             }
+            
+            /* Fazer modais de anamnese ocupar tela completa em tablets */
+            .anamnese-modal,
+            .response-modal {
+                width: 100% !important;
+                height: 100vh !important;
+                max-height: 100vh !important;
+                max-width: 100% !important;
+                border-radius: 0 !important;
+                animation: modalSlideUp 0.3s ease-out !important;
+            }
+            
+            .anamnese-modal-header,
+            .response-modal-header {
+                padding: 1.5rem !important;
+                border-radius: 0 !important;
+            }
+            
+            .anamnese-modal-header h2,
+            .response-modal-header h2 {
+                font-size: 1.5rem !important;
+            }
+            
+            .anamnese-modal-content,
+            .response-modal-content {
+                padding: 1.5rem !important;
+                overflow-y: auto !important;
+            }
+            
+            /* Aumentar legibilidade do texto */
+            .anamnese-modal-content p,
+            .response-modal-content p,
+            .anamnese-modal-content label,
+            .response-modal-content label {
+                font-size: 1rem !important;
+                line-height: 1.6 !important;
+            }
+            
+            /* Animação de slide up */
+            @keyframes modalSlideUp {
+                from {
+                    transform: translateY(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
         }
 
         @media (max-width: 480px) {
@@ -332,6 +381,96 @@
             .grid-start,
             .grid-end {
                 gap: 16px;
+            }
+            
+            /* Modal em tela cheia para dispositivos muito pequenos */
+            .anamnese-modal,
+            .response-modal {
+                width: 100% !important;
+                height: 100vh !important;
+                max-height: 100vh !important;
+                max-width: 100% !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                animation: modalSlideUp 0.3s ease-out !important;
+            }
+            
+            .anamnese-modal-header,
+            .response-modal-header {
+                padding: 1rem !important;
+                border-radius: 0 !important;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            
+            .anamnese-modal-header h2,
+            .response-modal-header h2 {
+                font-size: 1.3rem !important;
+                gap: 0.5rem !important;
+            }
+            
+            .anamnese-modal-header .fas,
+            .response-modal-header .fas {
+                font-size: 1.2rem !important;
+            }
+            
+            .anamnese-modal-header p,
+            .response-modal-header p {
+                font-size: 0.85rem !important;
+            }
+            
+            .anamnese-modal-content,
+            .response-modal-content {
+                padding: 1rem !important;
+                overflow-y: auto !important;
+                max-height: calc(100vh - 120px) !important;
+            }
+            
+            /* Grid para info cards em coluna única */
+            .anamnese-modal-content > div[style*="display: grid"],
+            .response-modal-content > div[style*="display: grid"] {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            /* Aumentar legibilidade */
+            .anamnese-modal-content h3,
+            .response-modal-content h3 {
+                font-size: 1.2rem !important;
+            }
+            
+            .anamnese-modal-content p,
+            .response-modal-content p,
+            .anamnese-modal-content label,
+            .response-modal-content label {
+                font-size: 0.95rem !important;
+                line-height: 1.5 !important;
+            }
+            
+            /* Melhorar inputs e elementos de texto */
+            .anamnese-modal-content textarea,
+            .response-modal-content textarea,
+            .anamnese-modal-content select,
+            .response-modal-content select,
+            .anamnese-modal-content input,
+            .response-modal-content input {
+                font-size: 1rem !important;
+                padding: 0.75rem !important;
+                line-height: 1.6 !important;
+                min-height: 2.5rem !important;
+            }
+            
+            /* Animação para slide up */
+            @keyframes modalSlideUp {
+                from {
+                    transform: translateY(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
             }
         }
 
