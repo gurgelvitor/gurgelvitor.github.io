@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>GurgelTrack - Plataforma Fitness</title>
     <link rel="icon" type="image/png" sizes="32x32" href="logo-gurgel.png">
     <link rel="icon" type="image/png" sizes="16x16" href="logo-gurgel.png">
@@ -341,9 +341,58 @@
             transform: translateX(0);
         }
 
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        body.sidebar-open {
+            overflow: hidden;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1002;
+            background: var(--accent);
+            color: white;
+            border: none;
+            min-width: 48px;
+            min-height: 48px;
+            padding: 0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.25rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .mobile-menu-toggle:focus-visible {
+            outline: 2px solid white;
+            outline-offset: 2px;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
+                width: min(300px, 88vw);
+                box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
             }
             
             .sidebar.active {
@@ -352,6 +401,34 @@
 
             .main-wrapper {
                 margin-left: 0;
+                padding-top: 4.25rem;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .theme-toggle {
+                top: 1rem;
+                right: 1rem;
+                width: 48px;
+                height: 48px;
+            }
+
+            .nav-item {
+                padding: 1rem 1.5rem;
+                min-height: 48px;
+            }
+
+            .sidebar-login-btn,
+            .sidebar-logout-btn,
+            .sidebar-personal-btn {
+                min-height: 48px;
+                font-size: 1rem;
+            }
+
+            .sidebar-logout-btn {
+                padding: 0.75rem;
             }
         }
 
@@ -430,7 +507,7 @@
             padding: 2rem;
             max-width: none;
             margin: 0;
-            width: calc(100% - 4rem);
+            width: 100%;
             min-width: 0;
             overflow-x: hidden;
         }
@@ -993,26 +1070,6 @@
         }
 
         @media (max-width: 768px) {
-            .mobile-menu-toggle {
-                display: block;
-                position: fixed;
-                top: 5.5rem;
-                left: 1rem;
-                z-index: 1002;
-                background: var(--accent);
-                color: white;
-                border: none;
-                padding: 0.75rem;
-                border-radius: 8px;
-                cursor: pointer;
-                font-size: 1.25rem;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            }
-            
-            .main-wrapper {
-                margin-left: 0;
-            }
-            
             .main-header {
                 padding: 1.5rem 1rem 2.5rem 1rem;
                 margin-bottom: 1rem;
@@ -1193,9 +1250,9 @@
             }
         }
 
-        @media (min-width: 1025px) {
-            .mobile-menu-toggle {
-                display: none;
+        @media (min-width: 769px) {
+            .sidebar-overlay {
+                display: none !important;
             }
         }
 
@@ -3213,6 +3270,132 @@
             opacity: 1;
         }
 
+        /* Responsividade mobile — botões, cards e toque */
+        @media (max-width: 768px) {
+            .btn-primary,
+            .btn-secondary,
+            .btn-success,
+            .btn-action,
+            .student-action-btn,
+            .sidebar-login-btn {
+                min-height: 48px;
+                font-size: 0.95rem;
+            }
+
+            .btn-small {
+                min-height: 44px;
+                padding: 0.625rem 1rem;
+                font-size: 0.875rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .action-buttons .btn-action {
+                width: 100%;
+                justify-content: center;
+                padding: 0.75rem 1rem;
+            }
+
+            .student-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .student-action-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 0.75rem 1rem;
+                font-size: 0.95rem;
+            }
+
+            .student-card {
+                padding: 1.25rem;
+            }
+
+            .student-info p {
+                word-break: break-all;
+            }
+
+            .stat-card-analytics {
+                padding: 1.25rem;
+            }
+
+            .analytics-period {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .deadlines-grid,
+            .students-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .help-button {
+                bottom: max(1rem, env(safe-area-inset-bottom));
+                right: max(1rem, env(safe-area-inset-right));
+                width: 52px;
+                height: 52px;
+            }
+
+            .standard-header {
+                padding-top: 0.5rem;
+            }
+
+            .header-title-section {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .btn-primary,
+            .btn-secondary,
+            .btn-action,
+            .student-action-btn {
+                min-height: 50px;
+                font-size: 1rem;
+            }
+
+            h1, .page-title {
+                font-size: 1.35rem !important;
+            }
+
+            .analytics-title {
+                font-size: 1.25rem;
+            }
+
+            .content-section h2 {
+                font-size: 1.2rem;
+            }
+
+            .stat-value-analytics {
+                font-size: 1.35rem;
+            }
+
+            .empty-state {
+                padding: 2rem 1rem;
+            }
+
+            .notification {
+                left: 1rem;
+                right: 1rem;
+                max-width: none;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -3312,10 +3495,12 @@
             </div>
         </aside>
 
+        <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
         <!-- Main Content -->
         <div class="main-wrapper">
-            <button class="mobile-menu-toggle" id="mobileMenuToggle">
-                <i class="fas fa-bars"></i>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="sidebar">
+                <i class="fas fa-bars" aria-hidden="true"></i>
             </button>
 
             <!-- Header Padronizado -->
@@ -4225,27 +4410,57 @@
             }
         });
 
-        // Mobile menu toggle functionality
-        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+        // Mobile menu
+        (function initMobileNav() {
             const sidebar = document.getElementById('sidebar');
-            if (sidebar) {
-                sidebar.classList.toggle('active');
-            }
-        });
-
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', function(event) {
-            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
             const mobileToggle = document.getElementById('mobileMenuToggle');
-            
-            if (window.innerWidth <= 768 && 
-                sidebar && 
-                !sidebar.contains(event.target) && 
-                !mobileToggle.contains(event.target) &&
-                sidebar.classList.contains('active')) {
-                sidebar.classList.remove('active');
+            const menuIcon = mobileToggle ? mobileToggle.querySelector('i') : null;
+
+            function setSidebarOpen(isOpen) {
+                if (!sidebar || !overlay || !mobileToggle) return;
+                sidebar.classList.toggle('active', isOpen);
+                overlay.classList.toggle('active', isOpen);
+                overlay.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+                document.body.classList.toggle('sidebar-open', isOpen);
+                mobileToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                mobileToggle.setAttribute('aria-label', isOpen ? 'Fechar menu' : 'Abrir menu');
+                if (menuIcon) {
+                    menuIcon.className = isOpen ? 'fas fa-times' : 'fas fa-bars';
+                }
             }
-        });
+
+            function closeSidebar() {
+                setSidebarOpen(false);
+            }
+
+            if (mobileToggle) {
+                mobileToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    setSidebarOpen(!sidebar.classList.contains('active'));
+                });
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', closeSidebar);
+            }
+
+            document.querySelectorAll('.nav-item, .sidebar-personal-btn, .sidebar-login-btn').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) closeSidebar();
+                });
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) {
+                    closeSidebar();
+                }
+            });
+
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) closeSidebar();
+            });
+        })();
 
             </script>
 

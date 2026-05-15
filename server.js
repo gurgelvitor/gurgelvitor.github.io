@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
@@ -1304,9 +1305,13 @@ app.get('/api/public/anamneses/:id', async (req, res) => {
     }
 });
 
-// Rota principal
+// Rotas de páginas (arquivos em public/)
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/alunos.html');
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
 // Iniciar servidor

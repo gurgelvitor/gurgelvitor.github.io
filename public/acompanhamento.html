@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Acompanhamento - GurgelTrack</title>
     <link rel="icon" type="image/png" sizes="32x32" href="logo-gurgel.png">
     <link rel="icon" type="image/png" sizes="16x16" href="logo-gurgel.png">
@@ -351,6 +351,13 @@
             .response-modal-content {
                 padding: 1.5rem !important;
                 overflow-y: auto !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+
+            .anamnese-modal.anamnese-modal--wide .anamnese-modal-content,
+            .response-modal.anamnese-modal--wide .response-modal-content {
+                padding: 0 !important;
             }
             
             /* Aumentar legibilidade do texto */
@@ -360,6 +367,28 @@
             .response-modal-content label {
                 font-size: 1rem !important;
                 line-height: 1.6 !important;
+            }
+            
+            /* Melhorar espaçamento para texto menos apertado em tablets */
+            .anamnese-modal-content .question-card,
+            .response-modal-content .question-card {
+                margin-bottom: 2.5rem !important;
+                padding: 2rem !important;
+                border-radius: 12px !important;
+            }
+            
+            .anamnese-modal-content .question-card h4,
+            .response-modal-content .question-card h4 {
+                margin-bottom: 1.5rem !important;
+                line-height: 1.3 !important;
+                font-size: 1.2rem !important;
+            }
+            
+            .anamnese-modal-content .question-card p,
+            .response-modal-content .question-card p {
+                margin-bottom: 2rem !important;
+                line-height: 1.9 !important;
+                font-size: 1.1rem !important;
             }
             
             /* Animação de slide up */
@@ -448,6 +477,28 @@
                 line-height: 1.5 !important;
             }
             
+            /* Melhorar espaçamento para texto menos apertado em dispositivos móveis */
+            .anamnese-modal-content .question-card,
+            .response-modal-content .question-card {
+                margin-bottom: 3rem !important;
+                padding: 2.5rem 1.5rem !important;
+                border-radius: 16px !important;
+            }
+            
+            .anamnese-modal-content .question-card h4,
+            .response-modal-content .question-card h4 {
+                margin-bottom: 2rem !important;
+                line-height: 1.2 !important;
+                font-size: 1.3rem !important;
+            }
+            
+            .anamnese-modal-content .question-card p,
+            .response-modal-content .question-card p {
+                margin-bottom: 2.5rem !important;
+                line-height: 2 !important;
+                font-size: 1.1rem !important;
+            }
+            
             /* Melhorar inputs e elementos de texto */
             .anamnese-modal-content textarea,
             .response-modal-content textarea,
@@ -456,9 +507,10 @@
             .anamnese-modal-content input,
             .response-modal-content input {
                 font-size: 1rem !important;
-                padding: 0.75rem !important;
+                padding: 1rem !important;
                 line-height: 1.6 !important;
-                min-height: 2.5rem !important;
+                min-height: 3rem !important;
+                margin-bottom: 1rem !important;
             }
             
             /* Animação para slide up */
@@ -471,6 +523,25 @@
                     transform: translateY(0);
                     opacity: 1;
                 }
+            }
+            
+            /* Melhorar espaçamento para texto menos apertado */
+            .anamnese-modal-content .question-card,
+            .response-modal-content .question-card {
+                margin-bottom: 2rem !important;
+                padding: 1.5rem !important;
+            }
+            
+            .anamnese-modal-content .question-card h4,
+            .response-modal-content .question-card h4 {
+                margin-bottom: 1rem !important;
+                line-height: 1.4 !important;
+            }
+            
+            .anamnese-modal-content .question-card p,
+            .response-modal-content .question-card p {
+                margin-bottom: 1.5rem !important;
+                line-height: 1.8 !important;
             }
         }
 
@@ -687,6 +758,30 @@
             color: white !important;
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(220, 20, 60, 0.4);
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        body.sidebar-open {
+            overflow: hidden;
         }
 
         /* Friendship Request Styles */
@@ -1491,7 +1586,7 @@
 
         .header-buttons {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             align-items: center;
             flex-wrap: wrap;
         }
@@ -1759,6 +1854,7 @@
         .protocol-type-btn span {
             font-weight: 600;
             font-size: 0.9rem;
+            color: var(--text-primary);
         }
 
         /* Items Modal */
@@ -1916,17 +2012,28 @@
         .mobile-menu-toggle {
             display: none;
             position: fixed;
-            top: 5.5rem;
+            top: 1rem;
             left: 1rem;
             z-index: 1002;
             background: var(--accent);
             color: white;
             border: none;
-            border-radius: 8px;
-            padding: 0.75rem;
+            min-width: 48px;
+            min-height: 48px;
+            padding: 0;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 1.25rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .mobile-menu-toggle:focus-visible {
+            outline: 2px solid white;
+            outline-offset: 2px;
         }
 
         .main-header {
@@ -1977,6 +2084,8 @@
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
+                width: min(300px, 88vw);
+                box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
             }
 
             .sidebar.active {
@@ -1985,12 +2094,34 @@
 
             .main-wrapper {
                 margin-left: 0;
+                padding-top: 4.25rem;
             }
 
             .mobile-menu-toggle {
                 display: flex;
-                align-items: center;
-                justify-content: center;
+            }
+
+            .theme-toggle {
+                top: 1rem;
+                right: 1rem;
+                width: 48px;
+                height: 48px;
+            }
+
+            .nav-item {
+                padding: 1rem 1.5rem;
+                min-height: 48px;
+            }
+
+            .sidebar-login-btn,
+            .sidebar-logout-btn,
+            .sidebar-personal-btn {
+                min-height: 48px;
+                font-size: 1rem;
+            }
+
+            .sidebar-logout-btn {
+                padding: 0.75rem;
             }
 
             .main-header {
@@ -2004,6 +2135,49 @@
             .main-content {
                 padding: 1rem;
                 overflow-x: hidden;
+            }
+
+            .btn-friendship,
+            .btn-primary,
+            .btn-secondary,
+            .print-btn,
+            .add-btn {
+                min-height: 48px;
+            }
+
+            .header-buttons {
+                flex-direction: column;
+                gap: 0.75rem;
+                width: 100%;
+            }
+
+            .header-buttons button,
+            .header-buttons .print-btn,
+            .header-buttons .add-btn {
+                width: 100%;
+                min-height: 48px;
+                justify-content: center;
+            }
+
+            .student-actions {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .student-actions button {
+                min-height: 44px;
+                flex: 1 1 auto;
+            }
+
+            .standard-header .header-title-section {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .sidebar-overlay {
+                display: none !important;
             }
         }
 
@@ -2656,6 +2830,218 @@
             opacity: 0.8;
         }
 
+        /* Anamnese — modal largo (perguntas/respostas em largura total) */
+        .anamnese-modal.anamnese-modal--wide,
+        .response-modal.anamnese-modal--wide {
+            display: flex;
+            flex-direction: column;
+            width: min(96vw, 1100px) !important;
+            max-width: 96vw !important;
+            max-height: 92vh;
+            margin: 0 auto;
+            align-self: center;
+            overflow: hidden;
+        }
+
+        .response-modal.anamnese-modal--wide .response-modal-content,
+        .anamnese-modal.anamnese-modal--wide .anamnese-modal-content {
+            max-width: 100% !important;
+            width: 100% !important;
+            max-height: none !important;
+            flex: 1;
+            min-height: 0;
+            box-sizing: border-box;
+        }
+
+        #viewResponseModal.modal-overlay.active,
+        #anamnesisViewModal.modal-overlay.active {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            padding: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right)) max(0.75rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
+        }
+
+        .anamnese-info-bar {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .anamnese-info-chip {
+            flex: 1 1 0;
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.6rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .anamnese-info-chip i {
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .anamnese-info-chip-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .anamnese-info-chip-value {
+            font-weight: 600;
+            color: var(--text-primary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+
+        .anamnese-qa-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+
+        .anamnese-qa-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.85rem;
+            width: 100%;
+            padding: 0.55rem 1rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            min-height: 44px;
+        }
+
+        .anamnese-qa-num {
+            flex: 0 0 1.75rem;
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .anamnese-qa-question {
+            flex: 0 1 36%;
+            min-width: 100px;
+            max-width: 40%;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .anamnese-qa-answer {
+            flex: 1 1 auto;
+            min-width: 0;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .anamnese-qa-answer.anamnese-qa-answer--muted {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .anamnese-input-inline {
+            width: 100%;
+            min-width: 0;
+            padding: 0.5rem 0.85rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow-x: auto;
+        }
+
+        .anamnese-input-inline:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(220, 20, 60, 0.15);
+        }
+
+        .anamnese-options-row {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            gap: 0.5rem;
+            overflow-x: auto;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .anamnese-option-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.75rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+
+        .anamnese-option-chip:hover {
+            border-color: var(--accent);
+        }
+
+        .anamnese-questions-block {
+            padding: 1rem 1.5rem 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .anamnese-modal--wide,
+            .response-modal.anamnese-modal--wide {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            .anamnese-info-bar {
+                flex-wrap: wrap;
+            }
+
+            .anamnese-qa-row {
+                flex-wrap: wrap;
+                align-items: flex-start;
+            }
+
+            .anamnese-qa-question {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+        }
+
         /* Modal Styles for Response View */
         .modal-overlay {
             position: fixed;
@@ -2688,6 +3074,16 @@
             overflow-y: auto;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
             border: 1px solid var(--border);
+            box-sizing: border-box;
+        }
+
+        /* Evita faixa vazia à direita no modal largo de anamnese */
+        .response-modal.anamnese-modal--wide .response-modal-content {
+            max-width: 100% !important;
+            width: 100% !important;
+            border-radius: 0;
+            box-shadow: none;
+            border: none;
         }
 
         .response-answer {
@@ -3539,6 +3935,64 @@
             opacity: 1;
         }
 
+        /* Responsividade mobile — botões e toque */
+        @media (max-width: 768px) {
+            .btn-primary,
+            .btn-secondary,
+            .btn-friendship {
+                min-height: 48px;
+                font-size: 0.95rem;
+            }
+
+            .btn-small {
+                min-height: 44px;
+            }
+
+            .friendship-section,
+            .student-details-section,
+            .my-students-section {
+                padding: 1.25rem;
+            }
+
+            .students-list {
+                gap: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .btn-primary,
+            .btn-secondary,
+            .btn-friendship,
+            .print-btn,
+            .add-btn {
+                min-height: 50px;
+                font-size: 1rem;
+            }
+
+            h1, .page-title {
+                font-size: 1.35rem !important;
+            }
+
+            .page-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .friendship-header h2,
+            .my-students-header h2 {
+                font-size: 1.15rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -3638,11 +4092,13 @@
             </div>
         </aside>
 
+        <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
         <!-- Main Content -->
         <div class="main-wrapper">
             <!-- Mobile Menu Toggle -->
-            <button class="mobile-menu-toggle" id="mobileMenuToggle">
-                <i class="fas fa-bars"></i>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="sidebar">
+                <i class="fas fa-bars" aria-hidden="true"></i>
             </button>
             
             <!-- Header Padronizado -->
@@ -3913,24 +4369,57 @@
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         });
 
-        // Mobile Menu Toggle
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        const sidebar = document.getElementById('sidebar');
+        // Mobile menu
+        (function initMobileNav() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            const menuIcon = mobileToggle ? mobileToggle.querySelector('i') : null;
 
-        if (mobileMenuToggle && sidebar) {
-            mobileMenuToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('active');
-            });
-        }
-
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', (e) => {
-            if (window.innerWidth <= 768 && sidebar && mobileMenuToggle) {
-                if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-                    sidebar.classList.remove('active');
+            function setSidebarOpen(isOpen) {
+                if (!sidebar || !overlay || !mobileToggle) return;
+                sidebar.classList.toggle('active', isOpen);
+                overlay.classList.toggle('active', isOpen);
+                overlay.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+                document.body.classList.toggle('sidebar-open', isOpen);
+                mobileToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                mobileToggle.setAttribute('aria-label', isOpen ? 'Fechar menu' : 'Abrir menu');
+                if (menuIcon) {
+                    menuIcon.className = isOpen ? 'fas fa-times' : 'fas fa-bars';
                 }
             }
-        });
+
+            function closeSidebar() {
+                setSidebarOpen(false);
+            }
+
+            if (mobileToggle) {
+                mobileToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    setSidebarOpen(!sidebar.classList.contains('active'));
+                });
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', closeSidebar);
+            }
+
+            document.querySelectorAll('.nav-item, .sidebar-personal-btn, .sidebar-login-btn').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) closeSidebar();
+                });
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) {
+                    closeSidebar();
+                }
+            });
+
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) closeSidebar();
+            });
+        })();
 
         // Sidebar Login/Logout functionality
         function updateSidebarAuth() {
@@ -4273,9 +4762,6 @@
                     
                     return `
                         <div class="student-item clickable" onclick="openStudentDetails('${userEmail}', '${firstName}')">
-                            <div class="student-avatar">
-                                ${firstLetter}
-                            </div>
                             <div class="student-details">
                                 <h3>${firstName}</h3>
                                 <p>${userEmail}</p>
@@ -4500,7 +4986,7 @@
                     <div class="response-header">
                         <div class="response-title">
                             <i class="fas fa-clipboard-check"></i>
-                            ${response.anamnese_name || response.title || response.name || response.anamneseTitle || 'Anamnese'}
+                            ${response.anamnese_name && response.anamnese_name !== 'undefined' ? response.anamnese_name : response.title && response.title !== 'undefined' ? response.title : response.name && response.name !== 'undefined' ? response.name : response.anamneseTitle && response.anamneseTitle !== 'undefined' ? response.anamneseTitle : 'Anamnese'}
                         </div>
                         <div class="response-date">${formatDate(response.created_at)}</div>
                     </div>
@@ -4557,17 +5043,12 @@
                     justify-content: center;
                     z-index: 9999;
                 ">
-                    <div class="response-modal" style="
+                    <div class="response-modal anamnese-modal--wide" style="
                         background: var(--bg-primary);
                         border-radius: 20px;
-                        max-width: 800px;
-                        width: 90%;
-                        max-height: 85vh;
-                        overflow-y: auto;
                         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
                         border: 1px solid var(--border);
                         animation: modalSlideIn 0.3s ease-out;
-                        position: relative;
                     ">
                         <!-- Header -->
                         <div class="response-modal-header" style="
@@ -4576,6 +5057,7 @@
                             padding: 2rem;
                             border-radius: 20px 20px 0 0;
                             position: relative;
+                            flex-shrink: 0;
                         ">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div>
@@ -4584,7 +5066,7 @@
                                         Resposta da Anamnese
                                     </h2>
                                     <p style="margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 0.95rem;">
-                                        ${responseData.anamnese_name || 'Anamnese'}
+                                        ${responseData.anamnese_name && responseData.anamnese_name !== 'undefined' ? responseData.anamnese_name : 'Anamnese'}
                                     </p>
                                 </div>
                                 <button class="modal-close-btn" onclick="closeViewResponseModal()" style="
@@ -4607,9 +5089,16 @@
                         </div>
 
                         <!-- Content -->
-                        <div class="response-modal-content" style="padding: 2rem;">
+                        <div class="response-modal-content" style="
+                            padding: 0;
+                            overflow-y: auto;
+                            flex: 1;
+                            width: 100%;
+                            max-width: 100%;
+                            box-sizing: border-box;
+                        ">
                             <!-- Info Cards -->
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; padding: 2rem 2rem 0 2rem;">
                                 <div style="
                                     background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
                                     border: 1px solid var(--border);
@@ -4649,6 +5138,8 @@
                                 border-radius: 16px;
                                 padding: 2rem;
                                 border: 1px solid var(--border);
+                                margin: 0 clamp(0.75rem, 3vw, 2rem) clamp(1rem, 3vw, 2rem);
+                                box-sizing: border-box;
                             ">
                                 <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
                                     <div style="
@@ -4705,26 +5196,14 @@
                     padding: 1.5rem;
                     margin-bottom: 1rem;
                 ">
-                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
-                        <div style="
-                            background: var(--accent);
-                            color: white;
-                            width: 24px;
-                            height: 24px;
-                            border-radius: 50%;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            font-size: 0.75rem;
-                            font-weight: 600;
-                        ">
-                            ${index + 1}
-                        </div>
-                        <h4 style="margin: 0; color: var(--text-primary); font-weight: 600;">
-                            ${answer.question || `Pergunta ${index + 1}`}
-                        </h4>
+                    <div style="margin-bottom: 1rem;">
+                        <span style="color: var(--accent); font-weight: 600; font-size: 0.9rem; display: block; margin-bottom: 0.35rem;">
+                            Pergunta ${index + 1}
+                        </span>
+                        <p style="margin: 0; font-weight: 600; color: var(--text-primary); line-height: 1.5; word-break: break-word;">
+                            ${answer.question || 'Pergunta não informada'}
+                        </p>
                     </div>
-                    
                     ${answer.isImage ? `
                     <div style="
                         background: var(--bg-secondary);
@@ -4755,6 +5234,7 @@
                         padding: 1rem;
                         color: var(--text-primary);
                         line-height: 1.5;
+                        word-break: break-word;
                     ">
                         ${answer.answer || 'Sem resposta'}
                     </div>
@@ -5021,13 +5501,9 @@
             // Criar modal para exibir a anamnese completa
             const modalHtml = `
                 <div class="modal-overlay active" id="anamnesisViewModal" style="backdrop-filter: blur(8px);">
-                    <div class="anamnese-modal" style="
+                    <div class="anamnese-modal anamnese-modal--wide" style="
                         background: var(--bg-primary);
                         border-radius: 20px;
-                        max-width: 800px;
-                        width: 90%;
-                        max-height: 85vh;
-                        overflow-y: auto;
                         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
                         border: 1px solid var(--border);
                         animation: modalSlideIn 0.3s ease-out;
@@ -5070,7 +5546,7 @@
                         </div>
 
                         <!-- Content -->
-                        <div class="anamnese-modal-content" style="padding: 2rem;">
+                        <div class="anamnese-modal-content" style="padding: 0; overflow-y: auto; flex: 1; width: 100%; max-width: 100%; box-sizing: border-box;">
                             <!-- Info Cards -->
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
                                 <div style="
@@ -5947,6 +6423,21 @@
                                     <td class="center-cell">${lip}g</td>
                                 </tr>
                             `;
+                            
+                            // Adicionar substituições do alimento
+                            if (food.substitutions && food.substitutions.length > 0) {
+                                food.substitutions.forEach(sub => {
+                                    html += `
+                                        <tr style="background-color: rgba(52, 152, 219, 0.1); font-size: 0.9rem;">
+                                            <td class="food-name-cell" style="padding-left: 2rem; color: #3498db; font-weight: 600;">
+                                                <i class="fas fa-exchange-alt" style="margin-right: 0.5rem;"></i>Substituição para "${food.name || 'N/A'}": ${sub.name || 'N/A'}
+                                            </td>
+                                            <td class="center-cell">${sub.quantity || 0}g</td>
+                                            <td colspan="4" class="center-cell" style="color: var(--text-secondary); font-size: 0.85rem;">Alimento alternativo</td>
+                                        </tr>
+                                    `;
+                                });
+                            }
                         });
                         
                         // Adicionar linha de totais da refeição
@@ -7348,6 +7839,23 @@ ${JSON.stringify(data, null, 2)}
                                     </td>
                                 </tr>
                             `;
+                            if (food.substitutions && food.substitutions.length > 0) {
+                                food.substitutions.forEach(sub => {
+                                    detailsHtml += `
+                                        <tr style="background: rgba(52, 152, 219, 0.1);">
+                                            <td style="padding: 4px; border: 1px solid #ddd; font-size: 8px; color: #2c3e50;">
+                                                <strong style="color: #3498db;">Substituição para "${food.name || 'Alimento sem nome'}":</strong> ${sub.name || 'Alimento alternativo'}
+                                            </td>
+                                            <td style="padding: 4px; border: 1px solid #ddd; text-align: center; font-size: 8px;">
+                                                ${sub.quantity || '0'}g
+                                            </td>
+                                            <td colspan="4" style="padding: 4px; border: 1px solid #ddd; text-align: center; font-size: 8px; color: #666;">
+                                                Alimento de substituição caso o alimento principal não possa ser consumido
+                                            </td>
+                                        </tr>
+                                    `;
+                                });
+                            }
                         });
                         
                         detailsHtml += `

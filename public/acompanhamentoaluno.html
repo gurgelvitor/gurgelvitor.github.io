@@ -1323,6 +1323,174 @@
             cursor: pointer;
         }
 
+        /* Anamnese — layout horizontal, máximo espaço para texto */
+        .anamnese-modal--wide {
+            max-width: min(98vw, 1680px) !important;
+            width: 98vw !important;
+        }
+
+        .anamnese-info-bar {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+        }
+
+        .anamnese-info-chip {
+            flex: 1 1 0;
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.6rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .anamnese-info-chip i {
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .anamnese-info-chip-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .anamnese-info-chip-value {
+            font-weight: 600;
+            color: var(--text-primary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+
+        .anamnese-qa-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+
+        .anamnese-qa-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.85rem;
+            width: 100%;
+            padding: 0.55rem 1rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            min-height: 44px;
+        }
+
+        .anamnese-qa-num {
+            flex: 0 0 1.75rem;
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .anamnese-qa-question {
+            flex: 0 1 36%;
+            min-width: 100px;
+            max-width: 40%;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .anamnese-qa-answer {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .anamnese-input-inline {
+            width: 100%;
+            min-width: 0;
+            padding: 0.5rem 0.85rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow-x: auto;
+        }
+
+        .anamnese-input-inline:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(220, 20, 60, 0.15);
+        }
+
+        .anamnese-options-row {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            gap: 0.5rem;
+            overflow-x: auto;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .anamnese-option-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.75rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+        }
+
+        .anamnese-option-chip:hover {
+            border-color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .anamnese-modal--wide {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            .anamnese-info-bar {
+                flex-wrap: wrap;
+            }
+
+            .anamnese-qa-row {
+                flex-wrap: wrap;
+            }
+
+            .anamnese-qa-question {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+        }
+
         .protocol-item:hover, .anamnese-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(220, 20, 60, 0.15);
@@ -2975,7 +3143,7 @@
                     <div class="item-header">
                         <div class="item-title">
                             <i class="fas fa-clipboard-check"></i>
-                            ${anamnese.anamnese_name || 'Anamnese'}
+                            ${anamnese.anamnese_name && anamnese.anamnese_name !== 'undefined' ? anamnese.anamnese_name : 'Anamnese'}
                         </div>
                         <div class="item-date">${formatDate(anamnese.created_at)}</div>
                     </div>
@@ -3150,12 +3318,12 @@
                         ">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div>
-                                    <h2 style="margin: 0; font-size: 1.8rem; font-weight: 700; display: flex; align-items: center; gap: 1rem;">
-                                        <i class="fas fa-edit" style="font-size: 1.5rem;"></i>
+                                    <h2 style="margin: 0; font-size: 1.8rem; font-weight: 700; display: flex; align-items: center; gap: 1rem; color: white;">
+                                        <i class="fas fa-edit" style="font-size: 1.5rem; color: white;"></i>
                                         Responder Anamnese
                                     </h2>
                                     <p style="margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 0.95rem;">
-                                        ${anamneseData.anamnese_name}
+                                        ${anamneseData.anamnese_name && anamneseData.anamnese_name !== 'undefined' ? anamneseData.anamnese_name : 'Anamnese'}
                                     </p>
                                 </div>
                                 <button class="modal-close-btn" onclick="closeAnswerAnamneseModal()" style="
@@ -4685,7 +4853,7 @@
                         <div class="protocol-view-header">
                             <h3>
                                 <i class="fas fa-clipboard-check"></i>
-                                Anamnese: ${anamneseData.anamnese_name || 'Anamnese'}
+                                Anamnese: ${anamneseData.anamnese_name && anamneseData.anamnese_name !== 'undefined' ? anamneseData.anamnese_name : 'Anamnese'}
                             </h3>
                             <button class="modal-close-btn" onclick="closeAnamneseViewModal()">
                                 <i class="fas fa-times"></i>
@@ -4845,6 +5013,21 @@
                                     <td class="center-cell">${lip}g</td>
                                 </tr>
                             `;
+                            
+                            // Adicionar substituições do alimento
+                            if (food.substitutions && food.substitutions.length > 0) {
+                                food.substitutions.forEach(sub => {
+                                    html += `
+                                        <tr style="background-color: rgba(52, 152, 219, 0.1); font-size: 0.9rem;">
+                                            <td class="food-name-cell" style="padding-left: 2rem; color: #3498db; font-weight: 600;">
+                                                <i class="fas fa-exchange-alt" style="margin-right: 0.5rem;"></i>Substituição para "${food.name || 'N/A'}": ${sub.name || 'N/A'}
+                                            </td>
+                                            <td class="center-cell">${sub.quantity || 0}g</td>
+                                            <td colspan="4" class="center-cell" style="color: var(--text-secondary); font-size: 0.85rem;">Alimento alternativo</td>
+                                        </tr>
+                                    `;
+                                });
+                            }
                         });
                         
                         // Adicionar linha de totais da refeição
@@ -5491,6 +5674,7 @@
             margin-top: 4rem;
             position: relative;
             overflow: hidden;
+            margin-left: 280px; /* Espaço para sidebar, igual acompanhamento.html */
             transition: margin-left 0.3s ease;
         }
 
