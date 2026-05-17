@@ -379,12 +379,12 @@
                 border-radius: 999px;
                 font-size: 1rem;
                 font-weight: 700;
-                background: linear-gradient(90deg, #6b21a8 0%, #dc143c 45%, #ea580c 100%);
+                background: linear-gradient(135deg, var(--accent), var(--accent-hover));
                 box-shadow: 0 8px 28px rgba(220, 20, 60, 0.35);
             }
 
             .login-btn:hover {
-                background: linear-gradient(90deg, #7c3aed 0%, #ef4444 45%, #f97316 100%);
+                transform: translateY(-3px);
                 box-shadow: 0 12px 36px rgba(220, 20, 60, 0.45);
             }
 
@@ -582,7 +582,8 @@
 
         .login-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+            box-shadow: 0 8px 24px rgba(220, 20, 60, 0.4);
+            filter: brightness(1.1);
         }
 
         .login-btn:active {

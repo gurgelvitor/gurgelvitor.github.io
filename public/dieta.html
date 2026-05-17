@@ -2226,6 +2226,132 @@
             }
         }
 
+        /* Mobile & layout improvements */
+        body, html {
+            overflow-x: hidden;
+        }
+
+        .main-wrapper {
+            min-height: 100vh;
+        }
+
+        .main-content {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        .summary-actions,
+        .meal-actions,
+        .food-quantity,
+        .saved-diet-actions,
+        .substitution-button-group,
+        .food-input-group,
+        .meal-input-group {
+            flex-wrap: wrap;
+        }
+
+        .saved-diet-actions {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .saved-diet-btn {
+            min-width: 120px;
+        }
+
+        .btn-add-meal,
+        .btn-add-food,
+        .btn-save-diet,
+        .btn-remove-meal,
+        .btn-remove-food,
+        .btn-substitute-food,
+        .btn-confirm-substitution,
+        .btn-cancel-substitution {
+            min-width: 120px;
+        }
+
+        @media (max-width: 992px) {
+            .main-wrapper {
+                width: 100%;
+            }
+
+            .main-content,
+            .content-section,
+            .summary-section,
+            .meals-section,
+            .saved-diets-section,
+            .add-meal-section,
+            .personal-data {
+                padding: 20px;
+            }
+
+            .summary-header,
+            .meal-header,
+            .food-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .meal-header {
+                gap: 1rem;
+            }
+
+            .food-item {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+
+            .food-info {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .food-macros {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .food-quantity {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .meal-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .saved-diets-list {
+                grid-template-columns: 1fr;
+            }
+
+            .saved-diet-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-add-meal,
+            .btn-save-diet,
+            .btn-add-food,
+            .saved-diet-btn {
+                width: 100%;
+            }
+
+            .summary-actions {
+                gap: 0.75rem;
+            }
+
+            .help-button {
+                bottom: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .standard-footer {
+                margin-left: 0;
+            }
+        }
+
         /* Header Padronizado */
         .standard-header {
             background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));

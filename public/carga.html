@@ -1943,6 +1943,95 @@ body.dark-mode tbody tr:hover {
             border: 1px solid var(--border);
         }
 
+        .student-selector {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .student-selector-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            margin-bottom: 1rem;
+        }
+
+        .student-name-group {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .student-blocks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .student-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: var(--transition);
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .student-card.active {
+            border-color: var(--accent);
+            background: rgba(220, 20, 60, 0.05);
+            box-shadow: 0 8px 20px rgba(220, 20, 60, 0.12);
+        }
+
+        .student-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 20, 60, 0.08);
+        }
+
+        .student-card-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        body.dark-mode .student-card-title {
+            color: #f5f5f5;
+        }
+
+        .student-card-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+
+        .student-card-date {
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .student-empty {
+            color: var(--text-secondary);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .student-selected-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-top: 1rem;
+        }
+
         .weight-form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -2076,6 +2165,20 @@ body.dark-mode tbody tr:hover {
         }
 
         @media (max-width: 768px) {
+            .student-selector-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.75rem;
+            }
+
+            .student-name-group {
+                min-width: auto;
+            }
+
+            .student-selector-row .btn {
+                width: 100%;
+            }
+
             .weight-form-grid {
                 grid-template-columns: 1fr;
                 gap: 1rem;
@@ -2843,8 +2946,23 @@ body.dark-mode tbody tr:hover {
                             <i class="fas fa-weight"></i>
                             Acompanhamento de Peso
                         </h2>
-                                            </div>
-                    
+                    </div>
+
+                    <div class="student-selector">
+                        <div class="student-selector-row">
+                            <div class="form-group student-name-group">
+                                <label for="studentNameInput">Nome do aluno</label>
+                                <input type="text" id="studentNameInput" class="form-control" placeholder="Digite o nome do aluno">
+                            </div>
+                            <button class="btn btn-primary btn-small" type="button" onclick="addStudent()">
+                                <i class="fas fa-user-plus"></i>
+                                Criar Aluno
+                            </button>
+                        </div>
+                        <div class="student-blocks" id="studentBlocks"></div>
+                        <p class="student-selected-label">Aluno selecionado: <strong id="selectedStudentName">Nenhum</strong></p>
+                    </div>
+
                     <!-- Weight Input Form -->
                     <div class="weight-input-container">
                         <div class="weight-form-grid">
@@ -4174,11 +4292,13 @@ body.dark-mode tbody tr:hover {
     <script>
         // Weight Tracking Data
         let weightRecords = [];
+        let studentWeights = {};
+        let selectedStudent = null;
         let weightChart = null;
 
         // Initialize weight tracking
         async function initWeightTracking() {
-            await loadWeightRecords();
+            loadWeightRecords();
             setupDefaultDate();
             initWeightChart();
             renderWeightTable();
@@ -4190,101 +4310,80 @@ body.dark-mode tbody tr:hover {
             document.getElementById('weightDate').value = today;
         }
 
-        // Load weight records from API
-        async function loadWeightRecords() {
-            try {
-                const response = await authenticatedFetch('/api/pesos');
-                if (response.ok) {
-                    const data = await response.json();
-                    weightRecords = data.map(record => ({
-                        id: record.id,
-                        date: record.date,
-                        weight: record.weight,
-                        kcal: record.kcal
-                    }));
-                    console.log('Registros de peso carregados:', weightRecords);
-                } else {
-                    console.error('Erro ao carregar registros de peso:', response.statusText);
-                    weightRecords = [];
-                }
-            } catch (error) {
-                console.error('Erro ao carregar registros de peso:', error);
-                weightRecords = [];
-            }
+        // Load weight records from localStorage
+        function loadWeightRecords() {
+            studentWeights = JSON.parse(localStorage.getItem('weightRecordsByStudent') || '{}');
+            const students = Object.keys(studentWeights);
+            selectedStudent = students.length ? students[0] : null;
+            weightRecords = selectedStudent ? studentWeights[selectedStudent] : [];
+            renderStudentBlocks();
         }
 
-        // Save weight records to localStorage
-        // Add new weight record
-        async function addWeightRecord() {
-            const date = document.getElementById('weightDate').value;
-            const weight = parseFloat(document.getElementById('weightValue').value);
-            const kcal = parseInt(document.getElementById('kcalValue').value);
+        function saveStudentWeightRecords() {
+            if (!selectedStudent) return;
+            studentWeights[selectedStudent] = weightRecords;
+            localStorage.setItem('weightRecordsByStudent', JSON.stringify(studentWeights));
+        }
 
-            if (!date || !weight || isNaN(weight)) {
-                alert('Por favor, preencha a data e o peso corretamente!');
+        function renderStudentBlocks() {
+            const container = document.getElementById('studentBlocks');
+            const selectedLabel = document.getElementById('selectedStudentName');
+            container.innerHTML = '';
+
+            const students = Object.keys(studentWeights);
+            if (students.length === 0) {
+                container.innerHTML = '<div class="student-empty">Nenhum aluno cadastrado ainda. Crie um aluno para começar.</div>';
+                selectedLabel.textContent = 'Nenhum';
                 return;
             }
 
-            try {
-                // Check if date already exists
-                const existingIndex = weightRecords.findIndex(record => record.date === date);
-                if (existingIndex !== -1) {
-                    if (confirm('Já existe um registro para esta data. Deseja substituí-lo?')) {
-                        // Update existing record
-                        const existingId = weightRecords[existingIndex].id;
-                        const response = await authenticatedFetch(`/api/pesos/${existingId}`, {
-                            method: 'PUT',
-                            body: JSON.stringify({ date, weight, kcal })
-                        });
-                        
-                        if (response.ok) {
-                            const updated = await response.json();
-                            weightRecords[existingIndex] = {
-                                id: updated.id,
-                                date: date,
-                                weight: weight,
-                                kcal: kcal
-                            };
-                        } else {
-                            throw new Error('Erro ao atualizar registro');
-                        }
-                    } else {
-                        return;
-                    }
-                } else {
-                    // Add new record
-                    const response = await authenticatedFetch('/api/pesos', {
-                        method: 'POST',
-                        body: JSON.stringify({ date, weight, kcal })
-                    });
-                    
-                    if (response.ok) {
-                        const newRecord = await response.json();
-                        weightRecords.push({
-                            id: newRecord.id,
-                            date: date,
-                            weight: weight,
-                            kcal: kcal
-                        });
-                    } else {
-                        throw new Error('Erro ao adicionar registro');
-                    }
-                }
+            students.forEach(studentName => {
+                const records = studentWeights[studentName] || [];
+                const lastRecord = records.length ? records[records.length - 1] : null;
+                const lastWeight = lastRecord ? `${lastRecord.weight.toFixed(1)} kg` : '-';
+                const lastDate = lastRecord ? new Date(lastRecord.date).toLocaleDateString('pt-BR') : '-';
 
-                // Sort by date
-                weightRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
+                const card = document.createElement('button');
+                card.type = 'button';
+                card.className = `student-card ${selectedStudent === studentName ? 'active' : ''}`;
+                card.innerHTML = `
+                    <div class="student-card-title">${studentName}</div>
+                    <div class="student-card-meta">
+                        <span>${records.length} registros</span>
+                        <span>${lastWeight}</span>
+                    </div>
+                    <div class="student-card-date">Último: ${lastDate}</div>
+                `;
+                card.onclick = () => selectStudent(studentName);
+                container.appendChild(card);
+            });
 
-                // Update UI
-                renderWeightTable();
-                updateWeightChart();
-                clearWeightForm();
-                
-                alert('Registro de peso salvo com sucesso!');
-                
-            } catch (error) {
-                console.error('Erro ao salvar registro de peso:', error);
-                alert('Erro ao salvar registro. Tente novamente.');
+            selectedLabel.textContent = selectedStudent || 'Nenhum';
+        }
+
+        function addStudent() {
+            const nameInput = document.getElementById('studentNameInput');
+            const studentName = nameInput.value.trim();
+            if (!studentName) {
+                alert('Digite o nome do aluno antes de criar.');
+                return;
             }
+
+            if (!studentWeights[studentName]) {
+                studentWeights[studentName] = [];
+                localStorage.setItem('weightRecordsByStudent', JSON.stringify(studentWeights));
+            }
+
+            nameInput.value = '';
+            selectStudent(studentName);
+        }
+
+        function selectStudent(studentName) {
+            selectedStudent = studentName;
+            weightRecords = studentWeights[selectedStudent] || [];
+            renderStudentBlocks();
+            renderWeightTable();
+            updateWeightChart();
         }
 
         // Clear weight form
@@ -4299,8 +4398,13 @@ body.dark-mode tbody tr:hover {
             const tbody = document.getElementById('weightRecordsBody');
             tbody.innerHTML = '';
 
+            if (!selectedStudent) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-secondary);">Selecione um aluno para visualizar os registros.</td></tr>';
+                return;
+            }
+
             if (weightRecords.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-secondary);">Nenhum registro encontrado</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-secondary);">Nenhum registro encontrado para este aluno.</td></tr>';
                 return;
             }
 
@@ -4353,87 +4457,69 @@ body.dark-mode tbody tr:hover {
         }
 
         // Update weight record (new function)
-        async function updateWeightRecord(id) {
+        function updateWeightRecord(id) {
             const date = document.getElementById('weightDate').value;
             const weight = parseFloat(document.getElementById('weightValue').value);
             const kcal = parseInt(document.getElementById('kcalValue').value);
+
+            if (!selectedStudent) {
+                alert('Selecione um aluno antes de atualizar o registro.');
+                return;
+            }
 
             if (!date || !weight || isNaN(weight)) {
                 alert('Por favor, preencha a data e o peso corretamente!');
                 return;
             }
 
-            try {
-                const response = await authenticatedFetch(`/api/pesos/${id}`, {
-                    method: 'PUT',
-                    body: JSON.stringify({ date, weight, kcal })
-                });
-                
-                if (response.ok) {
-                    const updated = await response.json();
-                    
-                    // Update local array
-                    const index = weightRecords.findIndex(r => r.id === id);
-                    if (index !== -1) {
-                        weightRecords[index] = {
-                            id: updated.id,
-                            date: date,
-                            weight: weight,
-                            kcal: kcal
-                        };
-                    }
-                    
-                    // Sort by date
-                    weightRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-                    // Update UI
-                    renderWeightTable();
-                    updateWeightChart();
-                    clearWeightForm();
-                    
-                    // Reset button
-                    const addButton = document.querySelector('.weight-input-container button');
-                    addButton.innerHTML = '<i class="fas fa-plus"></i> Adicionar Registro';
-                    addButton.onclick = addWeightRecord;
-                    
-                    // Clear editing state
-                    window.editingRecordId = null;
-                    
-                    alert('Registro atualizado com sucesso!');
-                } else {
-                    throw new Error('Erro ao atualizar registro');
-                }
-            } catch (error) {
-                console.error('Erro ao atualizar registro de peso:', error);
-                alert('Erro ao atualizar registro. Tente novamente.');
+            const index = weightRecords.findIndex(r => r.id === id);
+            if (index === -1) {
+                alert('Registro não encontrado.');
+                return;
             }
+
+            weightRecords[index] = {
+                id,
+                date,
+                weight,
+                kcal: isNaN(kcal) ? 0 : kcal
+            };
+
+            weightRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
+            studentWeights[selectedStudent] = weightRecords;
+            saveStudentWeightRecords();
+
+            renderWeightTable();
+            updateWeightChart();
+            clearWeightForm();
+
+            const addButton = document.querySelector('.weight-input-container button');
+            addButton.innerHTML = '<i class="fas fa-plus"></i> Adicionar Registro';
+            addButton.onclick = addWeightRecord;
+            window.editingRecordId = null;
+
+            alert('Registro atualizado com sucesso!');
         }
 
         // Delete weight record
-        async function deleteWeightRecord(id, showConfirm = true) {
+        function deleteWeightRecord(id, showConfirm = true) {
             if (showConfirm && !confirm('Tem certeza que deseja excluir este registro?')) {
                 return;
             }
 
-            try {
-                const response = await authenticatedFetch(`/api/pesos/${id}`, {
-                    method: 'DELETE'
-                });
-                
-                if (response.ok) {
-                    weightRecords = weightRecords.filter(record => record.id !== id);
-                    renderWeightTable();
-                    updateWeightChart();
-                    
-                    if (showConfirm) {
-                        alert('Registro excluído com sucesso!');
-                    }
-                } else {
-                    throw new Error('Erro ao excluir registro');
-                }
-            } catch (error) {
-                console.error('Erro ao excluir registro de peso:', error);
-                alert('Erro ao excluir registro. Tente novamente.');
+            if (!selectedStudent) {
+                alert('Selecione um aluno antes de excluir um registro.');
+                return;
+            }
+
+            weightRecords = weightRecords.filter(record => record.id !== id);
+            studentWeights[selectedStudent] = weightRecords;
+            saveStudentWeightRecords();
+            renderWeightTable();
+            updateWeightChart();
+
+            if (showConfirm) {
+                alert('Registro excluído com sucesso!');
             }
         }
 
@@ -4590,7 +4676,12 @@ body.dark-mode tbody tr:hover {
         }
 
         // Add new weight record
-        async function addWeightRecord() {
+        function addWeightRecord() {
+            if (!selectedStudent) {
+                alert('Selecione um aluno antes de adicionar um registro.');
+                return;
+            }
+
             const date = document.getElementById('weightDate').value;
             const weight = parseFloat(document.getElementById('weightValue').value);
             const kcal = parseInt(document.getElementById('kcalValue').value);
@@ -4600,66 +4691,36 @@ body.dark-mode tbody tr:hover {
                 return;
             }
 
-            try {
-                // Check if date already exists
-                const existingIndex = weightRecords.findIndex(record => record.date === date);
-                if (existingIndex !== -1) {
-                    if (confirm('Já existe um registro para esta data. Deseja substituí-lo?')) {
-                        // Update existing record
-                        const existingId = weightRecords[existingIndex].id;
-                        const response = await authenticatedFetch(`/api/pesos/${existingId}`, {
-                            method: 'PUT',
-                            body: JSON.stringify({ date, weight, kcal })
-                        });
-                        
-                        if (response.ok) {
-                            const updated = await response.json();
-                            weightRecords[existingIndex] = {
-                                id: updated.id,
-                                date: date,
-                                weight: weight,
-                                kcal: kcal
-                            };
-                        } else {
-                            throw new Error('Erro ao atualizar registro');
-                        }
-                    } else {
-                        return;
-                    }
-                } else {
-                    // Add new record
-                    const response = await authenticatedFetch('/api/pesos', {
-                        method: 'POST',
-                        body: JSON.stringify({ date, weight, kcal })
-                    });
-                    
-                    if (response.ok) {
-                        const newRecord = await response.json();
-                        weightRecords.push({
-                            id: newRecord.id,
-                            date: date,
-                            weight: weight,
-                            kcal: kcal
-                        });
-                    } else {
-                        throw new Error('Erro ao adicionar registro');
-                    }
+            const existingIndex = weightRecords.findIndex(record => record.date === date);
+            if (existingIndex !== -1) {
+                if (!confirm('Já existe um registro para esta data. Deseja substituí-lo?')) {
+                    return;
                 }
-
-                // Sort by date
-                weightRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-                // Update UI
-                renderWeightTable();
-                updateWeightChart();
-                clearWeightForm();
-                
-                alert('Registro de peso salvo com sucesso!');
-                
-            } catch (error) {
-                console.error('Erro ao salvar registro de peso:', error);
-                alert('Erro ao salvar registro. Tente novamente.');
+                weightRecords[existingIndex] = {
+                    id: weightRecords[existingIndex].id,
+                    date,
+                    weight,
+                    kcal: isNaN(kcal) ? 0 : kcal
+                };
+            } else {
+                weightRecords.push({
+                    id: Date.now().toString(),
+                    date,
+                    weight,
+                    kcal: isNaN(kcal) ? 0 : kcal
+                });
             }
+
+            weightRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
+            studentWeights[selectedStudent] = weightRecords;
+            saveStudentWeightRecords();
+
+            renderStudentBlocks();
+            renderWeightTable();
+            updateWeightChart();
+            clearWeightForm();
+
+            alert('Registro de peso salvo com sucesso!');
         }
 
         // Initialize on page load
